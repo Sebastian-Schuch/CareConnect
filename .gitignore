@@ -1,1 +1,6 @@
+# This directory includes tmp and configuration files for the editor
 .idea/
+
+# This directory includes the api key and should not be pushed to the remote directory
+.env/
+
