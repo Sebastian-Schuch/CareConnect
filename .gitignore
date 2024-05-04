@@ -4,3 +4,6 @@
 # This directory includes the api key and should not be pushed to the remote directory
 .env/
 
+database/
+
+log/
