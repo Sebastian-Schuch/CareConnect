@@ -13,6 +13,7 @@ public class PatientServiceImpl implements PatientService {
     public PatientServiceImpl(PatientValidator patientValidator) {
         this.patientValidator = patientValidator;
     }
+
     @Override
     public PatientDto createPatient(PatientCreateDto toCreate) {
         patientValidator.validateForCreate(toCreate);
