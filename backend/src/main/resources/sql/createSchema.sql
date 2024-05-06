@@ -13,21 +13,21 @@ CREATE TABLE IF NOT EXISTS doctor
 (
     uid BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_ref BIGINT,
-    FOREIGN KEY (uid) REFERENCES user(uid)
+    FOREIGN KEY (uid) REFERENCES credentials(uid)
 );
 
 CREATE TABLE IF NOT EXISTS admin
 (
     uid BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_ref BIGINT,
-    FOREIGN KEY (uid) REFERENCES user(uid)
+    FOREIGN KEY (uid) REFERENCES credentials(uid)
 );
 
 CREATE TABLE IF NOT EXISTS secretary
 (
     uid BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_ref BIGINT,
-    FOREIGN KEY (uid) REFERENCES user(uid)
+    FOREIGN KEY (uid) REFERENCES credentials(uid)
 );
 
 CREATE TABLE IF NOT EXISTS patient
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS ambulance
 CREATE TABLE IF NOT EXISTS opening_hours
 (
     ambulance_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    day VARCHAR(10),
+    weekday VARCHAR(10),
     opening_time TIME,
     closing_time TIME,
 
@@ -119,5 +119,5 @@ CREATE TABLE IF NOT EXISTS messages
     date DATETIME,
 
     FOREIGN KEY(treatment) REFERENCES Treatment(uid),
-    FOREIGN KEY(sender) REFERENCES user(uid)
+    FOREIGN KEY(sender) REFERENCES credentials(uid)
 );
