@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CredentialReposetory extends CrudRepository<Credential, Long> {
+public interface CredentialRepository extends CrudRepository<Credential, Long> {
 }

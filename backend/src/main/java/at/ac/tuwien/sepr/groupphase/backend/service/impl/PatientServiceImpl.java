@@ -5,7 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
-//import at.ac.tuwien.sepr.groupphase.backend.repository.PatientReposetory;
 import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.PatientValidator;
@@ -16,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class PatientServiceImpl implements PatientService {
     private final PatientValidator patientValidator;
     private final CredentialService credentialService;
-    //private final PatientReposetory patientReposetory;
+    //private final PatientRepository patientRepository;
 
     public PatientServiceImpl(PatientValidator patientValidator, CredentialService credentialService) {
         this.patientValidator = patientValidator;
         this.credentialService = credentialService;
-        //this.patientReposetory = patientReposetory;
+        //this.patientRepository = patientRepository;
     }
 
     @Override
@@ -29,18 +28,16 @@ public class PatientServiceImpl implements PatientService {
         System.out.println("SERVUS!");
         patientValidator.validateForCreate(toCreate);
         CredentialCreateDto toCreateCredentials = new CredentialCreateDto().setEmail(toCreate.getEmail()).setFirstname(toCreate.getFirstname()).setLastname(toCreate.getLastname());
-        var x = credentialService.createCredential(toCreateCredentials, Role.PATIENT);
-        System.out.println(x.getId());
-        //insertPatientData(toCreate);
+        insertPatientData(toCreate, credentialService.createCredential(toCreateCredentials, Role.PATIENT));
         return null;
     }
 
-    /*public void insertPatientData(PatientCreateDto toCreate) {
+    public void insertPatientData(PatientCreateDto toCreate, Credential credential) {
         Patient patient = new Patient();
         patient.setSvnr(toCreate.getSvnr());
-        patient.setCredential(-1L);
+        patient.setCredential(credential);
 
-        patientReposetory.save(patient);
-    }*/
+        //patientRepository.save(patient);
+    }
 
 }

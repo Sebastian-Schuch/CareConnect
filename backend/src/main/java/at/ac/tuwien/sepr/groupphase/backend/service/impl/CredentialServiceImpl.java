@@ -1,27 +1,26 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.CredentialMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
-import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialReposetory;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CredentialServiceImpl implements CredentialService {
-    private CredentialReposetory credentialReposetory;
+    private CredentialRepository credentialRepository;
     private CredentialMapper credentialMapper;
 
-    public CredentialServiceImpl(CredentialReposetory credentialReposetory, CredentialMapper credentialMapper) {
-        this.credentialReposetory = credentialReposetory;
+    public CredentialServiceImpl(CredentialRepository credentialReposetory, CredentialMapper credentialMapper) {
+        this.credentialRepository = credentialReposetory;
         this.credentialMapper = credentialMapper;
     }
 
     @Override
-    public CredentialDto createCredential(CredentialCreateDto toCreate, Role role) {
-        return credentialMapper.credentialToCredentialDto(insertCredentialData(toCreate, role));
+    public Credential createCredential(CredentialCreateDto toCreate, Role role) {
+        return insertCredentialData(toCreate, role);
     }
 
     public Credential insertCredentialData(CredentialCreateDto toCreate, Role role) {
@@ -32,6 +31,6 @@ public class CredentialServiceImpl implements CredentialService {
         credential.setPassword(new java.math.BigInteger(130, new java.security.SecureRandom()).toString(32));
         credential.setActive(true);
         credential.setRole(role);
-        return credentialReposetory.save(credential);
+        return credentialRepository.save(credential);
     }
 }
