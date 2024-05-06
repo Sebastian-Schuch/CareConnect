@@ -54,10 +54,10 @@ public class Allergies {
 
     @Override
     public String toString() {
-        return "allergies{" +
-            "uid=" + uid +
-            ", name='" + name + '\'' +
-            '}';
+        return "allergies{"
+            + "uid=" + uid
+            + ", name='" + name + '\''
+            + '}';
     }
 
     public static final class AllergieBuilder {
