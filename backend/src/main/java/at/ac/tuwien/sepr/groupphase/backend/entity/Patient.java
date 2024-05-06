@@ -18,4 +18,20 @@ public class Patient {
 
     @Column(nullable = false)
     private int svnr;
+
+    public int getSvnr() {
+        return svnr;
+    }
+
+    public void setSvnr(int svnr) {
+        this.svnr = svnr;
+    }
+
+    public Credential getCredential() {
+        return credential;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
+    }
 }

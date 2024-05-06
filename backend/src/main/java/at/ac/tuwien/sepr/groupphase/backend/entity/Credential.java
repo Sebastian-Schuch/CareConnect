@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +29,10 @@ public class Credential {
 
     @Column(nullable = false, length = 255)
     private boolean active;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private Role role;
 
     public Long getId() {
         return id;
@@ -73,5 +80,13 @@ public class Credential {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
