@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;

@@ -5,5 +5,5 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDto;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 
 public interface CredentialService {
-    public CredentialDto createCredential(CredentialCreateDto toCreate, Role role);
+    CredentialDto createCredential(CredentialCreateDto toCreate, Role role);
 }
