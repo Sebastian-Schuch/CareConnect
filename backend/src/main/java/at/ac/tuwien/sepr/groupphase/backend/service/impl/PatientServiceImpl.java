@@ -13,17 +13,22 @@ import org.springframework.stereotype.Service;
 public class PatientServiceImpl implements PatientService {
     private final PatientValidator patientValidator;
     private final CredentialService credentialService;
+    //private final PatientReposetory patientReposetory;
 
     public PatientServiceImpl(PatientValidator patientValidator, CredentialService credentialService) {
         this.patientValidator = patientValidator;
         this.credentialService = credentialService;
+        //this.patientReposetory = patientReposetory;
     }
 
     @Override
     public PatientDto createPatient(PatientCreateDto toCreate) {
+        System.out.println("SERVUS!");
         patientValidator.validateForCreate(toCreate);
         CredentialCreateDto toCreateCredentials = new CredentialCreateDto().setEmail(toCreate.getEmail()).setFirstname(toCreate.getFirstname()).setLastname(toCreate.getLastname());
         credentialService.createCredential(toCreateCredentials, Role.PATIENT);
         return null;
     }
+
+
 }

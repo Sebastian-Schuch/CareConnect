@@ -25,7 +25,7 @@ public class Credential {
     private String password;
 
     @Column(nullable = false, length = 255)
-    private String active;
+    private boolean active;
 
     public Long getId() {
         return id;
@@ -67,11 +67,11 @@ public class Credential {
         this.password = password;
     }
 
-    public String getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(String active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 }
