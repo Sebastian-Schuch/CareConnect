@@ -1,5 +1,4 @@
 -- section users
--- todo: redname table
 CREATE TABLE IF NOT EXISTS credentials
 (
     uid BIGINT AUTO_INCREMENT PRIMARY KEY,
