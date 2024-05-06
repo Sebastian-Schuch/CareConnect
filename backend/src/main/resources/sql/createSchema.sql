@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS credentials
     isActive Boolean,
     first_name VARCHAR(255),
     last_name VARCHAR(255),
-    username VARCHAR(255)
+    email VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS doctor
