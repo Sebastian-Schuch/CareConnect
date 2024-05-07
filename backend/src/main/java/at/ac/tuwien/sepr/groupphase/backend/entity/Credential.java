@@ -8,9 +8,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+
+import java.io.Serializable;
 
 @Entity
-public class Credential {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Credential implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

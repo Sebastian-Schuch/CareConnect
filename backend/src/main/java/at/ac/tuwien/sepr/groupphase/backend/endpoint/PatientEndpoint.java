@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/patient")
+@RequestMapping(value = "/api/patients")
 public class PatientEndpoint {
     private final PatientService patientService;
 
