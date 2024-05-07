@@ -43,7 +43,7 @@ public class PatientEndpoint {
     }
 
     /**
-     * The get endpoint for the patient
+     * The get endpoint for the patient.
      *
      * @param id the id of patient requested
      * @return the patient requested

@@ -9,8 +9,8 @@ public interface CredentialService {
      * Creates the Credential Entity with the data given.
      *
      * @param toCreate the data for the Credential Entity
-     * @param role
-     * @return
+     * @param role     the role of the credential
+     * @return the credential entity
      */
     Credential createCredentialEntity(CredentialCreateDto toCreate, Role role);
 }
