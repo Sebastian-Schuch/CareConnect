@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +37,7 @@ public class PatientEndpoint {
     @PermitAll
     //@Secured("ROLE_SECRETARY")
     @PostMapping
-    public PatientDto create(@RequestBody PatientCreateDto toCreate) {
+    public PatientDto create(@Valid @RequestBody PatientCreateDto toCreate) {
         LOG.info("POST " + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
         return this.patientService.createPatient(toCreate);

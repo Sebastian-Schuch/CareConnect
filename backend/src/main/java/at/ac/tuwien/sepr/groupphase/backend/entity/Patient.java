@@ -21,13 +21,13 @@ public class Patient {
     private Credential credential;
 
     @Column(nullable = false)
-    private int svnr;
+    private String svnr;
 
-    public int getSvnr() {
+    public String getSvnr() {
         return svnr;
     }
 
-    public void setSvnr(int svnr) {
+    public void setSvnr(String svnr) {
         this.svnr = svnr;
     }
 
