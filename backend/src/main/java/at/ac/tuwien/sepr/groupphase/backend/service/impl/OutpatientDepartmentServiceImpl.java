@@ -1,0 +1,57 @@
+package at.ac.tuwien.sepr.groupphase.backend.service.impl;
+
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OpeningHoursMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OutpatientDepartmentMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentService {
+    private final OutpatientDepartmentRepository outpatientDepartmentRepository;
+    private final OutpatientDepartmentMapper outpatientDepartmentMapper;
+    private final OpeningHoursMapper openingHoursMapper;
+
+    @Autowired
+    private OutpatientDepartmentServiceImpl(OutpatientDepartmentRepository outpatientDepartmentRepository, OutpatientDepartmentMapper outpatientDepartmentMapper, OpeningHoursMapper openingHoursMapper) {
+        this.outpatientDepartmentRepository = outpatientDepartmentRepository;
+        this.outpatientDepartmentMapper = outpatientDepartmentMapper;
+        this.openingHoursMapper = openingHoursMapper;
+    }
+
+    @Override
+    public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) {
+        //TODO: Implement validation for the outpatientDepartmentDto
+
+        OpeningHours openingHours = openingHoursMapper.dtoToEntity(outpatientDepartmentDto.openingHours());
+        OutpatientDepartment savedOutpatientDepartment = outpatientDepartmentRepository.save(outpatientDepartmentMapper.DtoToEntity(outpatientDepartmentDto, openingHours));
+
+        return outpatientDepartmentMapper.entityToDto(savedOutpatientDepartment, openingHoursMapper.entityToDto(savedOutpatientDepartment.getOpeningHours()));
+    }
+
+    @Override
+    public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
+        List<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAll();
+        return outpatientDepartments.stream()
+            .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours())))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public OutpatientDepartmentDto getOutpatientDepartmentById(Long id) throws NotFoundException {
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findById(id).orElse(null);
+        if (outpatientDepartment == null) {
+            throw new NotFoundException("Outpatient department with id " + id + " not found");
+        }
+        return outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
+    }
+}
