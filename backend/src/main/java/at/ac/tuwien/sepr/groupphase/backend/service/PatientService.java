@@ -5,5 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 
 public interface PatientService {
     PatientDto createPatient(PatientCreateDto toCreate);
-    //PatientDto getPatientById(Long id);
+
+    PatientDto getPatientById(Long id);
 }
