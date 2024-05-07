@@ -23,7 +23,7 @@ public class OutpatientDepartmentMapper {
      * @param openingHours the opening hours entity
      * @return the Entity
      */
-    public OutpatientDepartment DtoToEntity(OutpatientDepartmentDto dto, OpeningHours openingHours) {
+    public OutpatientDepartment dtoToEntity(OutpatientDepartmentDto dto, OpeningHours openingHours) {
         LOGGER.trace("DtoToEntity(OutpatientDepartmentDto)");
         return new OutpatientDepartment().setId(dto.id())
             .setName(dto.name())
@@ -39,7 +39,7 @@ public class OutpatientDepartmentMapper {
      * @param openingHours the opening hours entity
      * @return the Entity
      */
-    public OutpatientDepartment DtoToEntity(OutpatientDepartmentDtoCreate dto, OpeningHours openingHours) {
+    public OutpatientDepartment dtoToEntity(OutpatientDepartmentDtoCreate dto, OpeningHours openingHours) {
         LOGGER.trace("DtoToEntity(OutpatientDepartmentDtoCreate)");
         return new OutpatientDepartment().setId(null)
             .setName(dto.name())

@@ -10,7 +10,7 @@ import java.util.List;
 public interface OutpatientDepartmentService {
 
     /**
-     * Creates a new outpatient department
+     * Creates a new outpatient department.
      *
      * @param outpatientDepartmentDto the outpatient department to create
      * @return the created outpatient department
@@ -18,14 +18,14 @@ public interface OutpatientDepartmentService {
     OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException;
 
     /**
-     * Gets all outpatient departments
+     * Gets all outpatient departments.
      *
      * @return a list of all outpatient departments
      */
     List<OutpatientDepartmentDto> getAllOutpatientDepartments();
 
     /**
-     * Gets an outpatient department by its id
+     * Gets an outpatient department by its id.
      *
      * @param id the id of the outpatient department
      * @return the outpatient department

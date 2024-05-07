@@ -29,7 +29,6 @@ public class OpeningHoursValidator {
         }
         if (openingHoursDtoCreate.tuesdayStart() != null && openingHoursDtoCreate.tuesdayStart().isAfter(openingHoursDtoCreate.tuesdayEnd())) {
             bindingResult.rejectValue("tuesdayStart", null, "must be before tuesdayEnd");
-            ;
         }
         if (openingHoursDtoCreate.wednesdayStart() != null && openingHoursDtoCreate.wednesdayStart().isAfter(openingHoursDtoCreate.wednesdayEnd())) {
             bindingResult.rejectValue("wednesdayStart", null, "must be before wednesdayEnd");
