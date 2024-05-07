@@ -1,14 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validator;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.lang.invoke.MethodHandles;
+
 @Component
 public class OpeningHoursValidator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    /**
+     * Validates the opening hours.
+     *
+     * @param openingHoursDtoCreate the opening hours DTO
+     * @throws MethodArgumentNotValidException if the opening hours are not valid
+     */
     public void validateOpeningHours(OpeningHoursDtoCreate openingHoursDtoCreate) throws MethodArgumentNotValidException {
+        LOGGER.trace("validateOpeningHours()");
         BindingResult bindingResult = new BeanPropertyBindingResult(openingHoursDtoCreate, "openingHours");
 
         if (openingHoursDtoCreate.mondayStart() != null && openingHoursDtoCreate.mondayStart().isAfter(openingHoursDtoCreate.mondayEnd())) {
@@ -34,6 +47,7 @@ public class OpeningHoursValidator {
             bindingResult.rejectValue("sundayStart", null, "must be before sundayEnd");
         }
         if (bindingResult.hasErrors()) {
+            LOGGER.warn("OpeningHoursDtoCreate is not valid: " + bindingResult.getAllErrors());
             throw new MethodArgumentNotValidException(null, bindingResult);
         }
     }

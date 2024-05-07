@@ -4,12 +4,17 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
 import org.mapstruct.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Mapper
 public class OpeningHoursMapper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Maps an entity to a DTO.
@@ -18,7 +23,7 @@ public class OpeningHoursMapper {
      * @return the DTO
      */
     public OpeningHoursDto entityToDto(OpeningHours openingHours) {
-
+        LOGGER.trace("entityToDto()");
 
         return new OpeningHoursDto(
             openingHours.getId(),
@@ -46,6 +51,7 @@ public class OpeningHoursMapper {
      * @return the entity
      */
     public OpeningHours dtoToEntity(OpeningHoursDto dto) {
+        LOGGER.trace("dtoToEntity()");
         return new OpeningHours().setId(dto.id())
             .setMonday(formatDayOpeningHours(dto.mondayStart(), dto.mondayEnd()))
             .setTuesday(formatDayOpeningHours(dto.tuesdayStart(), dto.tuesdayEnd()))
@@ -57,6 +63,7 @@ public class OpeningHoursMapper {
     }
 
     public OpeningHours dtoToEntity(OpeningHoursDtoCreate dto) {
+        LOGGER.trace("dtoToEntity()");
         return new OpeningHours().setId(null)
             .setMonday(formatDayOpeningHours(dto.mondayStart(), dto.mondayEnd()))
             .setTuesday(formatDayOpeningHours(dto.tuesdayStart(), dto.tuesdayEnd()))
@@ -75,6 +82,7 @@ public class OpeningHoursMapper {
      * @return the formatted opening hours
      */
     private String formatDayOpeningHours(LocalTime openingHours, LocalTime closingHours) {
+        LOGGER.trace("formatDayOpeningHours()");
         if (openingHours == null || closingHours == null) {
             return null;
         }
@@ -89,6 +97,7 @@ public class OpeningHoursMapper {
      * @return the opening hours
      */
     private LocalTime extractOpeningHours(String openingHours) {
+        LOGGER.trace("extractOpeningHours()");
         if (openingHours == null || openingHours.isEmpty() || openingHours.isBlank() || openingHours.equals("closed")) {
             return null;
         }
@@ -102,6 +111,7 @@ public class OpeningHoursMapper {
      * @return the closing hours
      */
     private LocalTime extractClosingHours(String openingHours) {
+        LOGGER.trace("extractClosingHours()");
         if (openingHours == null || openingHours.isEmpty() || openingHours.isBlank() || openingHours.equals("closed")) {
             return null;
         }
