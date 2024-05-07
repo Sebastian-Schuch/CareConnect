@@ -1,34 +1,28 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public class CredentialCreateDto {
-    private String email;
-    private String firstname;
-    private String lastname;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
-    public String getEmail() {
-        return email;
-    }
+public record CredentialCreateDto(
 
-    public CredentialCreateDto setEmail(String email) {
-        this.email = email;
-        return this;
-    }
+    @NotBlank(message = "Email cannot be empty")
+    @NotNull(message = "Email address is required")
+    @Email(message = "Please provide a valid email address")
+    @Pattern(regexp = "[^@]+@[^@]+\\.[^@.]+", message = "Please provide a valid email address")
+    String email,
 
-    public String getFirstname() {
-        return firstname;
-    }
+    @NotBlank(message = "First name cannot be empty")
+    @NotNull(message = "First name is required")
+    @Max(value = 255, message = "First name cannot be longer than 255 characters")
+    String firstname,
 
-    public CredentialCreateDto setFirstname(String firstname) {
-        this.firstname = firstname;
-        return this;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public CredentialCreateDto setLastname(String lastname) {
-        this.lastname = lastname;
-        return this;
-    }
+    @NotBlank(message = "Last name cannot be empty")
+    @NotNull(message = "Last name is required")
+    @Max(value = 255, message = "Last name cannot be longer than 255 characters")
+    String lastname
+) {
 }
+
