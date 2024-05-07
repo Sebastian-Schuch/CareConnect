@@ -1,0 +1,92 @@
+package at.ac.tuwien.sepr.groupphase.backend.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+import java.util.Objects;
+
+@Entity
+public class Allergies {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uid;
+
+    public String getName() {
+        return name;
+    }
+
+    @Column(nullable = false, name = "allergies_name")
+    private String name;
+
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Allergies)) {
+            return false;
+        }
+        Allergies allergies = (Allergies) o;
+        return getUid().equals(allergies.getUid()) && getName().equals(allergies.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUid(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return "allergies{"
+            + "uid=" + uid
+            + ", name='" + name + '\''
+            + '}';
+    }
+
+    public static final class AllergieBuilder {
+        private Long uid;
+        private String name;
+
+        private AllergieBuilder() {
+        }
+
+        public static AllergieBuilder anAllergies() {
+            return new AllergieBuilder();
+        }
+
+        public AllergieBuilder withUid(Long uid) {
+            this.uid = uid;
+            return this;
+        }
+
+        public AllergieBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Allergies build() {
+            Allergies allergies = new Allergies();
+            allergies.setUid(uid);
+            allergies.setName(name);
+            return allergies;
+        }
+    }
+
+}
