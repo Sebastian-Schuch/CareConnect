@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
@@ -16,34 +17,30 @@ public class PatientServiceImpl implements PatientService {
     private final PatientValidator patientValidator;
     private final CredentialService credentialService;
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
-    public PatientServiceImpl(PatientValidator patientValidator, CredentialService credentialService, PatientRepository patientRepository) {
+    public PatientServiceImpl(PatientValidator patientValidator, CredentialService credentialService, PatientRepository patientRepository, PatientMapper patientMapper) {
         this.patientValidator = patientValidator;
         this.credentialService = credentialService;
         this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
     }
 
     @Override
     public PatientDto createPatient(PatientCreateDto toCreate) {
-        System.out.println("SERVUS!");
         patientValidator.validateForCreate(toCreate);
-        insertPatientData(toCreate, Role.PATIENT);
-        return null;
+        return insertPatientData(toCreate, Role.PATIENT);
     }
 
-    public void insertPatientData(PatientCreateDto toCreate, Role role) {
-        Credential credential = new Credential();
-        credential.setEmail(toCreate.getEmail());
-        credential.setFirstName(toCreate.getFirstname());
-        credential.setLastName(toCreate.getLastname());
-        credential.setPassword(new java.math.BigInteger(130, new java.security.SecureRandom()).toString(32));
-        credential.setActive(true);
-        credential.setRole(role);
+    //@Override
+    //public PatientDto getPatientById(Long id) {
+        //return patientMapper.patientToPatientDto(patientRepository.getReferenceById(id));
+    //}
 
+    public PatientDto insertPatientData(PatientCreateDto toCreate, Role role) {
         Patient patient = new Patient();
-        patient.setSvnr(toCreate.getSvnr());
-        patient.setCredential(credential);
-        patientRepository.save(patient);
+        patient.setSvnr(toCreate.svnr());
+        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), role));
+        return patientMapper.patientToPatientDto(patientRepository.save(patient));
     }
-
 }

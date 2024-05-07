@@ -24,4 +24,11 @@ public class PatientEndpoint {
     public PatientDto create(@RequestBody PatientCreateDto toCreate) {
         return this.patientService.createPatient(toCreate);
     }
+
+    //@PermitAll
+    //@Secured("ROLE_SECRETARY", "ROLE_PATIENT", "ROLE_ADMIN", "ROLE_DOCTOR")
+    //@GetMapping({"/{id}"})
+    //public PatientDto get(@PathVariable("id") long id) {
+        //return this.patientService.getPatientById(id);
+    //}
 }

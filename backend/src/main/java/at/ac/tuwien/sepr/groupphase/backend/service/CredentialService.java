@@ -5,5 +5,5 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 
 public interface CredentialService {
-    Credential createCredential(CredentialCreateDto toCreate, Role role);
+    Credential createCredentialEntity(CredentialCreateDto toCreate, Role role);
 }

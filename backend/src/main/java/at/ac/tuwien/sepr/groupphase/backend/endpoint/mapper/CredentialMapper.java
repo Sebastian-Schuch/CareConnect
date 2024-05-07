@@ -13,6 +13,4 @@ public interface CredentialMapper {
 
     @IterableMapping(qualifiedByName = "credential")
     CredentialDto credentialToDto(Credential credential);
-
-
 }

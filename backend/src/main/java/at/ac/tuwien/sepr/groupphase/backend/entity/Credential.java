@@ -20,19 +20,19 @@ public class Credential implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, length = 255, name = "first_name")
+    @Column(nullable = false, name = "first_name")
     private String firstName;
 
-    @Column(nullable = false, length = 255, name = "last_name")
+    @Column(nullable = false, name = "last_name")
     private String lastName;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private boolean active;
 
     @Enumerated(EnumType.ORDINAL)
