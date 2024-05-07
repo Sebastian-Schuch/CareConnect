@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.CredentialMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
-import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.springframework.stereotype.Service;
