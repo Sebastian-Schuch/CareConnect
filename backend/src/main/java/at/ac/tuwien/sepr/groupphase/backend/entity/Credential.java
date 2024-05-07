@@ -39,6 +39,9 @@ public class Credential implements Serializable {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private boolean isInitialPassword;
+
     public Long getId() {
         return id;
     }
@@ -93,5 +96,13 @@ public class Credential implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isInitialPassword() {
+        return isInitialPassword;
+    }
+
+    public void setInitialPassword(boolean initialPassword) {
+        isInitialPassword = initialPassword;
     }
 }

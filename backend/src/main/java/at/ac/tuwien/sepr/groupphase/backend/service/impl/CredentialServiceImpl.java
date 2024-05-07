@@ -16,6 +16,7 @@ public class CredentialServiceImpl implements CredentialService {
         credential.setPassword(new java.math.BigInteger(130, new java.security.SecureRandom()).toString(32));
         credential.setActive(true);
         credential.setRole(role);
+        credential.setInitialPassword(true);
         return credential;
     }
 }
