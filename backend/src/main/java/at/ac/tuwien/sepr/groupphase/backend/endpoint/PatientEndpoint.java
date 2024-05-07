@@ -27,6 +27,12 @@ public class PatientEndpoint {
         this.patientService = patientService;
     }
 
+    /**
+     * The create endpoint for the patient.
+     *
+     * @param toCreate the data for the patient to create
+     * @return the created patient
+     */
     @PermitAll
     //@Secured("ROLE_SECRETARY")
     @PostMapping
@@ -36,6 +42,12 @@ public class PatientEndpoint {
         return this.patientService.createPatient(toCreate);
     }
 
+    /**
+     * The get endpoint for the patient
+     *
+     * @param id the id of patient requested
+     * @return the patient requested
+     */
     @PermitAll
     //@Secured("ROLE_SECRETARY", "ROLE_PATIENT", "ROLE_ADMIN", "ROLE_DOCTOR")
     @GetMapping({"/{id}"})

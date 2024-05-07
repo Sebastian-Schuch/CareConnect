@@ -12,6 +12,12 @@ import java.lang.invoke.MethodHandles;
 public class PatientMapper {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    /**
+     * Converts the patient entity to the patientDto.
+     *
+     * @param patient the patient to convert
+     * @return the patientDto
+     */
     public PatientDto patientToPatientDto(Patient patient) {
         LOG.trace("patientToPatientDto({})", patient);
         return new PatientDto(patient.getCredential().getId(), patient.getSvnr(), patient.getCredential().getFirstName(), patient.getCredential().getLastName(), patient.getCredential().getEmail(), patient.getCredential().getPassword(),

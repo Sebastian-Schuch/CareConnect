@@ -36,7 +36,7 @@ public class PatientServiceImpl implements PatientService {
     public PatientDto createPatient(PatientCreateDto toCreate) {
         LOG.trace("createPatient({})", toCreate);
         patientValidator.validateForCreate(toCreate);
-        return insertPatientData(toCreate, Role.PATIENT);
+        return insertPatientData(toCreate);
     }
 
     @Override
@@ -49,11 +49,17 @@ public class PatientServiceImpl implements PatientService {
         return patientMapper.patientToPatientDto(patient);
     }
 
-    public PatientDto insertPatientData(PatientCreateDto toCreate, Role role) {
-        LOG.debug("insertPatientData({}, {})", toCreate, role);
+    /**
+     * Write the patient given into the repository.
+     *
+     * @param toCreate the patient to write into the repository
+     * @return the patient that has been written into the repository
+     */
+    public PatientDto insertPatientData(PatientCreateDto toCreate) {
+        LOG.debug("insertPatientData({})", toCreate);
         Patient patient = new Patient();
         patient.setSvnr(toCreate.svnr());
-        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), role));
+        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), Role.PATIENT));
         return patientMapper.patientToPatientDto(patientRepository.save(patient));
     }
 }
