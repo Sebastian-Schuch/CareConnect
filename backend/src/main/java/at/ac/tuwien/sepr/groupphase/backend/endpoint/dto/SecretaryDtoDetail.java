@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public record SecretaryDetailDto(
+public record SecretaryDtoDetail(
     long uid,
     String lastname,
     String firstname,
