@@ -13,7 +13,7 @@ import jakarta.persistence.OneToOne;
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="patient_id")
+    @Column(name = "patient_id")
     private long patientId;
 
     @OneToOne(cascade = CascadeType.ALL)

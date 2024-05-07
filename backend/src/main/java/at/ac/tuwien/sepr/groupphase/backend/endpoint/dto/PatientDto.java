@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public record PatientDto (
+public record PatientDto(
     long uid,
     String svnr,
     String lastname,
@@ -8,4 +8,5 @@ public record PatientDto (
     String email,
     String password,
     boolean active
-) {}
+) {
+}

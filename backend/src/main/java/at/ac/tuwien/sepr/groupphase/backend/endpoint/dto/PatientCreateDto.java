@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public record PatientCreateDto (
+public record PatientCreateDto(
     String svnr,
     String lastname,
     String firstname,

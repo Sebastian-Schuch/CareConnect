@@ -33,7 +33,7 @@ public class PatientServiceImpl implements PatientService {
 
     //@Override
     //public PatientDto getPatientById(Long id) {
-        //return patientMapper.patientToPatientDto(patientRepository.getReferenceById(id));
+    //return patientMapper.patientToPatientDto(patientRepository.getReferenceById(id));
     //}
 
     public PatientDto insertPatientData(PatientCreateDto toCreate, Role role) {

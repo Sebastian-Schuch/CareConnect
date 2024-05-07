@@ -29,6 +29,6 @@ public class PatientEndpoint {
     //@Secured("ROLE_SECRETARY", "ROLE_PATIENT", "ROLE_ADMIN", "ROLE_DOCTOR")
     //@GetMapping({"/{id}"})
     //public PatientDto get(@PathVariable("id") long id) {
-        //return this.patientService.getPatientById(id);
+    //return this.patientService.getPatientById(id);
     //}
 }

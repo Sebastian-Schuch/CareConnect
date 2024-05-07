@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public record CredentialDto (
+public record CredentialDto(
     Long id,
     String email,
     String firstname,
