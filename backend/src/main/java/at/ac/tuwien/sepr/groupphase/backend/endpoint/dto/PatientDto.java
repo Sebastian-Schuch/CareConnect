@@ -2,7 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 public record PatientDto(
     long uid,
-    String svnr,
+    int svnr,
     String lastname,
     String firstname,
     String email,
