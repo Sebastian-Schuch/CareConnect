@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.service.validator.OpeningHoursValidator;
 import org.junit.jupiter.api.Test;
@@ -21,37 +22,23 @@ public class OpeningHoursValidatorTest {
 
 
     private final OpeningHoursDtoCreate openingHoursDtoCreateInvalid = new OpeningHoursDtoCreate(
-        LocalTime.of(18, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0)
+        new OpeningHoursDayDto(LocalTime.of(19, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0))
     );
 
     private final OpeningHoursDtoCreate openingHoursDtoCreateValid = new OpeningHoursDtoCreate(
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0)
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0)),
+        null
     );
 
     @Test

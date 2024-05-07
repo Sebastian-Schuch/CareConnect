@@ -24,26 +24,26 @@ public class OpeningHoursValidator {
         LOGGER.trace("validateOpeningHours()");
         BindingResult bindingResult = new BeanPropertyBindingResult(openingHoursDtoCreate, "openingHours");
 
-        if (openingHoursDtoCreate.mondayStart() != null && openingHoursDtoCreate.mondayStart().isAfter(openingHoursDtoCreate.mondayEnd())) {
-            bindingResult.rejectValue("mondayStart", null, "must be before mondayEnd");
+        if (openingHoursDtoCreate.monday() != null && !openingHoursDtoCreate.monday().isValid()) {
+            bindingResult.rejectValue("monday", null, "opening time must be before closing time");
         }
-        if (openingHoursDtoCreate.tuesdayStart() != null && openingHoursDtoCreate.tuesdayStart().isAfter(openingHoursDtoCreate.tuesdayEnd())) {
-            bindingResult.rejectValue("tuesdayStart", null, "must be before tuesdayEnd");
+        if (openingHoursDtoCreate.tuesday() != null && !openingHoursDtoCreate.tuesday().isValid()) {
+            bindingResult.rejectValue("tuesday", null, "opening time must be before closing time");
         }
-        if (openingHoursDtoCreate.wednesdayStart() != null && openingHoursDtoCreate.wednesdayStart().isAfter(openingHoursDtoCreate.wednesdayEnd())) {
-            bindingResult.rejectValue("wednesdayStart", null, "must be before wednesdayEnd");
+        if (openingHoursDtoCreate.wednesday() != null && !openingHoursDtoCreate.wednesday().isValid()) {
+            bindingResult.rejectValue("wednesday", null, "opening time must be before closing time");
         }
-        if (openingHoursDtoCreate.thursdayStart() != null && openingHoursDtoCreate.thursdayStart().isAfter(openingHoursDtoCreate.thursdayEnd())) {
-            bindingResult.rejectValue("thursdayStart", null, "must be before thursdayEnd");
+        if (openingHoursDtoCreate.thursday() != null && !openingHoursDtoCreate.thursday().isValid()) {
+            bindingResult.rejectValue("thursday", null, "opening time must be before closing time");
         }
-        if (openingHoursDtoCreate.fridayStart() != null && openingHoursDtoCreate.fridayStart().isAfter(openingHoursDtoCreate.fridayEnd())) {
-            bindingResult.rejectValue("fridayStart", null, "must be before fridayEnd");
+        if (openingHoursDtoCreate.friday() != null && !openingHoursDtoCreate.friday().isValid()) {
+            bindingResult.rejectValue("friday", null, "opening time must be before closing time");
         }
-        if (openingHoursDtoCreate.saturdayStart() != null && openingHoursDtoCreate.saturdayStart().isAfter(openingHoursDtoCreate.saturdayEnd())) {
-            bindingResult.rejectValue("saturdayStart", null, "must be before saturdayEnd");
+        if (openingHoursDtoCreate.saturday() != null && !openingHoursDtoCreate.saturday().isValid()) {
+            bindingResult.rejectValue("saturday", null, "opening time must be before closing time");
         }
-        if (openingHoursDtoCreate.sundayStart() != null && openingHoursDtoCreate.sundayStart().isAfter(openingHoursDtoCreate.sundayEnd())) {
-            bindingResult.rejectValue("sundayStart", null, "must be before sundayEnd");
+        if (openingHoursDtoCreate.sunday() != null && !openingHoursDtoCreate.sunday().isValid()) {
+            bindingResult.rejectValue("sunday", null, "opening time must be before closing time");
         }
         if (bindingResult.hasErrors()) {
             LOGGER.warn("OpeningHoursDtoCreate is not valid: " + bindingResult.getAllErrors());

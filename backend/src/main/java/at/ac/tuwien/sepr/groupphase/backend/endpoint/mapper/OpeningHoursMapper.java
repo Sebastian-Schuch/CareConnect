@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Mapper
 public class OpeningHoursMapper {
@@ -27,20 +27,20 @@ public class OpeningHoursMapper {
 
         return new OpeningHoursDto(
             openingHours.getId(),
-            extractOpeningHours(openingHours.getMonday()),
-            extractClosingHours(openingHours.getMonday()),
-            extractOpeningHours(openingHours.getTuesday()),
-            extractClosingHours(openingHours.getTuesday()),
-            extractOpeningHours(openingHours.getWednesday()),
-            extractClosingHours(openingHours.getWednesday()),
-            extractOpeningHours(openingHours.getThursday()),
-            extractClosingHours(openingHours.getThursday()),
-            extractOpeningHours(openingHours.getFriday()),
-            extractClosingHours(openingHours.getFriday()),
-            extractOpeningHours(openingHours.getSaturday()),
-            extractClosingHours(openingHours.getSaturday()),
-            extractOpeningHours(openingHours.getSunday()),
-            extractClosingHours(openingHours.getSunday())
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getMonday()),
+                extractClosingHours(openingHours.getMonday())),
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getTuesday()),
+                extractClosingHours(openingHours.getTuesday())),
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getWednesday()),
+                extractClosingHours(openingHours.getWednesday())),
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getThursday()),
+                extractClosingHours(openingHours.getThursday())),
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getFriday()),
+                extractClosingHours(openingHours.getFriday())),
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getSaturday()),
+                extractClosingHours(openingHours.getSaturday())),
+            new OpeningHoursDayDto(extractOpeningHours(openingHours.getSunday()),
+                extractClosingHours(openingHours.getSunday()))
         );
     }
 
@@ -53,41 +53,25 @@ public class OpeningHoursMapper {
     public OpeningHours dtoToEntity(OpeningHoursDto dto) {
         LOGGER.trace("dtoToEntity()");
         return new OpeningHours().setId(dto.id())
-            .setMonday(formatDayOpeningHours(dto.mondayStart(), dto.mondayEnd()))
-            .setTuesday(formatDayOpeningHours(dto.tuesdayStart(), dto.tuesdayEnd()))
-            .setWednesday(formatDayOpeningHours(dto.wednesdayStart(), dto.wednesdayEnd()))
-            .setThursday(formatDayOpeningHours(dto.thursdayStart(), dto.thursdayEnd()))
-            .setFriday(formatDayOpeningHours(dto.fridayStart(), dto.fridayEnd()))
-            .setSaturday(formatDayOpeningHours(dto.saturdayStart(), dto.saturdayEnd()))
-            .setSunday(formatDayOpeningHours(dto.sundayStart(), dto.sundayEnd()));
+            .setMonday(dto.monday() != null ? dto.monday().toString() : null)
+            .setTuesday(dto.tuesday() != null ? dto.tuesday().toString() : null)
+            .setWednesday(dto.wednesday() != null ? dto.wednesday().toString() : null)
+            .setThursday(dto.thursday() != null ? dto.thursday().toString() : null)
+            .setFriday(dto.friday() != null ? dto.friday().toString() : null)
+            .setSaturday(dto.saturday() != null ? dto.saturday().toString() : null)
+            .setSunday(dto.sunday() != null ? dto.sunday().toString() : null);
     }
 
     public OpeningHours dtoToEntity(OpeningHoursDtoCreate dto) {
         LOGGER.trace("dtoToEntity()");
         return new OpeningHours().setId(null)
-            .setMonday(formatDayOpeningHours(dto.mondayStart(), dto.mondayEnd()))
-            .setTuesday(formatDayOpeningHours(dto.tuesdayStart(), dto.tuesdayEnd()))
-            .setWednesday(formatDayOpeningHours(dto.wednesdayStart(), dto.wednesdayEnd()))
-            .setThursday(formatDayOpeningHours(dto.thursdayStart(), dto.thursdayEnd()))
-            .setFriday(formatDayOpeningHours(dto.fridayStart(), dto.fridayEnd()))
-            .setSaturday(formatDayOpeningHours(dto.saturdayStart(), dto.saturdayEnd()))
-            .setSunday(formatDayOpeningHours(dto.sundayStart(), dto.sundayEnd()));
-    }
-
-    /**
-     * Formats the opening hours of a day to a string.
-     *
-     * @param openingHours the opening hours of the day
-     * @param closingHours the closing hours of the day
-     * @return the formatted opening hours
-     */
-    private String formatDayOpeningHours(LocalTime openingHours, LocalTime closingHours) {
-        LOGGER.trace("formatDayOpeningHours()");
-        if (openingHours == null || closingHours == null) {
-            return null;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        return openingHours.format(formatter) + "-" + closingHours.format(formatter);
+            .setMonday(dto.monday() != null ? dto.monday().toString() : null)
+            .setTuesday(dto.tuesday() != null ? dto.tuesday().toString() : null)
+            .setWednesday(dto.wednesday() != null ? dto.wednesday().toString() : null)
+            .setThursday(dto.thursday() != null ? dto.thursday().toString() : null)
+            .setFriday(dto.friday() != null ? dto.friday().toString() : null)
+            .setSaturday(dto.saturday() != null ? dto.saturday().toString() : null)
+            .setSunday(dto.sunday() != null ? dto.sunday().toString() : null);
     }
 
     /**

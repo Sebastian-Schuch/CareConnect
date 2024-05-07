@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.OutpatientDepartmentEndpoint;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
@@ -56,20 +57,20 @@ public class OutpatientDepartmentEndpointTest {
         .setSunday(null);
 
     private final OpeningHoursDtoCreate openingHoursDtoCreate = new OpeningHoursDtoCreate(
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0),
-        LocalTime.of(8, 0),
-        LocalTime.of(14, 0)
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0)),
+        new OpeningHoursDayDto(LocalTime.of(8, 0),
+            LocalTime.of(14, 0))
     );
 
     private final OutpatientDepartmentDtoCreate outpatientDepartmentDtoCreate = new OutpatientDepartmentDtoCreate(
@@ -108,7 +109,7 @@ public class OutpatientDepartmentEndpointTest {
         assertEquals(outpatientDepartment.name(), this.outpatientDepartment.getName());
         assertEquals(outpatientDepartment.description(), this.outpatientDepartment.getDescription());
         assertEquals(outpatientDepartment.capacity(), this.outpatientDepartment.getCapacity());
-        assertEquals(outpatientDepartment.openingHours().mondayStart() + "-" + outpatientDepartment.openingHours().mondayEnd(), this.outpatientDepartment.getOpeningHours().getMonday());
+        assertEquals(outpatientDepartment.openingHours().monday().toString(), this.outpatientDepartment.getOpeningHours().getMonday());
     }
 
     @Test
@@ -134,8 +135,8 @@ public class OutpatientDepartmentEndpointTest {
             assertEquals(outpatientDepartmentDto.name(), outpatientDepartmentDtoCreate.name());
             assertEquals(outpatientDepartmentDto.description(), outpatientDepartmentDtoCreate.description());
             assertEquals(outpatientDepartmentDto.capacity(), outpatientDepartmentDtoCreate.capacity());
-            assertEquals(outpatientDepartmentDto.openingHours().mondayStart() + "-" + outpatientDepartmentDto.openingHours().mondayEnd(),
-                outpatientDepartmentDtoCreate.openingHours().mondayStart() + "-" + outpatientDepartmentDtoCreate.openingHours().mondayEnd());
+            assertEquals(outpatientDepartmentDto.openingHours().monday().toString(),
+                outpatientDepartmentDtoCreate.openingHours().monday().toString());
         });
     }
 }
