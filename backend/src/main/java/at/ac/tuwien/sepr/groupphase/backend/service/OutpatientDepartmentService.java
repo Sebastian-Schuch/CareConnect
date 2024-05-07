@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface OutpatientDepartmentService {
      * @param outpatientDepartmentDto the outpatient department to create
      * @return the created outpatient department
      */
-    OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto);
+    OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException;
 
     /**
      * Gets all outpatient departments

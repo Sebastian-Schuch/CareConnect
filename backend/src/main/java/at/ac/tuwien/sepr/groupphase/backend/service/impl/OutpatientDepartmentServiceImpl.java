@@ -8,9 +8,11 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.OpeningHoursService;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,16 +23,23 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     private final OutpatientDepartmentMapper outpatientDepartmentMapper;
     private final OpeningHoursMapper openingHoursMapper;
 
+    private final OpeningHoursService openingHoursService;
+
     @Autowired
-    private OutpatientDepartmentServiceImpl(OutpatientDepartmentRepository outpatientDepartmentRepository, OutpatientDepartmentMapper outpatientDepartmentMapper, OpeningHoursMapper openingHoursMapper) {
+    private OutpatientDepartmentServiceImpl(
+        OutpatientDepartmentRepository outpatientDepartmentRepository,
+        OutpatientDepartmentMapper outpatientDepartmentMapper,
+        OpeningHoursMapper openingHoursMapper,
+        OpeningHoursService openingHoursService) {
         this.outpatientDepartmentRepository = outpatientDepartmentRepository;
         this.outpatientDepartmentMapper = outpatientDepartmentMapper;
         this.openingHoursMapper = openingHoursMapper;
+        this.openingHoursService = openingHoursService;
     }
 
     @Override
-    public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) {
-        //TODO: Implement validation for the outpatientDepartmentDto
+    public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
+        openingHoursService.getOpeningHoursEntityFromDto(outpatientDepartmentDto.openingHours());
 
         OpeningHours openingHours = openingHoursMapper.dtoToEntity(outpatientDepartmentDto.openingHours());
         OutpatientDepartment savedOutpatientDepartment = outpatientDepartmentRepository.save(outpatientDepartmentMapper.DtoToEntity(outpatientDepartmentDto, openingHours));

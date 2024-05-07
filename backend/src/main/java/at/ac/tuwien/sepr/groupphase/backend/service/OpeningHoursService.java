@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 public interface OpeningHoursService {
     /**
@@ -18,4 +20,11 @@ public interface OpeningHoursService {
      * @return a specific opening hours dto
      */
     OpeningHoursDto getOpeningHoursById(Long id);
+
+    /**
+     * Returns an opening hours entity from a dto after validating it
+     *
+     * @return opening hours entity
+     */
+    OpeningHours getOpeningHoursEntityFromDto(OpeningHoursDtoCreate openingHoursDto) throws MethodArgumentNotValidException;
 }

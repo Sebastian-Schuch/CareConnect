@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class OutpatientDepartmentEndpoint {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OutpatientDepartmentDto createOutpatientDepartment(@Valid @RequestBody OutpatientDepartmentDtoCreate outpatientDepartmentDto) {
+    public OutpatientDepartmentDto createOutpatientDepartment(@Valid @RequestBody OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
         return outpatientDepartmentService.createOutpatientDepartment(outpatientDepartmentDto);
     }
 

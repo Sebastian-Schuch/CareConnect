@@ -18,7 +18,6 @@ public class OutpatientDepartment {
 
     private String name;
 
-
     private String description;
 
     private int capacity;
