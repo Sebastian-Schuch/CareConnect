@@ -1,43 +1,61 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import at.ac.tuwien.sepr.groupphase.backend.service.validator.PatientValidator;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.lang.invoke.MethodHandles;
 
 @Service
 public class PatientServiceImpl implements PatientService {
-    private final PatientValidator patientValidator;
-    private final CredentialService credentialService;
-    //private final PatientRepository patientRepository;
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public PatientServiceImpl(PatientValidator patientValidator, CredentialService credentialService) {
-        this.patientValidator = patientValidator;
+    private final CredentialService credentialService;
+    private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
+
+    public PatientServiceImpl(CredentialService credentialService, PatientRepository patientRepository, PatientMapper patientMapper) {
         this.credentialService = credentialService;
-        //this.patientRepository = patientRepository;
+        this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
     }
 
     @Override
     public PatientDto createPatient(PatientCreateDto toCreate) {
-        System.out.println("SERVUS!");
-        patientValidator.validateForCreate(toCreate);
-        CredentialCreateDto toCreateCredentials = new CredentialCreateDto().setEmail(toCreate.getEmail()).setFirstname(toCreate.getFirstname()).setLastname(toCreate.getLastname());
-        insertPatientData(toCreate, credentialService.createCredential(toCreateCredentials, Role.PATIENT));
-        return null;
+        LOG.trace("createPatient({})", toCreate);
+        return insertPatientData(toCreate);
     }
 
-    public void insertPatientData(PatientCreateDto toCreate, Credential credential) {
+    @Override
+    public PatientDto getPatientById(Long id) {
+        LOG.trace("getPatientById({})", id);
+        Patient patient = patientRepository.findPatientById(id);
+        if (patient == null) {
+            throw new NotFoundException("Patient not found");
+        }
+        return patientMapper.patientToPatientDto(patient);
+    }
+
+    /**
+     * Write the patient given into the repository.
+     *
+     * @param toCreate the patient to write into the repository
+     * @return the patient that has been written into the repository
+     */
+    public PatientDto insertPatientData(PatientCreateDto toCreate) {
+        LOG.debug("insertPatientData({})", toCreate);
         Patient patient = new Patient();
-        patient.setSvnr(toCreate.getSvnr());
-        patient.setCredential(credential);
-
-        //patientRepository.save(patient);
+        patient.setSvnr(toCreate.svnr());
+        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), Role.PATIENT));
+        return patientMapper.patientToPatientDto(patientRepository.save(patient));
     }
-
 }

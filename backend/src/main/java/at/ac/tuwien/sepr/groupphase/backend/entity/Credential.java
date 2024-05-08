@@ -8,31 +8,39 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+
+import java.io.Serializable;
 
 @Entity
-public class Credential {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Credential implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, length = 255, name = "first_name")
+    @Column(nullable = false, name = "first_name")
     private String firstName;
 
-    @Column(nullable = false, length = 255, name = "last_name")
+    @Column(nullable = false, name = "last_name")
     private String lastName;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private boolean active;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false)
+    private boolean isInitialPassword;
 
     public Long getId() {
         return id;
@@ -88,5 +96,13 @@ public class Credential {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isInitialPassword() {
+        return isInitialPassword;
+    }
+
+    public void setInitialPassword(boolean initialPassword) {
+        isInitialPassword = initialPassword;
     }
 }

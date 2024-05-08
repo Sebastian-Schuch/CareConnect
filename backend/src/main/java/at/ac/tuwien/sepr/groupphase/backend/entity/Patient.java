@@ -3,27 +3,31 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 
 @Entity
 public class Patient {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_id")
+    private long patientId;
+
     @OneToOne(cascade = CascadeType.ALL)
-    @MapsId
     @JoinColumn(name = "id")
     private Credential credential;
 
     @Column(nullable = false)
-    private int svnr;
+    private String svnr;
 
-    public int getSvnr() {
+    public String getSvnr() {
         return svnr;
     }
 
-    public void setSvnr(int svnr) {
+    public void setSvnr(String svnr) {
         this.svnr = svnr;
     }
 

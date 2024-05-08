@@ -1,46 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public class PatientCreateDto {
-    private int svnr;
-    private String lastname;
-    private String firstname;
-    private String email;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-    public int getSvnr() {
-        return svnr;
-    }
+public record PatientCreateDto(
+    @NotBlank(message = "Social security number cannot be empty")
+    @Size(max = 10, min = 10, message = "Social security number must have 10 digits")
+    String svnr,
 
-    public PatientCreateDto setSvnr(int svnr) {
-        this.svnr = svnr;
-        return this;
-    }
+    @NotBlank
+    @Email(message = "Please provide a valid email address")
+    String email,
 
-    public String getLastname() {
-        return lastname;
-    }
+    @NotBlank(message = "First name cannot be empty")
+    @Size(max = 255, message = "First name cannot be longer than 255 characters")
+    String firstname,
 
-    public PatientCreateDto setLastname(String lastname) {
-        this.lastname = lastname;
-        return this;
+    @NotBlank(message = "Last name cannot be empty")
+    @Size(max = 255, message = "Last name cannot be longer than 255 characters")
+    String lastname
+) {
+    public CredentialCreateDto toCredentialCreateDto() {
+        return new CredentialCreateDto(email, firstname, lastname);
     }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public PatientCreateDto setFirstname(String firstname) {
-        this.firstname = firstname;
-        return this;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public PatientCreateDto setEmail(String email) {
-        this.email = email;
-        return this;
-    }
-    //private List<MedicineDto> medicines;
-    //private List<AllergiesDto> allergies;
 }
