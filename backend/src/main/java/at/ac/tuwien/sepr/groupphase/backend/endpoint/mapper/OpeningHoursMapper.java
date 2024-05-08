@@ -25,22 +25,30 @@ public class OpeningHoursMapper {
     public OpeningHoursDto entityToDto(OpeningHours openingHours) {
         LOGGER.trace("entityToDto()");
 
+        OpeningHoursDayDto monday = openingHours.getMonday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getMonday()),
+            extractClosingHours(openingHours.getMonday()));
+        OpeningHoursDayDto tuesday = openingHours.getTuesday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getTuesday()),
+            extractClosingHours(openingHours.getTuesday()));
+        OpeningHoursDayDto wednesday = openingHours.getWednesday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getWednesday()),
+            extractClosingHours(openingHours.getWednesday()));
+        OpeningHoursDayDto thursday = openingHours.getThursday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getThursday()),
+            extractClosingHours(openingHours.getThursday()));
+        OpeningHoursDayDto friday = openingHours.getFriday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getFriday()),
+            extractClosingHours(openingHours.getFriday()));
+        OpeningHoursDayDto saturday = openingHours.getSaturday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getSaturday()),
+            extractClosingHours(openingHours.getSaturday()));
+        OpeningHoursDayDto sunday = openingHours.getSunday() == null ? null : new OpeningHoursDayDto(extractOpeningHours(openingHours.getSunday()),
+            extractClosingHours(openingHours.getSunday()));
+
         return new OpeningHoursDto(
             openingHours.getId(),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getMonday()),
-                extractClosingHours(openingHours.getMonday())),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getTuesday()),
-                extractClosingHours(openingHours.getTuesday())),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getWednesday()),
-                extractClosingHours(openingHours.getWednesday())),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getThursday()),
-                extractClosingHours(openingHours.getThursday())),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getFriday()),
-                extractClosingHours(openingHours.getFriday())),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getSaturday()),
-                extractClosingHours(openingHours.getSaturday())),
-            new OpeningHoursDayDto(extractOpeningHours(openingHours.getSunday()),
-                extractClosingHours(openingHours.getSunday()))
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            sunday
         );
     }
 
