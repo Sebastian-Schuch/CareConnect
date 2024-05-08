@@ -27,6 +27,12 @@ public class SecretaryEndpoint {
         this.secretaryService = secretaryService;
     }
 
+    /**
+     * The create endpoint for the secretary.
+     *
+     * @param toCreate the data for the secretary to create
+     * @return the created secretary
+     */
     @PermitAll
     //@Secured("ROLE_ADMIN");
     @ResponseStatus(HttpStatus.CREATED)
