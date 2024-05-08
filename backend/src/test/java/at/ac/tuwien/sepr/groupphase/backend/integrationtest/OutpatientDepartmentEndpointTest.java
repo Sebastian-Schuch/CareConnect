@@ -115,7 +115,7 @@ public class OutpatientDepartmentEndpointTest {
     @Test
     public void givenAInvalidOutpatientDepartmentDtoCreate_whenCreateOutpatientDepartment_thenMethodArgumentNotValidException() {
         assertDoesNotThrow(() -> {
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/outpatient-department")
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/outpatient-department")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(outpatientDepartmentDtoCreateInvalid)))
                 .andExpect(status().isBadRequest())
@@ -126,7 +126,7 @@ public class OutpatientDepartmentEndpointTest {
     @Test
     public void givenAValidOutpatientDepartmentDtoCreate_whenCreateOutpatientDepartment_thenOutpatientDepartmentIsCreated() {
         assertDoesNotThrow(() -> {
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/outpatient-department")
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/outpatient-department")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(outpatientDepartmentDtoCreate)))
                 .andExpect(status().isCreated())

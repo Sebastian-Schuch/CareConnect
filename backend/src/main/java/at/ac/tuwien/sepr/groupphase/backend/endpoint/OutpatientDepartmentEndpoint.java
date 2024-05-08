@@ -22,7 +22,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/outpatient-department")
+@RequestMapping(value = "/api/v1/outpatient-department")
 public class OutpatientDepartmentEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final OutpatientDepartmentService outpatientDepartmentService;
