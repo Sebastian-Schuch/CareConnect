@@ -21,6 +21,10 @@ public record OpeningHoursDayDto(
         return open.format(formatter) + "-" + close.format(formatter);
     }
 
+    public boolean isClosed() {
+        return open == null || close == null;
+    }
+
     public boolean isValid() {
         if (open == null && close == null) {
             return true;

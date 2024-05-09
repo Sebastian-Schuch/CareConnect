@@ -61,25 +61,25 @@ public class OpeningHoursMapper {
     public OpeningHours dtoToEntity(OpeningHoursDto dto) {
         LOGGER.trace("dtoToEntity()");
         return new OpeningHours().setId(dto.id())
-            .setMonday(dto.monday() != null ? dto.monday().toString() : null)
-            .setTuesday(dto.tuesday() != null ? dto.tuesday().toString() : null)
-            .setWednesday(dto.wednesday() != null ? dto.wednesday().toString() : null)
-            .setThursday(dto.thursday() != null ? dto.thursday().toString() : null)
-            .setFriday(dto.friday() != null ? dto.friday().toString() : null)
-            .setSaturday(dto.saturday() != null ? dto.saturday().toString() : null)
-            .setSunday(dto.sunday() != null ? dto.sunday().toString() : null);
+            .setMonday(dto.monday().isClosed() ? null : dto.monday().toString())
+            .setTuesday(dto.tuesday().isClosed() ? null : dto.tuesday().toString())
+            .setWednesday(dto.wednesday().isClosed() ? null : dto.wednesday().toString())
+            .setThursday(dto.thursday().isClosed() ? null : dto.thursday().toString())
+            .setFriday(dto.friday().isClosed() ? null : dto.friday().toString())
+            .setSaturday(dto.saturday().isClosed() ? null : dto.saturday().toString())
+            .setSunday(dto.sunday().isClosed() ? null : dto.sunday().toString());
     }
 
     public OpeningHours dtoToEntity(OpeningHoursDtoCreate dto) {
         LOGGER.trace("dtoToEntity()");
         return new OpeningHours().setId(null)
-            .setMonday(dto.monday() != null ? dto.monday().toString() : null)
-            .setTuesday(dto.tuesday() != null ? dto.tuesday().toString() : null)
-            .setWednesday(dto.wednesday() != null ? dto.wednesday().toString() : null)
-            .setThursday(dto.thursday() != null ? dto.thursday().toString() : null)
-            .setFriday(dto.friday() != null ? dto.friday().toString() : null)
-            .setSaturday(dto.saturday() != null ? dto.saturday().toString() : null)
-            .setSunday(dto.sunday() != null ? dto.sunday().toString() : null);
+            .setMonday(dto.monday().isClosed() ? null : dto.monday().toString())
+            .setTuesday(dto.tuesday().isClosed() ? null : dto.tuesday().toString())
+            .setWednesday(dto.wednesday().isClosed() ? null : dto.wednesday().toString())
+            .setThursday(dto.thursday().isClosed() ? null : dto.thursday().toString())
+            .setFriday(dto.friday().isClosed() ? null : dto.friday().toString())
+            .setSaturday(dto.saturday().isClosed() ? null : dto.saturday().toString())
+            .setSunday(dto.sunday().isClosed() ? null : dto.sunday().toString());
     }
 
     /**

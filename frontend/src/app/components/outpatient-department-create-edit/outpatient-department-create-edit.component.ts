@@ -5,15 +5,15 @@ import {NgForOf} from "@angular/common";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 
 @Component({
-  selector: 'app-outpatient-department',
+  selector: 'app-outpatient-department-create-edit',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     FormsModule,
     NgForOf
   ],
-  templateUrl: './outpatient-department.component.html',
-  styleUrl: './outpatient-department.component.scss'
+  templateUrl: './outpatient-department.component-create-edit.html',
+  styleUrl: './outpatient-department.component-create-edit.scss'
 })
 export class OutpatientDepartmentComponent {
 
@@ -29,8 +29,8 @@ export class OutpatientDepartmentComponent {
     capacity: 0,
     openingHours: {
       monday: {
-        open: undefined,
-        close: undefined
+        open: new Date("12:00"),
+        close: new Date("16:00")
       },
       tuesday: {
         open: undefined,
@@ -66,12 +66,10 @@ export class OutpatientDepartmentComponent {
     if(!this.outpatientDepartment.description || this.outpatientDepartment.description.length > 1000 || this.outpatientDepartment.description.length<1){
       return false;
     }
-    if(this.outpatientDepartment.capacity < 0){
+    if(this.outpatientDepartment.capacity < 0 || this.outpatientDepartment.capacity > 1000){
       return false;
     }
-    if(this.outpatientDepartment.capacity > 0 || this.outpatientDepartment.capacity <= 100){
-      return false;
-    }
+
     for (let day of this.days) {
       let hours = this.outpatientDepartment.openingHours[day];
       if (!hours.closed && (!hours.open || !hours.close)) {

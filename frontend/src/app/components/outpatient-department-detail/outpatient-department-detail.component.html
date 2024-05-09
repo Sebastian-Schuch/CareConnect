@@ -1,0 +1,16 @@
+<div class="card" role="region" aria-label="Outpatient Department Details">
+  <div class="card-body">
+    <h5 class="card-title" id="outpatientDepartmentName">{{outpatientDepartment.name}}</h5>
+    <p class="card-text" id="outpatientDepartmentDescription">{{outpatientDepartment.description}}</p>
+    <p class="card-text" id="outpatientDepartmentCapacity">Capacity: {{outpatientDepartment.capacity}}</p>
+    <div *ngFor="let day of days" role="region">
+      <h6 class="card-subtitle text-muted">{{day.charAt(0).toUpperCase() + day.slice(1)}}</h6>
+      <p class="card-text mb-3" *ngIf="outpatientDepartment.openingHours[day]">
+        {{outpatientDepartment.openingHours[day].open}} - {{outpatientDepartment.openingHours[day].close}}
+      </p>
+      <p class="card-text mb-3" *ngIf="!outpatientDepartment.openingHours[day]">
+        closed
+      </p>
+    </div>
+  </div>
+</div>
