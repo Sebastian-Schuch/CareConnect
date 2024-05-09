@@ -29,7 +29,7 @@ public class Secretary implements Serializable {
     public void setId(Long id) {
         this.secretaryId = id;
     }
-    
+
     public Long getId() {
         return secretaryId;
     }
