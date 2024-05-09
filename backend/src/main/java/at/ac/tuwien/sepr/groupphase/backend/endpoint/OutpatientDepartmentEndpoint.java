@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/v1/outpatient-department")
+@RequestMapping(value = "/api/v1/outpatient-departments")
 public class OutpatientDepartmentEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final OutpatientDepartmentService outpatientDepartmentService;
@@ -32,6 +33,7 @@ public class OutpatientDepartmentEndpoint {
         this.outpatientDepartmentService = outpatientDepartmentService;
     }
 
+    //@Secured({"ADMIN"})
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -40,6 +42,7 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.createOutpatientDepartment(outpatientDepartmentDto);
     }
 
+    //@Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
     @PermitAll
     @GetMapping({"/{id}"})
     public OutpatientDepartmentDto getOutpatientDepartmentById(@PathVariable("id") Long id) {
@@ -47,6 +50,7 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.getOutpatientDepartmentById(id);
     }
 
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
     @PermitAll
     @GetMapping
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
