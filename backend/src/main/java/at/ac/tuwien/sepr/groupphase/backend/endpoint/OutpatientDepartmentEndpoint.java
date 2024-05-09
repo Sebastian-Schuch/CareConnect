@@ -3,12 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +32,8 @@ public class OutpatientDepartmentEndpoint {
         this.outpatientDepartmentService = outpatientDepartmentService;
     }
 
-    @Secured({"ADMIN"})
+    //@Secured({"ADMIN"})
+    @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OutpatientDepartmentDto createOutpatientDepartment(@Valid @RequestBody OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
@@ -40,12 +41,16 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.createOutpatientDepartment(outpatientDepartmentDto);
     }
 
+    //@Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
+    @PermitAll
     @GetMapping({"/{id}"})
     public OutpatientDepartmentDto getOutpatientDepartmentById(@PathVariable("id") Long id) {
         LOGGER.info("getOutpatientDepartmentById(" + id + ")");
         return outpatientDepartmentService.getOutpatientDepartmentById(id);
     }
 
+    //@Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
+    @PermitAll
     @GetMapping
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
         LOGGER.info("getAllOutpatientDepartments()");
