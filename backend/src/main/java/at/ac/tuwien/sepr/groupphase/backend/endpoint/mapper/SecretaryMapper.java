@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoDetail;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import org.mapstruct.Mapper;
 import org.slf4j.Logger;
@@ -20,9 +20,9 @@ public class SecretaryMapper {
      * @param secretary the secretary to convert
      * @return the SecretaryDtoDetail
      */
-    public SecretaryDtoDetail secretaryEntityToSecretaryDtoDetail(Secretary secretary) {
+    public SecretaryDetailDto secretaryEntityToSecretaryDtoDetail(Secretary secretary) {
         LOG.trace("secretaryEntityToSecretaryDtoDetail({})", secretary);
-        return new SecretaryDtoDetail(secretary.getCredential().getId(), secretary.getCredential().getFirstName(), secretary.getCredential().getLastName(), secretary.getCredential().getEmail(), secretary.getCredential().getPassword(),
+        return new SecretaryDetailDto(secretary.getCredential().getId(), secretary.getCredential().getFirstName(), secretary.getCredential().getLastName(), secretary.getCredential().getEmail(), secretary.getCredential().getPassword(),
             secretary.getCredential().getActive());
     }
 
@@ -32,9 +32,9 @@ public class SecretaryMapper {
      * @param secretaries the secretaries to convert
      * @return the converted secretaries
      */
-    public List<SecretaryDtoDetail> secretaryEntitiesToListOfSecretaryDtoDetail(List<Secretary> secretaries) {
+    public List<SecretaryDetailDto> secretaryEntitiesToListOfSecretaryDtoDetail(List<Secretary> secretaries) {
         LOG.trace("secretaryEntitiesToListOfSecretaryDtoDetail({})", secretaries);
-        List<SecretaryDtoDetail> secretariesDto = new ArrayList<>();
+        List<SecretaryDetailDto> secretariesDto = new ArrayList<>();
         for (Secretary secretary : secretaries) {
             secretariesDto.add(secretaryEntityToSecretaryDtoDetail(secretary));
         }

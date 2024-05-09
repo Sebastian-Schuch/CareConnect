@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoDetail;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -33,7 +33,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDtoDetail create(SecretaryDtoCreate toCreate) {
+    public SecretaryDetailDto create(SecretaryCreateDto toCreate) {
         LOG.trace("create{}", toCreate);
         Secretary secretary = new Secretary();
         secretary.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialDtoCreate(), Role.SECRETARY));
@@ -41,7 +41,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDtoDetail getById(Long id) {
+    public SecretaryDetailDto getById(Long id) {
         LOG.trace("getById({})", id);
         Secretary secretary = secretaryRepository.findSecretaryById(id);
         if (secretary == null) {
@@ -51,7 +51,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public List<SecretaryDtoDetail> getAllSecretaries() {
+    public List<SecretaryDetailDto> getAllSecretaries() {
         return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
     }
 }
