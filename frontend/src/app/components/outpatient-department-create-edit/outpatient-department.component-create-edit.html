@@ -1,0 +1,35 @@
+<form #form="ngForm" (ngSubmit)="onSubmit()" class="mt-3">
+  <div class="mb-3">
+    <label class="form-label">Name:</label>
+    <input type="text" [(ngModel)]="outpatientDepartment.name" name="name" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Description:</label>
+    <input type="text" [(ngModel)]="outpatientDepartment.description" name="description" class="form-control" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Capacity:</label>
+    <input type="number" [(ngModel)]="outpatientDepartment.capacity" name="capacity" class="form-control" required>
+  </div>
+
+  <div *ngFor="let day of days" class="row mb-3">
+    <div class="col">
+      <label class="form-label" for="{{day}}Open">{{day.charAt(0).toUpperCase() + day.slice(1)}} Open:</label>
+      <input type="time" [(ngModel)]="outpatientDepartment.openingHours[day].open" name="{{day}}Open" class="form-control" [disabled]="outpatientDepartment.openingHours[day].closed">
+    </div>
+    <div class="col">
+      <label class="form-label" for="{{day}}Close">{{day.charAt(0).toUpperCase() + day.slice(1)}} Close:</label>
+      <input type="time" [(ngModel)]="outpatientDepartment.openingHours[day].close" name="{{day}}Close" class="form-control" [disabled]="outpatientDepartment.openingHours[day].closed">
+    </div>
+    <div class="col-auto">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="outpatientDepartment.openingHours[day].closed" name="{{day}}Closed">
+        <label class="form-check-label" for="{{day}}Closed">Closed</label>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">Create</button>
+</form>
