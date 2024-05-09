@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mapper
 public class SecretaryMapper {
@@ -20,7 +22,23 @@ public class SecretaryMapper {
      */
     public SecretaryDtoDetail secretaryEntityToSecretaryDtoDetail(Secretary secretary) {
         LOG.trace("secretaryEntityToSecretaryDtoDetail({})", secretary);
-        return new SecretaryDtoDetail(secretary.getCredential().getId(), secretary.getCredential().getLastName(), secretary.getCredential().getLastName(), secretary.getCredential().getEmail(), secretary.getCredential().getPassword(),
+        return new SecretaryDtoDetail(secretary.getCredential().getId(), secretary.getCredential().getFirstName(), secretary.getCredential().getLastName(), secretary.getCredential().getEmail(), secretary.getCredential().getPassword(),
             secretary.getCredential().getActive());
     }
+
+    /**
+     * Converts the secretary entity list into a SecretaryDtoDetail list.
+     *
+     * @param secretaries the secretaries to convert
+     * @return the converted secretaries
+     */
+    public List<SecretaryDtoDetail> secretaryEntitiesToListOfSecretaryDtoDetail(List<Secretary> secretaries) {
+        LOG.trace("secretaryEntitiesToListOfSecretaryDtoDetail({})", secretaries);
+        List<SecretaryDtoDetail> secretariesDto = new ArrayList<>();
+        for (Secretary secretary : secretaries) {
+            secretariesDto.add(secretaryEntityToSecretaryDtoDetail(secretary));
+        }
+        return secretariesDto;
+    }
+
 }
