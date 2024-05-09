@@ -12,6 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import {UserCreateComponent} from "./components/user-create/user-create.component";
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {httpInterceptorProviders} from './interceptors';
     HttpClientModule,
     NgbModule,
     FormsModule,
+    UserCreateComponent,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
