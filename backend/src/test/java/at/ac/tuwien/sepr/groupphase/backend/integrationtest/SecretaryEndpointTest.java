@@ -103,8 +103,6 @@ public class SecretaryEndpointTest {
     }
 
     @Test
-    //TODO:
-    //watchReturnedStatus
     public void givenCreateSecretaryDetailDtoWithEmptyEmail_whenCreateNewSecretary_thenReturn422UnprocessableEntityStatus() throws Exception {
         String json = ow.writeValueAsString(new SecretaryCreateDto("", "a", "b"));
         mockMvc

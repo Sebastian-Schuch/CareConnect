@@ -1,0 +1,51 @@
+import {environment} from "../../environments/environment";
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {MedicationCreateDto, MedicationDto} from "../dtos/medication";
+
+const medicationBaseUri = environment.backendUrl + '/api/medications';
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class MedicationService {
+
+  constructor(
+    private http: HttpClient,
+  ) {
+  }
+
+  /**
+   * Get the medication with given ID.
+   *
+   * @param id the ID of the medication to get
+   * @return an Observable of the medication
+   */
+  getMedicationById(id: number): Observable<MedicationDto> {
+    return this.http.get<MedicationDto>(`${medicationBaseUri}/${id}`);
+  }
+
+  /**
+   * Get all medications from the backend.
+   *
+   * @return an Observable of the medications
+   */
+  getMedicationsAll(): Observable<MedicationDto[]> {
+    return this.http.get<MedicationDto[]>(`${medicationBaseUri}`);
+  }
+
+  /**
+   * Create a new medication in the system.
+   *
+   * @param medication the data for the medication that should be created
+   * @return an Observable for the created medication
+   */
+  createMedication(medication: MedicationCreateDto): Observable<MedicationDto> {
+    return this.http.post<MedicationDto>(
+      medicationBaseUri,
+      medication
+    );
+  }
+}

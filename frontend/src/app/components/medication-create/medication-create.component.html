@@ -1,0 +1,45 @@
+<h1 class="display-1">Create Medication</h1>
+
+
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+  <div class="row">
+    <!-- Start first name and last name row -->
+    <div class="mb-2 col-lg-6">
+      <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+      <div class="row">
+        <label for="medicationName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Name
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <input type="text"
+                 id="medicationName"
+                 name="medicationName"
+                 placeholder="Name"
+                 class="form-control"
+                 [class]="dynamicCssClassesForInput(nameModel)"
+                 [(ngModel)]="medication.name"
+                 #nameModel="ngModel"
+                 required
+          >
+
+          <div class="invalid-feedback">
+            <!-- This is shown, when the form validation deems the name input to be invalid -->
+            Name is required
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row">
+    <span class="flex-grow-1"></span>
+    <button type="submit"
+            class="btn btn-primary"
+            [disabled]="!form.valid"
+    >
+      Create Medication
+    </button>
+  </div>
+</form>
+
