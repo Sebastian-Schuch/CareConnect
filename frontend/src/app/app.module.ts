@@ -12,6 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import {UserCreateComponent} from "./components/user-create/user-create.component";
 import {OutpatientDepartmentComponent} from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
 import {
     OutpatientDepartmentDetailComponent
@@ -26,16 +27,17 @@ import {
     LoginComponent,
     MessageComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        NgbModule,
-        FormsModule,
-        OutpatientDepartmentComponent,
-        OutpatientDepartmentDetailComponent,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgbModule,
+    FormsModule,
+    OutpatientDepartmentComponent,
+    OutpatientDepartmentDetailComponent,
+    UserCreateComponent,
+  ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })

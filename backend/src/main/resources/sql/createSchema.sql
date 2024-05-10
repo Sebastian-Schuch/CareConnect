@@ -35,8 +35,7 @@ CREATE TABLE IF NOT EXISTS patient
     uid BIGINT AUTO_INCREMENT PRIMARY KEY,
     svnr INT,
     password VARCHAR(255),
-    email VARCHAR(255),
-    active BOOLEAN
+    email VARCHAR(255)
 );
 
 -- section static data

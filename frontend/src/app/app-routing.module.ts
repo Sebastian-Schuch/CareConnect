@@ -4,11 +4,25 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
+import {UserCreateComponent} from "./components/user-create/user-create.component";
+import {Role} from "./dtos/Role";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent}
+  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
+  {
+    path: 'user', children: [
+      {
+        path: 'create', children: [
+          {path: 'admin', component: UserCreateComponent, data: {mode: Role.admin}},
+          {path: 'doctor', component: UserCreateComponent, data: {mode: Role.doctor}},
+          {path: 'secretary', component: UserCreateComponent, data: {mode: Role.secretary}},
+          {path: 'patient', component: UserCreateComponent, data: {mode: Role.patient}}
+        ]
+      }
+    ]
+  }
 ];
 
 @NgModule({
