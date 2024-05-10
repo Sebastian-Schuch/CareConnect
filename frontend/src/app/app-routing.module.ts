@@ -6,6 +6,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
 import {UserCreateComponent} from "./components/user-create/user-create.component";
 import {Role} from "./dtos/Role";
+import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,6 +21,13 @@ const routes: Routes = [
           {path: 'secretary', component: UserCreateComponent, data: {mode: Role.secretary}},
           {path: 'patient', component: UserCreateComponent, data: {mode: Role.patient}}
         ]
+      }
+    ]
+  },
+  {
+    path: 'medication', children: [
+      {
+        path: 'create', component: MedicationCreateComponent
       }
     ]
   }

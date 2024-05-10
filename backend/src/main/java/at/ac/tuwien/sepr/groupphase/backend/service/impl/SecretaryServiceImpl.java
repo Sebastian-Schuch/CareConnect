@@ -26,7 +26,6 @@ public class SecretaryServiceImpl implements SecretaryService {
     private final SecretaryMapper secretaryMapper;
 
     public SecretaryServiceImpl(CredentialService credentialService, SecretaryRepository secretaryRepository, SecretaryMapper secretaryMapper) {
-
         this.credentialService = credentialService;
         this.secretaryRepository = secretaryRepository;
         this.secretaryMapper = secretaryMapper;
@@ -52,6 +51,7 @@ public class SecretaryServiceImpl implements SecretaryService {
 
     @Override
     public List<SecretaryDetailDto> getAllSecretaries() {
+        LOG.trace("getAllSecretaries()");
         return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
     }
 }

@@ -23,10 +23,11 @@ public interface SecretaryService {
      */
     SecretaryDetailDto getById(Long id);
 
+
     /**
-     * Get all patients from repository.
+     * Get all secretaries from repository.
      *
-     * @return the list of all patients
+     * @return the list of all secretaries
      */
     List<SecretaryDetailDto> getAllSecretaries();
 
