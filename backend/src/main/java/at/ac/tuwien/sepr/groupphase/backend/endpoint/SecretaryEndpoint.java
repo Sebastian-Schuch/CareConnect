@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = SecretaryEndpoint.BASE_PATH)
 public class SecretaryEndpoint {
-    static final String BASE_PATH = "/api/secretaries";
+    static final String BASE_PATH = "/api/v1/secretaries";
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SecretaryService secretaryService;
 
@@ -37,7 +37,7 @@ public class SecretaryEndpoint {
      * @return the created secretary
      */
 
-    //@Secured("ADMIN")
+    //TODO @Secured("ADMIN")
     @PermitAll
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -56,7 +56,7 @@ public class SecretaryEndpoint {
 
     @PermitAll
     @GetMapping({"/{id}"})
-    //@Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    //TODO @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     public SecretaryDetailDto getById(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/{}", id);
         return secretaryService.getById(id);
@@ -68,7 +68,7 @@ public class SecretaryEndpoint {
      * @return a list of all secretaries
      */
     @PermitAll
-    //@Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    //TODO @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     @GetMapping
     public List<SecretaryDetailDto> getAll() {
         LOG.info("GET " + BASE_PATH);

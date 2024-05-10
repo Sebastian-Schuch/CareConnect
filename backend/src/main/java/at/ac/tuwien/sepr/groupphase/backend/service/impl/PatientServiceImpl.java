@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -32,7 +33,10 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto createPatient(PatientCreateDto toCreate) {
         LOG.trace("createPatient({})", toCreate);
-        return insertPatientData(toCreate);
+        Patient patient = new Patient();
+        patient.setSvnr(toCreate.svnr());
+        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), Role.PATIENT));
+        return patientMapper.patientToPatientDto(patientRepository.save(patient));
     }
 
     @Override
@@ -45,17 +49,8 @@ public class PatientServiceImpl implements PatientService {
         return patientMapper.patientToPatientDto(patient);
     }
 
-    /**
-     * Write the patient given into the repository.
-     *
-     * @param toCreate the patient to write into the repository
-     * @return the patient that has been written into the repository
-     */
-    public PatientDto insertPatientData(PatientCreateDto toCreate) {
-        LOG.debug("insertPatientData({})", toCreate);
-        Patient patient = new Patient();
-        patient.setSvnr(toCreate.svnr());
-        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), Role.PATIENT));
-        return patientMapper.patientToPatientDto(patientRepository.save(patient));
+    @Override
+    public List<PatientDto> getAllPatients() {
+        return patientMapper.patientsToPatientDtos(patientRepository.findAll());
     }
 }

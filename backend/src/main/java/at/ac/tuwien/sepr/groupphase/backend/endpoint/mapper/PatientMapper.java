@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mapper
 public class PatientMapper {
@@ -22,5 +24,21 @@ public class PatientMapper {
         LOG.trace("patientToPatientDto({})", patient);
         return new PatientDto(patient.getCredential().getId(), patient.getSvnr(), patient.getCredential().getFirstName(), patient.getCredential().getLastName(), patient.getCredential().getEmail(), patient.getCredential().getPassword(),
             patient.getCredential().getActive());
+
+    }
+
+    /**
+     * Converts the patient entity list into a patientDto list.
+     *
+     * @param patients the patients to convert
+     * @return the converted patients
+     */
+    public List<PatientDto> patientsToPatientDtos(List<Patient> patients) {
+        LOG.trace("patientsToPatientsDtos({})", patients);
+        List<PatientDto> patientDtos = new ArrayList<>();
+        for (Patient patient : patients) {
+            patientDtos.add(patientToPatientDto(patient));
+        }
+        return patientDtos;
     }
 }

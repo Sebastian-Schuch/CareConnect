@@ -89,16 +89,16 @@ export class UserCreateComponent implements OnInit {
       let observable: Observable<UserCreateDto>;
       switch (this.mode) {
         case Role.admin:
-          //observable = this.service.createAdmin(this.user);
+          observable = this.service.createAdmin(this.user);
           break;
         case Role.doctor:
-          //observable = this.service.createDoctor(this.user);
+          observable = this.service.createDoctor(this.user);
           break;
         case Role.secretary:
           observable = this.service.createSecretary(this.user);
           break;
         case Role.patient:
-          //observable = this.service.createPatient(this.user);
+          observable = this.service.createPatient(this.user);
           break;
         default:
           console.error('Unknown Role', this.mode);
@@ -106,12 +106,12 @@ export class UserCreateComponent implements OnInit {
       }
       observable.subscribe({
         next: () => {
-          //this.notification.success(`Horse ${this.horse.name} successfully ${this.modeActionFinished}.`);
-          //this.router.navigate(['/horses']);
+          //this.notification.success(`Role ${this.user.name} successfully created.`);
+          //this.router.navigate(['/dashboard']);
         },
         error: error => {
           console.error('Error creating User', error);
-          //this.notification.error(this.errorFormatter.format(error), "Could not create Horse", {
+          //this.notification.error(this.errorFormatter.format(error), "Could not create User", {
           //enableHtml: true,
           //timeOut: 10000,
           //})
