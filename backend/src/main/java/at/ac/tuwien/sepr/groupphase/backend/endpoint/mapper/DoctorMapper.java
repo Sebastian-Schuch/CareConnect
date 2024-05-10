@@ -1,0 +1,43 @@
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
+
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
+import org.mapstruct.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
+
+@Mapper
+public class DoctorMapper {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    /**
+     * Converts the doctor entity to the doctorDto.
+     *
+     * @param doctor the doctor to convert
+     * @return the doctorDto
+     */
+    public DoctorDto doctorToDoctorDto(Doctor doctor) {
+        LOG.trace("doctorToDoctorDto({})", doctor);
+        return new DoctorDto(doctor.getCredential().getId(), doctor.getCredential().getFirstName(), doctor.getCredential().getLastName(), doctor.getCredential().getEmail(), doctor.getCredential().getPassword(),
+            doctor.getCredential().getActive());
+    }
+
+    /**
+     * Converts all the doctor entities to doctorDtos.
+     *
+     * @param doctors the doctor entities to convert
+     * @return the converted doctorDtos
+     */
+    public List<DoctorDto> doctorsToDoctorDtos(List<Doctor> doctors) {
+        LOG.trace("doctorsToDoctorDtos({})", doctors);
+        List<DoctorDto> doctorDtos = new ArrayList<>();
+        for (Doctor doctor : doctors) {
+            doctorDtos.add(doctorToDoctorDto(doctor));
+        }
+        return doctorDtos;
+    }
+}

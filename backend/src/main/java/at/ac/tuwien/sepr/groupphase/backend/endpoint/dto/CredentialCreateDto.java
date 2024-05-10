@@ -10,7 +10,7 @@ public record CredentialCreateDto(
     String email,
 
     @NotBlank(message = "cannot be empty")
-    @Size(max = 255, message = "First name cannot be longer than 255 characters")
+    @Size(max = 255, message = "cannot be longer than 255 characters")
     String firstname,
 
     @NotBlank(message = "cannot be empty")
@@ -18,3 +18,4 @@ public record CredentialCreateDto(
     String lastname
 ) {
 }
+
