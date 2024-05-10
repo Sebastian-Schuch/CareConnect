@@ -13,6 +13,10 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {UserCreateComponent} from "./components/user-create/user-create.component";
+import {OutpatientDepartmentComponent} from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
+import {
+    OutpatientDepartmentDetailComponent
+} from "./components/outpatient-department-detail/outpatient-department-detail.component";
 
 @NgModule({
   declarations: [
@@ -30,6 +34,8 @@ import {UserCreateComponent} from "./components/user-create/user-create.componen
     HttpClientModule,
     NgbModule,
     FormsModule,
+    OutpatientDepartmentComponent,
+    OutpatientDepartmentDetailComponent,
     UserCreateComponent,
   ],
   providers: [httpInterceptorProviders],
