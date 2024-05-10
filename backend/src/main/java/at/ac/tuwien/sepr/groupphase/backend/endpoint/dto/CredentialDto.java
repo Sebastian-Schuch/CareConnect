@@ -12,18 +12,18 @@ public record CredentialDto(
     @Email(message = "Please provide a valid email address")
     String email,
 
-    @NotBlank(message = "First name cannot be empty")
-    @Size(max = 255, message = "First name cannot be longer than 255 characters")
+    @NotBlank(message = "cannot be empty")
+    @Size(max = 255, message = "cannot be longer than 255 characters")
     String firstname,
 
-    @NotBlank(message = "Last name cannot be empty")
-    @NotNull(message = "Last name is required")
-    @Size(max = 255, message = "Last name cannot be longer than 255 characters")
+    @NotBlank(message = "cannot be empty")
+    @NotNull(message = "is required")
+    @Size(max = 255, message = "cannot be longer than 255 characters")
     String lastname,
 
-    @NotBlank(message = "Last name cannot be empty")
-    @NotNull(message = "Last name is required")
-    @Size(max = 255, message = "Last name cannot be longer than 255 characters")
+    @NotBlank(message = "cannot be empty")
+    @NotNull(message = "is required")
+    @Size(max = 255, message = "cannot be longer than 255 characters")
     String password,
     boolean active
 

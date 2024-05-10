@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +44,7 @@ public class SecretaryEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
     ObjectWriter ow;
-    static final String BASE_PATH = "/api/secretaries";
+    static final String BASE_PATH = "/api/v1/secretaries";
     @Autowired
     private SecretaryRepository secretaryRepository;
 
@@ -60,10 +61,14 @@ public class SecretaryEndpointTest {
     @BeforeEach
     public void beforeEach() {
         secretaryRepository.deleteAll();
-        credentialRepository.deleteAll();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ow = objectMapper.writer().withDefaultPrettyPrinter();
+    }
+
+    @AfterEach
+    public void cleanup() {
+        secretaryRepository.deleteAll();
     }
 
     @Test
