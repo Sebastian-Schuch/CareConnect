@@ -1,0 +1,203 @@
+<div class="container">
+  <form [formGroup]="treatmentForm" (ngSubmit)="submitForm()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="behandlungsname">title of treatment</label>
+          <input type="text"
+                 formControlName="treatmentTitle"
+                 class="form-control"
+                 id="behandlungsname"
+                 placeholder="title of treatment"
+          >
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="fill"  class="matFormFieldFullWidth">
+            <mat-label>patient</mat-label>
+            <input type="text" matInput formControlName="patient" [matAutocomplete]="patientAuto" >
+            <mat-autocomplete #patientAuto="matAutocomplete"  [displayWith]="displayPatient">
+              <mat-option *ngFor="let patient of filteredPatientOptions | async" [value]="patient" >
+                {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="fill"  class="matFormFieldFullWidth">
+            <mat-label>outpatient-department</mat-label>
+            <input type="text" matInput formControlName="outpatientDepartment" [matAutocomplete]="outpdepAuto" >
+            <mat-autocomplete #outpdepAuto="matAutocomplete"  [displayWith]="displayOutPD">
+              <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd" >
+                {{ outpd.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+            <mat-label>doctor</mat-label>
+            <input type="text" matInput formControlName="doctor" [matAutocomplete]="doctorAuto">
+            <mat-autocomplete #doctorAuto="matAutocomplete">
+              <mat-option *ngFor="let doctor of filteredDoctorOptions | async" [value]="doctor.firstname" (onSelectionChange)="addDoctorToSelection(doctor)">
+                {{ doctor.firstname }} {{ doctor.lastname }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <div class="badge-container">
+          <span class="badge rounded-pill text-bg-secondary" *ngFor="let doctor of selectedDoctorOptions">
+            {{ doctor.firstname }} {{ doctor.lastname }}
+            <button type="button" class="close" aria-label="Close" (click)="removeDoctorFromSelection(doctor)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </span>
+          </div>
+        </div>
+
+        <h3>treatment time</h3>
+
+        <div class="form-group treatmentDateContainer">
+          <div class="treatmentDatePickerElement">
+            <mat-form-field appearance="fill">
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <input matInput formControlName="treatmentStartDate" [matDatepicker]="startpicker" placeholder="start - date" [max]="dateToday| date:'yyyy-MM-dd'" >
+              <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+              <mat-datepicker #startpicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="treatmentDatePickerElement">
+            <mat-form-field appearance="fill">
+              <mat-label>start - time</mat-label>
+              <mat-hint>HH:MM</mat-hint>
+              <input matInput [type]="'time'" formControlName="treatmentStartTime" placeholder="HH:mm">
+            </mat-form-field>
+          </div>
+
+          <div class="treatmentDatePickerElement">
+            <mat-form-field appearance="fill">
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <input matInput formControlName="treatmentEndDate" [matDatepicker]="endpicker" placeholder="end - date" [max]="dateToday| date:'yyyy-MM-dd'">
+              <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+              <mat-datepicker #endpicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="treatmentDatePickerElement">
+            <mat-form-field appearance="fill">
+              <mat-label>end - time</mat-label>
+              <mat-hint>HH:MM</mat-hint>
+              <input matInput [type]="'time'" formControlName="treatmentEndTime" placeholder="HH:mm" required>
+            </mat-form-field>
+          </div>
+          <div class="invalid-feedback">
+            Start - date and time must be before end - date and time
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <h3>treatment text</h3>
+          <textarea class="form-control" rows="5" formControlName="treatmentText" placeholder="add treatment text"></textarea>
+        </div>
+        <div class="form-group">
+          <h3>medication (given to patient)</h3>
+            <form [formGroup]="medicationAdministeredForm" (ngSubmit)="submitMedicationAdministered()" class="medicineTreatmentForm">
+              <mat-form-field appearance="fill" class="medicineTreatmentFormInputFullWidth">
+                <mat-label>medication</mat-label>
+                <input matInput formControlName="medicine" [matAutocomplete]="medicineAuto" />
+                <mat-autocomplete #medicineAuto="matAutocomplete" [displayWith]="displayMedication">
+                  <mat-option *ngFor="let medicine of filteredMedicineOptions | async" [value]="medicine">
+                    {{ medicine.name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="medicineTreatmentFormInputHalfWidth">
+                <mat-label>amount</mat-label>
+                <input matInput formControlName="amount" />
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="medicineTreatmentFormInputHalfWidth">
+                <mat-label>unit of measurement</mat-label>
+                <input matInput formControlName="unit" />
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="medicineTreatmentFormInputHalfWidth">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <input matInput formControlName="medicineDatePicker" [matDatepicker]="medicineDatePicker" placeholder="date of administration" [max]="dateToday| date:'yyyy-MM-dd'">
+                <mat-datepicker-toggle matSuffix [for]="medicineDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #medicineDatePicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="medicineTreatmentFormInputHalfWidth">
+                <mat-label>time of administration</mat-label>
+                <mat-hint>HH:MM</mat-hint>
+                <input matInput [type]="'time'" formControlName="medicineTimePicker" placeholder="HH:mm">
+              </mat-form-field>
+
+              <div>
+                <div class="mt-4 d-flex flex-row">
+                  <span class="flex-grow-1"></span>
+                  <button type="submit"
+                          class="btn btn-primary"
+                  >
+                    Add Medication
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="Medication">
+              <th mat-header-cell *matHeaderCellDef> Medication </th>
+              <td mat-cell *matCellDef="let element"> {{element.medicine.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Amount">
+              <th mat-header-cell *matHeaderCellDef> Amount </th>
+              <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Unit">
+              <th mat-header-cell *matHeaderCellDef> Unit </th>
+              <td mat-cell *matCellDef="let element"> {{element.unit}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Date">
+              <th mat-header-cell *matHeaderCellDef> Date </th>
+              <td mat-cell *matCellDef="let element"> {{element.medicineDatePicker}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Time">
+              <th mat-header-cell *matHeaderCellDef> Time </th>
+              <td mat-cell *matCellDef="let element"> {{element.medicineTimePicker}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <ng-container matColumnDef="Delete">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="deleteRow(element)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                    <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                  </svg>
+                </button>
+              </td>
+            </ng-container>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    <div>
+      <div class="mt-4 d-flex flex-row">
+        <span class="flex-grow-1"></span>
+        <button type="submit"
+                class="btn btn-primary"
+        >
+          create treatment
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

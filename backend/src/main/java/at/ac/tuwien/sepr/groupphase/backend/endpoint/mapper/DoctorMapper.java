@@ -22,7 +22,7 @@ public class DoctorMapper {
      */
     public DoctorDto doctorToDoctorDto(Doctor doctor) {
         LOG.trace("doctorToDoctorDto({})", doctor);
-        return new DoctorDto(doctor.getCredential().getId(), doctor.getCredential().getFirstName(), doctor.getCredential().getLastName(), doctor.getCredential().getEmail(), doctor.getCredential().getPassword(),
+        return new DoctorDto(doctor.getDoctorId(), doctor.getCredential().getFirstName(), doctor.getCredential().getLastName(), doctor.getCredential().getEmail(), doctor.getCredential().getPassword(),
             doctor.getCredential().getActive());
     }
 

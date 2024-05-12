@@ -17,6 +17,19 @@ import {OutpatientDepartmentComponent} from "./components/outpatient-department-
 import {
     OutpatientDepartmentDetailComponent
 } from "./components/outpatient-department-detail/outpatient-department-detail.component";
+import {TreatmentComponent} from "./components/treatment/treatment.component";
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {MatChipsModule} from "@angular/material/chips";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatSelectModule} from "@angular/material/select";
+import { MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MAT_DATE_LOCALE, MatNativeDateModule, provideNativeDateAdapter} from '@angular/material/core';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatIconModule} from "@angular/material/icon";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatButton, MatIconButton} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -26,6 +39,8 @@ import {
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    TreatmentComponent
+
   ],
   imports: [
     BrowserModule,
@@ -37,8 +52,23 @@ import {
     OutpatientDepartmentComponent,
     OutpatientDepartmentDetailComponent,
     UserCreateComponent,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButton,
+    MatIconButton
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
+    { provide: MAT_DATE_LOCALE, useValue: 'de-DE' },provideNativeDateAdapter()
+  ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule {

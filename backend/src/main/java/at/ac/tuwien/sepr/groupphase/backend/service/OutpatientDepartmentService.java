@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -31,4 +32,12 @@ public interface OutpatientDepartmentService {
      * @return the outpatient department
      */
     OutpatientDepartmentDto getOutpatientDepartmentById(Long id) throws NotFoundException;
+
+    /**
+     * Gets an outpatient department Entity by its id.
+     *
+     * @param id the id of the outpatient department
+     * @return the outpatient department
+     */
+    OutpatientDepartment getOutpatientDepartmentEntityById(Long id) throws NotFoundException;
 }

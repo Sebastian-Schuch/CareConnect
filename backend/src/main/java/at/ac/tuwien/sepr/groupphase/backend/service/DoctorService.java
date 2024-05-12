@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 
 import java.util.List;
 
@@ -21,6 +22,15 @@ public interface DoctorService {
      * @return the doctor with the id given
      */
     DoctorDto getDoctorById(Long id);
+
+    /**
+     * Get the specified doctor.
+     *
+     * @param id the id of the doctor Entity requested
+     * @return the doctor with the id given
+     */
+    Doctor getDoctorEntityById(Long id);
+
 
     /**
      * Get all Doctors from the repository.

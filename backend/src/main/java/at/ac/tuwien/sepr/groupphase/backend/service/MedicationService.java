@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 
 import java.util.List;
 
@@ -22,6 +23,14 @@ public interface MedicationService {
      * @return the medication with the id given
      */
     MedicationDto getById(Long id);
+
+    /**
+     * Get the specified medication entity.
+     *
+     * @param id the id of the medication requested
+     * @return the medication entity with the id given
+     */
+    Medication getEntityById(Long id);
 
 
     /**

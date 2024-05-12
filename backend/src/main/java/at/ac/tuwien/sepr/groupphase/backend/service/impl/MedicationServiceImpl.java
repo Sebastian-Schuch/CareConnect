@@ -46,6 +46,16 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     @Override
+    public Medication getEntityById(Long id) {
+        LOG.trace("getEntityById({})", id);
+        Medication medication = medicationRepository.findMedicationById(id);
+        if (medication == null) {
+            throw new NotFoundException("Medication not found");
+        }
+        return medication;
+    }
+
+    @Override
     public List<MedicationDto> getAllMedications() {
         LOG.trace("getAllMedications()");
         return medicationMapper.medicationEntitiesToListOfMedicationDto(medicationRepository.findAll());

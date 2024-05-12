@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {MedicationCreateDto, MedicationDto} from "../dtos/medication";
 
-const medicationBaseUri = environment.backendUrl + '/api/medications';
+const medicationBaseUri = environment.backendUrl + '/api/v1/medications';
 
 @Injectable({
   providedIn: 'root'

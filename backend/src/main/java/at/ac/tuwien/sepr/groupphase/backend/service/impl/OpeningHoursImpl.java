@@ -53,9 +53,11 @@ public class OpeningHoursImpl implements OpeningHoursService {
         return openingHoursMapper.entityToDto(openingHours);
     }
 
-    public OpeningHours getOpeningHoursEntityFromDto(OpeningHoursDtoCreate openingHoursDto) throws MethodArgumentNotValidException {
+    public OpeningHours getOpeningHoursEntityFromDtoCreate(OpeningHoursDtoCreate openingHoursDto) throws MethodArgumentNotValidException {
         LOGGER.trace("getOpeningHoursEntityFromDto()");
         openingHoursValidator.validateOpeningHours(openingHoursDto);
         return openingHoursMapper.dtoToEntity(openingHoursDto);
     }
+
+
 }

@@ -27,7 +27,6 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     private final OutpatientDepartmentRepository outpatientDepartmentRepository;
     private final OutpatientDepartmentMapper outpatientDepartmentMapper;
     private final OpeningHoursMapper openingHoursMapper;
-
     private final OpeningHoursService openingHoursService;
 
     @Autowired
@@ -45,7 +44,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     @Override
     public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
         LOGGER.trace("createOutpatientDepartment()");
-        OpeningHours openingHours = openingHoursService.getOpeningHoursEntityFromDto(outpatientDepartmentDto.openingHours());
+        OpeningHours openingHours = openingHoursService.getOpeningHoursEntityFromDtoCreate(outpatientDepartmentDto.openingHours());
         OutpatientDepartment savedOutpatientDepartment = outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(outpatientDepartmentDto, openingHours));
 
         return outpatientDepartmentMapper.entityToDto(savedOutpatientDepartment, openingHoursMapper.entityToDto(savedOutpatientDepartment.getOpeningHours()));
@@ -69,5 +68,16 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
             throw new NotFoundException("Outpatient department with id " + id + " not found");
         }
         return outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
+    }
+
+    @Override
+    public OutpatientDepartment getOutpatientDepartmentEntityById(Long id) throws NotFoundException {
+        LOGGER.trace("getOutpatientDepartmentEntityById({})", id);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findById(id).orElse(null);
+        if (outpatientDepartment == null) {
+            LOGGER.warn("Outpatient department with id {} not found", id);
+            throw new NotFoundException("Outpatient department with id " + id + " not found");
+        }
+        return outpatientDepartment;
     }
 }

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 
 import java.util.List;
 
@@ -28,4 +29,14 @@ public interface PatientService {
      * @return the list of all patients
      */
     List<PatientDto> getAllPatients();
+
+    /**
+     * Get the specified patient Entity.
+     *
+     * @param id the id of the patient requested
+     * @return the patient with the id given
+     */
+    Patient getPatientEntityById(Long id);
+
+
 }

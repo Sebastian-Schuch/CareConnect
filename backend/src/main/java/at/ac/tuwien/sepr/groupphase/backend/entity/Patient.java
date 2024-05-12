@@ -31,6 +31,14 @@ public class Patient {
         this.svnr = svnr;
     }
 
+    public void setPatientId(long patientId) {
+        this.patientId = patientId;
+    }
+
+    public long getPatientId() {
+        return patientId;
+    }
+
     public Credential getCredential() {
         return credential;
     }
