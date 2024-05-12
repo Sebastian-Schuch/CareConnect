@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {OutpatientDepartmentDtoCreate} from "../../dtos/outpatient-department";
 import {NgForOf} from "@angular/common";

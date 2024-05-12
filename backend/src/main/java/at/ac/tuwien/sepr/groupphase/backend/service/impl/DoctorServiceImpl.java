@@ -43,12 +43,23 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorDto getDoctorById(Long id) {
         LOG.trace("getDoctorById({})", id);
-        Doctor doctor = doctorRepository.findDoctorById(id);
+        Doctor doctor = doctorRepository.findById(id).orElse(null);
         if (doctor == null) {
+            LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
         }
         return doctorMapper.doctorToDoctorDto(doctor);
+    }
 
+    @Override
+    public Doctor getDoctorEntityById(Long id) {
+        LOG.trace("getDoctorEntityById({})", id);
+        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        if (doctor == null) {
+            LOG.warn("doctor with id {} not found", id);
+            throw new NotFoundException("Doctor not found");
+        }
+        return doctor;
     }
 
     @Override

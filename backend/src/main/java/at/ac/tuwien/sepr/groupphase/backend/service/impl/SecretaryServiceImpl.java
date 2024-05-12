@@ -42,8 +42,9 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public SecretaryDetailDto getById(Long id) {
         LOG.trace("getById({})", id);
-        Secretary secretary = secretaryRepository.findSecretaryById(id);
+        Secretary secretary = secretaryRepository.findById(id).orElse(null);
         if (secretary == null) {
+            LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
         }
         return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);

@@ -26,11 +26,11 @@ public class Secretary implements Serializable {
     private Credential credential;
 
 
-    public void setId(Long id) {
+    public void setsecretaryId(Long id) {
         this.secretaryId = id;
     }
 
-    public Long getId() {
+    public Long getSecretaryId() {
         return secretaryId;
     }
 

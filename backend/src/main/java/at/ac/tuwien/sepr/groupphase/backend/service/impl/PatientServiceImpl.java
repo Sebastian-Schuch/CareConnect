@@ -42,12 +42,25 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto getPatientById(Long id) {
         LOG.trace("getPatientById({})", id);
-        Patient patient = patientRepository.findPatientById(id);
+        Patient patient = patientRepository.findById(id).orElse(null);
         if (patient == null) {
+            LOG.warn("patient with id {} not found", id);
             throw new NotFoundException("Patient not found");
         }
         return patientMapper.patientToPatientDto(patient);
     }
+
+    @Override
+    public Patient getPatientEntityById(Long id) {
+        LOG.trace("getPatientEntityById({})", id);
+        Patient patient = patientRepository.findById(id).orElse(null);
+        if (patient == null) {
+            LOG.warn("patient with id {} not found", id);
+            throw new NotFoundException("Patient not found");
+        }
+        return patient;
+    }
+
 
     @Override
     public List<PatientDto> getAllPatients() {

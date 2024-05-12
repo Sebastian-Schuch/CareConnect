@@ -22,7 +22,7 @@ public class PatientMapper {
      */
     public PatientDto patientToPatientDto(Patient patient) {
         LOG.trace("patientToPatientDto({})", patient);
-        return new PatientDto(patient.getCredential().getId(), patient.getSvnr(), patient.getCredential().getFirstName(), patient.getCredential().getLastName(), patient.getCredential().getEmail(), patient.getCredential().getPassword(),
+        return new PatientDto(patient.getPatientId(), patient.getSvnr(), patient.getCredential().getFirstName(), patient.getCredential().getLastName(), patient.getCredential().getEmail(), patient.getCredential().getPassword(),
             patient.getCredential().getActive());
 
     }

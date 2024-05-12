@@ -27,5 +27,6 @@ public interface OpeningHoursService {
      *
      * @return opening hours entity
      */
-    OpeningHours getOpeningHoursEntityFromDto(OpeningHoursDtoCreate openingHoursDto) throws MethodArgumentNotValidException;
+    OpeningHours getOpeningHoursEntityFromDtoCreate(OpeningHoursDtoCreate openingHoursDto) throws MethodArgumentNotValidException;
+
 }
