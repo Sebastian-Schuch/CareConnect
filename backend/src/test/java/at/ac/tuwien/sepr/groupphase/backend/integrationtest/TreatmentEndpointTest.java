@@ -1,7 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
-import at.ac.tuwien.sepr.groupphase.backend.repository.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.MedicationRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -23,7 +32,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -41,7 +49,7 @@ class TreatmentEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final String BASE_PATH = "/api/v1/treatment";
+    private static final String BASE_PATH = "/api/v1/treatments";
     ObjectWriter ow;
 
     @Autowired
@@ -108,9 +116,9 @@ class TreatmentEndpointTest {
                 true)),
             List.of(new TreatmentMedicineDtoCreate(
                 new MedicationDto(1L, "m2", true),
-                    "mg",
+                "mg",
                 200, new Date())
-                )
+            )
         );
     }
 

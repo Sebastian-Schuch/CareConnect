@@ -1,13 +1,8 @@
-import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {UserCreateDto, UserDetailDto} from "../dtos/user";
 import {Observable} from "rxjs";
-
-const adminBaseUri = environment.backendUrl + '/api/v1/admins';
-const doctorBaseUri = environment.backendUrl + '/api/v1/doctors';
-const secretaryBaseUri = environment.backendUrl + '/api/v1/secretaries';
-const patientBaseUri = environment.backendUrl + '/api/v1/patients';
+import {Globals} from "../global/globals";
 
 
 @Injectable({
@@ -15,9 +10,14 @@ const patientBaseUri = environment.backendUrl + '/api/v1/patients';
 })
 
 export class UserService {
+  private adminBaseUri: string = this.globals.backendUri + '/admins';
+  private doctorBaseUri: string = this.globals.backendUri + '/doctors';
+  private secretaryBaseUri: string = this.globals.backendUri + '/secretaries';
+  private patientBaseUri: string = this.globals.backendUri + '/patients';
 
   constructor(
     private http: HttpClient,
+    private globals: Globals
   ) {
   }
 
@@ -29,7 +29,7 @@ export class UserService {
    */
   createAdmin(admin: UserCreateDto): Observable<UserDetailDto> {
     return this.http.post<UserDetailDto>(
-      adminBaseUri,
+      this.adminBaseUri,
       admin
     );
   }
@@ -41,7 +41,7 @@ export class UserService {
    * @return an Observable of the admin
    */
   getAdminById(id: number): Observable<UserDetailDto> {
-    return this.http.get<UserDetailDto>(`${adminBaseUri}/${id}`);
+    return this.http.get<UserDetailDto>(`${this.adminBaseUri}/${id}`);
   }
 
   /**
@@ -50,7 +50,7 @@ export class UserService {
    * @return an Observable of the admins
    */
   getAllAdmins(): Observable<UserDetailDto[]> {
-    return this.http.get<UserDetailDto[]>(`${adminBaseUri}`);
+    return this.http.get<UserDetailDto[]>(`${this.adminBaseUri}`);
   }
 
   /**
@@ -61,7 +61,7 @@ export class UserService {
    */
   createDoctor(doctor: UserCreateDto): Observable<UserDetailDto> {
     return this.http.post<UserDetailDto>(
-      doctorBaseUri,
+      this.doctorBaseUri,
       doctor
     );
   }
@@ -73,7 +73,7 @@ export class UserService {
    * @return an Observable of the doctor
    */
   getDoctorById(id: number): Observable<UserDetailDto> {
-    return this.http.get<UserDetailDto>(`${doctorBaseUri}/${id}`);
+    return this.http.get<UserDetailDto>(`${this.doctorBaseUri}/${id}`);
   }
 
   /**
@@ -82,7 +82,7 @@ export class UserService {
    * @return an Observable of the doctors
    */
   getAllDoctors(): Observable<UserDetailDto[]> {
-    return this.http.get<UserDetailDto[]>(`${doctorBaseUri}`);
+    return this.http.get<UserDetailDto[]>(`${this.doctorBaseUri}`);
   }
 
   /**
@@ -93,7 +93,7 @@ export class UserService {
    */
   createSecretary(secretary: UserCreateDto): Observable<UserDetailDto> {
     return this.http.post<UserDetailDto>(
-      secretaryBaseUri,
+      this.secretaryBaseUri,
       secretary
     );
   }
@@ -105,7 +105,7 @@ export class UserService {
    * @return an Observable of the secretary
    */
   getSecretaryById(id: number): Observable<UserDetailDto> {
-    return this.http.get<UserDetailDto>(`${secretaryBaseUri}/${id}`);
+    return this.http.get<UserDetailDto>(`${this.secretaryBaseUri}/${id}`);
   }
 
   /**
@@ -114,26 +114,7 @@ export class UserService {
    * @return an Observable of the secretaries
    */
   getAllSecretaries(): Observable<UserDetailDto[]> {
-    return this.http.get<UserDetailDto[]>(`${secretaryBaseUri}`);
-  }
-
-  /**
-   * Get the patient with given ID.
-   *
-   * @param id the ID of the patient to get
-   * @return an Observable of the patient
-   */
-  getPatientById(id: number): Observable<UserDetailDto> {
-    return this.http.get<UserDetailDto>(`${patientBaseUri}/${id}`);
-  }
-
-  /**
-   * Get all patients from the backend.
-   *
-   * @return an Observable of the patients
-   */
-  getAllPatients(): Observable<UserDetailDto[]> {
-    return this.http.get<UserDetailDto[]>(`${patientBaseUri}`);
+    return this.http.get<UserDetailDto[]>(`${this.secretaryBaseUri}`);
   }
 
   /**
@@ -144,8 +125,27 @@ export class UserService {
    */
   createPatient(patient: UserCreateDto): Observable<UserDetailDto> {
     return this.http.post<UserDetailDto>(
-      patientBaseUri,
+      this.patientBaseUri,
       patient
     );
+  }
+
+  /**
+   * Get the patient with given ID.
+   *
+   * @param id the ID of the patient to get
+   * @return an Observable of the patient
+   */
+  getPatientById(id: number): Observable<UserDetailDto> {
+    return this.http.get<UserDetailDto>(`${this.patientBaseUri}/${id}`);
+  }
+
+  /**
+   * Get all patients from the backend.
+   *
+   * @return an Observable of the patients
+   */
+  getAllPatients(): Observable<UserDetailDto[]> {
+    return this.http.get<UserDetailDto[]>(`${this.patientBaseUri}`);
   }
 }

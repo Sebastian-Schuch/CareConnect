@@ -25,7 +25,7 @@ import java.lang.invoke.MethodHandles;
  */
 
 @RestController
-@RequestMapping(value = "/api/v1/treatment")
+@RequestMapping(value = "/api/v1/treatments")
 public class TreatmentEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TreatmentService treatmentService;
