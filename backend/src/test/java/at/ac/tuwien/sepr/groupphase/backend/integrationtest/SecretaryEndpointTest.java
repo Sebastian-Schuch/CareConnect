@@ -110,6 +110,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
         /*
             .andReturn().getResponse().getContentAsByteArray();
 
@@ -130,6 +131,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -140,6 +142,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -150,6 +153,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -160,6 +164,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -170,6 +175,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -181,6 +187,7 @@ public class SecretaryEndpointTest {
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -224,7 +231,7 @@ public class SecretaryEndpointTest {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
         SecretaryDetailDto secretary1 = objectMapper.readerFor(SecretaryDetailDto.class).<SecretaryDetailDto>readValues(bodyCreate).readAll().get(0);
-
+        json = ow.writeValueAsString(new SecretaryCreateDto("b@b.b", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -232,7 +239,7 @@ public class SecretaryEndpointTest {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
         SecretaryDetailDto secretary2 = objectMapper.readerFor(SecretaryDetailDto.class).<SecretaryDetailDto>readValues(bodyCreate).readAll().get(0);
-
+        json = ow.writeValueAsString(new SecretaryCreateDto("c@c.c", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)

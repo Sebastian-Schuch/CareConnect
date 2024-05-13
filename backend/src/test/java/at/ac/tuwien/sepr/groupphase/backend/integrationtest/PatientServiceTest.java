@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,11 @@ public class PatientServiceTest {
 
     @BeforeEach
     void clean() {
+        patientRepository.deleteAll();
+    }
+
+    @AfterEach
+    void clear() {
         patientRepository.deleteAll();
     }
 
@@ -67,26 +73,28 @@ public class PatientServiceTest {
 
     @Test
     public void givenThreeCreatePatients_whenGetAllPatients_thenThreePatientsAreReturned() {
-        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b");
-        PatientDto createdPatient1 = patientService.createPatient(toCreate);
-        PatientDto createdPatient2 = patientService.createPatient(toCreate);
-        PatientDto createdPatient3 = patientService.createPatient(toCreate);
+        PatientCreateDto toCreate1 = new PatientCreateDto("0123456789", "a@a.a", "a", "b");
+        PatientDto createdPatient1 = patientService.createPatient(toCreate1);
+        PatientCreateDto toCreate2 = new PatientCreateDto("0123456789", "b@b.b", "a", "b");
+        PatientDto createdPatient2 = patientService.createPatient(toCreate2);
+        PatientCreateDto toCreate3 = new PatientCreateDto("0123456789", "c@c.c", "a", "b");
+        PatientDto createdPatient3 = patientService.createPatient(toCreate3);
 
         List<PatientDto> allPatients = patientService.getAllPatients();
         assertAll("Grouped Assertions of all Patients",
             () -> assertEquals(3, allPatients.size()),
-            () -> assertEquals(toCreate.email(), createdPatient1.email(), "Email should be equal"),
-            () -> assertEquals(toCreate.email(), createdPatient2.email(), "Email should be equal"),
-            () -> assertEquals(toCreate.email(), createdPatient3.email(), "Email should be equal"),
-            () -> assertEquals(toCreate.svnr(), createdPatient1.svnr(), "SVNR should be equal"),
-            () -> assertEquals(toCreate.svnr(), createdPatient2.svnr(), "SVNR should be equal"),
-            () -> assertEquals(toCreate.svnr(), createdPatient3.svnr(), "SVNR should be equal"),
-            () -> assertEquals(toCreate.firstname(), createdPatient1.firstname(), "Firstname should be equal"),
-            () -> assertEquals(toCreate.firstname(), createdPatient2.firstname(), "Firstname should be equal"),
-            () -> assertEquals(toCreate.firstname(), createdPatient3.firstname(), "Firstname should be equal"),
-            () -> assertEquals(toCreate.lastname(), createdPatient1.lastname(), "Lastname should be equal"),
-            () -> assertEquals(toCreate.lastname(), createdPatient2.lastname(), "Lastname should be equal"),
-            () -> assertEquals(toCreate.lastname(), createdPatient3.lastname(), "Lastname should be equal"));
+            () -> assertEquals(toCreate1.email(), createdPatient1.email(), "Email should be equal"),
+            () -> assertEquals(toCreate2.email(), createdPatient2.email(), "Email should be equal"),
+            () -> assertEquals(toCreate3.email(), createdPatient3.email(), "Email should be equal"),
+            () -> assertEquals(toCreate1.svnr(), createdPatient1.svnr(), "SVNR should be equal"),
+            () -> assertEquals(toCreate2.svnr(), createdPatient2.svnr(), "SVNR should be equal"),
+            () -> assertEquals(toCreate3.svnr(), createdPatient3.svnr(), "SVNR should be equal"),
+            () -> assertEquals(toCreate1.firstname(), createdPatient1.firstname(), "Firstname should be equal"),
+            () -> assertEquals(toCreate2.firstname(), createdPatient2.firstname(), "Firstname should be equal"),
+            () -> assertEquals(toCreate3.firstname(), createdPatient3.firstname(), "Firstname should be equal"),
+            () -> assertEquals(toCreate1.lastname(), createdPatient1.lastname(), "Lastname should be equal"),
+            () -> assertEquals(toCreate2.lastname(), createdPatient2.lastname(), "Lastname should be equal"),
+            () -> assertEquals(toCreate3.lastname(), createdPatient3.lastname(), "Lastname should be equal"));
     }
 
     @Test

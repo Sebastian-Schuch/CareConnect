@@ -101,7 +101,7 @@ public class DoctorEndpointTest implements TestData {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -112,7 +112,7 @@ public class DoctorEndpointTest implements TestData {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -124,7 +124,7 @@ public class DoctorEndpointTest implements TestData {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -179,7 +179,7 @@ public class DoctorEndpointTest implements TestData {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
         DoctorDto doctor1 = objectMapper.readerFor(DoctorDto.class).<DoctorDto>readValues(bodyCreate).readAll().getFirst();
-
+        json = ow.writeValueAsString(new DoctorCreateDto("b@b.b", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -187,7 +187,7 @@ public class DoctorEndpointTest implements TestData {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
         DoctorDto doctor2 = objectMapper.readerFor(DoctorDto.class).<DoctorDto>readValues(bodyCreate).readAll().getFirst();
-
+        json = ow.writeValueAsString(new DoctorCreateDto("c@c.c", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)

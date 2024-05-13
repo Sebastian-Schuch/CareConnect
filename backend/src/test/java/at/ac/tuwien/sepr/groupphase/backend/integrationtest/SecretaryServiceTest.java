@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,11 @@ public class SecretaryServiceTest {
 
     @BeforeEach
     void clean() {
+        secretaryRepository.deleteAll();
+    }
+
+    @AfterEach
+    void clear() {
         secretaryRepository.deleteAll();
     }
 
@@ -74,21 +80,23 @@ public class SecretaryServiceTest {
 
     @Test
     public void givenThreeNewlyCreatedSecretariesInDatabase_whenGettingAllSecretaries_thenReturnThreeSecretaries() {
-        SecretaryCreateDto createSecretary = new SecretaryCreateDto("a@a.a", "a", "b");
-        SecretaryDetailDto createdSecretary1 = secretaryService.create(createSecretary);
-        SecretaryDetailDto createdSecretary2 = secretaryService.create(createSecretary);
-        SecretaryDetailDto createdSecretary3 = secretaryService.create(createSecretary);
+        SecretaryCreateDto createSecretary1 = new SecretaryCreateDto("a@a.a", "a", "b");
+        SecretaryDetailDto createdSecretary1 = secretaryService.create(createSecretary1);
+        SecretaryCreateDto createSecretary2 = new SecretaryCreateDto("b@b.b", "a", "b");
+        SecretaryDetailDto createdSecretary2 = secretaryService.create(createSecretary2);
+        SecretaryCreateDto createSecretary3 = new SecretaryCreateDto("c@c.c", "a", "b");
+        SecretaryDetailDto createdSecretary3 = secretaryService.create(createSecretary3);
         assertAll("Grouped Assertions of Secretary",
-            () -> assertEquals(createSecretary.email(), createdSecretary1.email(), "Email should be equal"),
-            () -> assertEquals(createSecretary.firstname(), createdSecretary1.firstname(), "Firstname should be equal"),
-            () -> assertEquals(createSecretary.lastname(), createdSecretary1.lastname(), "Lastname should be equal"),
+            () -> assertEquals(createSecretary1.email(), createdSecretary1.email(), "Email should be equal"),
+            () -> assertEquals(createSecretary1.firstname(), createdSecretary1.firstname(), "Firstname should be equal"),
+            () -> assertEquals(createSecretary1.lastname(), createdSecretary1.lastname(), "Lastname should be equal"),
 
-            () -> assertEquals(createSecretary.email(), createdSecretary2.email(), "Email should be equal"),
-            () -> assertEquals(createSecretary.firstname(), createdSecretary2.firstname(), "Firstname should be equal"),
-            () -> assertEquals(createSecretary.lastname(), createdSecretary2.lastname(), "Lastname should be equal"),
+            () -> assertEquals(createSecretary2.email(), createdSecretary2.email(), "Email should be equal"),
+            () -> assertEquals(createSecretary2.firstname(), createdSecretary2.firstname(), "Firstname should be equal"),
+            () -> assertEquals(createSecretary2.lastname(), createdSecretary2.lastname(), "Lastname should be equal"),
 
-            () -> assertEquals(createSecretary.email(), createdSecretary3.email(), "Email should be equal"),
-            () -> assertEquals(createSecretary.firstname(), createdSecretary3.firstname(), "Firstname should be equal"),
-            () -> assertEquals(createSecretary.lastname(), createdSecretary3.lastname(), "Lastname should be equal"));
+            () -> assertEquals(createSecretary3.email(), createdSecretary3.email(), "Email should be equal"),
+            () -> assertEquals(createSecretary3.firstname(), createdSecretary3.firstname(), "Firstname should be equal"),
+            () -> assertEquals(createSecretary3.lastname(), createdSecretary3.lastname(), "Lastname should be equal"));
     }
 }

@@ -102,7 +102,7 @@ public class PatientEndpointTest implements TestData {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -113,7 +113,7 @@ public class PatientEndpointTest implements TestData {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -124,7 +124,7 @@ public class PatientEndpointTest implements TestData {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test
@@ -191,7 +191,7 @@ public class PatientEndpointTest implements TestData {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
         PatientDto patient1 = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyCreate).readAll().getFirst();
-
+        json = ow.writeValueAsString(new PatientCreateDto("1234123456", "b@b.b", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -199,7 +199,7 @@ public class PatientEndpointTest implements TestData {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
         PatientDto patient2 = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyCreate).readAll().getFirst();
-
+        json = ow.writeValueAsString(new PatientCreateDto("1234123456", "c@c.c", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
