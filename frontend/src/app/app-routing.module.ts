@@ -4,6 +4,7 @@ import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
+import {AllergyComponent} from "./components/allergy/allergy.component";
 import {TreatmentComponent} from "./components/treatment/treatment.component";
 import {UserCreateComponent} from "./components/user-create/user-create.component";
 import {Role} from "./dtos/Role";
@@ -12,13 +13,13 @@ import {MedicationCreateComponent} from "./components/medication-create/medicati
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'allergies', component: AllergyComponent},
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'treatment', children: [
       {path: 'create', component: TreatmentComponent},
       {path: ':id/detail', component: TreatmentComponent},
       {path: ':id/edit', component: TreatmentComponent}
     ]},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {
     path: 'user', children: [
       {
