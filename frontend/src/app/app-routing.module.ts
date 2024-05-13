@@ -9,6 +9,7 @@ import {TreatmentComponent} from "./components/treatment/treatment.component";
 import {UserCreateComponent} from "./components/user-create/user-create.component";
 import {Role} from "./dtos/Role";
 import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
+import {StationComponent} from "./components/station/station.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -38,7 +39,9 @@ const routes: Routes = [
         path: 'create', component: MedicationCreateComponent
       }
     ]
-  }
+  },
+  {path: 'station', component: StationComponent},
+  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent}
 ];
 
 @NgModule({

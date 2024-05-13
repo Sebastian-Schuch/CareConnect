@@ -30,7 +30,9 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatButton, MatIconButton} from "@angular/material/button";
+import {StationComponent} from "./components/station/station.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
+
 
 @NgModule({
   declarations: [
@@ -40,9 +42,9 @@ import {AllergyComponent} from "./components/allergy/allergy.component";
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    AllergyComponent,
-    TreatmentComponent
-
+    TreatmentComponent,
+    StationComponent,
+    AllergyComponent
   ],
   imports: [
     BrowserModule,

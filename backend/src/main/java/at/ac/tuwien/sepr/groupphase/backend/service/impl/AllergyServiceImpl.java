@@ -34,7 +34,6 @@ public class AllergyServiceImpl implements AllergyService {
 
         Optional<Allergy> allergy = allergyRepository.findById(id);
         if (allergy.isPresent()) {
-            System.out.println(allergy.get());
             return allergy.get();
         } else {
             throw new NotFoundException(String.format("Could not find allergy with id %s", id));
