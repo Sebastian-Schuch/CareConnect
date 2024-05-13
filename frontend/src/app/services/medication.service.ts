@@ -1,10 +1,8 @@
-import {environment} from "../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {MedicationCreateDto, MedicationDto} from "../dtos/medication";
-
-const medicationBaseUri = environment.backendUrl + '/api/v1/medications';
+import {Globals} from "../global/globals";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +10,11 @@ const medicationBaseUri = environment.backendUrl + '/api/v1/medications';
 
 export class MedicationService {
 
+  private medicationBaseUri: string = this.globals.backendUri + '/medications';
+
   constructor(
     private http: HttpClient,
+    private globals: Globals
   ) {
   }
 
@@ -24,7 +25,7 @@ export class MedicationService {
    * @return an Observable of the medication
    */
   getMedicationById(id: number): Observable<MedicationDto> {
-    return this.http.get<MedicationDto>(`${medicationBaseUri}/${id}`);
+    return this.http.get<MedicationDto>(`${this.medicationBaseUri}/${id}`);
   }
 
   /**
@@ -33,7 +34,7 @@ export class MedicationService {
    * @return an Observable of the medications
    */
   getMedicationsAll(): Observable<MedicationDto[]> {
-    return this.http.get<MedicationDto[]>(`${medicationBaseUri}`);
+    return this.http.get<MedicationDto[]>(`${this.medicationBaseUri}`);
   }
 
   /**
@@ -44,7 +45,7 @@ export class MedicationService {
    */
   createMedication(medication: MedicationCreateDto): Observable<MedicationDto> {
     return this.http.post<MedicationDto>(
-      medicationBaseUri,
+      this.medicationBaseUri,
       medication
     );
   }

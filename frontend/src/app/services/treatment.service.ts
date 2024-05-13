@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {Globals} from "../global/globals";
@@ -9,8 +9,10 @@ import {TreatmentDto, TreatmentDtoCreate} from "../dtos/treatment";
 })
 export class TreatmentService {
 
-  private treatmentBaseUri: string = this.globals.backendUri + '/treatment';
-  constructor(private httpClient: HttpClient, private globals: Globals) { }
+  private treatmentBaseUri: string = this.globals.backendUri + '/treatments';
+
+  constructor(private httpClient: HttpClient, private globals: Globals) {
+  }
 
   createTreatment(treatmentDtoCreate: TreatmentDtoCreate): Observable<TreatmentDto> {
     return this.httpClient.post<TreatmentDto>(this.treatmentBaseUri, treatmentDtoCreate);
