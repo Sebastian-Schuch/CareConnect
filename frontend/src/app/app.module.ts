@@ -30,6 +30,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatButton, MatIconButton} from "@angular/material/button";
+import {AllergyComponent} from "./components/allergy/allergy.component";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import {MatButton, MatIconButton} from "@angular/material/button";
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    AllergyComponent,
     TreatmentComponent
 
   ],
