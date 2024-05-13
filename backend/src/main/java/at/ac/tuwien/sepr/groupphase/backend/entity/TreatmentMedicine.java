@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -20,8 +21,10 @@ public class TreatmentMedicine {
     @ManyToOne
     private Medication medicine;
 
+    @Convert(converter = EncryptorConverter.class)
     private Long amount;
 
+    @Convert(converter = EncryptorConverter.class)
     private String unitOfMeasurement;
 
     private java.util.Date timeOfAdministration;

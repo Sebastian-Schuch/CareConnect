@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Patient {
     @JoinColumn(name = "id")
     private Credential credential;
 
+    @Convert(converter = EncryptorConverter.class)
     @Column(nullable = false)
     private String svnr;
 
