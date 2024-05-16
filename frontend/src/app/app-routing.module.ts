@@ -1,21 +1,22 @@
 import {NgModule} from '@angular/core';
-import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
-import {LoginComponent} from './components/login/login.component';
-import {AuthGuard} from './guards/auth.guard';
-import {MessageComponent} from './components/message/message.component';
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {TreatmentComponent} from "./components/treatment/treatment.component";
 import {UserCreateComponent} from "./components/user-create/user-create.component";
 import {Role} from "./dtos/Role";
 import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
 import {StationComponent} from "./components/station/station.component";
+import {
+  OutpatientDepartmentComponent
+} from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
+import {LoginComponent} from "./components/login/login.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'allergies', component: AllergyComponent},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
+  {path: 'department', component: OutpatientDepartmentComponent},
   {path: 'treatment', children: [
       {path: 'create', component: TreatmentComponent},
       {path: ':id/detail', component: TreatmentComponent},
@@ -41,7 +42,6 @@ const routes: Routes = [
     ]
   },
   {path: 'station', component: StationComponent},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent}
 ];
 
 @NgModule({

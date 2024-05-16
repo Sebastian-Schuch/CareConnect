@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
@@ -36,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class DoctorEndpointTest implements TestData {
+public class DoctorEndpointTest {
     @Autowired
     private WebApplicationContext webAppContext;
     @Autowired
@@ -201,10 +200,11 @@ public class DoctorEndpointTest implements TestData {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
         List<DoctorDto> doctors = objectMapper.readerFor(DoctorDto.class).<DoctorDto>readValues(bodyGet).readAll();
-        assertThat(doctors).hasSize(3).extracting(DoctorDto::id, DoctorDto::email, DoctorDto::firstname, DoctorDto::lastname, DoctorDto::password).containsExactlyInAnyOrder(
-            tuple(doctor1.id(), doctor1.email(), doctor1.firstname(), doctor1.lastname(), doctor1.password()),
-            tuple(doctor2.id(), doctor2.email(), doctor2.firstname(), doctor2.lastname(), doctor2.password()),
-            tuple(doctor3.id(), doctor3.email(), doctor3.firstname(), doctor3.lastname(), doctor3.password()));
+        assertThat(doctors).hasSize(3).extracting(DoctorDto::id, DoctorDto::email, DoctorDto::firstname, DoctorDto::lastname, DoctorDto::password)
+            .containsExactlyInAnyOrder(
+                tuple(doctor1.id(), doctor1.email(), doctor1.firstname(), doctor1.lastname(), doctor1.password()),
+                tuple(doctor2.id(), doctor2.email(), doctor2.firstname(), doctor2.lastname(), doctor2.password()),
+                tuple(doctor3.id(), doctor3.email(), doctor3.firstname(), doctor3.lastname(), doctor3.password()));
     }
 
     @Test

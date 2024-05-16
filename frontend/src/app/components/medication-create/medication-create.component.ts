@@ -7,10 +7,6 @@ import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-medication-create',
-  standalone: true,
-  imports: [
-    FormsModule
-  ],
   templateUrl: './medication-create.component.html',
   styleUrl: './medication-create.component.scss'
 })

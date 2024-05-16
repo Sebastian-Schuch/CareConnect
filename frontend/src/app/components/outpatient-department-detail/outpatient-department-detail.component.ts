@@ -5,11 +5,6 @@ import {OutpatientDepartmentService} from "../../services/outpatient-department.
 
 @Component({
   selector: 'app-outpatient-department-detail',
-  standalone: true,
-  imports: [
-    NgForOf,
-    NgIf
-  ],
   templateUrl: './outpatient-department-detail.component.html',
   styleUrl: './outpatient-department-detail.component.scss'
 })

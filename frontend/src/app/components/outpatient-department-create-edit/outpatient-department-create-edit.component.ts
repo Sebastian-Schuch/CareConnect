@@ -6,12 +6,6 @@ import {OutpatientDepartmentService} from "../../services/outpatient-department.
 
 @Component({
   selector: 'app-outpatient-department-create-edit',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FormsModule,
-    NgForOf
-  ],
   templateUrl: './outpatient-department.component-create-edit.html',
   styleUrl: './outpatient-department.component-create-edit.scss'
 })

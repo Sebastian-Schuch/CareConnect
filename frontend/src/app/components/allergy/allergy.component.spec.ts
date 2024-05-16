@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AllergyComponent } from './allergy.component';
+import {HttpClientModule} from "@angular/common/http";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {FormsModule, NgModel} from "@angular/forms";
 
 describe('AllergyComponent', () => {
   let component: AllergyComponent;
@@ -8,10 +11,11 @@ describe('AllergyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AllergyComponent]
+      declarations: [ AllergyComponent],
+      imports: [HttpClientModule, HttpClientTestingModule, FormsModule]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(AllergyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
@@ -36,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class PatientEndpointTest implements TestData {
+public class PatientEndpointTest {
     @Autowired
     private WebApplicationContext webAppContext;
     @Autowired
@@ -213,10 +212,12 @@ public class PatientEndpointTest implements TestData {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
         List<PatientDto> patients = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
-        assertThat(patients).hasSize(3).extracting(PatientDto::id, PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname, PatientDto::password).containsExactlyInAnyOrder(
-            tuple(patient1.id(), patient1.svnr(), patient1.email(), patient1.firstname(), patient1.lastname(), patient1.password()),
-            tuple(patient2.id(), patient2.svnr(), patient2.email(), patient2.firstname(), patient2.lastname(), patient2.password()),
-            tuple(patient3.id(), patient3.svnr(), patient3.email(), patient3.firstname(), patient3.lastname(), patient3.password()));
+        assertThat(patients).hasSize(3)
+            .extracting(PatientDto::id, PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname, PatientDto::password)
+            .containsExactlyInAnyOrder(
+                tuple(patient1.id(), patient1.svnr(), patient1.email(), patient1.firstname(), patient1.lastname(), patient1.password()),
+                tuple(patient2.id(), patient2.svnr(), patient2.email(), patient2.firstname(), patient2.lastname(), patient2.password()),
+                tuple(patient3.id(), patient3.svnr(), patient3.email(), patient3.firstname(), patient3.lastname(), patient3.password()));
     }
 
     @Test

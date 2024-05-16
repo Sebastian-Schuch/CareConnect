@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OutpatientDepartmentComponent } from './outpatient-department-create-edit.component';
+import {HttpClientModule} from "@angular/common/http";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {FormsModule} from "@angular/forms";
 
 describe('OutpatientDepartmentComponent', () => {
   let component: OutpatientDepartmentComponent;
@@ -8,7 +11,8 @@ describe('OutpatientDepartmentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OutpatientDepartmentComponent]
+      declarations: [OutpatientDepartmentComponent],
+      imports: [HttpClientModule, HttpClientTestingModule, FormsModule]
     })
     .compileComponents();
 
