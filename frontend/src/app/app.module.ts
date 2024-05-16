@@ -8,8 +8,6 @@ import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
-import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {UserCreateComponent} from "./components/user-create/user-create.component";
@@ -32,6 +30,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {StationComponent} from "./components/station/station.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
+import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
+import {LoginComponent} from "./components/login/login.component";
 
 
 @NgModule({
@@ -40,11 +40,14 @@ import {AllergyComponent} from "./components/allergy/allergy.component";
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    LoginComponent,
-    MessageComponent,
     TreatmentComponent,
     StationComponent,
-    AllergyComponent
+    AllergyComponent,
+    UserCreateComponent,
+    OutpatientDepartmentComponent,
+    OutpatientDepartmentDetailComponent,
+    MedicationCreateComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -53,9 +56,6 @@ import {AllergyComponent} from "./components/allergy/allergy.component";
     HttpClientModule,
     NgbModule,
     FormsModule,
-    OutpatientDepartmentComponent,
-    OutpatientDepartmentDetailComponent,
-    UserCreateComponent,
     MatChipsModule,
     MatFormFieldModule,
     MatSelectModule,

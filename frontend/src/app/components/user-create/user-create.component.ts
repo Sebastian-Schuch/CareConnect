@@ -11,11 +11,6 @@ import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-user-create',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgIf
-  ],
   templateUrl: './user-create.component.html',
   styleUrl: './user-create.component.scss'
 })
