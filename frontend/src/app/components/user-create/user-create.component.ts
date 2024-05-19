@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserCreateDto} from "../../dtos/user";
+import {UserCreateDto, UserLoginDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormsModule, NgForm, NgModel} from "@angular/forms";
@@ -81,7 +81,7 @@ export class UserCreateComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.user);
     if (form.valid) {
-      let observable: Observable<UserCreateDto>;
+      let observable: Observable<UserLoginDto>;
       switch (this.mode) {
         case Role.admin:
           observable = this.service.createAdmin(this.user);
@@ -100,7 +100,8 @@ export class UserCreateComponent implements OnInit {
           return;
       }
       observable.subscribe({
-        next: () => {
+        next: (data) => {
+          console.log(data);
           //this.notification.success(`Role ${this.user.name} successfully created.`);
           //this.router.navigate(['/dashboard']);
         },

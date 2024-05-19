@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,9 +28,9 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the email address.
      *
      * @param email the email address
-     * @return a application user
+     * @return the credentials of a application user
      */
-    ApplicationUser findApplicationUserByEmail(String email);
+    Credential findApplicationUserByEmail(String email);
 
     /**
      * Log in a user.
@@ -37,4 +40,35 @@ public interface UserService extends UserDetailsService {
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
     String login(UserLoginDto userLoginDto);
+
+    /**
+     * Creates the Credential Entity with the data given.
+     *
+     * @param toCreate the data of the doctor for the credential entity
+     * @return the users login data
+     */
+    UserLoginDto createDoctor(DoctorCreateDto toCreate);
+
+    /**
+     * Creates the Credential Entity with the data given.
+     *
+     * @param toCreate the data of the secretary for the credential entity
+     * @return the users login data
+     */
+    UserLoginDto createSecretary(SecretaryCreateDto toCreate);
+
+    /**
+     * Creates the Credential Entity with the data given.
+     *
+     * @param toCreate the data of the patient for the credential entity
+     * @return the users login data
+     */
+    UserLoginDto createPatient(PatientCreateDto toCreate);
+
+    /**
+     * Changes the password of the user who sent the request.
+     *
+     * @param newLogin the new user login data
+     */
+    void changePassword(UserLoginDto newLogin);
 }

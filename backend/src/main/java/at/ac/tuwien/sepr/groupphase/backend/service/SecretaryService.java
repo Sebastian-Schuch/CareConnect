@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 
 import java.util.List;
 
@@ -10,10 +11,11 @@ public interface SecretaryService {
     /**
      * Creates a secretary with the data given.
      *
-     * @param toCreate the data to create the secretary with
+     * @param toCreate    the data to create the secretary with
+     * @param credentials the credential to create the secretary with
      * @return the created secretary
      */
-    SecretaryDetailDto create(SecretaryCreateDto toCreate);
+    SecretaryDetailDto create(SecretaryCreateDto toCreate, Credential credentials);
 
     /**
      * Get the specified secretary.

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -103,6 +104,7 @@ public class OutpatientDepartmentEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAValidId_whenGetOutpatientDepartmentById_thenGetOutpatientDepartment() {
         OutpatientDepartmentDto outpatientDepartment = outpatientDepartmentEndpoint.getOutpatientDepartmentById(testObjectId);
         assertEquals(outpatientDepartment.id(), this.outpatientDepartment.getId());
@@ -113,6 +115,7 @@ public class OutpatientDepartmentEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAInvalidOutpatientDepartmentDtoCreate_whenCreateOutpatientDepartment_thenMethodArgumentNotValidException() {
         assertDoesNotThrow(() -> {
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/outpatient-departments")
@@ -124,6 +127,7 @@ public class OutpatientDepartmentEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAValidOutpatientDepartmentDtoCreate_whenCreateOutpatientDepartment_thenOutpatientDepartmentIsCreated() {
         assertDoesNotThrow(() -> {
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/outpatient-departments")
@@ -131,7 +135,8 @@ public class OutpatientDepartmentEndpointTest {
                     .content(objectMapper.writeValueAsString(outpatientDepartmentDtoCreate)))
                 .andExpect(status().isCreated())
                 .andReturn();
-            OutpatientDepartmentDto outpatientDepartmentDto = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), OutpatientDepartmentDto.class);
+            OutpatientDepartmentDto outpatientDepartmentDto =
+                objectMapper.readValue(mvcResult.getResponse().getContentAsString(), OutpatientDepartmentDto.class);
             assertEquals(outpatientDepartmentDto.name(), outpatientDepartmentDtoCreate.name());
             assertEquals(outpatientDepartmentDto.description(), outpatientDepartmentDtoCreate.description());
             assertEquals(outpatientDepartmentDto.capacity(), outpatientDepartmentDtoCreate.capacity());

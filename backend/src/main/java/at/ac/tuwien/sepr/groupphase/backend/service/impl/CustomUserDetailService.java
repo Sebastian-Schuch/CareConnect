@@ -1,14 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.CredentialsMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserCreationFacadeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -20,45 +33,55 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final UserRepository userRepository;
+    private final CredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
+    private final CredentialsMapper mapper;
+    private final UserCreationFacadeService userCreationFacadeService;
+
+    @Value("${PASSWORD_PEPPER}")
+    private String passwordPepper;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
-        this.userRepository = userRepository;
+    public CustomUserDetailService(CredentialRepository credentialRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
+                                   CredentialsMapper mapper, UserCreationFacadeService userCreationFacadeService) {
+        this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
+        this.mapper = mapper;
+        this.userCreationFacadeService = userCreationFacadeService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         LOGGER.debug("Load all user by email");
         try {
-            ApplicationUser applicationUser = findApplicationUserByEmail(email);
+            Credential applicationUser = findApplicationUserByEmail(email);
 
-            List<GrantedAuthority> grantedAuthorities;
-            if (applicationUser.getAdmin()) {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
-            } else {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-            }
+            List<GrantedAuthority> grantedRoles = AuthorityUtils.createAuthorityList(applicationUser.getRole().toString());
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+            return new User(applicationUser.getEmail(),
+                applicationUser.getPassword(),
+                applicationUser.getActive(),
+                true,
+                true,
+                true,
+                grantedRoles);
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
+    public Credential findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
-        ApplicationUser applicationUser = userRepository.findUserByEmail(email);
+        Credential applicationUser = credentialRepository.findByEmail(email);
         if (applicationUser != null) {
             return applicationUser;
         }
@@ -68,10 +91,107 @@ public class CustomUserDetailService implements UserService {
     @Override
     public String login(UserLoginDto userLoginDto) {
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-        if (userDetails != null && userDetails.isAccountNonExpired() && userDetails.isAccountNonLocked() && userDetails.isCredentialsNonExpired() && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+        //TODO add locking mechanism in sprint 2, see issue #40
+        //if (userDetails != null && userDetails.isAccountNonExpired() && userDetails.isAccountNonLocked() && userDetails.isCredentialsNonExpired() && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
+        if (userDetails != null && passwordEncoder.matches(userLoginDto.getPassword() + passwordPepper, userDetails.getPassword())) {
             List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
-        throw new BadCredentialsException("Username or password is incorrect or account is locked");
+        throw new BadCredentialsException("Username or password is incorrect or account is no longer active");
+    }
+
+    @Override
+    public UserLoginDto createDoctor(DoctorCreateDto toCreate) {
+        UserLoginDto userLogin = createCredentials(mapper.doctorCreateDtoToCredentialCreateDto(toCreate));
+        Credential credential = createCredentialEntity(mapper.doctorCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
+        DoctorDto doctorDto = userCreationFacadeService.createUser(toCreate, credential);
+        userLogin.setId(doctorDto.id());
+        return userLogin;
+    }
+
+    @Override
+    public UserLoginDto createSecretary(SecretaryCreateDto toCreate) {
+        UserLoginDto userLogin = createCredentials(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate));
+        Credential credential = createCredentialEntity(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
+        SecretaryDetailDto secretaryDetailDto = userCreationFacadeService.createUser(toCreate, credential);
+        userLogin.setId(secretaryDetailDto.id());
+        return userLogin;
+    }
+
+    @Override
+    public UserLoginDto createPatient(PatientCreateDto toCreate) {
+        UserLoginDto userLogin = createCredentials(mapper.patientCreateDtoToCredentialCreateDto(toCreate));
+        Credential credential = createCredentialEntity(mapper.patientCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
+        PatientDto patientDto = userCreationFacadeService.createUser(toCreate, credential);
+        userLogin.setId(patientDto.id());
+        return userLogin;
+    }
+
+    /**
+     * Create a credentials with the given data.
+     *
+     * @param toCreate the data of the user for the credential entity
+     * @return the users login data
+     */
+    private UserLoginDto createCredentials(CredentialCreateDto toCreate) {
+        // Generate a random password
+        String randomPassword = generateRandomPassword();
+
+
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail(toCreate.email());
+        userLoginDto.setPassword(randomPassword);
+
+        return userLoginDto;
+
+    }
+
+    /**
+     * Create a credentials entity with the given data.
+     *
+     * @param toCreate    the data of the user for the credential entity
+     * @param credentials the login data of the user
+     * @param role        the role of the user
+     * @return the users login data
+     */
+    private Credential createCredentialEntity(CredentialCreateDto toCreate, UserLoginDto credentials, Role role) {
+        // Encode the random password
+        String encodedPassword = passwordEncoder.encode(credentials.getPassword() + passwordPepper);
+
+        // Save the user with the encoded password
+        Credential credential = new Credential();
+        credential.setEmail(toCreate.email());
+        credential.setFirstName(toCreate.firstname());
+        credential.setLastName(toCreate.lastname());
+        credential.setPassword(encodedPassword);
+        credential.setActive(true);
+        credential.setRole(role);
+        credential.setInitialPassword(true);
+
+        return credential;
+    }
+
+    @Override
+    public void changePassword(UserLoginDto newLogin) {
+        Credential credential = findApplicationUserByEmail(newLogin.getEmail());
+        credential.setPassword(passwordEncoder.encode(newLogin.getPassword() + passwordPepper));
+        credential.setInitialPassword(false);
+        credentialRepository.save(credential);
+    }
+
+    /**
+     * Generate a random password of length 12.
+     *
+     * @return the random password
+     */
+    private String generateRandomPassword() {
+        // Generate a random password of length 12
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+*#_-$%";
+        StringBuilder randomPassword = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 12; i++) {
+            randomPassword.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return randomPassword.toString();
     }
 }

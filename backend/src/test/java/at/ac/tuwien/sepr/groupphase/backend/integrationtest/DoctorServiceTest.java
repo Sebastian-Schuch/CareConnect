@@ -2,9 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +45,15 @@ public class DoctorServiceTest {
     @Test
     public void givenValidDoctorCreateDto_whenCreateDoctor_thenCreatedDoctorIsReturned() {
         DoctorCreateDto toCreate = new DoctorCreateDto("a@a.a", "a", "b");
-        DoctorDto createdDoctor = doctorService.createDoctor(toCreate);
+        Credential credential = new Credential();
+        credential.setEmail("a@a.a");
+        credential.setActive(true);
+        credential.setFirstName("a");
+        credential.setLastName("b");
+        credential.setPassword("password");
+        credential.setInitialPassword(false);
+        credential.setRole(Role.DOCTOR);
+        DoctorDto createdDoctor = doctorService.createDoctor(toCreate, credential);
         assertAll("Grouped Assertions of Doctor",
             () -> assertEquals(toCreate.email(), createdDoctor.email(), "email should be equal"),
             () -> assertEquals(toCreate.firstname(), createdDoctor.firstname(), "firstname should be equal"),
@@ -57,7 +68,15 @@ public class DoctorServiceTest {
     @Test
     public void givenCreateDoctor_whenGetDoctorById_thenDoctorIsReturned() {
         DoctorCreateDto toCreate = new DoctorCreateDto("a@a.a", "a", "b");
-        DoctorDto createdDoctor = doctorService.createDoctor(toCreate);
+        Credential credential = new Credential();
+        credential.setEmail("a@a.a");
+        credential.setActive(true);
+        credential.setFirstName("a");
+        credential.setLastName("b");
+        credential.setPassword("password");
+        credential.setInitialPassword(false);
+        credential.setRole(Role.DOCTOR);
+        DoctorDto createdDoctor = doctorService.createDoctor(toCreate, credential);
         DoctorDto searchedDoctor = doctorService.getDoctorById(createdDoctor.id());
         assertAll("Grouped Assertions of Doctor",
             () -> assertEquals(createdDoctor.id(), searchedDoctor.id(), "ID should be equal"),
@@ -71,11 +90,35 @@ public class DoctorServiceTest {
     @Test
     public void givenThreeCreateDoctors_whenGetAllDoctors_thenThreeDoctorsAreReturned() {
         DoctorCreateDto toCreate1 = new DoctorCreateDto("a@a.a", "a", "b");
-        DoctorDto createdDoctor1 = doctorService.createDoctor(toCreate1);
+        Credential credential1 = new Credential();
+        credential1.setEmail("a@a.a");
+        credential1.setActive(true);
+        credential1.setFirstName("a");
+        credential1.setLastName("b");
+        credential1.setPassword("password");
+        credential1.setInitialPassword(false);
+        credential1.setRole(Role.DOCTOR);
+        DoctorDto createdDoctor1 = doctorService.createDoctor(toCreate1, credential1);
         DoctorCreateDto toCreate2 = new DoctorCreateDto("b@b.b", "a", "b");
-        DoctorDto createdDoctor2 = doctorService.createDoctor(toCreate2);
+        Credential credential2 = new Credential();
+        credential2.setEmail("b@b.b");
+        credential2.setActive(true);
+        credential2.setFirstName("a");
+        credential2.setLastName("b");
+        credential2.setPassword("password");
+        credential2.setInitialPassword(false);
+        credential2.setRole(Role.DOCTOR);
+        DoctorDto createdDoctor2 = doctorService.createDoctor(toCreate2, credential2);
         DoctorCreateDto toCreate3 = new DoctorCreateDto("c@c.c", "a", "b");
-        DoctorDto createdDoctor3 = doctorService.createDoctor(toCreate3);
+        Credential credential3 = new Credential();
+        credential3.setEmail("c@c.c");
+        credential3.setActive(true);
+        credential3.setFirstName("a");
+        credential3.setLastName("b");
+        credential3.setPassword("password");
+        credential3.setInitialPassword(false);
+        credential3.setRole(Role.DOCTOR);
+        DoctorDto createdDoctor3 = doctorService.createDoctor(toCreate3, credential3);
 
         List<DoctorDto> allDoctors = doctorService.getAllDoctors();
         assertAll("Grouped Assertions of all Doctors",

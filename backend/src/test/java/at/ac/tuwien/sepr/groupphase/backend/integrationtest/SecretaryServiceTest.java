@@ -2,9 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,7 +47,15 @@ public class SecretaryServiceTest {
     @Test
     public void givenNewlyCreatedSecretary_whenGettingSecretaryWithId_thenReturnSecretary() {
         SecretaryCreateDto createSecretary = new SecretaryCreateDto("a@a.a", "a", "b");
-        SecretaryDetailDto createdSecretary = secretaryService.create(createSecretary);
+        Credential credential = new Credential();
+        credential.setEmail("a@a.a");
+        credential.setActive(true);
+        credential.setFirstName("a");
+        credential.setLastName("b");
+        credential.setPassword("password");
+        credential.setInitialPassword(false);
+        credential.setRole(Role.SECRETARY);
+        SecretaryDetailDto createdSecretary = secretaryService.create(createSecretary, credential);
         SecretaryDetailDto foundSecretary = secretaryService.getById(createdSecretary.id());
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(createdSecretary.id(), foundSecretary.id(), "ID should be equal"),
@@ -65,7 +76,15 @@ public class SecretaryServiceTest {
     @Test
     public void givenSecretaryCreateDto_whenCreatingNewSecretary_thenReturnNewlyCreated() {
         SecretaryCreateDto createSecretary = new SecretaryCreateDto("a@a.a", "a", "b");
-        SecretaryDetailDto createdSecretary = secretaryService.create(createSecretary);
+        Credential credential = new Credential();
+        credential.setEmail("a@a.a");
+        credential.setActive(true);
+        credential.setFirstName("a");
+        credential.setLastName("b");
+        credential.setPassword("password");
+        credential.setInitialPassword(false);
+        credential.setRole(Role.PATIENT);
+        SecretaryDetailDto createdSecretary = secretaryService.create(createSecretary, credential);
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(createdSecretary.email(), createSecretary.email(), "Email should be equal"),
             () -> assertEquals(createdSecretary.firstname(), createSecretary.firstname(), "Firstname should be equal"),
@@ -81,11 +100,35 @@ public class SecretaryServiceTest {
     @Test
     public void givenThreeNewlyCreatedSecretariesInDatabase_whenGettingAllSecretaries_thenReturnThreeSecretaries() {
         SecretaryCreateDto createSecretary1 = new SecretaryCreateDto("a@a.a", "a", "b");
-        SecretaryDetailDto createdSecretary1 = secretaryService.create(createSecretary1);
+        Credential credential1 = new Credential();
+        credential1.setEmail("a@a.a");
+        credential1.setActive(true);
+        credential1.setFirstName("a");
+        credential1.setLastName("b");
+        credential1.setPassword("password");
+        credential1.setInitialPassword(false);
+        credential1.setRole(Role.PATIENT);
+        SecretaryDetailDto createdSecretary1 = secretaryService.create(createSecretary1, credential1);
         SecretaryCreateDto createSecretary2 = new SecretaryCreateDto("b@b.b", "a", "b");
-        SecretaryDetailDto createdSecretary2 = secretaryService.create(createSecretary2);
+        Credential credential2 = new Credential();
+        credential2.setEmail("b@b.b");
+        credential2.setActive(true);
+        credential2.setFirstName("a");
+        credential2.setLastName("b");
+        credential2.setPassword("password");
+        credential2.setInitialPassword(false);
+        credential2.setRole(Role.PATIENT);
+        SecretaryDetailDto createdSecretary2 = secretaryService.create(createSecretary2, credential2);
         SecretaryCreateDto createSecretary3 = new SecretaryCreateDto("c@c.c", "a", "b");
-        SecretaryDetailDto createdSecretary3 = secretaryService.create(createSecretary3);
+        Credential credential3 = new Credential();
+        credential3.setEmail("c@c.c");
+        credential3.setActive(true);
+        credential3.setFirstName("a");
+        credential3.setLastName("b");
+        credential3.setPassword("password");
+        credential3.setInitialPassword(false);
+        credential3.setRole(Role.PATIENT);
+        SecretaryDetailDto createdSecretary3 = secretaryService.create(createSecretary3, credential3);
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(createSecretary1.email(), createdSecretary1.email(), "Email should be equal"),
             () -> assertEquals(createSecretary1.firstname(), createdSecretary1.firstname(), "Firstname should be equal"),
