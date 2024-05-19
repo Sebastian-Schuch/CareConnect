@@ -3,12 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
-import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,22 +19,20 @@ import java.util.List;
 public class DoctorServiceImpl implements DoctorService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final CredentialService credentialService;
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
 
-    public DoctorServiceImpl(CredentialService credentialService, DoctorRepository doctorRepository, DoctorMapper doctorMapper) {
-        this.credentialService = credentialService;
+    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorMapper doctorMapper) {
         this.doctorRepository = doctorRepository;
         this.doctorMapper = doctorMapper;
     }
 
 
     @Override
-    public DoctorDto createDoctor(DoctorCreateDto toCreate) {
+    public DoctorDto createDoctor(DoctorCreateDto toCreate, Credential credentials) {
         LOG.trace("createDoctor({})", toCreate);
         Doctor doctor = new Doctor();
-        doctor.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), Role.DOCTOR));
+        doctor.setCredential(credentials);
         return doctorMapper.doctorToDoctorDto(doctorRepository.save(doctor));
 
     }

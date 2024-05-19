@@ -13,3 +13,8 @@ export interface UserDetailDto {
   lastname: string;
   password: string;
 }
+
+export interface UserLoginDto {
+  email: string;
+  password: string;
+}

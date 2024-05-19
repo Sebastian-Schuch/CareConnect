@@ -2,12 +2,14 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
-import jakarta.annotation.security.PermitAll;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +27,11 @@ public class SecretaryEndpoint {
     static final String BASE_PATH = "/api/v1/secretaries";
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SecretaryService secretaryService;
+    private final UserService userService;
 
-    public SecretaryEndpoint(SecretaryService secretaryService) {
+    public SecretaryEndpoint(SecretaryService secretaryService, UserService userService) {
         this.secretaryService = secretaryService;
+        this.userService = userService;
     }
 
     /**
@@ -37,14 +41,13 @@ public class SecretaryEndpoint {
      * @return the created secretary
      */
 
-    //TODO @Secured("ADMIN")
-    @PermitAll
+    @Secured("ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public SecretaryDetailDto create(@Valid @RequestBody SecretaryCreateDto toCreate) {
+    public UserLoginDto create(@Valid @RequestBody SecretaryCreateDto toCreate) {
         LOG.info("POST" + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
-        return this.secretaryService.create(toCreate);
+        return userService.createSecretary(toCreate);
     }
 
     /**
@@ -54,9 +57,8 @@ public class SecretaryEndpoint {
      * @return the secretary requested
      */
 
-    @PermitAll
     @GetMapping({"/{id}"})
-    //TODO @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     public SecretaryDetailDto getById(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/{}", id);
         return secretaryService.getById(id);
@@ -67,8 +69,7 @@ public class SecretaryEndpoint {
      *
      * @return a list of all secretaries
      */
-    @PermitAll
-    //TODO @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     @GetMapping
     public List<SecretaryDetailDto> getAll() {
         LOG.info("GET " + BASE_PATH);

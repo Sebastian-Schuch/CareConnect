@@ -3,12 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,22 +19,20 @@ import java.util.List;
 public class PatientServiceImpl implements PatientService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final CredentialService credentialService;
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
 
-    public PatientServiceImpl(CredentialService credentialService, PatientRepository patientRepository, PatientMapper patientMapper) {
-        this.credentialService = credentialService;
+    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper) {
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
     }
 
     @Override
-    public PatientDto createPatient(PatientCreateDto toCreate) {
+    public PatientDto createPatient(PatientCreateDto toCreate, Credential credentials) {
         LOG.trace("createPatient({})", toCreate);
         Patient patient = new Patient();
         patient.setSvnr(toCreate.svnr());
-        patient.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialCreateDto(), Role.PATIENT));
+        patient.setCredential(credentials);
         return patientMapper.patientToPatientDto(patientRepository.save(patient));
     }
 

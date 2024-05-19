@@ -3,12 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.CredentialService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
-import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,21 +20,19 @@ public class SecretaryServiceImpl implements SecretaryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final CredentialService credentialService;
     private final SecretaryRepository secretaryRepository;
     private final SecretaryMapper secretaryMapper;
 
-    public SecretaryServiceImpl(CredentialService credentialService, SecretaryRepository secretaryRepository, SecretaryMapper secretaryMapper) {
-        this.credentialService = credentialService;
+    public SecretaryServiceImpl(SecretaryRepository secretaryRepository, SecretaryMapper secretaryMapper) {
         this.secretaryRepository = secretaryRepository;
         this.secretaryMapper = secretaryMapper;
     }
 
     @Override
-    public SecretaryDetailDto create(SecretaryCreateDto toCreate) {
+    public SecretaryDetailDto create(SecretaryCreateDto toCreate, Credential credentials) {
         LOG.trace("create{}", toCreate);
         Secretary secretary = new Secretary();
-        secretary.setCredential(credentialService.createCredentialEntity(toCreate.toCredentialDtoCreate(), Role.SECRETARY));
+        secretary.setCredential(credentials);
         return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretaryRepository.save(secretary));
     }
 

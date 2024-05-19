@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {UserCreateDto, UserDetailDto} from "../dtos/user";
+import {UserCreateDto, UserDetailDto, UserLoginDto} from "../dtos/user";
 import {Observable} from "rxjs";
 import {Globals} from "../global/globals";
 
@@ -27,8 +27,8 @@ export class UserService {
    * @param admin the data for the admin that should be created
    * @return an Observable for the created admin
    */
-  createAdmin(admin: UserCreateDto): Observable<UserDetailDto> {
-    return this.http.post<UserDetailDto>(
+  createAdmin(admin: UserCreateDto): Observable<UserLoginDto> {
+    return this.http.post<UserLoginDto>(
       this.adminBaseUri,
       admin
     );
@@ -59,8 +59,8 @@ export class UserService {
    * @param doctor the data for the doctors that should be created
    * @return an Observable for the created doctors
    */
-  createDoctor(doctor: UserCreateDto): Observable<UserDetailDto> {
-    return this.http.post<UserDetailDto>(
+  createDoctor(doctor: UserCreateDto): Observable<UserLoginDto> {
+    return this.http.post<UserLoginDto>(
       this.doctorBaseUri,
       doctor
     );
@@ -91,8 +91,8 @@ export class UserService {
    * @param secretary the data for the secretary that should be created
    * @return an Observable for the created secretary
    */
-  createSecretary(secretary: UserCreateDto): Observable<UserDetailDto> {
-    return this.http.post<UserDetailDto>(
+  createSecretary(secretary: UserCreateDto): Observable<UserLoginDto> {
+    return this.http.post<UserLoginDto>(
       this.secretaryBaseUri,
       secretary
     );
@@ -118,19 +118,6 @@ export class UserService {
   }
 
   /**
-   * Create a new patient in the system.
-   *
-   * @param patient the data for the patient that should be created
-   * @return an Observable for the created patient
-   */
-  createPatient(patient: UserCreateDto): Observable<UserDetailDto> {
-    return this.http.post<UserDetailDto>(
-      this.patientBaseUri,
-      patient
-    );
-  }
-
-  /**
    * Get the patient with given ID.
    *
    * @param id the ID of the patient to get
@@ -147,5 +134,18 @@ export class UserService {
    */
   getAllPatients(): Observable<UserDetailDto[]> {
     return this.http.get<UserDetailDto[]>(`${this.patientBaseUri}`);
+  }
+
+  /**
+   * Create a new patient in the system.
+   *
+   * @param patient the data for the patient that should be created
+   * @return an Observable for the created patient
+   */
+  createPatient(patient: UserCreateDto): Observable<UserLoginDto> {
+    return this.http.post<UserLoginDto>(
+      this.patientBaseUri,
+      patient
+    );
   }
 }

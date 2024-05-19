@@ -2,12 +2,14 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import jakarta.annotation.security.PermitAll;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +29,11 @@ public class PatientEndpoint {
 
     private final PatientService patientService;
 
-    public PatientEndpoint(PatientService patientService) {
+    private final UserService userService;
+
+    public PatientEndpoint(PatientService patientService, UserService userService) {
         this.patientService = patientService;
+        this.userService = userService;
     }
 
     /**
@@ -37,14 +42,13 @@ public class PatientEndpoint {
      * @param toCreate the data for the patient to create
      * @return the created patient
      */
-    //TODO @Secured("SECRETARY")
-    @PermitAll
+    @Secured("SECRETARY")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public PatientDto create(@Valid @RequestBody PatientCreateDto toCreate) {
+    public UserLoginDto create(@Valid @RequestBody PatientCreateDto toCreate) {
         LOG.info("POST " + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
-        return this.patientService.createPatient(toCreate);
+        return userService.createPatient(toCreate);
     }
 
     /**
@@ -53,8 +57,7 @@ public class PatientEndpoint {
      * @param id the id of patient requested
      * @return the patient requested
      */
-    //TODO @Secured({"SECRETARY", "PATIENT", "ADMIN", "DOCTOR"})
-    @PermitAll
+    @Secured({"SECRETARY", "PATIENT", "ADMIN", "DOCTOR"})
     @GetMapping({"/{id}"})
     public PatientDto get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
@@ -66,8 +69,7 @@ public class PatientEndpoint {
      *
      * @return a list of all patients
      */
-    //TODO @Secured({"SECRETARY", "DOCTOR"})
-    @PermitAll
+    @Secured({"SECRETARY", "DOCTOR"})
     @GetMapping
     public List<PatientDto> getAll() {
         LOG.info("GET " + BASE_PATH);

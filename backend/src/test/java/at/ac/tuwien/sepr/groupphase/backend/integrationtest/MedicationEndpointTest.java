@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -59,6 +60,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenInvalidUrl_whenSendRequest_Returns404NotFoundStatus() throws Exception {
         mockMvc
             .perform(MockMvcRequestBuilders
@@ -68,6 +70,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenValidData_whenCreateNewMedication_thenReturn200OkStatusAndCreatedMedication() throws Exception {
         String json = ow.writeValueAsString(new MedicationCreateDto("WieAgra"));
         byte[] body = mockMvc
@@ -88,6 +91,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenEmptyName_whenCreateNewMedication_thenReturn422UnprocessableEntityStatus() throws Exception {
         String json = ow.writeValueAsString(new MedicationCreateDto(""));
         mockMvc
@@ -98,6 +102,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void giveNameTooLong_whenCreateNewMedication_thenReturn422UnprocessableEntityStatus() throws Exception {
         String json = ow.writeValueAsString(new MedicationCreateDto(
             "We're no strangers to loveYou know the rules and so do IA full commitment's what I'm thinking ofYou wouldn't get this from any other guyI just wanna tell you how I'm feelingGotta make you understandNever gonna give you upNever gonna let you downNever gonna run around and desert youNever gonna make you cryNever gonna say goodbyeNever gonna tell a lie and hurt youWe've known each other for so longYour heart's been aching, butYou're too shy to say itInside, we both know what's been going onWe know the game and we're gonna play itAnd if you ask me how I'm feelingDon't tell me you're too blind to seeNever gonna give you upNever gonna let you downNever gonna run around and desert youNever gonna make you cryNever gonna say goodbyeNever gonna tell a lie and hurt youNever gonna give you upNever gonna let you downNever gonna run around and desert youNever gonna make you cryNever gonna say goodbyeNever gonna tell a lie and hurt you(Ooh, give you up)(Ooh, give you up)Never gonna give, never gonna give(Give you up)Never gonna give, never gonna give(Give you up)We've known each other for so longYour heart's been aching, butYou're too shy to say itInside, we both know what's been going onWe know the game and we're gonna play itI just wanna tell you how I'm feelingGotta make you understandNever gonna give you upNever gonna let you downNever gonna run around and desert youNever gonna make you cryNever gonna say goodbyeNever gonna tell a lie and hurt youNever gonna give you upNever gonna let you downNever gonna run around and desert youNever gonna make you cryNever gonna say goodbyeNever gonna tell a lie and hurt youNever gonna give you upNever gonna let you downNever gonna run around and desert youNever gonna make you cryNever gonna say goodbyeNever gonna tell a lie and hurt you"));
@@ -109,6 +114,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenNewlyCreatedSecretary_whenGetSecretary_thenReturnSecretary() throws Exception {
         String json = ow.writeValueAsString(new MedicationCreateDto("WieAgra"));
         byte[] bodyCreate =
@@ -131,6 +137,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenInvalidId_whenGetMedication_thenReturn404NotFoundStatus() throws Exception {
         mockMvc
             .perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + -1)
@@ -139,6 +146,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenThreeCreatedMedications_whenGetAllMedications_thenReturnsThreeMedications() throws Exception {
         String json = ow.writeValueAsString(new MedicationCreateDto("WieAgra"));
         byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -177,6 +185,7 @@ public class MedicationEndpointTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenNoMedicationsInDatabase_whenGetAllMedicationss_thenReturnsEmptyList() throws Exception {
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .accept(MediaType.APPLICATION_JSON))

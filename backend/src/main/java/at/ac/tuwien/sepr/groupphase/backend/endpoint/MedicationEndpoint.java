@@ -3,11 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +36,7 @@ public class MedicationEndpoint {
      * @param toCreate the data for the medication to create
      * @return the created medication
      */
-    //TODO: @Secured("ADMIN")
-    @PermitAll
+    @Secured("ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public MedicationDto create(@Valid @RequestBody MedicationCreateDto toCreate) {
@@ -53,9 +52,8 @@ public class MedicationEndpoint {
      * @return the medication requested
      */
 
-    @PermitAll
     @GetMapping({"/{id}"})
-    //TODO: @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     public MedicationDto getById(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/{}", id);
         return medicationService.getById(id);
@@ -66,8 +64,7 @@ public class MedicationEndpoint {
      *
      * @return a list of all medications
      */
-    @PermitAll
-    //TODO: @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     @GetMapping
     public List<MedicationDto> getAll() {
         LOG.info("GET " + BASE_PATH);

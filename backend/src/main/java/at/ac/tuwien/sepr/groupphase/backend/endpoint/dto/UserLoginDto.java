@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class UserLoginDto {
+    private long id;
 
     @NotNull(message = "Email must not be null")
     @Email
@@ -28,6 +29,14 @@ public class UserLoginDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override

@@ -51,3 +51,6 @@ buildNumber.properties
 
 ### VS Code ###
 .vscode/
+
+### Environment ###
+/src/main/resources/application.properties

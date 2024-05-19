@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 
 import java.util.List;
@@ -10,10 +11,11 @@ public interface DoctorService {
     /**
      * Creates a doctor with the data given.
      *
-     * @param toCreate the data to create the doctor with
+     * @param toCreate    the data to create the doctor with
+     * @param credentials the credentials of the doctor
      * @return the created doctor
      */
-    DoctorDto createDoctor(DoctorCreateDto toCreate);
+    DoctorDto createDoctor(DoctorCreateDto toCreate, Credential credentials);
 
     /**
      * Get the specified doctor.

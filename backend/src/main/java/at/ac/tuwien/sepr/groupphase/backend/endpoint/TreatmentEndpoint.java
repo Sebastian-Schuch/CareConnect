@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +44,7 @@ public class TreatmentEndpoint {
      * @return the created treatment as dto
      * @throws MethodArgumentNotValidException if the dto is not valid
      */
-    //@Secured({"ADMIN"})
-    @PermitAll
+    @Secured({"ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TreatmentDto createTreatment(@Valid @RequestBody TreatmentDtoCreate treatmentDtoCreate) throws MethodArgumentNotValidException {
@@ -59,7 +59,7 @@ public class TreatmentEndpoint {
      * @param id the id of the treatment
      * @return the treatment as dto
      */
-    //@Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
     @PermitAll
     @GetMapping({"/{id}"})
     public TreatmentDto getTreatmentById(@PathVariable("id") Long id) {
