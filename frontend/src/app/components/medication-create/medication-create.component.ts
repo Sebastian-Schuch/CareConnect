@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {MedicationCreateDto} from "../../dtos/medication";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MedicationService} from "../../services/medication.service";
-import {FormsModule, NgForm, NgModel} from "@angular/forms";
+import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-medication-create',
@@ -19,8 +20,8 @@ export class MedicationCreateComponent implements OnInit {
   constructor(
     private service: MedicationService,
     private router: Router,
-    private route: ActivatedRoute
-    //private notification: ToastrService,
+    private route: ActivatedRoute,
+    private notification: ToastrService
     //private errorFormatter: ErrorFormatterService
   ) {
   }
@@ -41,18 +42,13 @@ export class MedicationCreateComponent implements OnInit {
       observable = this.service.createMedication(this.medication);
       observable.subscribe({
         next: () => {
-          //this.notification.success(`Horse ${this.horse.name} successfully ${this.modeActionFinished}.`);
-          //this.router.navigate(['/horses']);
+          this.notification.success('Successfully created ' + this.medication.name + ' Medication');
         },
         error: error => {
+          this.notification.error('Error creating Medication');
           console.error('Error creating Medication', error);
-          //this.notification.error(this.errorFormatter.format(error), "Could not create Horse", {
-          //enableHtml: true,
-          //timeOut: 10000,
-          //})
         }
       });
     }
   }
-
 }

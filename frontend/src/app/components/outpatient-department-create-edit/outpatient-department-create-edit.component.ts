@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {OutpatientDepartmentDtoCreate} from "../../dtos/outpatient-department";
-import {NgForOf} from "@angular/common";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-outpatient-department-create-edit',
@@ -13,6 +12,7 @@ export class OutpatientDepartmentComponent {
 
   constructor(
     private outpatientDepartmentService: OutpatientDepartmentService,
+    private notification: ToastrService
   ) {
   }
 
@@ -54,13 +54,13 @@ export class OutpatientDepartmentComponent {
   };
 
   isFormValid(): boolean {
-    if (!this.outpatientDepartment.name || this.outpatientDepartment.name.length > 255 || this.outpatientDepartment.name.length<1) {
+    if (!this.outpatientDepartment.name || this.outpatientDepartment.name.length > 255 || this.outpatientDepartment.name.length < 1) {
       return false;
     }
-    if(!this.outpatientDepartment.description || this.outpatientDepartment.description.length > 1000 || this.outpatientDepartment.description.length<1){
+    if (!this.outpatientDepartment.description || this.outpatientDepartment.description.length > 1000 || this.outpatientDepartment.description.length < 1) {
       return false;
     }
-    if(this.outpatientDepartment.capacity < 0 || this.outpatientDepartment.capacity > 1000){
+    if (this.outpatientDepartment.capacity < 0 || this.outpatientDepartment.capacity > 1000) {
       return false;
     }
 
@@ -72,6 +72,7 @@ export class OutpatientDepartmentComponent {
     }
     return true;
   }
+
   onSubmit(): void {
     for (let day of this.days) {
       let hours = this.outpatientDepartment.openingHours[day];
@@ -79,19 +80,22 @@ export class OutpatientDepartmentComponent {
       if (hours.closed) {
         this.outpatientDepartment.openingHours[day] = {
           open: null,
-          close: null};
-      } else{
+          close: null
+        };
+      } else {
         this.outpatientDepartment.openingHours[day] = {
           open: hours.open,
-          close: hours.close};
+          close: hours.close
+        };
       }
     }
     console.log(this.outpatientDepartment);
     this.outpatientDepartmentService.createOutpatientDepartment(this.outpatientDepartment).subscribe({
       next: data => {
-        console.log(data);
+        this.notification.success('Outpatient Department ' + data.name + ' created');
       },
       error: error => {
+        this.notification.error('Outpatient Department could not be created');
         console.error('There was an error!', error);
       }
     })

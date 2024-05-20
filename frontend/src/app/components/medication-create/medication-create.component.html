@@ -1,7 +1,5 @@
-<h1 class="display-1">Create Medication</h1>
-
-
-<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)"
+      aria-label="Form to create a medicine">
   <div class="row">
     <!-- Start first name and last name row -->
     <div class="mb-2 col-lg-6">

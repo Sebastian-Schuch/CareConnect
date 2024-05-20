@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
@@ -9,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.CredentialsMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -112,7 +110,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public UserLoginDto createSecretary(SecretaryCreateDto toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate));
-        Credential credential = createCredentialEntity(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
+        Credential credential = createCredentialEntity(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.SECRETARY);
         SecretaryDetailDto secretaryDetailDto = userCreationFacadeService.createUser(toCreate, credential);
         userLogin.setId(secretaryDetailDto.id());
         return userLogin;
@@ -121,7 +119,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public UserLoginDto createPatient(PatientCreateDto toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.patientCreateDtoToCredentialCreateDto(toCreate));
-        Credential credential = createCredentialEntity(mapper.patientCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
+        Credential credential = createCredentialEntity(mapper.patientCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.PATIENT);
         PatientDto patientDto = userCreationFacadeService.createUser(toCreate, credential);
         userLogin.setId(patientDto.id());
         return userLogin;

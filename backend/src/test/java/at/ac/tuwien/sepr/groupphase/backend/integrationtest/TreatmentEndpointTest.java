@@ -122,7 +122,7 @@ class TreatmentEndpointTest {
         );
     }
 
-    // TODO: Add further tests as soon as test-data is available (Issue #41)
+    //TODO: Add further tests as soon as test-data is available (Issue #41)
     @Test
     void givenValidTreatmentDto_whenCreateTreatment_thenReturnCreatedTreatment() throws Exception {
         Date date = new Date();

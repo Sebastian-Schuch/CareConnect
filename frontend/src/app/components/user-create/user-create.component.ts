@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {UserCreateDto, UserLoginDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormsModule, NgForm, NgModel} from "@angular/forms";
+import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Role} from "../../dtos/Role";
-import {NgIf} from "@angular/common";
-//import {ToastrService} from 'ngx-toastr';
+import {ToastrService} from 'ngx-toastr';
+
 //import {ErrorFormatterService} from "../../../service/error-formatter.service";
 
 @Component({
@@ -18,7 +18,8 @@ import {NgIf} from "@angular/common";
 
 export class UserCreateComponent implements OnInit {
 
-  mode: Role = Role.patient;
+  @Input() mode: Role;
+  //mode: Role = Role.patient;
 
   user: UserCreateDto = {
     email: '',
@@ -29,8 +30,8 @@ export class UserCreateComponent implements OnInit {
   constructor(
     private service: UserService,
     private router: Router,
-    private route: ActivatedRoute
-    //private notification: ToastrService,
+    private route: ActivatedRoute,
+    private notification: ToastrService,
     //private errorFormatter: ErrorFormatterService
   ) {
   }
@@ -68,7 +69,9 @@ export class UserCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.mode = data.mode;
+      if (data.mode != null) {
+        this.mode = data.mode;
+      }
     });
   }
 
@@ -100,17 +103,13 @@ export class UserCreateComponent implements OnInit {
           return;
       }
       observable.subscribe({
-        next: (data) => {
-          console.log(data);
-          //this.notification.success(`Role ${this.user.name} successfully created.`);
+        next: () => {
+          this.notification.success(`${this.role} ${this.user.firstname} ${this.user.lastname} successfully created.`);
           //this.router.navigate(['/dashboard']);
         },
         error: error => {
           console.error('Error creating User', error);
-          //this.notification.error(this.errorFormatter.format(error), "Could not create User", {
-          //enableHtml: true,
-          //timeOut: 10000,
-          //})
+          this.notification.error(`Could not create ${this.role}`);
         }
       });
     }

@@ -139,7 +139,7 @@ public class PatientEndpointTest {
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
-        //TODO: is this the right statuscode?
+        //TODO: fix the status code of the global exception handler (Issue #45)
     }
 
     @Test

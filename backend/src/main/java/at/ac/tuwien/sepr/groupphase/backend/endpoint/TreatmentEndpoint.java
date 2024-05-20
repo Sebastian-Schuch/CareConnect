@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,7 @@ public class TreatmentEndpoint {
      * @return the created treatment as dto
      * @throws MethodArgumentNotValidException if the dto is not valid
      */
-    @Secured({"ADMIN"})
+    @Secured({"DOCTOR"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TreatmentDto createTreatment(@Valid @RequestBody TreatmentDtoCreate treatmentDtoCreate) throws MethodArgumentNotValidException {
@@ -59,8 +58,7 @@ public class TreatmentEndpoint {
      * @param id the id of the treatment
      * @return the treatment as dto
      */
-    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
-    @PermitAll
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/{id}"})
     public TreatmentDto getTreatmentById(@PathVariable("id") Long id) {
         LOGGER.info("getTreatmentById({})", id);

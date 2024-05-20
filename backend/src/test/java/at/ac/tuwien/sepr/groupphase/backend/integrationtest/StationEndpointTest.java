@@ -54,7 +54,7 @@ public class StationEndpointTest extends StationTestData {
             .getResponse();
 
         // then
-        assertEquals(200, response.getStatus());
+        assertEquals(201, response.getStatus());
         StationDto stationDto = objectMapper.readValue(response.getContentAsString(), StationDto.class);
         assertNotNull(stationDto.getId());
         assertEquals(STATION_NAME, stationDto.getName());
@@ -75,7 +75,7 @@ public class StationEndpointTest extends StationTestData {
             .getResponse();
 
         // then
-        assertEquals(200, createResponse.getStatus());
+        assertEquals(201, createResponse.getStatus());
         StationDto createdStationDto = objectMapper.readValue(createResponse.getContentAsString(), StationDto.class);
         assertNotNull(createdStationDto.getId());
         assertEquals(STATION_NAME, createdStationDto.getName());

@@ -21,7 +21,7 @@ public class TreatmentMedicine {
     @ManyToOne
     private Medication medicine;
 
-    @Convert(converter = EncryptorConverter.class)
+    //@Convert(converter = EncryptorConverter.class)
     private Long amount;
 
     @Convert(converter = EncryptorConverter.class)

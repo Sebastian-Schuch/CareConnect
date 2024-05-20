@@ -39,14 +39,14 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.createOutpatientDepartment(outpatientDepartmentDto);
     }
 
-    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/{id}"})
     public OutpatientDepartmentDto getOutpatientDepartmentById(@PathVariable("id") Long id) {
         LOGGER.info("getOutpatientDepartmentById(" + id + ")");
         return outpatientDepartmentService.getOutpatientDepartmentById(id);
     }
 
-    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "NURSE"})
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
         LOGGER.info("getAllOutpatientDepartments()");
