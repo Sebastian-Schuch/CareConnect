@@ -3,6 +3,7 @@ import {StationCreateDto} from "../../dtos/Station";
 import {StationService} from "../../services/station.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-station',
@@ -21,8 +22,10 @@ export class StationComponent implements OnInit {
   };
 
   constructor(
-    private stationService: StationService
-  ) {}
+    private stationService: StationService,
+    private notification: ToastrService
+  ) {
+  }
 
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.station);
@@ -30,7 +33,8 @@ export class StationComponent implements OnInit {
       let observable: Observable<StationCreateDto> = this.stationService.createStation(this.station);
 
       observable.subscribe({
-        next: () => {
+        next: data => {
+          this.notification.success('Successfully created ' + data.name + ' Station');
           //this.router.navigate(['/dashboard']);
         },
         error: error => {

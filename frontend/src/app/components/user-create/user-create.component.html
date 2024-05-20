@@ -1,116 +1,118 @@
-<h1 class="display-1">Create {{role}}</h1>
-
-
-<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
-  <div class="row">
-    <!-- Start first name and last name row -->
-    <div class="mb-2 col-lg-6">
-      <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
-      <div class="row">
-        <label for="userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          First Name
-        </label>
-        <div class="col-md-10 col-lg-8"
-        >
-          <input type="text"
-                 id="userFirstName"
-                 name="userFirstName"
-                 placeholder="First Name"
-                 class="form-control"
-                 [class]="dynamicCssClassesForInput(firstNameModel)"
-                 [(ngModel)]="user.firstname"
-                 #firstNameModel="ngModel"
-                 required
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)"
+      aria-label="Form to create a aser" xmlns="http://www.w3.org/1999/html">
+  <fieldset aria-label="Inputs for user creation">
+    <legend>Inputs for user creation</legend>
+    <div class="row">
+      <!-- Start first name and last name row -->
+      <div class="mb-2 col-lg-6">
+        <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+        <div class="row">
+          <label for="{{mode}}userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+            First Name
+          </label>
+          <div class="col-md-10 col-lg-8"
           >
+            <input type="text"
+                   id="{{mode}}userFirstName"
+                   name="userFirstName"
+                   placeholder="First Name"
+                   class="form-control"
+                   [class]="dynamicCssClassesForInput(firstNameModel)"
+                   [(ngModel)]="user.firstname"
+                   #firstNameModel="ngModel"
+                   required
+            >
 
-          <div class="invalid-feedback">
-            <!-- This is shown, when the form validation deems the name input to be invalid -->
-            First Name is required
+            <div class="invalid-feedback">
+              <!-- This is shown, when the form validation deems the name input to be invalid -->
+              First Name is required
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="mb-2 col-lg-6">
-      <div class="row">
-        <label for="userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          Last Name
-        </label>
-        <div class="col-md-10 col-lg-8"
-        >
-          <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
-               The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
-            -->
-          <input type="text"
-                 id="userLastName"
-                 name="userLastName"
-                 placeholder="Last Name"
-                 class="form-control"
-                 [class]="dynamicCssClassesForInput(lastNameModel)"
-                 [(ngModel)]="user.lastname"
-                 #lastNameModel="ngModel"
-                 required
+      <div class="mb-2 col-lg-6">
+        <div class="row">
+          <label for="{{mode}}userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+            Last Name
+          </label>
+          <div class="col-md-10 col-lg-8"
           >
-          <div class="invalid-feedback">
-            Last Name is required
+            <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
+                 The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
+              -->
+            <input type="text"
+                   id="{{mode}}userLastName"
+                   name="userLastName"
+                   placeholder="Last Name"
+                   class="form-control"
+                   [class]="dynamicCssClassesForInput(lastNameModel)"
+                   [(ngModel)]="user.lastname"
+                   #lastNameModel="ngModel"
+                   required
+            >
+            <div class="invalid-feedback">
+              Last Name is required
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- End first name and last name row -->
-  </div>
-
-  <div class="row">
-    <!-- Start email row -->
-    <div class="mb-2 col-lg-6">
-      <div class="row">
-        <label for="userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          Email
-        </label>
-        <div class="col-md-10 col-lg-8"
-        >
-          <input type="text"
-                 id="userEmail"
-                 name="userEmail"
-                 placeholder="Email"
-                 class="form-control"
-                 [class]="dynamicCssClassesForInput(emailModel)"
-                 [(ngModel)]="user.email"
-                 #emailModel="ngModel"
-                 required
-          >
-          <div class="invalid-feedback">
-            Email is required
-          </div>
-        </div>
-      </div>
+      <!-- End first name and last name row -->
     </div>
 
-    <div class="mb-2 col-lg-6">
-      <div class="row">
-        <label for="userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4" *ngIf="modeIsPatient">
-          Svnr
-        </label>
-        <div class="col-md-10 col-lg-8"
-        >
-          <input type="text"
-                 id="userSvnr"
-                 name="userSvnr"
-                 placeholder="Svnr"
-                 class="form-control"
-                 [class]="dynamicCssClassesForInput(svnrModel)"
-                 [(ngModel)]="user.svnr"
-                 #svnrModel="ngModel"
-                 *ngIf="modeIsPatient"
-                 required
+    <div class="row">
+      <!-- Start email row -->
+      <div class="mb-2 col-lg-6">
+        <div class="row">
+          <label for="{{mode}}userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+            Email
+          </label>
+          <div class="col-md-10 col-lg-8"
           >
-          <div class="invalid-feedback" *ngIf="modeIsPatient">
-            Svnr is required
+            <input type="text"
+                   id="{{mode}}userEmail"
+                   name="userEmail"
+                   placeholder="Email"
+                   class="form-control"
+                   [class]="dynamicCssClassesForInput(emailModel)"
+                   [(ngModel)]="user.email"
+                   #emailModel="ngModel"
+                   required
+            >
+            <div class="invalid-feedback">
+              Email is required
+            </div>
           </div>
         </div>
       </div>
-      <!-- End svnr row -->
+
+      <div class="mb-2 col-lg-6">
+        <div class="row">
+          <label for="{{mode}}userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"
+                 *ngIf="modeIsPatient">
+            Svnr
+          </label>
+          <div class="col-md-10 col-lg-8"
+          >
+            <input type="text"
+                   id="{{mode}}userSvnr"
+                   name="userSvnr"
+                   placeholder="Svnr"
+                   class="form-control"
+                   [class]="dynamicCssClassesForInput(svnrModel)"
+                   [(ngModel)]="user.svnr"
+                   #svnrModel="ngModel"
+                   *ngIf="modeIsPatient"
+                   required
+            >
+            <div class="invalid-feedback" *ngIf="modeIsPatient">
+              Svnr is required
+            </div>
+          </div>
+        </div>
+        <!-- End svnr row -->
+      </div>
     </div>
-  </div>
+  </fieldset>
 
 
   <div class="mt-4 d-flex flex-row">
@@ -119,7 +121,7 @@
             class="btn btn-primary"
             [disabled]="!form.valid"
     >
-      Create {{role}}
+      Create {{ role }}
     </button>
   </div>
 </form>

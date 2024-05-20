@@ -5,6 +5,8 @@ import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
 import {Globals} from '../global/globals';
+import {Role} from "../dtos/Role";
+import {ToastrService} from "ngx-toastr";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) {
+  constructor(private httpClient: HttpClient, private globals: Globals, private notification: ToastrService) {
   }
 
   /**
@@ -37,7 +39,7 @@ export class AuthService {
   }
 
   logoutUser() {
-    console.log('Logout');
+    this.notification.success('Successfully logged out');
     localStorage.removeItem('authToken');
   }
 
@@ -48,17 +50,21 @@ export class AuthService {
   /**
    * Returns the user role based on the current token
    */
-  getUserRole() {
+  getUserRole(): Role {
     if (this.getToken() != null) {
       const decoded: any = jwtDecode(this.getToken());
       const authInfo: string[] = decoded.rol;
-      if (authInfo.includes('ROLE_ADMIN')) {
-        return 'ADMIN';
-      } else if (authInfo.includes('ROLE_USER')) {
-        return 'USER';
+      if (authInfo.includes('ADMIN')) {
+        return Role.admin;
+      } else if (authInfo.includes('DOCTOR')) {
+        return Role.doctor;
+      } else if (authInfo.includes('SECRETARY')) {
+        return Role.secretary;
+      } else if (authInfo.includes('PATIENT')) {
+        return Role.patient;
       }
     }
-    return 'UNDEFINED';
+    return undefined;
   }
 
   private setToken(authResponse: string) {

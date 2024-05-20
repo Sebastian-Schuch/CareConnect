@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AllergyCreateDto} from "../../dtos/allergy";
 import {AllergyService} from "../../services/allergy.service";
-import {FormControl, NgForm, NgModel, Validators} from "@angular/forms";
+import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-allergy',
@@ -12,8 +13,10 @@ import {Observable} from "rxjs";
 export class AllergyComponent implements OnInit {
 
   constructor(
-    private allergyService: AllergyService
-  ) { }
+    private allergyService: AllergyService,
+    private notification: ToastrService
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -29,10 +32,11 @@ export class AllergyComponent implements OnInit {
       let observable: Observable<AllergyCreateDto> = this.allergyService.createAllergy(allergy);
 
       observable.subscribe({
-        next: () => {
-          //this.router.navigate(['/dashboard']);
+        next: data => {
+          this.notification.success('Successfully created ' + data.name + ' Allergy');
         },
         error: error => {
+          this.notification.error('Error creating Allergy');
           console.error('Error creating User', error);
         }
       });

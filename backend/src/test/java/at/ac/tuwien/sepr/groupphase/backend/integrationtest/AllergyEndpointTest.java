@@ -54,7 +54,7 @@ public class AllergyEndpointTest implements AllergyTestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(200, response.getStatus());
+        assertEquals(201, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         AllergyDto allergyDto = mapper.readValue(response.getContentAsString(), AllergyDto.class);
@@ -90,7 +90,7 @@ public class AllergyEndpointTest implements AllergyTestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(200, response.getStatus());
+        assertEquals(201, response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         AllergyDto allergyDto = mapper.readValue(response.getContentAsString(), AllergyDto.class);

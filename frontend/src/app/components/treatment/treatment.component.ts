@@ -12,6 +12,7 @@ import {UserDetailDto} from "../../dtos/user";
 import {MedicationDto} from "../../dtos/medication";
 import {TreatmentService} from "../../services/treatment.service";
 import {TreatmentMedicineDtoCreate} from "../../dtos/treatmentMedicine";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-treatment',
@@ -23,7 +24,7 @@ import {TreatmentMedicineDtoCreate} from "../../dtos/treatmentMedicine";
  * Component for creating a new treatment
  */
 
-export class TreatmentComponent implements OnInit{
+export class TreatmentComponent implements OnInit {
 
   private readonly baseUrl = '/api/v1';
   treatmentForm: FormGroup;
@@ -48,8 +49,9 @@ export class TreatmentComponent implements OnInit{
   constructor(private userService: UserService,
               private medicineService: MedicationService,
               private outpatientDepartmentService: OutpatientDepartmentService,
-              private treatmentService: TreatmentService
-              ) {
+              private treatmentService: TreatmentService,
+              private notification: ToastrService
+  ) {
 
     this.dataSource = new MatTableDataSource<any>();
   }
@@ -62,7 +64,7 @@ export class TreatmentComponent implements OnInit{
       departments: this.loadOutpatientDepartments(),
       patients: this.loadPatients()
     }).subscribe({
-      next: ({ doctors, medicines, departments,patients }) => {
+      next: ({doctors, medicines, departments, patients}) => {
         this.doctorOptions = doctors;
         this.medicineOptions = medicines;
         this.outpatientDepartments = departments;
@@ -142,9 +144,10 @@ export class TreatmentComponent implements OnInit{
     if (this.treatmentForm.valid) {
       this.treatmentService.createTreatment(this.treatmentDtoCreate).subscribe({
         next: data => {
-          console.log('Successfully created treatment', data);
+          this.notification.success('Successfully created treatment ' + data.treatmentTitle);
         },
         error: error => {
+          this.notification.error('Failed creating treatment!')
           console.error('There was an error!', error);
         }
       })
@@ -282,7 +285,7 @@ export class TreatmentComponent implements OnInit{
    * @returns the filtered medicines
    */
   private filterMedicine(value: string): MedicationDto[] {
-    if(value!=null) {
+    if (value != null) {
       const filterValue = value.toString().toLowerCase();
       return this.medicineOptions.filter(option =>
         option.name.toString().toLowerCase().includes(filterValue)

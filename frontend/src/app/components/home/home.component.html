@@ -1,12 +1,116 @@
 <div class="jumbotron mt-5">
-  <h1 class="display-4">Welcome to the SE PR group phase!</h1>
+  <header aria-label="Welcome to Care Connect banner">
+    <h1 class="display-4">Care Connect</h1>
+  </header>
   <hr class="my-4">
   <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login" role="button">Login</a>
   <div *ngIf="authService.isLoggedIn()">
-    <p>Check out the latest message from the SE PR group phase.</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" routerLink="/message" role="button">Message</a>
-    </p>
+    <main aria-label="Vertical list of functions for the user">
+      <div class="d-flex align-items-start">
+        <div class="nav flex-column nav-pills col-md-3" id="v-pills-tab" role="tablist"
+             aria-orientation="vertical">
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-outpatient-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-outpatient-create"
+                  type="button" role="tab" tabindex="0" aria-controls="v-pills-outpatient-create" aria-selected="true">
+            Create
+            Outpatient
+            Department
+          </button>
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-admin-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-admin-create"
+                  type="button" role="tab" tabindex="1" aria-controls="v-pills-admin-create" aria-selected="false">
+            Create Admin
+          </button>
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-doctor-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-doctor-create"
+                  type="button" role="tab" tabindex="2" aria-controls="v-pills-doctor-create" aria-selected="false">
+            Create Doctor
+          </button>
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-secretary-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-secretary-create"
+                  type="button" role="tab" tabindex="3" aria-controls="v-pills-secretary-create" aria-selected="false">
+            Create
+            Secretary
+          </button>
+          <button *ngIf="isRoleSecretary()" class="nav-link" id="v-pills-patient-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-patient-create"
+                  type="button" role="tab" tabindex="4" aria-controls="v-pills-patient-create" aria-selected="false">
+            Create Patient
+          </button>
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-medication-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-medication-create"
+                  type="button" role="tab" tabindex="5" aria-controls="v-pills-medication-create" aria-selected="false">
+            Create
+            Medication
+          </button>
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-allergy-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-allergy-create"
+                  type="button" role="tab" tabindex="6" aria-controls="v-pills-allergy-create" aria-selected="false">
+            Create Allergy
+          </button>
+          <button *ngIf="isRoleAdmin()" class="nav-link" id="v-pills-inpatient-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-inpatient-create"
+                  type="button" role="tab" tabindex="7" aria-controls="v-pills-inpatient-create" aria-selected="false">
+            Create
+            Inpatient
+            Department
+          </button>
+          <button *ngIf="isRoleDoctor()" class="nav-link" id="v-pills-treatment-create-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-treatment-create"
+                  type="button" role="tab" tabindex="8" aria-controls="v-pills-treatment-create" aria-selected="false">
+            Create
+            Treatment
+          </button>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="tab-content col-md-8" id="v-pills-tabContent">
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-outpatient-create" role="tabpanel"
+               aria-labelledby="v-pills-outpatient-create-tab">
+            <h1 class="display-4">Create Outpatient Department</h1>
+            <app-outpatient-department-create-edit></app-outpatient-department-create-edit>
+          </div>
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-admin-create" role="tabpanel"
+               aria-labelledby="v-pills-admin-create-tab">
+            <h1 class="display-4">Create Admin</h1>
+            <app-user-create [mode]="Role.admin"></app-user-create>
+          </div>
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-doctor-create" role="tabpanel"
+               aria-labelledby="v-pills-doctor-create-tab">
+            <h1 class="display-4">Create Doctor</h1>
+            <app-user-create [mode]="Role.doctor"></app-user-create>
+          </div>
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-secretary-create" role="tabpanel"
+               aria-labelledby="v-pills-secretary-create-tab">
+            <h1 class="display-4">Create Secretary</h1>
+            <app-user-create [mode]="Role.secretary"></app-user-create>
+          </div>
+          <div *ngIf="isRoleSecretary()" class="tab-pane fade" id="v-pills-patient-create" role="tabpanel"
+               aria-labelledby="v-pills-patient-create-tab">
+            <h1 class="display-4">Create Patient</h1>
+            <app-user-create [mode]="Role.patient"></app-user-create>
+          </div>
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-medication-create" role="tabpanel"
+               aria-labelledby="v-pills-medication-create-tab">
+            <h1 class="display-4 ">Create Medication</h1>
+            <app-medication-create></app-medication-create>
+          </div>
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-allergy-create" role="tabpanel"
+               aria-labelledby="v-pills-allergy-create-tab">
+            <h1 class="display-4 ">Create Allergy</h1>
+            <app-allergy></app-allergy>
+          </div>
+          <div *ngIf="isRoleAdmin()" class="tab-pane fade" id="v-pills-inpatient-create" role="tabpanel"
+               aria-labelledby="v-pills-inpatient-create-tab">
+            <h1 class="display-4 ">Create Inpatient Department</h1>
+            <app-station></app-station>
+          </div>
+          <div *ngIf="isRoleDoctor()" class="tab-pane fade" id="v-pills-treatment-create" role="tabpanel"
+               aria-labelledby="v-pills-inpatient-create-tab">
+            <h1 class="display-4 ">Create Treatment</h1>
+            <app-treatment></app-treatment>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
-  <app-outpatient-department-detail [id]="1052"></app-outpatient-department-detail>   <app-outpatient-department-create-edit></app-outpatient-department-create-edit>
 </div>

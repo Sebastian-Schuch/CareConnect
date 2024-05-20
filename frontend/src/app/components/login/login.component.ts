@@ -3,6 +3,7 @@ import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private notification: ToastrService) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -48,12 +49,13 @@ export class LoginComponent implements OnInit {
     console.log('Try to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
-        console.log('Successfully logged in user: ' + authRequest.email);
-        this.router.navigate(['/message']);
+        this.notification.success('Successfully logged in as: ' + authRequest.email);
+        this.router.navigate(['/']);
       },
       error: error => {
         console.log('Could not log in due to:');
         console.log(error);
+        this.notification.error('Login failed. Please try again.');
         this.error = true;
         if (typeof error.error === 'object') {
           this.errorMessage = error.error.error;
