@@ -13,9 +13,11 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.PdfService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserCreationFacadeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +44,20 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final CredentialsMapper mapper;
     private final UserCreationFacadeService userCreationFacadeService;
+    private final PdfService pdfService;
 
     @Value("${PASSWORD_PEPPER}")
     private String passwordPepper;
 
     @Autowired
     public CustomUserDetailService(CredentialRepository credentialRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
-                                   CredentialsMapper mapper, UserCreationFacadeService userCreationFacadeService) {
+                                   CredentialsMapper mapper, UserCreationFacadeService userCreationFacadeService, PdfService pdfService) {
         this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.mapper = mapper;
         this.userCreationFacadeService = userCreationFacadeService;
+        this.pdfService = pdfService;
     }
 
     @Override
@@ -99,30 +103,30 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserLoginDto createDoctor(DoctorCreateDto toCreate) {
+    public PDDocument createDoctor(DoctorCreateDto toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.doctorCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.doctorCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
         DoctorDto doctorDto = userCreationFacadeService.createUser(toCreate, credential);
         userLogin.setId(doctorDto.id());
-        return userLogin;
+        return pdfService.getAccountDataSheet(userLogin);
     }
 
     @Override
-    public UserLoginDto createSecretary(SecretaryCreateDto toCreate) {
+    public PDDocument createSecretary(SecretaryCreateDto toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.SECRETARY);
         SecretaryDetailDto secretaryDetailDto = userCreationFacadeService.createUser(toCreate, credential);
         userLogin.setId(secretaryDetailDto.id());
-        return userLogin;
+        return pdfService.getAccountDataSheet(userLogin);
     }
 
     @Override
-    public UserLoginDto createPatient(PatientCreateDto toCreate) {
+    public PDDocument createPatient(PatientCreateDto toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.patientCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.patientCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.PATIENT);
         PatientDto patientDto = userCreationFacadeService.createUser(toCreate, credential);
         userLogin.setId(patientDto.id());
-        return userLogin;
+        return pdfService.getAccountDataSheet(userLogin);
     }
 
     /**

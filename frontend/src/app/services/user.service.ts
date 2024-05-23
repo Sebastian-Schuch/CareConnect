@@ -27,10 +27,11 @@ export class UserService {
    * @param admin the data for the admin that should be created
    * @return an Observable for the created admin
    */
-  createAdmin(admin: UserCreateDto): Observable<UserLoginDto> {
-    return this.http.post<UserLoginDto>(
+  createAdmin(admin: UserCreateDto): Observable<Blob> {
+    return this.http.post(
       this.adminBaseUri,
-      admin
+      admin,
+      { responseType: 'blob' }
     );
   }
 
@@ -59,10 +60,11 @@ export class UserService {
    * @param doctor the data for the doctors that should be created
    * @return an Observable for the created doctors
    */
-  createDoctor(doctor: UserCreateDto): Observable<UserLoginDto> {
-    return this.http.post<UserLoginDto>(
+  createDoctor(doctor: UserCreateDto): Observable<Blob> {
+    return this.http.post(
       this.doctorBaseUri,
-      doctor
+      doctor,
+      { responseType: 'blob' }
     );
   }
 
@@ -91,10 +93,11 @@ export class UserService {
    * @param secretary the data for the secretary that should be created
    * @return an Observable for the created secretary
    */
-  createSecretary(secretary: UserCreateDto): Observable<UserLoginDto> {
-    return this.http.post<UserLoginDto>(
+  createSecretary(secretary: UserCreateDto): Observable<Blob> {
+    return this.http.post(
       this.secretaryBaseUri,
-      secretary
+      secretary,
+      { responseType: 'blob' }
     );
   }
 
@@ -142,10 +145,11 @@ export class UserService {
    * @param patient the data for the patient that should be created
    * @return an Observable for the created patient
    */
-  createPatient(patient: UserCreateDto): Observable<UserLoginDto> {
-    return this.http.post<UserLoginDto>(
+  createPatient(patient: UserCreateDto): Observable<Blob> {
+    return this.http.post(
       this.patientBaseUri,
-      patient
+      patient,
+      { responseType: 'blob' }
     );
   }
 }

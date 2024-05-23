@@ -115,7 +115,7 @@ public class MedicationEndpointTest {
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenNewlyCreatedSecretary_whenGetSecretary_thenReturnSecretary() throws Exception {
+    public void givenNewlyCreatedMedication_whenGetMedication_thenReturnMedication() throws Exception {
         String json = ow.writeValueAsString(new MedicationCreateDto("WieAgra"));
         byte[] bodyCreate =
             mockMvc
