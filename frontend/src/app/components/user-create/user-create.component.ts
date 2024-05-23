@@ -84,7 +84,7 @@ export class UserCreateComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.user);
     if (form.valid) {
-      let observable: Observable<UserLoginDto>;
+      let observable: Observable<Blob>;
       switch (this.mode) {
         case Role.admin:
           observable = this.service.createAdmin(this.user);
@@ -103,8 +103,11 @@ export class UserCreateComponent implements OnInit {
           return;
       }
       observable.subscribe({
-        next: () => {
+        next: (response) => {
           this.notification.success(`${this.role} ${this.user.firstname} ${this.user.lastname} successfully created.`);
+
+          const url = window.URL.createObjectURL(response);
+          window.open(url);
           //this.router.navigate(['/dashboard']);
         },
         error: error => {

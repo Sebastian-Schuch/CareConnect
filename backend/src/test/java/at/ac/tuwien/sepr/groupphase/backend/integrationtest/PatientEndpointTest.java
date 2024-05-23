@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -87,10 +89,12 @@ public class PatientEndpointTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        List<UserLoginDto> patients = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(body).readAll();
-        assertNotNull(patients);
-        assertThat(patients).hasSize(1).extracting(UserLoginDto::getEmail).containsExactly(
-            "a@a.a");
+
+        List<Credential> credentials = patientRepository.findAllPatientCredentials();
+
+        assertNotNull(credentials);
+        assertThat(credentials).hasSize(1).extracting(Credential::getEmail, Credential::getFirstName, Credential::getLastName).containsExactly(
+            tuple("a@a.a", "a", "b"));
     }
 
     @Test
@@ -149,13 +153,15 @@ public class PatientEndpointTest {
         byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_PDF))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        List<PatientDto> patientsCreate = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyCreate).readAll();
-        PatientDto patientCreate = patientsCreate.getFirst();
 
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + patientCreate.id())
+        List<Patient> patients = patientRepository.findAll();
+        assertThat(patients).hasSize(1);
+        Patient patientCreate = patients.get(0);
+
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + patientCreate.getPatientId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
@@ -195,28 +201,31 @@ public class PatientEndpointTest {
         byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json1)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_PDF))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        UserLoginDto patient1 = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyCreate).readAll().getFirst();
 
         String json2 = ow.writeValueAsString(new PatientCreateDto("6543214321", "b@b.b", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json2)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_PDF))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        UserLoginDto patient2 = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyCreate).readAll().getFirst();
 
         String json3 = ow.writeValueAsString(new PatientCreateDto("6543123456", "c@c.c", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json3)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_PDF))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        UserLoginDto patient3 = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyCreate).readAll().getFirst();
+
+        List<Credential> credentials = patientRepository.findAllPatientCredentials();
+
+        Credential patient1 = credentials.get(0);
+        Credential patient2 = credentials.get(1);
+        Credential patient3 = credentials.get(2);
 
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .accept(MediaType.APPLICATION_JSON))
@@ -224,11 +233,11 @@ public class PatientEndpointTest {
             .andReturn().getResponse().getContentAsByteArray();
         List<UserLoginDto> patients = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyGet).readAll();
         assertThat(patients).hasSize(3)
-            .extracting(UserLoginDto::getId, UserLoginDto::getEmail)
+            .extracting(UserLoginDto::getEmail)
             .containsExactlyInAnyOrder(
-                tuple(patient1.getId(), patient1.getEmail()),
-                tuple(patient2.getId(), patient2.getEmail()),
-                tuple(patient3.getId(), patient3.getEmail()));
+                patient1.getEmail(),
+                patient2.getEmail(),
+                patient3.getEmail());
     }
 
     @Test

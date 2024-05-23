@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +61,7 @@ public class SecretaryEndpointTest {
     @BeforeEach
     public void beforeEach() {
         secretaryRepository.deleteAll();
+        credentialRepository.deleteAll();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ow = objectMapper.writer().withDefaultPrettyPrinter();
@@ -67,6 +70,7 @@ public class SecretaryEndpointTest {
     @AfterEach
     public void cleanup() {
         secretaryRepository.deleteAll();
+        credentialRepository.deleteAll();
     }
 
     @Test
@@ -81,7 +85,7 @@ public class SecretaryEndpointTest {
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenValidCreateSecretaryDetailDto_whenCreateNewSecretary_thenReturn200OkStatusAndCreatedSecretary() throws Exception {
+    public void givenValidCreateSecretaryDetailDto_whenCreateNewSecretary_thenReturn201CreatedStatusAndCreatedSecretary() throws Exception {
         String json = ow.writeValueAsString(new SecretaryCreateDto("a.a@a.a", "a", "b"));
         byte[] body = mockMvc
             .perform(MockMvcRequestBuilders
@@ -90,15 +94,15 @@ public class SecretaryEndpointTest {
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
 
-        List<UserLoginDto> secretaryResult = objectMapper.readerFor(UserLoginDto.class)
-            .<UserLoginDto>readValues(body).readAll();
 
-        assertThat(secretaryResult)
+        List<Credential> credentials = secretaryRepository.findAllSecretariesCredentials();
+
+        assertThat(credentials)
             .isNotNull()
             .hasSize(1)
-            .extracting(UserLoginDto::getEmail)
+            .extracting(Credential::getEmail, Credential::getFirstName, Credential::getLastName)
             .containsExactly(
-                "a.a@a.a"
+                tuple("a.a@a.a", "a", "b")
             );
     }
 
@@ -209,9 +213,13 @@ public class SecretaryEndpointTest {
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsByteArray();
-        List<SecretaryDetailDto> secretaryResult = objectMapper.readerFor(SecretaryDetailDto.class).<SecretaryDetailDto>readValues(bodyCreate).readAll();
 
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + secretaryResult.get(0).id())
+        List<Credential> credentials = secretaryRepository.findAllSecretariesCredentials();
+        assertThat(credentials).hasSize(1);
+        Secretary secretary = secretaryRepository.findByCredential(credentials.getFirst());
+
+
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + secretary.getSecretaryId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
@@ -240,7 +248,6 @@ public class SecretaryEndpointTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        UserLoginDto secretary1 = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyCreate).readAll().get(0);
 
         String json2 = ow.writeValueAsString(new SecretaryCreateDto("b@b.b", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -249,7 +256,6 @@ public class SecretaryEndpointTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        UserLoginDto secretary2 = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyCreate).readAll().get(0);
 
         String json3 = ow.writeValueAsString(new SecretaryCreateDto("c@c.c", "a", "b"));
         bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -258,7 +264,14 @@ public class SecretaryEndpointTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andReturn().getResponse().getContentAsByteArray();
-        UserLoginDto secretary3 = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyCreate).readAll().get(0);
+
+        List<Credential> credentials = secretaryRepository.findAllSecretariesCredentials();
+
+        assertThat(credentials).hasSize(3);
+
+        Credential secretary1 = credentials.getFirst();
+        Credential secretary2 = credentials.get(1);
+        Credential secretary3 = credentials.get(2);
 
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .accept(MediaType.APPLICATION_JSON))
@@ -266,10 +279,10 @@ public class SecretaryEndpointTest {
             .andReturn().getResponse().getContentAsByteArray();
         List<UserLoginDto> secretaries = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyGet).readAll();
         assertThat(secretaries).hasSize(3)
-            .extracting(UserLoginDto::getId, UserLoginDto::getEmail).containsExactlyInAnyOrder(
-                tuple(secretary1.getId(), secretary1.getEmail()),
-                tuple(secretary2.getId(), secretary2.getEmail()),
-                tuple(secretary3.getId(), secretary3.getEmail()));
+            .extracting(UserLoginDto::getEmail).containsExactlyInAnyOrder(
+                secretary1.getEmail(),
+                secretary2.getEmail(),
+                secretary3.getEmail());
     }
 
     @Test

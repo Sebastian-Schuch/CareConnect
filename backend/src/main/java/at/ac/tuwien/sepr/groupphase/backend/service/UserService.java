@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -47,7 +48,7 @@ public interface UserService extends UserDetailsService {
      * @param toCreate the data of the doctor for the credential entity
      * @return the users login data
      */
-    UserLoginDto createDoctor(DoctorCreateDto toCreate);
+    PDDocument createDoctor(DoctorCreateDto toCreate);
 
     /**
      * Creates the Credential Entity with the data given.
@@ -55,7 +56,7 @@ public interface UserService extends UserDetailsService {
      * @param toCreate the data of the secretary for the credential entity
      * @return the users login data
      */
-    UserLoginDto createSecretary(SecretaryCreateDto toCreate);
+    PDDocument createSecretary(SecretaryCreateDto toCreate);
 
     /**
      * Creates the Credential Entity with the data given.
@@ -63,7 +64,7 @@ public interface UserService extends UserDetailsService {
      * @param toCreate the data of the patient for the credential entity
      * @return the users login data
      */
-    UserLoginDto createPatient(PatientCreateDto toCreate);
+    PDDocument createPatient(PatientCreateDto toCreate);
 
     /**
      * Changes the password of the user who sent the request.
