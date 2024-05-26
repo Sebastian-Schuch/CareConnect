@@ -11,7 +11,6 @@ public interface StationService {
      * Find a station by its name.
      *
      * @param name the name of the station to find
-     *
      * @return the station with the given name
      */
     Station findByName(String name);
@@ -20,7 +19,6 @@ public interface StationService {
      * Find a station by its id.
      *
      * @param id the id of the station to find
-     *
      * @return the station with the given id
      */
     Station findById(Long id);
@@ -36,7 +34,6 @@ public interface StationService {
      * This function creates a new station and assigns a new auto-generated id to it.
      *
      * @param toCreate the station to persist in the db
-     *
      * @return the persisted station
      */
     Station createStation(StationDtoCreate toCreate);
@@ -45,7 +42,6 @@ public interface StationService {
      * This function counts the number of stations in the db.
      *
      * @param toUpdate the station to update
-     *
      * @return the number of stations in the db
      */
     Station updateStation(Station toUpdate);

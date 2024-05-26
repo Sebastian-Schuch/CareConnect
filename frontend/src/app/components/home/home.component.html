@@ -61,6 +61,27 @@
             Create
             Treatment
           </button>
+          <button *ngIf="isRoleSecretary() || isRolePatient()" class="nav-link" id="v-pills-appointment-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#v-pills-appointment"
+                  type="button" role="tab" tabindex="8" aria-controls="v-pills-appointment" aria-selected="false">
+            Book Appointment
+          </button>
+          <button *ngIf="isRolePatient()" class="nav-link" id="v-pills-show-patient-appointments-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#v-pills-show-patient-appointments"
+                  type="button" role="tab" tabindex="9" aria-controls="v-pills-patient-appointment"
+                  aria-selected="false">
+            My Appointments
+          </button>
+          <button *ngIf="isRoleSecretary()" class="nav-link" id="v-pills-show-all-appointments-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#v-pills-show-all-appointments"
+                  type="button" role="tab" tabindex="10" aria-controls="v-pills-all-appointment"
+                  aria-selected="false">
+            View Appointments
+          </button>
+
         </div>
         <div class="col-md-1"></div>
         <div class="tab-content col-md-8" id="v-pills-tabContent">
@@ -109,8 +130,27 @@
             <h1 class="display-4 ">Create Treatment</h1>
             <app-treatment></app-treatment>
           </div>
+          <div *ngIf="isRoleSecretary() || isRolePatient()" class="tab-pane fade" id="v-pills-appointment"
+               role="tabpanel"
+               aria-labelledby="v-pills-appointment-tab">
+            <h1 class="display-4 ">Book Appointment</h1>
+            <app-calendar-wrapper [mode]="mode"></app-calendar-wrapper>
+          </div>
+          <div *ngIf="isRolePatient()" class="tab-pane fade" id="v-pills-show-patient-appointments"
+               role="tabpanel"
+               aria-labelledby="v-pills-show-patient-appointments-tab">
+            <h1 class="display-4 ">My Appointments</h1>
+            <app-appointments-patient></app-appointments-patient>
+          </div>
+          <div *ngIf="isRoleSecretary()" class="tab-pane fade" id="v-pills-show-all-appointments"
+               role="tabpanel"
+               aria-labelledby="v-pills-show-all-appointments-tab">
+            <h1 class="display-4 ">View Appointments</h1>
+            <app-appointments-secretary></app-appointments-secretary>
+          </div>
         </div>
       </div>
+
     </main>
   </div>
 </div>

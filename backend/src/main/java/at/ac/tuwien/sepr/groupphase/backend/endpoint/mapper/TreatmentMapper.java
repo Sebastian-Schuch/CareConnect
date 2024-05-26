@@ -66,7 +66,7 @@ public class TreatmentMapper {
      * @param treatmentMedicines the TreatmentMedicineDto objects to convert
      * @return the converted Treatment object
      */
-    public Treatment dtoToEntity(TreatmentDtoCreate treatmentDtoCreate,  List<TreatmentMedicineDto> treatmentMedicines) {
+    public Treatment dtoToEntity(TreatmentDtoCreate treatmentDtoCreate, List<TreatmentMedicineDto> treatmentMedicines) {
         LOG.trace("dtoToEntity({})", treatmentDtoCreate);
 
         List<Doctor> doctors = new LinkedList<>();

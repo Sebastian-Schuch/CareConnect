@@ -22,4 +22,5 @@ export class OpeningHoursDtoCreate {
 export class OpeningHoursDayDto {
   open: Date;
   close: Date;
+  isClosed?: boolean;
 }

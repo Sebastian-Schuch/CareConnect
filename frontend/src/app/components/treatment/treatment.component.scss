@@ -1,8 +1,8 @@
-.container{
+.container {
   margin-top: 20px;
 }
 
-#treatmentSectionDatePickers{
+#treatmentSectionDatePickers {
   display: flex;
   justify-content: space-evenly;
   margin-bottom: 20px;
@@ -10,19 +10,20 @@
   flex-direction: row;
   align-items: flex-start;
 }
-h3{
+
+h3 {
   margin-bottom: 25px;
 }
 
-.treatmentDatePickerElement{
+.treatmentDatePickerElement {
   margin-bottom: 20px;
 }
 
-.form-group{
+.form-group {
   margin-bottom: 50px;
 }
 
-.badge-container{
+.badge-container {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;
@@ -31,33 +32,33 @@ h3{
   align-items: flex-start;
 }
 
-.badge{
+.badge {
   margin-right: 10px;
   margin-bottom: 10px;
 }
 
-.matFormFieldFullWidth{
+.matFormFieldFullWidth {
   width: 100%;
 }
 
-.treatmentDateContainer{
+.treatmentDateContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
 }
 
-.medicineTreatmentForm{
+.medicineTreatmentForm {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.medicineTreatmentFormInputFullWidth{
+.medicineTreatmentFormInputFullWidth {
   width: 100%;
 }
 
-.medicineTreatmentFormInputHalfWidth{
+.medicineTreatmentFormInputHalfWidth {
   width: 46%;
 }

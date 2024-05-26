@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { OutpatientDepartmentService } from './outpatient-department.service';
+import {OutpatientDepartmentService} from './outpatient-department.service';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 

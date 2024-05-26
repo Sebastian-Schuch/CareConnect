@@ -1,7 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { StationComponent } from './station.component';
-import {StationService} from "../../services/station.service";
+import {StationComponent} from './station.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {FormsModule} from "@angular/forms";
@@ -13,8 +12,9 @@ describe('StationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule, FormsModule],
-      declarations: [ StationComponent ]})
-    .compileComponents();
+      declarations: [StationComponent]
+    })
+      .compileComponents();
 
     fixture = TestBed.createComponent(StationComponent);
     component = fixture.componentInstance;

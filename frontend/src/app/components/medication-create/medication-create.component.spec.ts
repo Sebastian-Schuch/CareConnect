@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MedicationCreateComponent } from './medication-create.component';
+import {MedicationCreateComponent} from './medication-create.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ActivatedRoute} from "@angular/router";
@@ -12,7 +12,7 @@ describe('MedicationCreateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MedicationCreateComponent],
+      declarations: [MedicationCreateComponent],
       imports: [HttpClientModule, HttpClientTestingModule, FormsModule],
       providers: [
         {
@@ -29,7 +29,7 @@ describe('MedicationCreateComponent', () => {
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MedicationCreateComponent);
     component = fixture.componentInstance;

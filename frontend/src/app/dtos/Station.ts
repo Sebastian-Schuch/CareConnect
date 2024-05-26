@@ -1,4 +1,4 @@
-export interface StationCreateDto{
+export interface StationCreateDto {
   name: string;
   capacity: number;
 }

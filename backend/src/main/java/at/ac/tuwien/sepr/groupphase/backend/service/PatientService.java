@@ -40,5 +40,19 @@ public interface PatientService {
      */
     Patient getPatientEntityById(Long id);
 
+    /**
+     * Find a patient by the given credential.
+     *
+     * @param credential the credential to find the patient by
+     * @return the patient with the credential given
+     */
+    PatientDto findPatientByCredential(Credential credential);
 
+    /**
+     * Check if the used id matches the token given.
+     *
+     * @param userId the id of the user
+     * @return true if the user is from the patient that is sending the request, false otherwise
+     */
+    boolean isValidPatientRequest(Long userId);
 }

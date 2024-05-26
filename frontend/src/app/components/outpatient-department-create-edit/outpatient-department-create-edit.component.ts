@@ -89,7 +89,6 @@ export class OutpatientDepartmentComponent {
         };
       }
     }
-    console.log(this.outpatientDepartment);
     this.outpatientDepartmentService.createOutpatientDepartment(this.outpatientDepartment).subscribe({
       next: data => {
         this.notification.success('Outpatient Department ' + data.name + ' created');

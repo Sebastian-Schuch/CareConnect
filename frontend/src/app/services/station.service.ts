@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {StationCreateDto, StationDetailDto} from "../dtos/Station";
-import {environment} from "../../environments/environment";
+import {StationCreateDto} from "../dtos/Station";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
 
@@ -14,7 +13,8 @@ export class StationService {
   constructor(
     private http: HttpClient,
     private globals: Globals
-  ) { }
+  ) {
+  }
 
   public createStation(station: StationCreateDto): Observable<any> {
     return this.http.post(this.stationUri, station);
