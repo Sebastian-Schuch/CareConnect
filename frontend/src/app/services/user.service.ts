@@ -14,11 +14,23 @@ export class UserService {
   private doctorBaseUri: string = this.globals.backendUri + '/doctors';
   private secretaryBaseUri: string = this.globals.backendUri + '/secretaries';
   private patientBaseUri: string = this.globals.backendUri + '/patients';
+  private credentialBaseUri: string = this.globals.backendUri + '/credentials';
 
   constructor(
     private http: HttpClient,
     private globals: Globals
   ) {
+  }
+
+  /**
+   * Get the information from the logged-in user
+   *
+   * @return an Observable for the UserDetailDto
+   */
+  getUserCredentials() {
+    return this.http.get<UserDetailDto>(
+      this.credentialBaseUri
+    );
   }
 
   /**
@@ -128,6 +140,15 @@ export class UserService {
    */
   getPatientById(id: number): Observable<UserDetailDto> {
     return this.http.get<UserDetailDto>(`${this.patientBaseUri}/${id}`);
+  }
+
+  /**
+   * Get the patient with his current credentials.
+   *
+   * @return an Observable of the patient
+   */
+  getPatientLoggedIn(): Observable<UserDetailDto> {
+    return this.http.get<UserDetailDto>(this.credentialBaseUri);
   }
 
   /**

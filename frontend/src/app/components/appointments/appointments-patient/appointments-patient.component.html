@@ -1,0 +1,61 @@
+<app-confirm-delete-dialog (confirm)="cancelAppointment()" [deleteWhat]="appointmentToBeCancelled?.outpatientDepartment.name"
+                           id="confirmDeleteDialog"></app-confirm-delete-dialog>
+<div class="container mt-3">
+  <div class="filter-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Filter by Outpatient Department</mat-label>
+      <input [formControl]="departmentControl" [matAutocomplete]="auto" matInput type="text">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="filterAppointments($event.option.value)">
+        <mat-option *ngFor="let department of filteredDepartments | async" [value]="department">
+          {{ department }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+  <div class="appointments-section">
+    <h2>Future Appointments</h2>
+    <div class="card-container">
+      <div *ngFor="let appointment of futureAppointments" class="appointment-card">
+        <div class="appointment-details">
+          <div><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}</div>
+          <div><strong>Start
+            Date:</strong> {{ appointment.startDate.toLocaleDateString() }} {{ appointment.startDate.toLocaleTimeString() }}
+          </div>
+          <div><strong>End
+            Date:</strong> {{ appointment.endDate.toLocaleDateString() }} {{ appointment.endDate.toLocaleTimeString() }}
+          </div>
+        </div>
+        <div class="appointment-actions">
+          <button (click)="appointmentToBeCancelled = appointment" aria-label="Cancel appointment" color="warn"
+                  data-bs-target="#confirmDeleteDialog" data-bs-toggle="modal"
+                  mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="appointments-section">
+    <h2 (click)="togglePastAppointments()" class="collapsible-header">
+      Past Appointments
+      <span class="toggle-icon">{{ showPastAppointments ? '-' : '+' }}</span>
+    </h2>
+    <div [hidden]="!showPastAppointments" class="card-container">
+      <div *ngFor="let appointment of pastAppointments" class="appointment-card">
+        <div class="appointment-details">
+          <div><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}</div>
+          <div><strong>Start
+            Date:</strong> {{ appointment.startDate.toLocaleDateString() }} {{ appointment.startDate.toLocaleTimeString() }}
+          </div>
+          <div><strong>End
+            Date:</strong> {{ appointment.endDate.toLocaleDateString() }} {{ appointment.endDate.toLocaleTimeString() }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

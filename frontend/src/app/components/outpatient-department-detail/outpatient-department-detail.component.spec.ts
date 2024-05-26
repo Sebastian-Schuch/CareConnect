@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { OutpatientDepartmentDetailComponent } from './outpatient-department-detail.component';
+import {OutpatientDepartmentDetailComponent} from './outpatient-department-detail.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
@@ -11,10 +11,10 @@ describe('OutpatientDepartmentDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OutpatientDepartmentDetailComponent ],
+      declarations: [OutpatientDepartmentDetailComponent],
       imports: [FormsModule, HttpClientModule, HttpClientTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(OutpatientDepartmentDetailComponent);
     component = fixture.componentInstance;

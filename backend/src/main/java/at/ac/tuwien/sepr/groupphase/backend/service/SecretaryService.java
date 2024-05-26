@@ -33,4 +33,11 @@ public interface SecretaryService {
      */
     List<SecretaryDetailDto> getAllSecretaries();
 
+    /**
+     * Check if the used id matches the token given.
+     *
+     * @param userId the id of the user
+     * @return true if the user is from the secretary that is sending the request, false otherwise
+     */
+    boolean isValidSecretaryRequest(Long userId);
 }

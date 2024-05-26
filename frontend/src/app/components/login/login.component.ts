@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.email.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
     } else {
-      console.log('Invalid input');
+      this.notification.error('Invalid input. Please check your input data.');
     }
   }
 
@@ -46,15 +46,13 @@ export class LoginComponent implements OnInit {
    * @param authRequest authentication data from the user login form
    */
   authenticateUser(authRequest: AuthRequest) {
-    console.log('Try to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         this.notification.success('Successfully logged in as: ' + authRequest.email);
         this.router.navigate(['/']);
       },
       error: error => {
-        console.log('Could not log in due to:');
-        console.log(error);
+        console.error(error);
         this.notification.error('Login failed. Please try again.');
         this.error = true;
         if (typeof error.error === 'object') {

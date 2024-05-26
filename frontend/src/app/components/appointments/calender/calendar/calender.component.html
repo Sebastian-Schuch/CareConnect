@@ -1,0 +1,159 @@
+<div>
+  <div class="row text-center">
+    <div class="col-md-3">
+      <div class="btn-group">
+        <div
+          class="btn btn-primary"
+          mwlCalendarPreviousView
+          [view]="view"
+          [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()"
+        >
+          Previous
+        </div>
+        <div
+          class="btn btn-outline-secondary"
+          mwlCalendarToday
+          [(viewDate)]="viewDate"
+        >
+          Today
+        </div>
+        <div
+          class="btn btn-primary"
+          mwlCalendarNextView
+          [view]="view"
+          [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()"
+        >
+          Next
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <div class="col-md-3">
+      <div class="btn-group">
+        <div
+          class="btn btn-primary"
+          (click)="setView(CalendarView.Month)"
+          [class.active]="view === CalendarView.Month"
+        >
+          Month
+        </div>
+        <div
+          class="btn btn-primary"
+          (click)="setView(CalendarView.Day)"
+          [class.active]="view === CalendarView.Day"
+        >
+          Day
+        </div>
+      </div>
+    </div>
+  </div>
+  <br/>
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view
+      *ngSwitchCase="CalendarView.Month"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+      [weekStartsOn]="1"
+      [activeDayIsOpen]="activeDayIsOpen"
+      (dayClicked)="dayClicked($event.day)"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+      (eventTimesChanged)="eventTimesChanged($event)"
+      [cellTemplate]="customMonthCellTemplate"
+    >
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+      *ngSwitchCase="CalendarView.Week"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+      [weekStartsOn]="1"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+      (eventTimesChanged)="eventTimesChanged($event)"
+      (hourSegmentClicked)="hourSegmentClicked($event.date)"
+    >
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+      *ngSwitchCase="CalendarView.Day"
+      [viewDate]="viewDate"
+      [events]="events"
+      [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+      (eventTimesChanged)="eventTimesChanged($event)"
+      (hourSegmentClicked)="hourSegmentClicked($event.date)"
+    >
+    </mwl-calendar-day-view>
+  </div>
+</div>
+<ng-template #customMonthCellTemplate let-day="day" let-locale="locale">
+  <div class="cal-cell-top">
+    <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) > 0"
+          [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
+    >Free: {{ calcFreeSlots(day.date) }}</span
+    >
+    <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) <= 0"
+          [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
+    >Booked out!</span
+    >
+    <span class="cal-day-number"
+    >{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span
+    >
+  </div>
+</ng-template>
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title" id="confirmationModalLabel">
+      <div *ngIf="modalData.event.meta.isMyAppointment; then thenBlockHeader else elseBlockHeader"></div>
+      <ng-template #thenBlockHeader>
+        <div>
+          Confirmation
+        </div>
+      </ng-template>
+      <ng-template #elseBlockHeader>
+        <div *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity">Confirmation</div>
+        <div *ngIf="modalData.event.meta.curCapacity >= modalData.event.meta.maxCapacity">Notice</div>
+      </ng-template>
+    </h5>
+    <div *ngIf="modalData.event.meta.isMyAppointment"></div>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="modalData.event.meta.isMyAppointment; then thenBlockBody else elseBlockBody"></div>
+    <ng-template #thenBlockBody>
+      <div>
+        Are you certain you want to cancel your appointment on {{ modalData?.event?.start | date:'medium' }}?
+      </div>
+    </ng-template>
+    <ng-template #elseBlockBody>
+      <div *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity">Are you certain you want to
+        schedule the appointment for {{ modalData?.event?.start | date:'medium' }}?
+      </div>
+      <div *ngIf="modalData.event.meta.curCapacity >= modalData.event.meta.maxCapacity">The Appointment
+        on {{ modalData?.event?.start | date:'medium' }} is fully booked
+      </div>
+    </ng-template>
+  </div>
+  <div class="modal-footer">
+    <div *ngIf="modalData.event.meta.isMyAppointment; then thenBlockButton else elseBlockButton"></div>
+    <ng-template #thenBlockButton>
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary" (click)="cancelAppointment(modalData.event); close()">
+        Confirm
+      </button>
+    </ng-template>
+    <ng-template #elseBlockButton>
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        Close
+      </button>
+      <button *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity" type="button"
+              class="btn btn-primary" (click)="bookAppointment(modalData.event); close()">
+        Confirm
+      </button>
+    </ng-template>
+  </div>
+</ng-template>

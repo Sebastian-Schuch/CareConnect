@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Role} from "../../dtos/Role";
+import {CalendarWrapperComponent} from "../appointments/calender/calendar-wrapper/calendar-wrapper.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -11,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   mode: Role = Role.admin;
 
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
@@ -41,4 +43,9 @@ export class HomeComponent implements OnInit {
   }
 
   protected readonly Role = Role;
+  protected readonly CalendarWrapperComponent = CalendarWrapperComponent;
+
+  changeToCalendar() {
+    this.router.navigate(['/calendar']);
+  }
 }

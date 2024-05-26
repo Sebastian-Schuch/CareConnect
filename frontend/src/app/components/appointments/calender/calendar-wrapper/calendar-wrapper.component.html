@@ -1,0 +1,28 @@
+<form [formGroup]="appointmentForm">
+  <div class="form-group">
+    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+      <mat-label>Outpatient Department</mat-label>
+      <input type="text" matInput formControlName="outpatientDepartment" [matAutocomplete]="outpdepAuto">
+      <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD">
+        <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">
+          {{ outpd.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="form-group" *ngIf="isRoleSecretary()">
+    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+      <mat-label>patient</mat-label>
+      <input type="text" matInput formControlName="patient" [matAutocomplete]="patientAuto">
+      <mat-autocomplete #patientAuto="matAutocomplete" [displayWith]="displayPatient">
+        <mat-option *ngFor="let patient of filteredPatientOptions | async" [value]="patient">
+          {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</form>
+
+<app-calender *ngIf="isOutpatientDepartmentSet()"
+              [outpatientDepartment]="GetActiveOutpatientDepartment()"
+              [patient]="GetActivePatient()"></app-calender>

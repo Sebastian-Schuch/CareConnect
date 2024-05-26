@@ -10,6 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -51,6 +53,12 @@ public class SecretaryServiceImpl implements SecretaryService {
     public List<SecretaryDetailDto> getAllSecretaries() {
         LOG.trace("getAllSecretaries()");
         return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
+    }
+
+    @Override
+    public boolean isValidSecretaryRequest(Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("SECRETARY"));
     }
 }
 

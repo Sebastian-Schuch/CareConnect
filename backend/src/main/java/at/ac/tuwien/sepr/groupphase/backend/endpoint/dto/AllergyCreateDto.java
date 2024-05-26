@@ -9,7 +9,7 @@ public class AllergyCreateDto {
     @NotNull
     @Size(min = 1, max = 255)
     private String name;
-    
+
     private Long id;
 
     public void setName(String name) {

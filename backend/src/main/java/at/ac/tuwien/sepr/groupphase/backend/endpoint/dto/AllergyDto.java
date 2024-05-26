@@ -10,7 +10,7 @@ public class AllergyDto {
 
     public AllergyDto() {
     }
-    
+
     public AllergyDto(Long uid, String name) {
         this.uid = uid;
         this.name = name;

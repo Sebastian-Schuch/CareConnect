@@ -12,7 +12,6 @@ public interface AllergyRepository extends CrudRepository<Allergy, Long> {
      * Find an allergy by its name.
      *
      * @param name the name of the allergy to find
-     *
      * @return the allergy with the given name
      */
     Allergy findByName(String name);
