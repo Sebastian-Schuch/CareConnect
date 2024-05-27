@@ -1,11 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.AllergyTestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,26 +25,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "datagen"})
 @AutoConfigureMockMvc
-public class AllergyEndpointTest implements AllergyTestData {
+public class AllergyEndpointTest extends TestBase implements AllergyTestData {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private AllergyRepository allergyRepository;
-    @Autowired
     private ObjectMapper mapper;
 
 
-    @BeforeEach
-    public void beforeEach() {
-        allergyRepository.deleteAll();
-    }
-
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenAValidAlleryCreateDto_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
+    public void givenAValidAllergyCreateDto_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
         AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
         allergyCreateDto.setName(ALLERGY_NAME_1);
 
@@ -66,7 +58,7 @@ public class AllergyEndpointTest implements AllergyTestData {
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenAnInvalidAlleryCreateDto_whenCreateAllergy_thenBadRequest() throws Exception {
+    public void givenAnInvalidAllergyCreateDto_whenCreateAllergy_thenBadRequest() throws Exception {
         AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
         allergyCreateDto.setName(null);
 
