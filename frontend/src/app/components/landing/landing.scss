@@ -1,0 +1,158 @@
+@import 'src/styles.scss';
+.start-page-container {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.headline {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #2d2d2d;
+}
+
+.subheadline {
+  font-size: 1.25rem;
+  color: #666;
+  margin-top: 20px;
+}
+
+.get-access-button {
+  margin-top: 30px;
+  background-color: $sepr-group-phase-green;
+  color: white;
+  font-size: 1rem;
+  padding: 25px 35px;
+  border-radius: 5px;
+}
+
+// booking section
+   .booking-info-card {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     background-color: #f5f8fa; /* Light blue background */
+     border-radius: 10px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     padding: 80px;
+     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+   }
+
+.calendar-image {
+  max-width: 100%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.treatment-image{
+  max-width: 90%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.booking-info-card:hover .calendar-image {
+  transform: translateX(10px);
+}
+
+.text-section {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.text-section h2 {
+  font-size: 2rem;
+  color: #00796b;
+  margin-bottom: 10px;
+}
+
+.text-section p {
+  font-size: 1.125rem;
+  color: #455a64;
+  margin-bottom: 20px;
+}
+
+.login-button {
+  background-color: $sepr-group-phase-green;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.image-section {
+  flex: 1;
+  text-align: right;
+}
+
+
+mat-card {
+  padding: 20px;
+  background-color: #f5f8fa;
+}
+
+
+// image green section
+   .cta-section {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     //background-color: #4caf50; // old green
+     background-color: $sepr-group-phase-green;
+   //background-color: #4b8d74; /* Green background */
+     padding: 50px;
+     border-radius: 10px;
+     text-align: center;
+     color: #ffffff;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+   }
+
+.cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.cta-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cta-image {
+  max-width: 100%;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cta-button {
+  background-color: #ffffff;
+  color: $sepr-group-phase-green;
+  font-weight: bold;
+  margin-top: 20px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.cta-button:hover {
+  background-color: #e1f5fe;
+}
+
+
+.image-from-above{
+  display: none;
+  position: absolute;
+  right: 0;
+  transform: translateY(-150px) scaleX(-1);
+  z-index: -20;
+}
+
+@media (min-width: 1600px) {
+  .image-from-above {
+    display: block;
+  }
+}
+
+.get-access-button-inverted {
+  margin-top: 30px;
+  background-color: #fff;
+  color: $sepr-group-phase-green;
+  font-size: 1rem;
+  padding: 25px 35px;
+  border-radius: 5px;
+}

@@ -20,8 +20,5 @@ public record SecretaryCreateDto(
 
 
 ) {
-    public CredentialCreateDto toCredentialDtoCreate() {
-        return new CredentialCreateDto(email, firstname, lastname);
-    }
 }
 

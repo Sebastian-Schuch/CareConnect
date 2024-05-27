@@ -83,8 +83,6 @@ public class TreatmentMapper {
 
         Treatment t = new Treatment();
         t.setTreatmentTitle(treatmentDtoCreate.treatmentTitle());
-
-        t.setTreatmentTitle(treatmentDtoCreate.treatmentTitle());
         t.setTreatmentText(treatmentDtoCreate.treatmentText());
         t.setPatient(patientService.getPatientEntityById(treatmentDtoCreate.patient().id()));
         t.setDoctors(doctors);

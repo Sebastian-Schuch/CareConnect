@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {UserCreateDto, UserDetailDto, UserLoginDto} from "../dtos/user";
+import {UserCreateDto, UserDetailDto} from "../dtos/user";
 import {Observable} from "rxjs";
 import {Globals} from "../global/globals";
 
@@ -14,23 +14,15 @@ export class UserService {
   private doctorBaseUri: string = this.globals.backendUri + '/doctors';
   private secretaryBaseUri: string = this.globals.backendUri + '/secretaries';
   private patientBaseUri: string = this.globals.backendUri + '/patients';
-  private credentialBaseUri: string = this.globals.backendUri + '/credentials';
+  private credentialAdminBaseUri: string = this.globals.backendUri + '/credentials/admins';
+  private credentialDoctorBaseUri: string = this.globals.backendUri + '/credentials/doctors';
+  private credentialSecretaryBaseUri: string = this.globals.backendUri + '/credentials/secretaries';
+  private credentialPatientBaseUri: string = this.globals.backendUri + '/credentials/patients';
 
   constructor(
     private http: HttpClient,
     private globals: Globals
   ) {
-  }
-
-  /**
-   * Get the information from the logged-in user
-   *
-   * @return an Observable for the UserDetailDto
-   */
-  getUserCredentials() {
-    return this.http.get<UserDetailDto>(
-      this.credentialBaseUri
-    );
   }
 
   /**
@@ -43,7 +35,7 @@ export class UserService {
     return this.http.post(
       this.adminBaseUri,
       admin,
-      { responseType: 'blob' }
+      {responseType: 'blob'}
     );
   }
 
@@ -55,6 +47,17 @@ export class UserService {
    */
   getAdminById(id: number): Observable<UserDetailDto> {
     return this.http.get<UserDetailDto>(`${this.adminBaseUri}/${id}`);
+  }
+
+  /**
+   * Get the information from the admin that is logged in.
+   *
+   * @return an Observable for the UserDetailDto
+   */
+  getAdminCredentials() {
+    return this.http.get<UserDetailDto>(
+      this.credentialAdminBaseUri
+    );
   }
 
   /**
@@ -76,7 +79,7 @@ export class UserService {
     return this.http.post(
       this.doctorBaseUri,
       doctor,
-      { responseType: 'blob' }
+      {responseType: 'blob'}
     );
   }
 
@@ -88,6 +91,17 @@ export class UserService {
    */
   getDoctorById(id: number): Observable<UserDetailDto> {
     return this.http.get<UserDetailDto>(`${this.doctorBaseUri}/${id}`);
+  }
+
+  /**
+   * Get the information from the doctor that is logged in.
+   *
+   * @return an Observable for the UserDetailDto
+   */
+  getDoctorCredentials() {
+    return this.http.get<UserDetailDto>(
+      this.credentialDoctorBaseUri
+    );
   }
 
   /**
@@ -109,7 +123,7 @@ export class UserService {
     return this.http.post(
       this.secretaryBaseUri,
       secretary,
-      { responseType: 'blob' }
+      {responseType: 'blob'}
     );
   }
 
@@ -121,6 +135,17 @@ export class UserService {
    */
   getSecretaryById(id: number): Observable<UserDetailDto> {
     return this.http.get<UserDetailDto>(`${this.secretaryBaseUri}/${id}`);
+  }
+
+  /**
+   * Get the information from the secretary that is logged in.
+   *
+   * @return an Observable for the UserDetailDto
+   */
+  getSecretaryCredentials() {
+    return this.http.get<UserDetailDto>(
+      this.credentialSecretaryBaseUri
+    );
   }
 
   /**
@@ -143,12 +168,14 @@ export class UserService {
   }
 
   /**
-   * Get the patient with his current credentials.
+   * Get the information from the patient that is logged in.
    *
-   * @return an Observable of the patient
+   * @return an Observable for the UserDetailDto
    */
-  getPatientLoggedIn(): Observable<UserDetailDto> {
-    return this.http.get<UserDetailDto>(this.credentialBaseUri);
+  getPatientCredentials() {
+    return this.http.get<UserDetailDto>(
+      this.credentialPatientBaseUri
+    );
   }
 
   /**
@@ -170,7 +197,7 @@ export class UserService {
     return this.http.post(
       this.patientBaseUri,
       patient,
-      { responseType: 'blob' }
+      {responseType: 'blob'}
     );
   }
 }

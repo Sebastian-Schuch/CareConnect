@@ -23,9 +23,10 @@ public class ChatMapper {
     public ChatDto treatmentAndMessagesToChatDto(Treatment treatment, List<Message> messages) {
         LOG.trace("treatmentAndMessagesToChatDto({}, {})", treatment, messages);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm");
+        String formattedDateTime = formatter.format(treatment.getTreatmentStart());
 
-        return new ChatDto(treatment.getId(), treatment.getTreatmentTitle() + " " + dateFormat.format(treatment.getTreatmentStart()),
+        return new ChatDto(treatment.getId(), treatment.getTreatmentTitle() + " (" + formattedDateTime + ")",
             messageMapper.messageEntitiesToMessageDtos(messages));
     }
 }

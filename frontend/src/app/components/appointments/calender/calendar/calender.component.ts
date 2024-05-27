@@ -19,6 +19,7 @@ import {AppointmentService} from "../../../../services/appointment.service";
 import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
 import {AppointmentCalendarDto, AppointmentCreateDto} from "../../../../dtos/appointment";
 import {UserDetailDto} from "../../../../dtos/user";
+import {OpeningHoursDto} from "../../../../dtos/opening-hours";
 
 
 @Component({
@@ -69,6 +70,9 @@ export class CalenderComponent implements OnInit {
   startDate: Date = new Date();
   endDate: Date = new Date();
 
+  dayStartHour: number = 0;
+  dayEndHour: number = 24;
+
   constructor(
     private modal: NgbModal,
     private service: CalenderService,
@@ -77,11 +81,38 @@ export class CalenderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setStartAndEndHour(this.outpatientDepartment.openingHours);
     // Since the ngOnChanges Method also calls, when the component is initialized, we don't need to call loadSlotsAndBookedAppointmentsOfMonth here
   }
 
   ngOnChanges(): void {
     this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
+  }
+
+  private setStartAndEndHour(openingHours: OpeningHoursDto) {
+    let min = 24;
+    let max = 0;
+    for (let i = 0; i < 7; i++) {
+      let tmpmax = this.service.getCloseHourOfDay(this.service.getDayOfWeek(openingHours, i));
+      let tmpmin = this.service.getOpenHourOfDay(this.service.getDayOfWeek(openingHours, i));
+      if (tmpmax > max) {
+        max = tmpmax;
+      }
+      if (tmpmin < min) {
+        min = tmpmin;
+      }
+    }
+    if (min > max) {
+      this.dayStartHour = 0;
+      this.dayEndHour = 24;
+    } else {
+      if (min > 0) {
+        this.dayStartHour = min - 1;
+      }
+      if (max < 24) {
+        this.dayEndHour = max + 1;
+      }
+    }
   }
 
   /**

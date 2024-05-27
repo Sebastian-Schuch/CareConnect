@@ -1,15 +1,15 @@
-<div class="chat-window">
-  <div class="messages">
-    <div class="message" *ngFor="let message of messages">
-      <div class="message-content" [ngClass]="{'my-message': message.senderEmail === ownEmail, 'other-message': message.senderEmail !== ownEmail}">
-        {{ message.content }}
-      </div>
-      <div class="message-info" [ngClass]="{'my-message-info': message.senderEmail === ownEmail, '': message.senderEmail !== ownEmail}">
-        <span class="sender">{{ getDisplayName(message) }}</span>
-        <span class="timestamp">{{ getDateAsString(message.timestamp) }}</span>
-      </div>
+<div class="chat-window" role="region" aria-label="Chat window">
+    <div class="messages" tabindex="0">
+        <div class="message" *ngFor="let message of messages" tabindex="0">
+            <div class="message-content" [ngClass]="{'my-message': message.senderEmail === ownEmail, 'other-message': message.senderEmail !== ownEmail}">
+                {{ message.content }}
+            </div>
+            <div class="message-info" [ngClass]="{'my-message-info': message.senderEmail === ownEmail, '': message.senderEmail !== ownEmail}">
+                <span class="sender">{{ getDisplayName(message) }}</span>
+                <span class="timestamp">{{ getDateAsString(message.timestamp) }}</span>
+            </div>
+        </div>
+        <div #sectionSubscribe id="scroll"></div>
     </div>
-    <div #sectionSubscribe id="scroll"></div>
-  </div>
-  <app-chat-input (sendMessage)="addMessage($event)"></app-chat-input>
+    <app-chat-input (sendMessage)="addMessage($event)"></app-chat-input>
 </div>

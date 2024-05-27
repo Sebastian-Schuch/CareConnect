@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AppointmentDetailDto} from "../../../dtos/appointment";
 import {AppointmentService} from "../../../services/appointment.service";
 import {UserService} from "../../../services/user.service";
@@ -21,6 +21,10 @@ export class AppointmentsPatientComponent implements OnInit {
   filteredDepartments: Observable<string[]>;
   departmentControl = new FormControl();
   showPastAppointments: boolean = false;
+  pageSize: number = 3;
+  currentPageFuture: number = 1;
+  currentPagePast: number = 1;
+  @Input() customStyle!: boolean;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -35,6 +39,46 @@ export class AppointmentsPatientComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPatientAppointments();
+    this.filteredDepartments = this.departmentControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterDepartments(value))
+    );
+  }
+
+  getVisibleFutureAppointments(): AppointmentDetailDto[] {
+    const startIndex = (this.currentPageFuture - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.futureAppointments.slice(startIndex, endIndex);
+  }
+
+  getVisiblePastAppointments(): AppointmentDetailDto[] {
+    const startIndex = (this.currentPagePast - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.pastAppointments.slice(startIndex, endIndex);
+  }
+
+  nextFuturePage(): void {
+    if ((this.currentPageFuture * this.pageSize) < this.futureAppointments.length) {
+      this.currentPageFuture++;
+    }
+  }
+
+  previousFuturePage(): void {
+    if (this.currentPageFuture > 1) {
+      this.currentPageFuture--;
+    }
+  }
+
+  nextPastPage(): void {
+    if ((this.currentPagePast * this.pageSize) < this.pastAppointments.length) {
+      this.currentPagePast++;
+    }
+  }
+
+  previousPastPage(): void {
+    if (this.currentPagePast > 1) {
+      this.currentPagePast--;
+    }
   }
 
   /**
@@ -84,7 +128,7 @@ export class AppointmentsPatientComponent implements OnInit {
    * Load the appointments for the patient
    */
   private loadPatientAppointments(): void {
-    this.userService.getPatientLoggedIn().subscribe({
+    this.userService.getPatientCredentials().subscribe({
       next: (patient) => {
         this.appointmentService.getAppointmentsFromPatient(patient.id).subscribe({
           next: (appointments) => {

@@ -169,10 +169,15 @@ export class TreatmentComponent implements OnInit {
         medicineAdministrationDate: this.combineDateAndTime(medicationData.medicineDatePicker, medicationData.medicineTimePicker)
       };
 
+      medicationData.medicineDatePicker = new Date(medicationData.medicineDatePicker).toLocaleDateString();
+      console.log(medicationData);
       this.treatmentMedicines.push(this.treatmentMedicineDtoCreate);
       this.dataSource.data.push(medicationData);
       this.dataSource._updateChangeSubscription();
       this.medicationAdministeredForm.reset();
+      this.medicationAdministeredForm.markAsPristine();
+      this.medicationAdministeredForm.markAsUntouched();
+
 
       this.filteredMedicineOptions = this.medicationAdministeredForm.get('medicine').valueChanges.pipe(
         startWith(''),

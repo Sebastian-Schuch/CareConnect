@@ -1,0 +1,19 @@
+@import "src/styles.scss";
+.cta-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-icon {
+  background-color: white;
+  color: $sepr-group-phase-green;
+  border-radius: 50%;
+  padding: 10px;
+  font-size: 40px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

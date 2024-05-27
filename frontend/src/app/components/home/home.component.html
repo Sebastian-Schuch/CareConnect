@@ -1,7 +1,10 @@
 <div class="jumbotron mt-5">
-  <header aria-label="Welcome to Care Connect banner">
-    <h1 class="display-4">Care Connect</h1>
-  </header>
+
+
+  <div *ngIf="isRolePatient()" aria-labelledby="v-pills-patient-landing-page">
+    <app-landing-patient></app-landing-patient>
+  </div>
+
   <hr class="my-4">
   <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login" role="button">Login</a>
   <div *ngIf="authService.isLoggedIn()">

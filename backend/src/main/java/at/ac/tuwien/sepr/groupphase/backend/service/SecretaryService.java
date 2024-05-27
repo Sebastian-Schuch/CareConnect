@@ -40,4 +40,12 @@ public interface SecretaryService {
      * @return true if the user is from the secretary that is sending the request, false otherwise
      */
     boolean isValidSecretaryRequest(Long userId);
+
+    /**
+     * Find a secretary by the given credential.
+     *
+     * @param credential the credential to search for
+     * @return the secretary with the given credential
+     */
+    SecretaryDetailDto findSecretaryByCredential(Credential credential);
 }

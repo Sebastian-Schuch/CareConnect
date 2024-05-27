@@ -82,6 +82,8 @@
       [viewDate]="viewDate"
       [events]="events"
       [refresh]="refresh"
+      [dayStartHour]="dayStartHour"
+      [dayEndHour]="dayEndHour"
       (eventClicked)="handleEvent('Clicked', $event.event)"
       (eventTimesChanged)="eventTimesChanged($event)"
       (hourSegmentClicked)="hourSegmentClicked($event.date)"

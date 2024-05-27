@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {UserCreateDto, UserLoginDto} from "../../dtos/user";
+import {Component, OnInit} from '@angular/core';
+import {UserCreateDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from "@angular/forms";
@@ -18,8 +18,7 @@ import {ToastrService} from 'ngx-toastr';
 
 export class UserCreateComponent implements OnInit {
 
-  @Input() mode: Role;
-  //mode: Role = Role.patient;
+  mode: Role = null;
 
   user: UserCreateDto = {
     email: '',
@@ -69,8 +68,8 @@ export class UserCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      if (data.mode != null) {
-        this.mode = data.mode;
+      if (data.role != null) {
+        this.mode = data.role;
       }
     });
   }

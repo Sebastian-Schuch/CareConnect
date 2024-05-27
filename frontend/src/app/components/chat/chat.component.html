@@ -1,3 +1,17 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;">
+      <span>Telemedicine Chat</span><br>
+    </h1>
+  </div>
+  <h3>Here you can start a new chat to ask questions about a past treatment.</h3>
+  <p class="subheadline">
+    Start by selecting the treatment you want to chat about.<br>
+    Or look at your already existing chats.
+  </p>
+  <br>
+</div>
+
 <div class="chat-container">
   <app-chat-list style="width: 40%" (chatSwitched)="onChatSelected($event)"></app-chat-list>
   <app-chat-messages style="width:100%" [chat]="selectedChat"></app-chat-messages>

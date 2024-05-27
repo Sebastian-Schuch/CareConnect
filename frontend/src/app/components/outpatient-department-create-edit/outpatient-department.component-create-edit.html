@@ -1,8 +1,17 @@
+<div class="start-page-container">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;">
+      <span>Register Outpatient Department</span><br>
+    </h1>
+  </div>
+</div>
 <form #form="ngForm" (ngSubmit)="onSubmit()" class="mt-3" aria-label="Form for creating a outpatient department">
   <fieldset aria-label="Inputs for basic information of outpatient departments">
+    <!--
     <legend>
       Inputs for basic information of outpatient departments
     </legend>
+    -->
     <div class="mb-3">
       <label class="form-label" for="name">Name:</label>
       <input type="text" [(ngModel)]="outpatientDepartment.name" name="name" class="form-control" required id="name">
@@ -10,7 +19,8 @@
 
     <div class="mb-3">
       <label class="form-label" for="description">Description:</label>
-      <input type="text" [(ngModel)]="outpatientDepartment.description" name="description" class="form-control" required
+      <input type="text" [(ngModel)]="outpatientDepartment.description" name="description" class="form-control"
+             required
              id="description">
     </div>
 
@@ -43,6 +53,6 @@
 
   <div class="mt-4 d-flex flex-row">
     <span class="flex-grow-1"></span>
-    <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">Create Outpatient Department</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">Register Outpatient Department</button>
   </div>
 </form>

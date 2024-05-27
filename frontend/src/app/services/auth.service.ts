@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
@@ -15,6 +15,9 @@ export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
+  public isLogged = new BehaviorSubject<boolean>(false);
+  cast = this.isLogged.asObservable();
+
   constructor(private httpClient: HttpClient, private globals: Globals, private notification: ToastrService) {
   }
 
@@ -26,7 +29,10 @@ export class AuthService {
   loginUser(authRequest: AuthRequest): Observable<string> {
     return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
       .pipe(
-        tap((authResponse: string) => this.setToken(authResponse))
+        tap((authResponse: string) => {
+          this.setToken(authResponse);
+          this.isLogged.next(true);
+        })
       );
   }
 
@@ -41,6 +47,7 @@ export class AuthService {
   logoutUser() {
     this.notification.success('Successfully logged out');
     localStorage.removeItem('authToken');
+    this.isLogged.next(false);
   }
 
   getToken() {

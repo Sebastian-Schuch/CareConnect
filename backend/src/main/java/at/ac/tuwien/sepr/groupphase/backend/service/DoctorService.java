@@ -49,4 +49,12 @@ public interface DoctorService {
      */
     DoctorDto getDoctorByEmail(String email);
 
+    /**
+     * Find a doctor by the given credential.
+     *
+     * @param credential the credential to search for
+     * @return the doctor with the given credential
+     */
+    DoctorDto findDoctorByCredential(Credential credential);
+
 }

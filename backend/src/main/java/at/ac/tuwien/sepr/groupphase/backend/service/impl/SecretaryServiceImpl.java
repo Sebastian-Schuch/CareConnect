@@ -60,5 +60,15 @@ public class SecretaryServiceImpl implements SecretaryService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("SECRETARY"));
     }
+
+    @Override
+    public SecretaryDetailDto findSecretaryByCredential(Credential credential) {
+        LOG.debug("Find application user by email");
+        Secretary secretary = secretaryRepository.findByCredential(credential);
+        if (secretary != null) {
+            return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
+        }
+        throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
+    }
 }
 

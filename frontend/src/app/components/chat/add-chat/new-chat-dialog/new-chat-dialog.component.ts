@@ -12,6 +12,7 @@ import {MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {ChatDto} from "../../../../dtos/chat";
+import {CommonModule} from "@angular/common";
 
 export interface DialogData {
   available: ChatDto[];
@@ -30,7 +31,8 @@ export interface DialogData {
     FormsModule,
     MatDialogTitle,
     MatButton,
-    MatLabel
+    MatLabel,
+    CommonModule
   ],
   templateUrl: './new-chat-dialog.component.html',
   styleUrl: './new-chat-dialog.component.scss'
