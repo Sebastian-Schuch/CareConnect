@@ -93,24 +93,26 @@ export class CalenderComponent implements OnInit {
     let min = 24;
     let max = 0;
     for (let i = 0; i < 7; i++) {
-      let tmpmax = this.service.getCloseHourOfDay(this.service.getDayOfWeek(openingHours, i));
-      let tmpmin = this.service.getOpenHourOfDay(this.service.getDayOfWeek(openingHours, i));
-      if (tmpmax > max) {
-        max = tmpmax;
+      if (!(this.service.getDayOfWeek(openingHours, i) == null)) {
+        let tmpmax = this.service.getCloseHourOfDay(this.service.getDayOfWeek(openingHours, i));
+        let tmpmin = this.service.getOpenHourOfDay(this.service.getDayOfWeek(openingHours, i));
+        if (tmpmax > max) {
+          max = tmpmax;
+        }
+        if (tmpmin < min) {
+          min = tmpmin;
+        }
       }
-      if (tmpmin < min) {
-        min = tmpmin;
-      }
-    }
-    if (min > max) {
-      this.dayStartHour = 0;
-      this.dayEndHour = 24;
-    } else {
-      if (min > 0) {
-        this.dayStartHour = min - 1;
-      }
-      if (max < 24) {
-        this.dayEndHour = max + 1;
+      if (min > max) {
+        this.dayStartHour = 0;
+        this.dayEndHour = 24;
+      } else {
+        if (min > 0) {
+          this.dayStartHour = min - 1;
+        }
+        if (max < 24) {
+          this.dayEndHour = max + 1;
+        }
       }
     }
   }
