@@ -121,7 +121,7 @@ public class OutpatientDepartmentEndpointTest {
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/outpatient-departments")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(outpatientDepartmentDtoCreateInvalid)))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnprocessableEntity())
                 .andReturn();
         });
     }

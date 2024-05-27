@@ -110,7 +110,7 @@ public class StationEndpointTest extends StationTestData {
             .getResponse();
 
         // then
-        assertEquals(400, response.getStatus());
+        assertEquals(422, response.getStatus());
     }
 
 

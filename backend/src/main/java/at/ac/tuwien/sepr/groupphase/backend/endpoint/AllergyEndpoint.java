@@ -6,12 +6,12 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AllergyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +37,7 @@ public class AllergyEndpoint {
         this.allergyMapper = allergyMapper;
     }
 
-    @PermitAll
+    @Secured({"ADMIN", "Doctor"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new allergy")
@@ -46,14 +46,15 @@ public class AllergyEndpoint {
         return allergyMapper.allergyToDto(this.allergyService.createAllergy(toCreate));
     }
 
-    @PermitAll
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
+
     @GetMapping(value = "/{id}")
     public AllergyDto find(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET " + BASE_PATH + "/{}", id);
         return allergyMapper.allergyToDto(this.allergyService.findById(id));
     }
 
-    @PermitAll
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
     @GetMapping
     @Operation(summary = "Get list of allergies without details")
     public List<AllergyDto> findAll() {
@@ -66,7 +67,7 @@ public class AllergyEndpoint {
         }
     }
 
-    @PermitAll
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
     @PostMapping(value = "/{id}")
     @Operation(summary = "Update a new allergy")
     public ResponseEntity<AllergyDto> update(@PathVariable(name = "id") Long id, @RequestBody AllergyDto toUpdate) {
