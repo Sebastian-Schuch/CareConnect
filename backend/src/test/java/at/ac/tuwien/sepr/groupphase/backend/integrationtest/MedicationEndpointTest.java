@@ -98,7 +98,7 @@ public class MedicationEndpointTest {
             .perform(MockMvcRequestBuilders
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class MedicationEndpointTest {
             .perform(MockMvcRequestBuilders
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

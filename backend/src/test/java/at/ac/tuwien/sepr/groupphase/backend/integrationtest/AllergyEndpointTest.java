@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +44,7 @@ public class AllergyEndpointTest implements AllergyTestData {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAValidAlleryCreateDto_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
         AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
         allergyCreateDto.setName(ALLERGY_NAME_1);
@@ -63,6 +65,7 @@ public class AllergyEndpointTest implements AllergyTestData {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAnInvalidAlleryCreateDto_whenCreateAllergy_thenBadRequest() throws Exception {
         AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
         allergyCreateDto.setName(null);
@@ -74,10 +77,11 @@ public class AllergyEndpointTest implements AllergyTestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(400, response.getStatus());
+        assertEquals(422, response.getStatus());
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAnAllergyId_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
         AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
         allergyCreateDto.setName(ALLERGY_NAME_1);
@@ -99,6 +103,7 @@ public class AllergyEndpointTest implements AllergyTestData {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAnInvalidAllergyId_whenRequesting_thanNotFound() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(get(baseUri + "/-1"))

@@ -105,8 +105,7 @@ public class PatientEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-        //TODO: fix the status code of the global exception handler (Issue #45)
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -117,8 +116,7 @@ public class PatientEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-        //TODO: fix the status code of the global exception handler (Issue #45)
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -129,8 +127,7 @@ public class PatientEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-        //TODO: fix the status code of the global exception handler (Issue #45)
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -142,8 +139,7 @@ public class PatientEndpointTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
-        //TODO: fix the status code of the global exception handler (Issue #45)
+            .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
