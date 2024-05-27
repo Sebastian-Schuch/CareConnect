@@ -41,6 +41,14 @@ public interface PatientService {
     Patient getPatientEntityById(Long id);
 
     /**
+     * Get the specified patient Entity.
+     *
+     * @param email the email of the patient requested
+     * @return the patient with the email given
+     */
+    PatientDto getPatientByEmail(String email);
+
+    /**
      * Find a patient by the given credential.
      *
      * @param credential the credential to find the patient by

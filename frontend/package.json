@@ -23,6 +23,7 @@
     "@angular/router": "17.3.4",
     "@ng-bootstrap/ng-bootstrap": "16.0.0",
     "@popperjs/core": "2.11.8",
+    "@stomp/stompjs": "^7.0.0",
     "angular-calendar": "^0.31.1",
     "angularx-flatpickr": "^7.3.0",
     "bootstrap": "5.3.3",

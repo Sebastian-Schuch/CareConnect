@@ -42,6 +42,7 @@ import {FlatpickrModule} from "angularx-flatpickr";
 
 import {ToastrModule} from "ngx-toastr";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ChatComponent} from "./components/chat/chat.component";
 import {CalendarWrapperComponent} from "./components/appointments/calender/calendar-wrapper/calendar-wrapper.component";
 import {
   AppointmentsPatientComponent
@@ -102,7 +103,9 @@ import {
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-    ConfirmDeleteDialogComponent
+    ConfirmDeleteDialogComponent,
+    MatIconButton,
+    ChatComponent
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()

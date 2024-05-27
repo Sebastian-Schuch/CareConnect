@@ -15,6 +15,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query(value = "SELECT * FROM Doctor WHERE id= ?1", nativeQuery = true)
     Doctor findDoctorById(Long id);
 
+    Doctor findByCredential_Email(String email);
+
     @Query("SELECT d.credential FROM Doctor d")
     List<Credential> findAllDoctorCredentials();
 

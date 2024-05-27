@@ -52,9 +52,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthToken(HttpServletRequest request)
-        throws JwtException, IllegalArgumentException {
-        String token = request.getHeader(securityProperties.getAuthHeader());
+    public UsernamePasswordAuthenticationToken getAuthTokenFromString(String token) {
         if (token == null || token.isEmpty()) {
             return null;
         }
@@ -86,5 +84,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         MDC.put("u", username);
 
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
+    }
+
+    private UsernamePasswordAuthenticationToken getAuthToken(HttpServletRequest request)
+        throws JwtException, IllegalArgumentException {
+        String token = request.getHeader(securityProperties.getAuthHeader());
+        return getAuthTokenFromString(token);
     }
 }

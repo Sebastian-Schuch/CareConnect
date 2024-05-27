@@ -129,4 +129,13 @@ public class TreatmentMapper {
             doctors,
             medicines);
     }
+
+    public List<TreatmentDto> entityListToDtoList(List<Treatment> treatments) {
+        List<TreatmentDto> treatmentDtos = new LinkedList<>();
+        for (Treatment treatment : treatments) {
+            treatmentDtos.add(entityToDto(treatment));
+        }
+        return treatmentDtos;
+    }
+
 }

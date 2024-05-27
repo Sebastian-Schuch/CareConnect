@@ -1,0 +1,7 @@
+<mat-nav-list>
+  <app-add-chat *ngIf="isPatient()" (chatAdded)="addChat($event)"></app-add-chat>
+  <mat-list-item *ngFor="let chat of chats" (click)="selectChat(chat)">
+    <div matLine class="chat-name">{{chat.name}}</div>
+    <div matLine class="chat-last-message">{{chat.messages.length > 0 ? previewMesssage(chat) : null}}</div>
+  </mat-list-item>
+</mat-nav-list>

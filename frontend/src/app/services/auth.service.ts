@@ -67,6 +67,14 @@ export class AuthService {
     return undefined;
   }
 
+  getUserEmail(): string {
+    const token = this.getToken();
+    if (token != null) {
+      const decoded = jwtDecode(token);
+      return decoded.sub;
+    }
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }

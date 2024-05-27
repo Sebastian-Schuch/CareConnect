@@ -63,4 +63,9 @@ public class DoctorServiceImpl implements DoctorService {
     public List<DoctorDto> getAllDoctors() {
         return doctorMapper.doctorsToDoctorDtos(doctorRepository.findAll());
     }
+
+    @Override
+    public DoctorDto getDoctorByEmail(String email) {
+        return doctorMapper.doctorToDoctorDto(doctorRepository.findByCredential_Email(email));
+    }
 }
