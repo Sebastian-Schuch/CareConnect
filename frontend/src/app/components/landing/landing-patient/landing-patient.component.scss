@@ -1,0 +1,35 @@
+:host ::ng-deep app-appointments-patient {
+
+  #appointment-section-past {
+    display: none !important;
+  }
+  .card-container{
+    color: #2d2d2d!important;
+    display: flex!important;
+    flex-direction: row!important;
+    flex-wrap: wrap!important;
+    justify-content: flex-start!important;
+    align-content: center!important;
+    align-items: flex-start!important;
+    gap: 1rem!important;
+  }
+  .appointment-card {
+    max-width: 100%;
+  }
+
+  .container{
+    max-width: 100% !important;
+  }
+
+  .appointment-details{
+    align-items: flex-start!important;
+  }
+
+  .on-landing-hidden{
+    display: none!important;
+  }
+
+  .modal-dialog{
+    color: #2d2d2d!important;
+  }
+}

@@ -25,6 +25,9 @@ export class AppointmentsSecretaryComponent implements OnInit {
   patients: string[] = [];
   showFilters: boolean = true;
   appointmentFilterForm: FormGroup;
+  pageSize: number = 3;
+  currentPageFuture: number = 1;
+  currentPagePast: number = 1;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -53,6 +56,42 @@ export class AppointmentsSecretaryComponent implements OnInit {
         console.error('Error loading initial data', err);
       }
     });
+  }
+
+  getVisibleFutureAppointments(): AppointmentDetailDto[] {
+    const startIndex = (this.currentPageFuture - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.futureAppointments.slice(startIndex, endIndex);
+  }
+
+  getVisiblePastAppointments(): AppointmentDetailDto[] {
+    const startIndex = (this.currentPagePast - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.pastAppointments.slice(startIndex, endIndex);
+  }
+
+  nextFuturePage(): void {
+    if ((this.currentPageFuture * this.pageSize) < this.futureAppointments.length) {
+      this.currentPageFuture++;
+    }
+  }
+
+  previousFuturePage(): void {
+    if (this.currentPageFuture > 1) {
+      this.currentPageFuture--;
+    }
+  }
+
+  nextPastPage(): void {
+    if ((this.currentPagePast * this.pageSize) < this.pastAppointments.length) {
+      this.currentPagePast++;
+    }
+  }
+
+  previousPastPage(): void {
+    if (this.currentPagePast > 1) {
+      this.currentPagePast--;
+    }
   }
 
   /**

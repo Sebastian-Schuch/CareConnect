@@ -1,28 +1,48 @@
-<form [formGroup]="appointmentForm">
-  <div class="form-group">
-    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
-      <mat-label>Outpatient Department</mat-label>
-      <input type="text" matInput formControlName="outpatientDepartment" [matAutocomplete]="outpdepAuto">
-      <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD">
-        <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">
-          {{ outpd.name }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+<div class="start-page-container">
+  <div>
+    <div style="position: relative;">
+      <h1 class="headline" style="position: relative; z-index: 1;">
+        <span>Appointment Booking</span><br>
+      </h1>
+    </div>
+
+    <div>
+      <h3 *ngIf="isRolePatient()">Here you can book your own appointments!</h3>
+      <h3 *ngIf="isRoleSecretary()">Here you can book an appointment for a patient!</h3>
+      <p *ngIf="isRolePatient()" class="subheadline">
+        Just start by selecting the outpatient department you want to book an appointment for.
+      </p>
+    </div>
   </div>
-  <div class="form-group" *ngIf="isRoleSecretary()">
-    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
-      <mat-label>patient</mat-label>
-      <input type="text" matInput formControlName="patient" [matAutocomplete]="patientAuto">
-      <mat-autocomplete #patientAuto="matAutocomplete" [displayWith]="displayPatient">
-        <mat-option *ngFor="let patient of filteredPatientOptions | async" [value]="patient">
-          {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-  </div>
-</form>
+  <br>
+  <form [formGroup]="appointmentForm">
+    <div class="form-group">
+      <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+        <mat-label>Outpatient Department</mat-label>
+        <input type="text" matInput formControlName="outpatientDepartment" [matAutocomplete]="outpdepAuto">
+        <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD">
+          <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">
+            {{ outpd.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="form-group" *ngIf="isRoleSecretary()">
+      <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+        <mat-label>patient</mat-label>
+        <input type="text" matInput formControlName="patient" [matAutocomplete]="patientAuto">
+        <mat-autocomplete #patientAuto="matAutocomplete" [displayWith]="displayPatient">
+          <mat-option *ngFor="let patient of filteredPatientOptions | async" [value]="patient">
+            {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+
 
 <app-calender *ngIf="isOutpatientDepartmentSet()"
               [outpatientDepartment]="GetActiveOutpatientDepartment()"
               [patient]="GetActivePatient()"></app-calender>
+

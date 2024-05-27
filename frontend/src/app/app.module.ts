@@ -29,7 +29,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatAnchor, MatButton, MatIconButton} from "@angular/material/button";
 import {StationComponent} from "./components/station/station.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {LoginComponent} from "./components/login/login.component";
@@ -43,6 +43,9 @@ import {FlatpickrModule} from "angularx-flatpickr";
 import {ToastrModule} from "ngx-toastr";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ChatComponent} from "./components/chat/chat.component";
+import {MatToolbar} from "@angular/material/toolbar";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {LandingPatientComponent} from "./components/landing/landing-patient/landing-patient.component";
 import {CalendarWrapperComponent} from "./components/appointments/calender/calendar-wrapper/calendar-wrapper.component";
 import {
   AppointmentsPatientComponent
@@ -53,6 +56,7 @@ import {
 import {
   AppointmentsSecretaryComponent
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
+import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog/new-chat-dialog.component";
 
 @NgModule({
   declarations: [
@@ -72,7 +76,8 @@ import {
     CalenderComponent,
     CalendarWrapperComponent,
     AppointmentsPatientComponent,
-    AppointmentsSecretaryComponent
+    AppointmentsSecretaryComponent,
+    LandingPatientComponent
   ],
   imports: [
     BrowserModule,
@@ -95,6 +100,11 @@ import {
     MatPaginatorModule,
     MatButton,
     MatIconButton,
+    MatToolbar,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatAnchor,
     CommonModule,
     FormsModule,
     NgbModalModule,
@@ -105,13 +115,16 @@ import {
     }),
     ConfirmDeleteDialogComponent,
     MatIconButton,
-    ChatComponent
+    ChatComponent,
+    NewChatDialogComponent
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()
   ],
   exports: [
-    CalenderComponent
+    CalenderComponent,
+    AppointmentsPatientComponent,
+    AppointmentsSecretaryComponent
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

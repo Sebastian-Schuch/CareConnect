@@ -1,0 +1,87 @@
+@import 'src/styles.scss';
+.admin-landing-container {
+  padding: 50px 20px;
+  text-align: center;
+
+  .section {
+    margin-bottom: 50px;
+
+    .section-card {
+      flex-wrap: wrap;
+      flex-direction: row;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f5f8fa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      .explanation {
+        text-align: left;
+        padding-right: 20px;
+        max-width: 500px;
+
+        h2 {
+          font-size: 2.5rem;
+          color: $sepr-group-phase-green;
+        }
+
+        p {
+          font-size: 1.25rem;
+          color: #666;
+          margin-top: 10px;
+        }
+      }
+
+      .cards {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .card {
+          padding: 20px;
+          background-color: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+          width: 250px;
+          text-align: center;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          mat-icon {
+            font-size: 40px;
+            color: $sepr-group-phase-green;
+            margin-bottom: 15px;
+            width: 40px;
+            height: 40px;
+          }
+
+          h3 {
+            font-size: 1.5rem;
+            color: #2d2d2d;
+          }
+
+          &:hover {
+            background-color: $sepr-group-phase-green;
+            color: #fff!important;
+            transform: translateY(-10px);
+
+            mat-icon {
+              color: #fff;
+            }
+
+            h3 {
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+  }
+}

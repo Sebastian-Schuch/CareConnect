@@ -5,6 +5,7 @@ import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {ToastrService} from "ngx-toastr";
 import {MessageService} from "../../services/message.service";
+import {Role} from "../../dtos/Role";
 
 
 @Component({
@@ -36,7 +37,6 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.email.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
-
     } else {
       this.notification.error('Invalid input. Please check your input data.');
     }
@@ -74,6 +74,22 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      switch (this.authService.getUserRole()) {
+        case Role.admin:
+          this.router.navigate(['/home/admin']);
+          break;
+        case Role.doctor:
+          this.router.navigate(['/home/doctor']);
+          break;
+        case Role.secretary:
+          this.router.navigate(['/home/secretary']);
+          break;
+        case Role.patient:
+          this.router.navigate(['/home/patient']);
+          break;
+      }
+    }
   }
 
 }

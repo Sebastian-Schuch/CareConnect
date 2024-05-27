@@ -17,7 +17,4 @@ public record DoctorCreateDto(
     @Size(max = 255, message = "cannot be longer than 255 characters")
     String lastname
 ) {
-    public CredentialCreateDto toCredentialCreateDto() {
-        return new CredentialCreateDto(email, firstname, lastname);
-    }
 }

@@ -1,3 +1,10 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;">
+      <span>Register Medication</span><br>
+    </h1>
+  </div>
+</div>
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)"
       aria-label="Form to create a medicine">
   <div class="row">
@@ -36,7 +43,7 @@
             class="btn btn-primary"
             [disabled]="!form.valid"
     >
-      Create Medication
+      Register Medication
     </button>
   </div>
 </form>

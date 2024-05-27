@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
 import {forkJoin, map, Observable, startWith} from "rxjs";
@@ -7,6 +7,7 @@ import {ToastrService} from "ngx-toastr";
 import {Role} from "../../../../dtos/Role";
 import {UserDetailDto} from "../../../../dtos/user";
 import {UserService} from "../../../../services/user.service";
+import {AuthService} from "../../../../services/auth.service";
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -14,7 +15,7 @@ import {UserService} from "../../../../services/user.service";
   styleUrl: './calendar-wrapper.component.scss'
 })
 export class CalendarWrapperComponent implements OnInit {
-  @Input() mode: Role;
+  mode: Role;
   appointmentForm: FormGroup;
   outpatientDepartments: OutpatientDepartmentDto[] = [];
   filteredOutPatDep: Observable<OutpatientDepartmentDto[]>;
@@ -25,10 +26,12 @@ export class CalendarWrapperComponent implements OnInit {
   constructor(
     private outpatientDepartmentService: OutpatientDepartmentService,
     private notification: ToastrService,
-    private userService: UserService) {
+    private userService: UserService,
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    this.mode = this.authService.getUserRole();
     if (this.mode == Role.secretary) {
       this.appointmentForm = new FormGroup({
         outpatientDepartment: new FormControl('', Validators.required),
@@ -49,7 +52,7 @@ export class CalendarWrapperComponent implements OnInit {
       });
       forkJoin({
         outpatientDepartment: this.outpatientDepartmentService.getOutpatientDepartment(),
-        patient: this.userService.getUserCredentials(),
+        patient: this.userService.getPatientCredentials(),
       }).subscribe(({outpatientDepartment, patient}) => {
         this.patient = patient;
         this.outpatientDepartments = outpatientDepartment;
@@ -63,6 +66,13 @@ export class CalendarWrapperComponent implements OnInit {
    */
   isRoleSecretary(): boolean {
     return this.mode === Role.secretary;
+  }
+
+  /**
+   * Checks if the current user is a secretary
+   */
+  isRolePatient(): boolean {
+    return this.mode === Role.patient;
   }
 
   /**

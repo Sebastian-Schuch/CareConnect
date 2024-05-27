@@ -1,15 +1,260 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark"
-     aria-label="Horizontal navigation list">
-  <a class="navbar-brand ml-lg-5" href="">Care Connect</a>
-  <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<!-- app-navbar.component.html -->
+<mat-toolbar class="navbar" color="primary">
+  <a mat-button routerLink="/">
+    <img src="assets/careconnect_logo.png" alt="Care Connect" class="logo">
+  </a>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-5">
-      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
-    </ul>
+  <span class="spacer"></span>
+  <div *ngIf="!isHandheld">
+    <!-- Logged in as patient -->
+    <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.patient">
+      <button mat-button [matMenuTriggerFor]="appointmentsMenu">
+        <mat-icon>calendar_today</mat-icon>
+        Appointments
+      </button>
+      <mat-menu #appointmentsMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/book-appointment']">Book Appointment
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/appointments']">My Appointments
+          </button>
+        </div>
+      </mat-menu>
+
+      <button mat-button routerLink="/home/patient/telemedicine">
+        <mat-icon>chat_bubble</mat-icon>
+        Telemedicine
+      </button>
+
+      <!-- Hidden until feature is available-->
+      <!--
+      <button mat-button [routerLink]="['/home/patient/treatments']">
+        <mat-icon>medical_services</mat-icon>
+        My Treatments
+      </button>
+      -->
+    </ng-container>
+
+    <!-- Logged in as secretary -->
+    <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.secretary">
+      <button mat-button [matMenuTriggerFor]="appointmentsMenu">
+        <mat-icon>calendar_today</mat-icon>
+        Appointments
+      </button>
+      <mat-menu #appointmentsMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/book-appointment']">Book
+            Appointment
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/appointments']">All Appointments
+          </button>
+        </div>
+      </mat-menu>
+
+      <button mat-button [matMenuTriggerFor]="patientMenu">
+        <mat-icon>person</mat-icon>
+        Patients
+      </button>
+      <mat-menu #patientMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-patient']">Register
+            Patient
+          </button>
+          <!--
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/dit-patient']">Edit Patient
+            Information
+          </button>
+          -->
+        </div>
+      </mat-menu>
+
+      <!--
+          <button mat-button [matMenuTriggerFor]="stayMenu">
+            <mat-icon>medical_information</mat-icon>
+            Hospital stay
+          </button>
+          <mat-menu #stayMenu="matMenu">
+            <div class="dropdown-card">
+              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-stay']">Register stay
+              </button>
+              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/edit-stay']">Edit stay
+              </button>
+            </div>
+          </mat-menu>
+          -->
+    </ng-container>
+
+    <!-- Logged in as doctor -->
+    <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.doctor">
+      <button mat-button [matMenuTriggerFor]="treatmentMenu">
+        <mat-icon>medical_services</mat-icon>
+        Treatments
+      </button>
+      <mat-menu #treatmentMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/log-treatment']">Log Treatment
+          </button>
+          <!--
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/edit-treatment']">Edit Treatment
+          </button>
+          -->
+        </div>
+      </mat-menu>
+
+      <button mat-button routerLink="/home/doctor/telemedicine">
+        <mat-icon>chat_bubble</mat-icon>
+        Telemedicine
+      </button>
+    </ng-container>
+
+    <!-- Logged in as admin -->
+    <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.admin">
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>person_add</mat-icon>
+        Register Account
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <div class="dropdown-card">
+          <!--
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-admin']">Register Administrator
+          </button>
+          -->
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-doctor']">Register Doctor
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-secretary']">Register
+            Secretary
+          </button>
+        </div>
+      </mat-menu>
+
+      <button mat-button [matMenuTriggerFor]="departmentMenu">
+        <mat-icon>add_business</mat-icon>
+        Register Department
+      </button>
+      <mat-menu #departmentMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-outpatient-department']">
+            Register Outpatient
+            Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-inpatient-department']">
+            Register
+            Inpatient
+            Department
+          </button>
+        </div>
+      </mat-menu>
+
+      <button mat-button routerLink="/home/admin/register-medicine">
+        <mat-icon>medication</mat-icon>
+        Register Medication
+      </button>
+
+      <button mat-button routerLink="/home/admin/register-allergy">
+        <mat-icon>thermostat</mat-icon>
+        Register Allergy
+      </button>
+    </ng-container>
   </div>
-</nav>
+
+  <span class="spacer"></span>
+  <!-- Right side: Login or User Profile -->
+  <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+    <button mat-button routerLink="/login">Login</button>
+  </ng-container>
+  <ng-template #loggedIn>
+    <ng-container>
+      <div mat-button [matMenuTriggerFor]="userMenu" class="user-card">
+        <div class="user-info">
+          <div class="user-text">
+            <div
+              class="user-name">{{ this.name }}
+            </div>
+            <div class="user-role">{{ this.getRoleString() }}</div>
+          </div>
+          <div class="user-icon">
+            <mat-icon>person</mat-icon>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/" (click)="authService.logoutUser()" class="clean-button">Logout</button>
+      <!--<button mat-menu-item routerLink="/profile" class="clean-button">Edit Profile</button>-->
+      <div *ngIf="isHandheld">
+        <!-- Role specific actions -->
+        <!-- patient -->
+        <div *ngIf="isRolePatient()">
+          <button mat-menu-item class="clean-button"
+                  [routerLink]="['/home/patient/book-appointment']">Book Appointment
+          </button>
+          <button mat-menu-item class="clean-button"
+                  [routerLink]="['/home/patient/appointments']">My Appointments
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/telemedicine']">
+            Telemedicine
+          </button>
+        </div>
+        <!-- secretary -->
+        <div *ngIf="isRoleSecretary()">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/book-appointment']">Book
+            Appointment
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/appointments']">All Appointments
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-patient']">Register
+            Patient
+          </button>
+          <!--
+            <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/dit-patient']">Edit Patient
+              Information
+            </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-stay']">Register stay
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/edit-stay']">Edit stay
+          </button>-->
+        </div>
+        <!-- doctor -->
+        <div *ngIf="isRoleDoctor()">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/log-treatment']">Log Treatment
+          </button>
+          <!--
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/edit-treatment']">Edit Treatment
+          </button>
+          -->
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/telemedicine']">
+            Telemedicine
+          </button>
+        </div>
+        <!-- admin -->
+        <div *ngIf="isRoleAdmin()">
+          <!--
+            <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-admin']">Register Administrator
+            </button>
+            -->
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-doctor']">Register Doctor
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-secretary']">Register
+            Secretary
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-outpatient-department']">
+            Register Outpatient
+            Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-inpatient-department']">
+            Register
+            Inpatient
+            Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-medicine']">
+            Register Medication
+          </button>
+
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-allergy']">
+            Register Allergy
+          </button>
+        </div>
+      </div>
+    </mat-menu>
+  </ng-template>
+</mat-toolbar>

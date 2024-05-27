@@ -1,7 +1,19 @@
-<app-confirm-delete-dialog (confirm)="cancelAppointment()" [deleteWhat]="appointmentToBeCancelled?.outpatientDepartment.name"
-                           id="confirmDeleteDialog"></app-confirm-delete-dialog>
-<div class="container mt-3">
-  <div class="filter-container">
+<div class="start-page-container on-landing-hidden">
+
+    <div style="position: relative;">
+      <h1 class="headline" style="position: relative; z-index: 1;">
+        <span>My Appointments</span><br>
+      </h1>
+    </div>
+
+
+    <h3>Here you can see all your future and past appointments!</h3>
+    <p class="subheadline">
+      You can can use the "next" and "previous" buttons to navigate through your appointments.<br>
+      By inputing a department name in the filter field, you can filter the appointments by department.
+    </p>
+  <br>
+  <div class="filter-container on-landing-hidden matFormFieldFullWidth">
     <mat-form-field appearance="fill">
       <mat-label>Filter by Outpatient Department</mat-label>
       <input [formControl]="departmentControl" [matAutocomplete]="auto" matInput type="text">
@@ -12,13 +24,18 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
+</div>
+<app-confirm-delete-dialog (confirm)="cancelAppointment()" [deleteWhat]="appointmentToBeCancelled?.outpatientDepartment.name"
+                           id="confirmDeleteDialog"></app-confirm-delete-dialog>
+<div class="container mt-3">
+
 
   <div class="appointments-section">
-    <h2>Future Appointments</h2>
+    <h2 class="on-landing-hidden">Future Appointments</h2>
     <div class="card-container">
-      <div *ngFor="let appointment of futureAppointments" class="appointment-card">
+      <div *ngFor="let appointment of getVisibleFutureAppointments()" class="appointment-card">
         <div class="appointment-details">
-          <div><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}</div>
+          <div><strong>{{ appointment.outpatientDepartment.name }}</strong></div>
           <div><strong>Start
             Date:</strong> {{ appointment.startDate.toLocaleDateString() }} {{ appointment.startDate.toLocaleTimeString() }}
           </div>
@@ -34,28 +51,44 @@
           </button>
         </div>
       </div>
+      <div class="pagination-buttons on-landing-hidden">
+        <button mat-button class="pagination-buttons-button" (click)="previousFuturePage()" [disabled]="currentPageFuture === 1">
+          Previous
+        </button>
+        <button mat-button class="pagination-buttons-button" (click)="nextFuturePage()" [disabled]="(currentPageFuture * pageSize) >= futureAppointments.length">
+          Next
+        </button>
+      </div>
     </div>
   </div>
 
-  <hr>
+  <hr class="on-landing-hidden">
 
-  <div class="appointments-section">
+  <div class="appointments-section" id="appointment-section-past">
     <h2 (click)="togglePastAppointments()" class="collapsible-header">
       Past Appointments
       <span class="toggle-icon">{{ showPastAppointments ? '-' : '+' }}</span>
     </h2>
     <div [hidden]="!showPastAppointments" class="card-container">
-      <div *ngFor="let appointment of pastAppointments" class="appointment-card">
+      <div *ngFor="let appointment of getVisiblePastAppointments()" class="appointment-card">
         <div class="appointment-details">
-          <div><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}</div>
+          <div class="flex-start"><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}</div>
           <div><strong>Start
             Date:</strong> {{ appointment.startDate.toLocaleDateString() }} {{ appointment.startDate.toLocaleTimeString() }}
           </div>
-          <div><strong>End
+          <div class="flex-start"><strong>End
             Date:</strong> {{ appointment.endDate.toLocaleDateString() }} {{ appointment.endDate.toLocaleTimeString() }}
           </div>
         </div>
       </div>
+    </div>
+    <div class="pagination-buttons" *ngIf="showPastAppointments">
+      <button mat-button class="pagination-buttons-button" (click)="previousPastPage()" [disabled]="currentPagePast === 1">
+        Previous
+      </button>
+      <button mat-button class="pagination-buttons-button" (click)="nextPastPage()" [disabled]="(currentPagePast * pageSize) >= pastAppointments.length">
+        Next
+      </button>
     </div>
   </div>
 </div>

@@ -60,6 +60,16 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public DoctorDto findDoctorByCredential(Credential credential) {
+        LOG.debug("Find application user by email");
+        Doctor doctor = doctorRepository.findByCredential(credential);
+        if (doctor != null) {
+            return doctorMapper.doctorToDoctorDto(doctor);
+        }
+        throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
+    }
+
+    @Override
     public List<DoctorDto> getAllDoctors() {
         return doctorMapper.doctorsToDoctorDtos(doctorRepository.findAll());
     }

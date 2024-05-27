@@ -191,7 +191,7 @@ export class CalenderService {
    * @param openingHours the opening hours of the outpatient department
    * @param dayOfWeek the day of the week
    */
-  private getDayOfWeek(openingHours: OpeningHoursDto, dayOfWeek: number): OpeningHoursDayDto {
+  getDayOfWeek(openingHours: OpeningHoursDto, dayOfWeek: number): OpeningHoursDayDto {
     switch (dayOfWeek) {
       case 0:
         return openingHours.sunday;
@@ -348,7 +348,7 @@ export class CalenderService {
    *
    * @param openingHours the opening hours of the outpatient department
    */
-  private getOpenHourOfDay(openingHours: OpeningHoursDayDto): number {
+  getOpenHourOfDay(openingHours: OpeningHoursDayDto): number {
     let open: string = (openingHours.open + "").split(":")[0];
     return Number(open);
   }
@@ -358,7 +358,7 @@ export class CalenderService {
    *
    * @param openingHours the opening hours of the outpatient department
    */
-  private getOpenMinuteOfDay(openingHours: OpeningHoursDayDto): number {
+  getOpenMinuteOfDay(openingHours: OpeningHoursDayDto): number {
     let open: string = (openingHours.open + "").split(":")[1];
     return Number(open);
   }
@@ -368,7 +368,7 @@ export class CalenderService {
    *
    * @param openingHours the opening hours of the outpatient department
    */
-  private getCloseHourOfDay(openingHours: OpeningHoursDayDto): number {
+  getCloseHourOfDay(openingHours: OpeningHoursDayDto): number {
     let open: string = (openingHours.close + "").split(":")[0];
     return Number(open);
   }
@@ -378,7 +378,7 @@ export class CalenderService {
    *
    * @param openingHours the opening hours of the outpatient department
    */
-  private getCloseMinuteOfDay(openingHours: OpeningHoursDayDto): number {
+  getCloseMinuteOfDay(openingHours: OpeningHoursDayDto): number {
     let open: string = (openingHours.close + "").split(":")[1];
     return Number(open);
   }

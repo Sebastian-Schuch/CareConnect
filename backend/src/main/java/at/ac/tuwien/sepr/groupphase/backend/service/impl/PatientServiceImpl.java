@@ -73,7 +73,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto findPatientByCredential(Credential credential) {
         LOG.debug("Find application user by email");
-        Patient patient = patientRepository.findByCredentialId(credential.getId());
+        Patient patient = patientRepository.findByCredential(credential);
         if (patient != null) {
             return patientMapper.patientToPatientDto(patient);
         }

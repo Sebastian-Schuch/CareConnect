@@ -1,16 +1,16 @@
 <h2 mat-dialog-title class="px-4">Create a new Chat</h2>
 <mat-dialog-content class="px-4">
-  <p>What treatment should the chat be about?</p>
+  <p id="dialogDesc">What treatment should the chat be about?</p>
   <mat-form-field class="w-100">
     <mat-label>Treatment</mat-label>
-    <mat-select [(value)]="selectedNewChat">
-      @for (chat of data.available; track chat) {
+    <mat-select [(value)]="selectedNewChat" aria-labelledby="dialogDesc">
+      <ng-container *ngFor="let chat of data.available">
         <mat-option [value]="chat">{{chat.name}}</mat-option>
-      }
+      </ng-container>
     </mat-select>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions class="px-4">
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="selectedNewChat" [disabled]="selectedNewChat===undefined">Create</button>
+  <button mat-button (click)="onNoClick()" aria-label="Cancel">Cancel</button>
+  <button mat-button [mat-dialog-close]="selectedNewChat" [disabled]="selectedNewChat===undefined" aria-label="Create">Create</button>
 </mat-dialog-actions>

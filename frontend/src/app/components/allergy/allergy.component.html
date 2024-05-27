@@ -1,3 +1,10 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;">
+      <span>Register Allergy</span><br>
+    </h1>
+  </div>
+</div>
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="row">
     <!-- Start first name and last name row -->
@@ -37,7 +44,7 @@
             class="btn btn-primary"
             [disabled]="!form.valid"
     >
-      Create Allergy
+      Register Allergy
     </button>
   </div>
 </form>

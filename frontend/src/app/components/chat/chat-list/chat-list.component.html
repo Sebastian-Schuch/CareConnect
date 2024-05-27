@@ -1,7 +1,11 @@
-<mat-nav-list>
-  <app-add-chat *ngIf="isPatient()" (chatAdded)="addChat($event)"></app-add-chat>
-  <mat-list-item *ngFor="let chat of chats" (click)="selectChat(chat)">
+<mat-nav-list role="navigation" aria-label="Chat navigation">
+  <app-add-chat *ngIf="isPatient()" (chatAdded)="addChat($event)" aria-label="Add chat"></app-add-chat>
+  <mat-list-item *ngFor="let chat of chats; let i = index"
+                 (click)="selectChat(chat)"
+                 (keydown.enter)="selectChat(chat)"
+                 tabindex="0"
+                 [attr.aria-label]="'Chat with ' + chat.name">
     <div matLine class="chat-name">{{chat.name}}</div>
-    <div matLine class="chat-last-message">{{chat.messages.length > 0 ? previewMesssage(chat) : null}}</div>
+    <div matLine class="chat-last-message">{{chat.messages.length > 0 ? previewMesssage(chat) : 'No messages yet'}}</div>
   </mat-list-item>
 </mat-nav-list>

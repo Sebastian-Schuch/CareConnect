@@ -1,3 +1,10 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;">
+      <span>Register Inpatient Department</span><br>
+    </h1>
+  </div>
+</div>
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="row">
     <!-- Start first name and last name row -->
@@ -5,24 +12,24 @@
       <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
       <div class="row">
         <label for="stationName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          Allergy Name
+          Name
         </label>
         <div class="col-md-10 col-lg-8"
         >
           <input type="text"
                  id="stationName"
-                 name="allergy"
-                 placeholder="Station Name"
+                 name="inpatient"
+                 placeholder="Inpatient Department Name"
                  class="form-control"
-                 [class]="dynamicCssClassesForInput(AllergyModel)"
+                 [class]="dynamicCssClassesForInput(InpatientModel)"
                  [(ngModel)]="station.name"
-                 #AllergyModel="ngModel"
+                 #InpatientModel="ngModel"
                  required
           >
 
           <div class="invalid-feedback">
             <!-- This is shown, when the form validation deems the name input to be invalid -->
-            Station name is required
+            Inpatient Department name is required
           </div>
         </div>
       </div>
@@ -58,7 +65,7 @@
             class="btn btn-primary"
             [disabled]="!form.valid"
     >
-      Create Station
+      Register Inpatient Department
     </button>
   </div>
 </form>
