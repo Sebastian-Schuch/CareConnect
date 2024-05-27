@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.OutpatientDepartmentEndpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
@@ -31,9 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "datagen"})
 @AutoConfigureMockMvc
-public class OutpatientDepartmentEndpointTest {
+public class OutpatientDepartmentEndpointTest extends TestBase {
 
     @Autowired
     private OutpatientDepartmentEndpoint outpatientDepartmentEndpoint;

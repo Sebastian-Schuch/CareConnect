@@ -1,11 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.StationTestData;
+import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StationDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.repository.StationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.StationTestData.MESSAGE_BASE_URI;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.StationTestData.STATION_CAPACITY;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.StationTestData.STATION_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -25,20 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "datagen"})
 @AutoConfigureMockMvc
-public class StationEndpointTest extends StationTestData {
+public class StationEndpointTest extends TestBase {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private StationRepository stationRepository;
-
-    @BeforeEach
-    public void beforeEach() {
-        stationRepository.deleteAll();
-    }
 
     @Test
     public void givenStation_whenCreateStation_thenStationIsCreated() throws Exception {

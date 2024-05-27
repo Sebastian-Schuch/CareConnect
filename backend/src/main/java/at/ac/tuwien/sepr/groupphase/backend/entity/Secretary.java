@@ -26,7 +26,7 @@ public class Secretary implements Serializable {
     private Credential credential;
 
 
-    public void setsecretaryId(Long id) {
+    public void setSecretaryId(Long id) {
         this.secretaryId = id;
     }
 

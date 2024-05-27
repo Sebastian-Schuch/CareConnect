@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
@@ -14,7 +15,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,9 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "datagen"})
 @AutoConfigureMockMvc
-class TreatmentEndpointTest {
+class TreatmentEndpointTest extends TestBase {
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -66,15 +66,9 @@ class TreatmentEndpointTest {
 
     @BeforeEach
     public void beforeEach() {
-        treatmentRepository.deleteAll();
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ow = objectMapper.writer().withDefaultPrettyPrinter();
-    }
-
-    @AfterEach
-    public void cleanup() {
-        treatmentRepository.deleteAll();
     }
 
     @Test

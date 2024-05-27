@@ -141,7 +141,7 @@ public class MessageServiceImpl implements MessageService {
                 return chatMapper.treatmentAndMessagesToChatDto(chatRoom, List.of());
             }
 
-            return chatMapper.treatmentAndMessagesToChatDto(messages.getFirst().getTreatment(), messages);
+            return chatMapper.treatmentAndMessagesToChatDto(messages.get(0).getTreatment(), messages);
         }
         return null;
     }
