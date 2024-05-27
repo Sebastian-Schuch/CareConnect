@@ -29,6 +29,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -134,7 +135,11 @@ public class MessageServiceImpl implements MessageService {
     public ChatDto getChat(Long chatId) {
         Principal user = SecurityContextHolder.getContext().getAuthentication();
         if (isAllowedToChat(user, chatId)) {
+            Treatment chatRoom = treatmentRepository.findById(chatId).orElseThrow(NoSuchElementException::new);
             List<Message> messages = messageRepository.findByTreatment_IdOrderByTimestampAsc(chatId);
+            if (messages.isEmpty()) {
+                return chatMapper.treatmentAndMessagesToChatDto(chatRoom, List.of());
+            }
 
             return chatMapper.treatmentAndMessagesToChatDto(messages.getFirst().getTreatment(), messages);
         }

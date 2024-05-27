@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Component
@@ -22,7 +23,9 @@ public class ChatMapper {
     public ChatDto treatmentAndMessagesToChatDto(Treatment treatment, List<Message> messages) {
         LOG.trace("treatmentAndMessagesToChatDto({}, {})", treatment, messages);
 
-        return new ChatDto(treatment.getId(), treatment.getTreatmentTitle() + " " + treatment.getTreatmentStart().toString(),
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.");
+
+        return new ChatDto(treatment.getId(), treatment.getTreatmentTitle() + " " + dateFormat.format(treatment.getTreatmentStart()),
             messageMapper.messageEntitiesToMessageDtos(messages));
     }
 }
