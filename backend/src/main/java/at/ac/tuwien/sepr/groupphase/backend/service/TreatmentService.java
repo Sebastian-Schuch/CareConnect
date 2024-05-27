@@ -2,8 +2,11 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.List;
 
 /**
  * Service for the treatment entity.
@@ -29,5 +32,30 @@ public interface TreatmentService {
      * @throws NotFoundException if the treatment with the given ID does not exist
      */
     TreatmentDto getTreatmentById(Long id) throws NotFoundException;
+
+    /**
+     * Gets a treatment entity by its id.
+     *
+     * @param id the id of the treatment
+     * @return the treatment as an entity
+     * @throws NotFoundException if the treatment with the given ID does not exist
+     */
+    Treatment getTreatmentEntityById(Long id) throws NotFoundException;
+
+    /**
+     * Gets all treatments from a patient.
+     *
+     * @param patientId the id of the patient
+     * @return the treatments as a DTO
+     */
+    List<TreatmentDto> getAllTreatmentsFromPatient(Long patientId);
+
+    /**
+     * Gets all treatments from a doctor.
+     *
+     * @param doctorId the id of the doctor
+     * @return the treatments as a DTO
+     */
+    List<TreatmentDto> getAllTreatmentsFromDoctor(Long doctorId);
 
 }

@@ -17,4 +17,9 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query("SELECT p.credential FROM Patient p")
     List<Credential> findAllPatientCredentials();
+
+    Patient findByCredential(Credential credential);
+
+    Patient findByCredential_Email(String email);
+
 }

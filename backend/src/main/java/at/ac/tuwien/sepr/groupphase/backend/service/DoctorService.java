@@ -41,4 +41,12 @@ public interface DoctorService {
      */
     List<DoctorDto> getAllDoctors();
 
+    /**
+     * Get the doctor by email.
+     *
+     * @param email the email of the doctor
+     * @return the doctor with the email given
+     */
+    DoctorDto getDoctorByEmail(String email);
+
 }

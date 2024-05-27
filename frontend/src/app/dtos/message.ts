@@ -1,7 +1,16 @@
-export class Message {
-  id: number;
-  title: string;
-  summary: string;
-  text: string;
-  publishedAt: string;
+import {Timestamp} from "rxjs";
+
+export interface MessageDtoCreate {
+  content: string,
+  treatmentId: number
+}
+
+export interface MessageDto {
+  id?: number,
+  content: string,
+  displayname: string,
+  treatmentId: number,
+  timestamp: Date,
+  senderEmail: string,
+  read: boolean
 }

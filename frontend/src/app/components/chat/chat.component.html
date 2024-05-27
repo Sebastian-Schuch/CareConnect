@@ -1,0 +1,4 @@
+<div class="chat-container">
+  <app-chat-list style="width: 40%" (chatSwitched)="onChatSelected($event)"></app-chat-list>
+  <app-chat-messages style="width:100%" [chat]="selectedChat"></app-chat-messages>
+</div>

@@ -59,4 +59,27 @@ public class TreatmentServiceImpl implements TreatmentService {
         }
         return treatmentMapper.entityToDto(treatment);
     }
+
+    @Override
+    public Treatment getTreatmentEntityById(Long id) throws NotFoundException {
+        log.trace("getTreatmentEntityById({})", id);
+        Treatment treatment = treatmentRepository.findById(id).orElse(null);
+        if (treatment == null) {
+            log.warn("treatment with id {} not found", id);
+            throw new NotFoundException("treatment with id " + id + " not found");
+        }
+        return treatment;
+    }
+
+    @Override
+    public List<TreatmentDto> getAllTreatmentsFromPatient(Long patientId) {
+        List<Treatment> treatments = treatmentRepository.findByPatient_PatientId(patientId);
+        return treatmentMapper.entityListToDtoList(treatments);
+    }
+
+    @Override
+    public List<TreatmentDto> getAllTreatmentsFromDoctor(Long doctorId) {
+        List<Treatment> treatments = treatmentRepository.findByDoctors_DoctorId(doctorId);
+        return treatmentMapper.entityListToDtoList(treatments);
+    }
 }

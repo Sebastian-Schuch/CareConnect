@@ -8,11 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Getter
 public class Treatment {
     @Id
     @GeneratedValue

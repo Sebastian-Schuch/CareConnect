@@ -61,6 +61,11 @@
             Create
             Treatment
           </button>
+          <button *ngIf="isRoleDoctor() || isRolePatient()" class="nav-link" id="v-pills-chat-tab" data-bs-toggle="pill"
+                  data-bs-target="#v-pills-chat"
+                  type="button" role="tab" tabindex="9" aria-controls="v-pills-chat-tab" aria-selected="true">
+            Telemedicine
+          </button>
           <button *ngIf="isRoleSecretary() || isRolePatient()" class="nav-link" id="v-pills-appointment-tab"
                   data-bs-toggle="pill"
                   data-bs-target="#v-pills-appointment"
@@ -81,7 +86,6 @@
                   aria-selected="false">
             View Appointments
           </button>
-
         </div>
         <div class="col-md-1"></div>
         <div class="tab-content col-md-8" id="v-pills-tabContent">
@@ -129,6 +133,11 @@
                aria-labelledby="v-pills-inpatient-create-tab">
             <h1 class="display-4 ">Create Treatment</h1>
             <app-treatment></app-treatment>
+          </div>
+          <div *ngIf="isRoleDoctor() || isRolePatient()" class="tab-pane fade" id="v-pills-chat" role="tabpanel"
+               aria-labelledby="v-pills-chat-tab">
+            <h1 class="display-4">Telemedicine</h1>
+            <app-chat></app-chat>
           </div>
           <div *ngIf="isRoleSecretary() || isRolePatient()" class="tab-pane fade" id="v-pills-appointment"
                role="tabpanel"

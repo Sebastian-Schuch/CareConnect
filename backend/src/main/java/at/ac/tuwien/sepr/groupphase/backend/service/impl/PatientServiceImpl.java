@@ -61,6 +61,16 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public PatientDto getPatientByEmail(String email) {
+        Patient patient = patientRepository.findByCredential_Email(email);
+        if (patient == null) {
+            LOG.warn("patient with email {} not found", email);
+            throw new NotFoundException("Patient not found");
+        }
+        return patientMapper.patientToPatientDto(patient);
+    }
+
+    @Override
     public PatientDto findPatientByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Patient patient = patientRepository.findByCredentialId(credential.getId());
