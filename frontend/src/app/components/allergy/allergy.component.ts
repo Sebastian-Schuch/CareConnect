@@ -24,7 +24,6 @@ export class AllergyComponent implements OnInit {
   allergyname: string = '';
 
   public onSubmit(form: NgForm): void {
-    console.log('is form valid?', form.valid, this.allergyname);
     if (form.valid) {
       const allergy: AllergyCreateDto = {
         name: this.allergyname

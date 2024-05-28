@@ -51,7 +51,6 @@ export class ChatMessagesComponent implements OnChanges, OnInit, AfterViewInit{
 
   addMessage(message: string) {
     const newMessage : MessageDtoCreate = { content: message, treatmentId: this.chat.id};
-    console.log(newMessage);
     this.messageService.sendMessage(newMessage);
     setTimeout(() => this.scrollToBottom(), 50);
   }

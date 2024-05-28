@@ -61,7 +61,6 @@ export class MessageService {
    * @param chatId
    */
   sendMessage(message: MessageDtoCreate) {
-    console.log('Send message ' + message);
     if(this.connection && this.connection.connected){
       this.connection.publish({
         destination: '/app/chat/'+message.treatmentId,

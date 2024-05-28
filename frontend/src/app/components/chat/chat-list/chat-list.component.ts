@@ -42,7 +42,6 @@ export class ChatListComponent implements OnInit{
       this.chats = chats;
       this.messageService.initWebSocket().then(() => {
         for(let chat of this.chats){
-          console.log("try to subscribe to "+ chat.id);
           this.messageService.listenToMessages(chat.id, this.handleNewChats.bind(this));
         }
       });

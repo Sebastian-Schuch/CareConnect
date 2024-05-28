@@ -42,7 +42,6 @@ export class ChatComponent implements OnInit  {
   }
 
   onChatSelected(chat: ChatDto) {
-    console.log(chat)
     this.selectedChat = chat;
   }
 }
