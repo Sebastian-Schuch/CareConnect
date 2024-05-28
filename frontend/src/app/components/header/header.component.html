@@ -1,14 +1,14 @@
 <!-- app-navbar.component.html -->
 <mat-toolbar class="navbar" color="primary">
-  <a mat-button routerLink="/">
+  <button tabindex="1" mat-button routerLink="/">
     <img src="assets/careconnect_logo.png" alt="Care Connect" class="logo">
-  </a>
+  </button>
 
   <span class="spacer"></span>
   <div *ngIf="!isHandheld">
     <!-- Logged in as patient -->
     <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.patient">
-      <button mat-button [matMenuTriggerFor]="appointmentsMenu">
+      <button mat-button [matMenuTriggerFor]="appointmentsMenu" tabindex="2">
         <mat-icon>calendar_today</mat-icon>
         Appointments
       </button>
@@ -21,14 +21,14 @@
         </div>
       </mat-menu>
 
-      <button mat-button routerLink="/home/patient/telemedicine">
+      <button mat-button routerLink="/home/patient/telemedicine" tabindex="3">
         <mat-icon>chat_bubble</mat-icon>
         Telemedicine
       </button>
 
       <!-- Hidden until feature is available-->
       <!--
-      <button mat-button [routerLink]="['/home/patient/treatments']">
+      <button mat-button [routerLink]="['/home/patient/treatments']" tabindex="4">
         <mat-icon>medical_services</mat-icon>
         My Treatments
       </button>
@@ -37,7 +37,7 @@
 
     <!-- Logged in as secretary -->
     <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.secretary">
-      <button mat-button [matMenuTriggerFor]="appointmentsMenu">
+      <button mat-button [matMenuTriggerFor]="appointmentsMenu" tabindex="5">
         <mat-icon>calendar_today</mat-icon>
         Appointments
       </button>
@@ -51,7 +51,7 @@
         </div>
       </mat-menu>
 
-      <button mat-button [matMenuTriggerFor]="patientMenu">
+      <button mat-button [matMenuTriggerFor]="patientMenu" tabindex="6">
         <mat-icon>person</mat-icon>
         Patients
       </button>
@@ -69,7 +69,7 @@
       </mat-menu>
 
       <!--
-          <button mat-button [matMenuTriggerFor]="stayMenu">
+          <button mat-button [matMenuTriggerFor]="stayMenu" tabindex="7">
             <mat-icon>medical_information</mat-icon>
             Hospital stay
           </button>
@@ -86,7 +86,7 @@
 
     <!-- Logged in as doctor -->
     <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.doctor">
-      <button mat-button [matMenuTriggerFor]="treatmentMenu">
+      <button mat-button [matMenuTriggerFor]="treatmentMenu" tabindex="8">
         <mat-icon>medical_services</mat-icon>
         Treatments
       </button>
@@ -101,7 +101,7 @@
         </div>
       </mat-menu>
 
-      <button mat-button routerLink="/home/doctor/telemedicine">
+      <button mat-button routerLink="/home/doctor/telemedicine" tabindex="9">
         <mat-icon>chat_bubble</mat-icon>
         Telemedicine
       </button>
@@ -109,7 +109,7 @@
 
     <!-- Logged in as admin -->
     <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.admin">
-      <button mat-button [matMenuTriggerFor]="userMenu">
+      <button mat-button [matMenuTriggerFor]="userMenu" tabindex="10">
         <mat-icon>person_add</mat-icon>
         Register Account
       </button>
@@ -127,7 +127,7 @@
         </div>
       </mat-menu>
 
-      <button mat-button [matMenuTriggerFor]="departmentMenu">
+      <button mat-button [matMenuTriggerFor]="departmentMenu" tabindex="11">
         <mat-icon>add_business</mat-icon>
         Register Department
       </button>
@@ -145,12 +145,12 @@
         </div>
       </mat-menu>
 
-      <button mat-button routerLink="/home/admin/register-medicine">
+      <button mat-button routerLink="/home/admin/register-medicine" tabindex="12">
         <mat-icon>medication</mat-icon>
         Register Medication
       </button>
 
-      <button mat-button routerLink="/home/admin/register-allergy">
+      <button mat-button routerLink="/home/admin/register-allergy" tabindex="13">
         <mat-icon>thermostat</mat-icon>
         Register Allergy
       </button>
@@ -160,11 +160,11 @@
   <span class="spacer"></span>
   <!-- Right side: Login or User Profile -->
   <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
-    <button mat-button routerLink="/login">Login</button>
+    <button mat-button routerLink="/login" tabindex="2">Login</button>
   </ng-container>
   <ng-template #loggedIn>
     <ng-container>
-      <div mat-button [matMenuTriggerFor]="userMenu" class="user-card">
+      <button mat-button style="height: 80%" [matMenuTriggerFor]="userMenu" class="user-card" tabindex="14">
         <div class="user-info">
           <div class="user-text">
             <div
@@ -176,7 +176,7 @@
             <mat-icon>person</mat-icon>
           </div>
         </div>
-      </div>
+      </button>
     </ng-container>
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item routerLink="/" (click)="authService.logoutUser()" class="clean-button">Logout</button>
