@@ -1,17 +1,17 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
-    <h1 class="headline" style="position: relative; z-index: 1;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
       <span>Register {{ role }}</span><br>
     </h1>
   </div>
   <div *ngIf="modeIsPatient">
-    <h3>Here you can register a new patient</h3>
+    <h3>Here you can register a new {{ role.toLowerCase() }}</h3>
     <br>
   </div>
 </div>
 
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)"
-      aria-label="Form to create a aser" xmlns="http://www.w3.org/1999/html">
+      aria-label="Form to create a user" xmlns="http://www.w3.org/1999/html">
   <fieldset aria-label="Inputs for user creation">
     <!-- <legend>Inputs for user creation</legend> -->
     <div class="row">
@@ -27,12 +27,13 @@
             <input type="text"
                    id="{{mode}}userFirstName"
                    name="userFirstName"
-                   placeholder="First Name"
+                   placeholder="First Name of {{ role}}"
                    class="form-control"
                    [class]="dynamicCssClassesForInput(firstNameModel)"
                    [(ngModel)]="user.firstname"
                    #firstNameModel="ngModel"
                    required
+                   tabindex="21"
             >
 
             <div class="invalid-feedback">
@@ -55,12 +56,13 @@
             <input type="text"
                    id="{{mode}}userLastName"
                    name="userLastName"
-                   placeholder="Last Name"
+                   placeholder="Last Name of {{role}}"
                    class="form-control"
                    [class]="dynamicCssClassesForInput(lastNameModel)"
                    [(ngModel)]="user.lastname"
                    #lastNameModel="ngModel"
                    required
+                   tabindex="22"
             >
             <div class="invalid-feedback">
               Last Name is required
@@ -83,12 +85,13 @@
             <input type="text"
                    id="{{mode}}userEmail"
                    name="userEmail"
-                   placeholder="Email"
+                   placeholder="Email of {{role}}"
                    class="form-control"
                    [class]="dynamicCssClassesForInput(emailModel)"
                    [(ngModel)]="user.email"
                    #emailModel="ngModel"
                    required
+                   tabindex="23"
             >
             <div class="invalid-feedback">
               Email is required
@@ -108,13 +111,14 @@
             <input type="text"
                    id="{{mode}}userSvnr"
                    name="userSvnr"
-                   placeholder="Svnr"
+                   placeholder="Svnr of {{role}}"
                    class="form-control"
                    [class]="dynamicCssClassesForInput(svnrModel)"
                    [(ngModel)]="user.svnr"
                    #svnrModel="ngModel"
                    *ngIf="modeIsPatient"
                    required
+                   tabindex="24"
             >
             <div class="invalid-feedback" *ngIf="modeIsPatient">
               Svnr is required
@@ -132,6 +136,7 @@
     <button type="submit"
             class="btn btn-primary"
             [disabled]="!form.valid"
+            tabindex="25"
     >
       Register {{ role }}
     </button>

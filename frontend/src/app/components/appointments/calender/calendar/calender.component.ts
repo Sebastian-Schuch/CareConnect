@@ -309,6 +309,30 @@ export class CalenderComponent implements OnInit {
     return date.substring(0, 10) + ' ' + date.substring(11, 16);
   }
 
+  public getDayString(day: any): string {
+    let strings = day.toLocaleDateString().split('/');
+    return strings[1] + '/' + strings[0] + '/' + strings[2];
+  }
+
+  public getWeekdayString(i: number) {
+    switch (i) {
+      case 0:
+        return 'Sunday';
+      case 1:
+        return 'Monday';
+      case 2:
+        return 'Tuesday';
+      case 3:
+        return 'Wednesday';
+      case 4:
+        return 'Thursday';
+      case 5:
+        return 'Friday';
+      case 6:
+        return 'Saturday';
+    }
+  }
+
   private addSelectedDayViewClass() {
     this.hourColumns.forEach((column) => {
       column.hours.forEach((hourSegment) => {

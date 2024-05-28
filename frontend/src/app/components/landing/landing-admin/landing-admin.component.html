@@ -22,16 +22,21 @@
         <p>Manage the registration of medical staff, including doctors and secretaries.</p>
       </div>
       <div class="cards">
-        <mat-card [routerLink]="['/home/admin/register-doctor']" aria-label="Register Doctor" class="card" role="link"
-                  tabindex="0">
-          <mat-icon aria-hidden="true">person_add</mat-icon>
-          <h3>Register Doctor</h3>
-        </mat-card>
-        <mat-card [routerLink]="['/home/admin/register-secretary']" aria-label="Register Secretary" class="card" role="link"
-                  tabindex="0">
-          <mat-icon aria-hidden="true">person_add</mat-icon>
-          <h3>Register Secretary</h3>
-        </mat-card>
+        <a style="height: 100%;text-decoration: none" [routerLink]="['/home/admin/register-doctor']">
+          <mat-card id="doctor" aria-label="Register Doctor" class="card"
+                    role="link">
+            <mat-icon aria-hidden="true">person_add</mat-icon>
+            <label for="doctor"><h3>Register Doctor</h3></label>
+          </mat-card>
+        </a>
+        <a style="height: 100%;text-decoration: none" [routerLink]="['/home/admin/register-secretary']">
+          <mat-card id="secretary" aria-label="Register Secretary"
+                    class="card"
+                    role="link">
+            <mat-icon aria-hidden="true">person_add</mat-icon>
+            <label for="secretary"><h3>Register Secretary</h3></label>
+          </mat-card>
+        </a>
       </div>
     </mat-card>
   </div>
@@ -44,16 +49,20 @@
           departments.</p>
       </div>
       <div class="cards">
-        <mat-card [routerLink]="['/home/admin/register-outpatient-department']" aria-label="Register Outpatient Department" class="card" role="link"
-                  tabindex="0">
-          <mat-icon aria-hidden="true">local_hospital</mat-icon>
-          <h3>Register Outpatient Department</h3>
-        </mat-card>
-        <mat-card [routerLink]="['/home/admin/register-inpatient-department']" aria-label="Register Inpatient Department" class="card" role="link"
-                  tabindex="0">
-          <mat-icon aria-hidden="true">local_hospital</mat-icon>
-          <h3>Register Inpatient Department</h3>
-        </mat-card>
+        <a style="height: 100%;text-decoration: none" [routerLink]="['/home/admin/register-outpatient-department']">
+          <mat-card id="out"
+                    aria-label="Register Outpatient Department" class="card" role="link">
+            <mat-icon aria-hidden="true">local_hospital</mat-icon>
+            <label for="out"><h3>Register Outpatient Department</h3></label>
+          </mat-card>
+        </a>
+        <a style="height: 100%;text-decoration: none" [routerLink]="['/home/admin/register-inpatient-department']">
+          <mat-card id="in"
+                    aria-label="Register Inpatient Department" class="card" role="link">
+            <mat-icon aria-hidden="true">local_hospital</mat-icon>
+            <label for="in"><h3>Register Inpatient Department</h3></label>
+          </mat-card>
+        </a>
       </div>
     </mat-card>
   </div>
@@ -65,16 +74,22 @@
         <p>Manage the registration of medications and allergies for patient care.</p>
       </div>
       <div class="cards">
-        <mat-card [routerLink]="['/home/admin/register-medicine']" aria-label="Register Medication" class="card" role="link"
-                  tabindex="0">
-          <mat-icon aria-hidden="true">medication</mat-icon>
-          <h3>Register Medication</h3>
-        </mat-card>
-        <mat-card [routerLink]="['/home/admin/register-allergy']" aria-label="Register Allergy" class="card" role="link"
-                  tabindex="0">
-          <mat-icon aria-hidden="true">thermostat</mat-icon>
-          <h3>Register Allergy</h3>
-        </mat-card>
+        <a style="height: 100%;text-decoration: none" [routerLink]="['/home/admin/register-medicine']">
+          <mat-card id="medicine" aria-label="Register Medication"
+                    class="card"
+                    role="link">
+            <mat-icon aria-hidden="true">medication</mat-icon>
+            <label for="medicine"><h3>Register Medication</h3></label>
+          </mat-card>
+        </a>
+        <a style="height: 100%;text-decoration: none" [routerLink]="['/home/admin/register-allergy']">
+          <mat-card id="allergy" aria-label="Register Allergy"
+                    class="card" role="link">
+            <mat-icon aria-hidden="true">thermostat</mat-icon>
+            <label for="allergy"><h3>Register Allergy</h3></label>
+          </mat-card>
+        </a>
+
       </div>
     </mat-card>
   </div>

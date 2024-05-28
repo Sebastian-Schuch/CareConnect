@@ -82,6 +82,11 @@ export class AppointmentsSecretaryComponent implements OnInit {
     }
   }
 
+  public getDayString(day: any): string {
+    let strings = day.toLocaleDateString().split('/');
+    return strings[1] + '/' + strings[0] + '/' + strings[2];
+  }
+
   nextPastPage(): void {
     if ((this.currentPagePast * this.pageSize) < this.pastAppointments.length) {
       this.currentPagePast++;

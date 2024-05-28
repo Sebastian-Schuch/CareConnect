@@ -1,6 +1,6 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
-    <h1 class="headline" style="position: relative; z-index: 1;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
       <span>Register Inpatient Department</span><br>
     </h1>
   </div>
@@ -19,6 +19,7 @@
           <input type="text"
                  id="stationName"
                  name="inpatient"
+                 tabindex="21"
                  placeholder="Inpatient Department Name"
                  class="form-control"
                  [class]="dynamicCssClassesForInput(InpatientModel)"
@@ -49,6 +50,7 @@
                  [(ngModel)]="station.capacity"
                  #CapacityModel="ngModel"
                  required
+                 tabindex="22"
           >
           <div class="invalid-feedback">
             Capacity is required
