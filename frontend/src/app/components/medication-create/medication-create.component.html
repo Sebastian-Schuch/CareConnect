@@ -1,6 +1,6 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
-    <h1 class="headline" style="position: relative; z-index: 1;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
       <span>Register Medication</span><br>
     </h1>
   </div>
@@ -26,6 +26,7 @@
                  [(ngModel)]="medication.name"
                  #nameModel="ngModel"
                  required
+                 tabindex="21"
           >
 
           <div class="invalid-feedback">
@@ -42,6 +43,7 @@
     <button type="submit"
             class="btn btn-primary"
             [disabled]="!form.valid"
+            tabindex="22"
     >
       Register Medication
     </button>

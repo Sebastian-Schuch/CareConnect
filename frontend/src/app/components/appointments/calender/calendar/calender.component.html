@@ -8,6 +8,7 @@
           [view]="view"
           [(viewDate)]="viewDate"
           (viewDateChange)="closeOpenMonthViewDay()"
+          tabindex="21"
         >
           Previous
         </div>
@@ -15,6 +16,7 @@
           class="btn btn-outline-secondary"
           mwlCalendarToday
           [(viewDate)]="viewDate"
+          tabindex="22"
         >
           Today
         </div>
@@ -24,6 +26,7 @@
           [view]="view"
           [(viewDate)]="viewDate"
           (viewDateChange)="closeOpenMonthViewDay()"
+          tabindex="23"
         >
           Next
         </div>
@@ -38,6 +41,7 @@
           class="btn btn-primary"
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
+          tabindex="24"
         >
           Month
         </div>
@@ -45,6 +49,7 @@
           class="btn btn-primary"
           (click)="setView(CalendarView.Day)"
           [class.active]="view === CalendarView.Day"
+          tabindex="25"
         >
           Day
         </div>
@@ -101,10 +106,11 @@
           [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
     >Booked out!</span
     >
-    <span class="cal-day-number"
-    >{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span
-    >
   </div>
+  <div style="text-align: center" class="cal-cell-row"><span style="margin-left: auto;margin-right: auto;color:black"
+                                                             class="cal-day-number"
+  >{{ getWeekdayString(day.day) }}<br>{{ getDayString(day.date) }}</span
+  ></div>
 </ng-template>
 <ng-template #modalContent let-close="close">
   <div class="modal-header">
