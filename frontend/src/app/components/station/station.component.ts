@@ -28,7 +28,6 @@ export class StationComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
-    console.log('is form valid?', form.valid, this.station);
     if (form.valid) {
       let observable: Observable<StationCreateDto> = this.stationService.createStation(this.station);
 

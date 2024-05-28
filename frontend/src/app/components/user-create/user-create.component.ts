@@ -81,7 +81,6 @@ export class UserCreateComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
-    console.log('is form valid?', form.valid, this.user);
     if (form.valid) {
       let observable: Observable<Blob>;
       switch (this.mode) {

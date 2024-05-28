@@ -36,7 +36,6 @@ export class MedicationCreateComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
-    console.log('is form valid?', form.valid, this.medication);
     if (form.valid) {
       let observable: Observable<MedicationCreateDto>;
       observable = this.service.createMedication(this.medication);
