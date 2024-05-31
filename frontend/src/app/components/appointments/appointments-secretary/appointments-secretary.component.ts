@@ -7,6 +7,7 @@ import {OutpatientDepartmentService} from '../../../services/outpatient-departme
 import {AppointmentDetailDto} from '../../../dtos/appointment';
 import {OutpatientDepartmentDto} from '../../../dtos/outpatient-department';
 import {ToastrService} from 'ngx-toastr';
+import {getDate, getMonth, getYear} from "date-fns";
 
 @Component({
   selector: 'app-appointments-secretary',
@@ -83,8 +84,7 @@ export class AppointmentsSecretaryComponent implements OnInit {
   }
 
   public getDayString(day: any): string {
-    let strings = day.toLocaleDateString().split('/');
-    return strings[1] + '/' + strings[0] + '/' + strings[2];
+    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
   }
 
   nextPastPage(): void {

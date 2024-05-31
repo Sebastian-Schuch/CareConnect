@@ -121,8 +121,11 @@ public class AppointmentServiceImpl implements AppointmentService {
             if (appointmentCalendarDtos.isEmpty()) {
                 appointmentCalendarDtos.add(new AppointmentCalendarDto(outpatientDepartmentId, appointment.getStartDate(), appointment.getEndDate(), 1));
             } else {
-                if (!this.isAppointmentInListOfAppointmentCalendarDto(appointment, appointmentCalendarDtos)) {
+                AppointmentCalendarDto appointmentCalendarDto = this.getAppointmentInListOfAppointmentCalendarDto(appointment, appointmentCalendarDtos);
+                if (appointmentCalendarDto == null) {
                     appointmentCalendarDtos.add(new AppointmentCalendarDto(outpatientDepartmentId, appointment.getStartDate(), appointment.getEndDate(), 1));
+                } else {
+                    appointmentCalendarDto.increaseCount();
                 }
             }
         }
@@ -130,21 +133,20 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     /**
-     * Checks if the appointment is already in the list of AppointmentCalendarDto.
+     * Get the appointment in the list of AppointmentCalendarDto.
      *
      * @param appointment             the appointment to check
      * @param appointmentCalendarDtos the list of AppointmentCalendarDto
-     * @return true if the appointment is already in the list, false otherwise
+     * @return the AppointmentCalendarDto if the appointment is in the list, null otherwise
      */
-    private boolean isAppointmentInListOfAppointmentCalendarDto(Appointment appointment, List<AppointmentCalendarDto> appointmentCalendarDtos) {
-        LOG.trace("isAppointmentInListOfAppointmentCalendarDto({},{})", appointment, appointmentCalendarDtos);
+    private AppointmentCalendarDto getAppointmentInListOfAppointmentCalendarDto(Appointment appointment, List<AppointmentCalendarDto> appointmentCalendarDtos) {
+        LOG.trace("getAppointmentInListOfAppointmentCalendarDto({},{})", appointment, appointmentCalendarDtos);
         for (AppointmentCalendarDto appointmentCalendarDto : appointmentCalendarDtos) {
             if (appointmentCalendarDto.getStartDate().equals(appointment.getStartDate()) && appointmentCalendarDto.getEndDate().equals(appointment.getEndDate())) {
-                appointmentCalendarDto.increaseCount();
-                return true;
+                return appointmentCalendarDto;
             }
         }
-        return false;
+        return null;
     }
 
 
