@@ -6,6 +6,7 @@ import {ToastrService} from "ngx-toastr";
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import {getDate, getMonth, getYear} from "date-fns";
 
 @Component({
   selector: 'app-appointments-patient',
@@ -70,8 +71,7 @@ export class AppointmentsPatientComponent implements OnInit {
   }
 
   public getDayString(day: any): string {
-    let strings = day.toLocaleDateString().split('/');
-    return strings[1] + '/' + strings[0] + '/' + strings[2];
+    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
   }
 
   nextPastPage(): void {

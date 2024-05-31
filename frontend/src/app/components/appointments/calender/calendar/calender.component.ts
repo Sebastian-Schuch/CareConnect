@@ -1,5 +1,15 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef, ViewChild,} from '@angular/core';
-import {addMonths, endOfMonth, startOfMonth, subMonths,} from 'date-fns';
+import {
+  addMonths,
+  endOfMonth,
+  getDate,
+  getHours,
+  getMinutes,
+  getMonth,
+  getYear,
+  startOfMonth,
+  subMonths,
+} from 'date-fns';
 import {forkJoin, Subject} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -209,7 +219,7 @@ export class CalenderComponent implements OnInit {
       let observable = this.appointmentService.createAppointment(appointment);
       observable.subscribe({
         next: (appointment) => {
-          this.notification.success('Success', `Appointment at ${this.getStringDate(appointment.startDate.toString())} booked`);
+          this.notification.success('Success', `Appointment booked at ${this.getStringDate(appointment.startDate.toString())}`);
           this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
         },
         error: error => {
@@ -306,12 +316,28 @@ export class CalenderComponent implements OnInit {
    * @param date the date to get the string representation for
    */
   private getStringDate(date: string) {
-    return date.substring(0, 10) + ' ' + date.substring(11, 16);
+    return this.getDayString(date) + ' ' + this.getHourString(date);
+  }
+
+  private getHourString(date: string) {
+    let hours = getHours(date);
+    let minutes = getMinutes(date);
+    let output;
+    if (hours < 10) {
+      output = '0' + hours + ':';
+    } else {
+      output = hours + ':';
+    }
+    if (minutes < 10) {
+      output += '0' + minutes;
+    } else {
+      output += minutes;
+    }
+    return output;
   }
 
   public getDayString(day: any): string {
-    let strings = day.toLocaleDateString().split('/');
-    return strings[1] + '/' + strings[0] + '/' + strings[2];
+    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
   }
 
   public getWeekdayString(i: number) {
