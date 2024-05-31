@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AllergyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
@@ -41,7 +41,7 @@ public class AllergyEndpoint {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new allergy")
-    public AllergyDto create(@Valid @RequestBody AllergyCreateDto toCreate) {
+    public AllergyDto create(@Valid @RequestBody AllergyDtoCreate toCreate) {
         LOGGER.info("POST " + BASE_PATH);
         return allergyMapper.allergyToDto(this.allergyService.createAllergy(toCreate));
     }

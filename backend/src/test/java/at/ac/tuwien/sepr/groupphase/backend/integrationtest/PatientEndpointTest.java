@@ -75,7 +75,7 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenValidCreatePatientDto_whenCreatePatient_thenReturnCreatedPatient() throws Exception {
-        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "a", "b"));
+        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "a", "b", null, null));
         byte[] body = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -93,7 +93,7 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenCreatePatientDtoWithInvalidEmail_whenCreatePatient_thenReturns422UnprocessableEntity() throws Exception {
-        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a.a.a", "a", "b"));
+        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a.a.a", "a", "b", null, null));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -104,7 +104,7 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenCreatePatientDtoWithInvalidSvnr_whenCreatePatient_thenReturns422UnprocessableEntity() throws Exception {
-        String json = ow.writeValueAsString(new PatientCreateDto("12341234567", "a@a.a", "a", "b"));
+        String json = ow.writeValueAsString(new PatientCreateDto("12341234567", "a@a.a", "a", "b", null, null));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -115,7 +115,7 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenCreatePatientDtoWithInvalidFirstname_whenCreatePatient_thenReturns422UnprocessableEntity() throws Exception {
-        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "", "b"));
+        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "", "b", null, null));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -127,7 +127,8 @@ public class PatientEndpointTest extends TestBase {
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenCreatePatientDtoWithInvalidLastname_whenCreatePatient_thenReturns422UnprocessableEntity() throws Exception {
         String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "a",
-            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
+            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            null, null));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -138,7 +139,7 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenCreatedPatient_whenGetPatient_thenReturnPatient() throws Exception {
-        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "a", "b"));
+        String json = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "a", "b", null, null));
         byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)

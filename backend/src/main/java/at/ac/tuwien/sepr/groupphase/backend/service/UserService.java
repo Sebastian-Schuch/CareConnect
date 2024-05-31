@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -48,7 +48,7 @@ public interface UserService extends UserDetailsService {
      * @param toCreate the data of the doctor for the credential entity
      * @return the users login data
      */
-    PDDocument createDoctor(DoctorCreateDto toCreate);
+    PDDocument createDoctor(DoctorDtoCreate toCreate);
 
     /**
      * Creates the Credential Entity with the data given.
@@ -56,7 +56,7 @@ public interface UserService extends UserDetailsService {
      * @param toCreate the data of the secretary for the credential entity
      * @return the users login data
      */
-    PDDocument createSecretary(SecretaryCreateDto toCreate);
+    PDDocument createSecretary(SecretaryDtoCreate toCreate);
 
     /**
      * Creates the Credential Entity with the data given.

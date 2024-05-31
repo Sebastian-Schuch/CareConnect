@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.CredentialsMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -103,7 +103,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public PDDocument createDoctor(DoctorCreateDto toCreate) {
+    public PDDocument createDoctor(DoctorDtoCreate toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.doctorCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.doctorCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
         DoctorDto doctorDto = userCreationFacadeService.createUser(toCreate, credential);
@@ -112,10 +112,10 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public PDDocument createSecretary(SecretaryCreateDto toCreate) {
+    public PDDocument createSecretary(SecretaryDtoCreate toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.SECRETARY);
-        SecretaryDetailDto secretaryDetailDto = userCreationFacadeService.createUser(toCreate, credential);
+        SecretaryDto secretaryDetailDto = userCreationFacadeService.createUser(toCreate, credential);
         userLogin.setId(secretaryDetailDto.id());
         return pdfService.getAccountDataSheet(userLogin);
     }
@@ -135,7 +135,7 @@ public class CustomUserDetailService implements UserService {
      * @param toCreate the data of the user for the credential entity
      * @return the users login data
      */
-    private UserLoginDto createCredentials(CredentialCreateDto toCreate) {
+    private UserLoginDto createCredentials(CredentialDtoCreate toCreate) {
         // Generate a random password
         String randomPassword = generateRandomPassword();
 
@@ -156,7 +156,7 @@ public class CustomUserDetailService implements UserService {
      * @param role        the role of the user
      * @return the users login data
      */
-    private Credential createCredentialEntity(CredentialCreateDto toCreate, UserLoginDto credentials, Role role) {
+    private Credential createCredentialEntity(CredentialDtoCreate toCreate, UserLoginDto credentials, Role role) {
         // Encode the random password
         String encodedPassword = passwordEncoder.encode(credentials.getPassword() + passwordPepper);
 

@@ -34,6 +34,9 @@ public class MedicationMapper {
     public List<MedicationDto> medicationEntitiesToListOfMedicationDto(List<Medication> medications) {
         LOG.trace("medicationEntitiesToListOfMedicationDto({})", medications);
         List<MedicationDto> medicationsDto = new ArrayList<>();
+        if (medications == null) {
+            return medicationsDto;
+        }
         for (Medication medication : medications) {
             medicationsDto.add(medicationEntityToMedicationDto(medication));
         }

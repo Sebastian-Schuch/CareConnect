@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 
@@ -16,7 +16,7 @@ public interface AppointmentService {
      * @param toCreate the data to create the appointment with
      * @return the created appointment
      */
-    AppointmentDto create(AppointmentCreateDto toCreate) throws ConflictException;
+    AppointmentDto create(AppointmentDtoCreate toCreate) throws ConflictException;
 
     /**
      * Get the specified appointment.

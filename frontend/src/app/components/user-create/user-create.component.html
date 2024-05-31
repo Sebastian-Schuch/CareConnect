@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)"
+<form [formGroup]="userForm" #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="submitForm()"
       aria-label="Form to create a user" xmlns="http://www.w3.org/1999/html">
   <fieldset aria-label="Inputs for user creation">
     <!-- <legend>Inputs for user creation</legend> -->
@@ -18,7 +18,7 @@
       <!-- Start first name and last name row -->
       <div class="mb-2 col-lg-6">
         <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
-        <div class="row">
+        <div class="row form-group">
           <label for="{{mode}}userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
             First Name
           </label>
@@ -29,11 +29,8 @@
                    name="userFirstName"
                    placeholder="First Name of {{ role}}"
                    class="form-control"
-                   [class]="dynamicCssClassesForInput(firstNameModel)"
-                   [(ngModel)]="user.firstname"
-                   #firstNameModel="ngModel"
-                   required
                    tabindex="21"
+                   formControlName="firstname"
             >
 
             <div class="invalid-feedback">
@@ -44,7 +41,7 @@
         </div>
       </div>
       <div class="mb-2 col-lg-6">
-        <div class="row">
+        <div class="row form-group">
           <label for="{{mode}}userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
             Last Name
           </label>
@@ -58,11 +55,8 @@
                    name="userLastName"
                    placeholder="Last Name of {{role}}"
                    class="form-control"
-                   [class]="dynamicCssClassesForInput(lastNameModel)"
-                   [(ngModel)]="user.lastname"
-                   #lastNameModel="ngModel"
-                   required
                    tabindex="22"
+                   formControlName="lastname"
             >
             <div class="invalid-feedback">
               Last Name is required
@@ -76,7 +70,7 @@
     <div class="row">
       <!-- Start email row -->
       <div class="mb-2 col-lg-6">
-        <div class="row">
+        <div class="row form-group">
           <label for="{{mode}}userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
             Email
           </label>
@@ -87,10 +81,7 @@
                    name="userEmail"
                    placeholder="Email of {{role}}"
                    class="form-control"
-                   [class]="dynamicCssClassesForInput(emailModel)"
-                   [(ngModel)]="user.email"
-                   #emailModel="ngModel"
-                   required
+                   formControlName="email"
                    tabindex="23"
             >
             <div class="invalid-feedback">
@@ -99,11 +90,10 @@
           </div>
         </div>
       </div>
-
-      <div class="mb-2 col-lg-6">
-        <div class="row">
+      <div class="mb-2 col-lg-6" *ngIf="modeIsPatient">
+        <div class="row form-group">
           <label for="{{mode}}userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"
-                 *ngIf="modeIsPatient">
+          >
             Svnr
           </label>
           <div class="col-md-10 col-lg-8"
@@ -113,20 +103,75 @@
                    name="userSvnr"
                    placeholder="Svnr of {{role}}"
                    class="form-control"
-                   [class]="dynamicCssClassesForInput(svnrModel)"
-                   [(ngModel)]="user.svnr"
-                   #svnrModel="ngModel"
                    *ngIf="modeIsPatient"
-                   required
                    tabindex="24"
+                   formControlName="svnr"
             >
             <div class="invalid-feedback" *ngIf="modeIsPatient">
               Svnr is required
             </div>
           </div>
         </div>
-        <!-- End svnr row -->
       </div>
+      <!-- End email row -->
+    </div>
+    <div class="row">
+      <!-- Start medication row-->
+      <div class="row form-group col-lg-6" *ngIf="modeIsPatient">
+        <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Medications
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+            <mat-label>Medications</mat-label>
+            <input type="text" matInput formControlName="medication" [matAutocomplete]="medicationAuto">
+            <mat-autocomplete #medicationAuto="matAutocomplete">
+              <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication.name"
+                          (onSelectionChange)="addMedicationToSelection(medication)">
+                {{ medication.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div class="badge-container">
+          <span class="badge rounded-pill bg-secondary" *ngFor="let medication of selectedMedicationOptions">
+            {{ medication.name }}
+            <button type="button" class="btn-close" aria-label="Close"
+                    (click)="removeMedicationFromSelection(medication)"></button>
+          </span>
+        </div>
+      </div>
+
+
+      <div class="row form-group col-lg-6" *ngIf="modeIsPatient">
+        <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Allergies
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+            <mat-label>Allergies</mat-label>
+            <input type="text" matInput formControlName="allergy" [matAutocomplete]="allergyAuto">
+            <mat-autocomplete #allergyAuto="matAutocomplete">
+              <mat-option *ngFor="let allergy of filteredAllergyOptions | async" [value]="allergy.name"
+                          (onSelectionChange)="addAllergyToSelection(allergy)">
+                {{ allergy.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div class="badge-container">
+          <span class="badge rounded-pill bg-secondary" *ngFor="let allergy of selectedAllergyOptions">
+            {{ allergy.name }}
+            <button type="button" class="btn-close" aria-label="Close"
+                    (click)="removeAllergyFromSelection(allergy)"></button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
     </div>
   </fieldset>
 
@@ -135,7 +180,6 @@
     <span class="flex-grow-1"></span>
     <button type="submit"
             class="btn btn-primary"
-            [disabled]="!form.valid"
             tabindex="25"
     >
       Register {{ role }}

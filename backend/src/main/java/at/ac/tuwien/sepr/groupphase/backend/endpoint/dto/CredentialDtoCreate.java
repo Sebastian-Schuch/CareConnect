@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record DoctorCreateDto(
+public record CredentialDtoCreate(
     @NotBlank
     @Email(message = "Please provide a valid email address")
     String email,
@@ -18,3 +18,4 @@ public record DoctorCreateDto(
     String lastname
 ) {
 }
+

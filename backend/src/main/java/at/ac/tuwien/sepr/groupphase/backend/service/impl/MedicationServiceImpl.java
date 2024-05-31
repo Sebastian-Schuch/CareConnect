@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.MedicationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -27,7 +27,7 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     @Override
-    public MedicationDto create(MedicationCreateDto toCreate) {
+    public MedicationDto create(MedicationDtoCreate toCreate) {
         LOG.trace("create{}", toCreate);
         Medication medication = new Medication();
         medication.setName(toCreate.name());

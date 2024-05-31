@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
@@ -32,7 +32,7 @@ public class SecretaryServiceTest extends TestBase {
 
     @Test
     public void givenNewlyCreatedSecretary_whenGettingSecretaryWithId_thenReturnSecretary() {
-        SecretaryCreateDto createSecretary = new SecretaryCreateDto("a@a.a", "a", "b");
+        SecretaryDtoCreate createSecretary = new SecretaryDtoCreate("a@a.a", "a", "b");
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);
@@ -41,8 +41,8 @@ public class SecretaryServiceTest extends TestBase {
         credential.setPassword("password");
         credential.setInitialPassword(false);
         credential.setRole(Role.SECRETARY);
-        SecretaryDetailDto createdSecretary = secretaryService.create(createSecretary, credential);
-        SecretaryDetailDto foundSecretary = secretaryService.getById(createdSecretary.id());
+        SecretaryDto createdSecretary = secretaryService.create(createSecretary, credential);
+        SecretaryDto foundSecretary = secretaryService.getById(createdSecretary.id());
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(createdSecretary.id(), foundSecretary.id(), "ID should be equal"),
             () -> assertEquals(createdSecretary.email(), foundSecretary.email(), "Email should be equal"),
@@ -61,7 +61,7 @@ public class SecretaryServiceTest extends TestBase {
 
     @Test
     public void givenSecretaryCreateDto_whenCreatingNewSecretary_thenReturnNewlyCreated() {
-        SecretaryCreateDto createSecretary = new SecretaryCreateDto("a@a.a", "a", "b");
+        SecretaryDtoCreate createSecretary = new SecretaryDtoCreate("a@a.a", "a", "b");
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);
@@ -70,7 +70,7 @@ public class SecretaryServiceTest extends TestBase {
         credential.setPassword("password");
         credential.setInitialPassword(false);
         credential.setRole(Role.PATIENT);
-        SecretaryDetailDto createdSecretary = secretaryService.create(createSecretary, credential);
+        SecretaryDto createdSecretary = secretaryService.create(createSecretary, credential);
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(createdSecretary.email(), createSecretary.email(), "Email should be equal"),
             () -> assertEquals(createdSecretary.firstname(), createSecretary.firstname(), "Firstname should be equal"),

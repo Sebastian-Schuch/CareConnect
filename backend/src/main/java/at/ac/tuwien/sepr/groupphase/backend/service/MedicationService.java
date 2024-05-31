@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public interface MedicationService {
      * @param toCreate the data to create the medication with
      * @return the created medication
      */
-    MedicationDto create(MedicationCreateDto toCreate);
+    MedicationDto create(MedicationDtoCreate toCreate);
 
     /**
      * Get the specified medication.

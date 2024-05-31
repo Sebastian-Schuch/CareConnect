@@ -4,11 +4,15 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+
+import java.util.List;
 
 @Entity
 public class Patient {
@@ -24,6 +28,12 @@ public class Patient {
     @Convert(converter = EncryptorConverter.class)
     @Column(nullable = false)
     private String svnr;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Medication> medicines;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Allergy> allergies;
 
     public String getSvnr() {
         return svnr;
@@ -47,5 +57,21 @@ public class Patient {
 
     public void setCredential(Credential credential) {
         this.credential = credential;
+    }
+
+    public List<Medication> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(List<Medication> medicines) {
+        this.medicines = medicines;
+    }
+
+    public List<Allergy> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(List<Allergy> allergies) {
+        this.allergies = allergies;
     }
 }

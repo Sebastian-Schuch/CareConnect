@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +24,8 @@ public interface AllergyRepository extends CrudRepository<Allergy, Long> {
      * @return all allergies in the db
      */
     List<Allergy> findAll();
+
+    @Transactional
+    @Query(value = "SELECT * FROM Allergy WHERE UID= ?1", nativeQuery = true)
+    Allergy findAllergyById(Long id);
 }

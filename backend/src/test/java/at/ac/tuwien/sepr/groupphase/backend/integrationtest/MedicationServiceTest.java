@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MedicationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
@@ -30,7 +30,7 @@ public class MedicationServiceTest extends TestBase {
 
     @Test
     public void givenNewlyCreatedMedication_whenGettingMedicationWithId_thenReturnMedication() {
-        MedicationCreateDto createMedication = new MedicationCreateDto("WieAgra");
+        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");
         MedicationDto createdMedication = medicationService.create(createMedication);
         MedicationDto foundMedication = medicationService.getById(createdMedication.id());
         assertAll("Grouped Assertions of Medication",
@@ -48,7 +48,7 @@ public class MedicationServiceTest extends TestBase {
 
     @Test
     public void givenMedicationCreateDto_whenCreatingNewMedication_thenReturnNewlyCreated() {
-        MedicationCreateDto createMedication = new MedicationCreateDto("WieAgra");
+        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");
         MedicationDto createdMedication = medicationService.create(createMedication);
         assertAll("Grouped Assertions of Medication",
             () -> assertEquals(createdMedication.name(), createMedication.name(), "Name should be equal"));

@@ -7,6 +7,8 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
+import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,19 +25,20 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final MedicationService medicationService;
+    private final AllergyService allergyService;
 
-    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper) {
+    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper, MedicationService medicationService, AllergyService allergyService) {
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
+        this.medicationService = medicationService;
+        this.allergyService = allergyService;
     }
 
     @Override
     public PatientDto createPatient(PatientCreateDto toCreate, Credential credentials) {
         LOG.trace("createPatient({})", toCreate);
-        Patient patient = new Patient();
-        patient.setSvnr(toCreate.svnr());
-        patient.setCredential(credentials);
-        return patientMapper.patientToPatientDto(patientRepository.save(patient));
+        return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.dtoToEntity(toCreate, credentials)));
     }
 
     @Override

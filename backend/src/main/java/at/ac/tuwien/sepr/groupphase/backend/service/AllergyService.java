@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
@@ -14,7 +14,7 @@ public interface AllergyService {
      * @param toCreate the allergy to persist in the db
      * @return the persisted allergy
      */
-    Allergy createAllergy(AllergyCreateDto toCreate);
+    Allergy createAllergy(AllergyDtoCreate toCreate);
 
     /**
      * This function finds an allergy by its id.
@@ -55,4 +55,12 @@ public interface AllergyService {
      * @return the updated allergy
      */
     Allergy updateAllergy(AllergyDto allergy);
+
+    /**
+     * Get the specified allergy entity.
+     *
+     * @param id the id of the allergy requested
+     * @return the allergy entity with the id given
+     */
+    Allergy getEntityById(Long id);
 }

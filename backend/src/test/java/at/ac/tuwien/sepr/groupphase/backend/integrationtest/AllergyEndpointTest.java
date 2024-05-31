@@ -2,8 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.AllergyTestData;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAValidAllergyCreateDto_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
-        AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
+        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate();
         allergyCreateDto.setName(ALLERGY_NAME_1);
 
         MvcResult mvcResult = mockMvc.perform(post(baseUri)
@@ -59,7 +59,7 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAnInvalidAllergyCreateDto_whenCreateAllergy_thenBadRequest() throws Exception {
-        AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
+        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate();
         allergyCreateDto.setName(null);
 
         MvcResult mvcResult = mockMvc.perform(post(baseUri)
@@ -75,7 +75,7 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAnAllergyId_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
-        AllergyCreateDto allergyCreateDto = new AllergyCreateDto();
+        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate();
         allergyCreateDto.setName(ALLERGY_NAME_1);
         allergyCreateDto.setId(1L);
 
