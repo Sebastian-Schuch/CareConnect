@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
@@ -31,7 +31,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDetailDto create(SecretaryCreateDto toCreate, Credential credentials) {
+    public SecretaryDto create(SecretaryDtoCreate toCreate, Credential credentials) {
         LOG.trace("create{}", toCreate);
         Secretary secretary = new Secretary();
         secretary.setCredential(credentials);
@@ -39,7 +39,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDetailDto getById(Long id) {
+    public SecretaryDto getById(Long id) {
         LOG.trace("getById({})", id);
         Secretary secretary = secretaryRepository.findById(id).orElse(null);
         if (secretary == null) {
@@ -50,7 +50,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public List<SecretaryDetailDto> getAllSecretaries() {
+    public List<SecretaryDto> getAllSecretaries() {
         LOG.trace("getAllSecretaries()");
         return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
     }
@@ -62,7 +62,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDetailDto findSecretaryByCredential(Credential credential) {
+    public SecretaryDto findSecretaryByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Secretary secretary = secretaryRepository.findByCredential(credential);
         if (secretary != null) {

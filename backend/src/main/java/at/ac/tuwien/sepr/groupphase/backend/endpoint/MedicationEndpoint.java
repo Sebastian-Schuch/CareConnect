@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class MedicationEndpoint {
     @Secured("ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public MedicationDto create(@Valid @RequestBody MedicationCreateDto toCreate) {
+    public MedicationDto create(@Valid @RequestBody MedicationDtoCreate toCreate) {
         LOG.info("POST" + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
         return this.medicationService.create(toCreate);

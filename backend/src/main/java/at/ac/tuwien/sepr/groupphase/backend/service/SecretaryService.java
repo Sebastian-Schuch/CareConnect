@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface SecretaryService {
      * @param credentials the credential to create the secretary with
      * @return the created secretary
      */
-    SecretaryDetailDto create(SecretaryCreateDto toCreate, Credential credentials);
+    SecretaryDto create(SecretaryDtoCreate toCreate, Credential credentials);
 
     /**
      * Get the specified secretary.
@@ -23,7 +23,7 @@ public interface SecretaryService {
      * @param id the id of the secretary requested
      * @return the secretary with the id given
      */
-    SecretaryDetailDto getById(Long id);
+    SecretaryDto getById(Long id);
 
 
     /**
@@ -31,7 +31,7 @@ public interface SecretaryService {
      *
      * @return the list of all secretaries
      */
-    List<SecretaryDetailDto> getAllSecretaries();
+    List<SecretaryDto> getAllSecretaries();
 
     /**
      * Check if the used id matches the token given.
@@ -47,5 +47,5 @@ public interface SecretaryService {
      * @param credential the credential to search for
      * @return the secretary with the given credential
      */
-    SecretaryDetailDto findSecretaryByCredential(Credential credential);
+    SecretaryDto findSecretaryByCredential(Credential credential);
 }

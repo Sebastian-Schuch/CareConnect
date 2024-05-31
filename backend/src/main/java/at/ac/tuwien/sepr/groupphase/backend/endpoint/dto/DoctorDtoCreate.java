@@ -4,9 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record SecretaryCreateDto(
-
-    @NotBlank(message = "cannot be empty")
+public record DoctorDtoCreate(
+    @NotBlank
     @Email(message = "Please provide a valid email address")
     String email,
 
@@ -17,8 +16,5 @@ public record SecretaryCreateDto(
     @NotBlank(message = "cannot be empty")
     @Size(max = 255, message = "cannot be longer than 255 characters")
     String lastname
-
-
 ) {
 }
-

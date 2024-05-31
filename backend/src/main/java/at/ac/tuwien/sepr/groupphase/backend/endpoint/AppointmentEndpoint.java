@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
@@ -52,7 +52,7 @@ public class AppointmentEndpoint {
     @Secured({"SECRETARY", "PATIENT"})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public AppointmentDto create(@Valid @RequestBody AppointmentCreateDto toCreate) throws ConflictException {
+    public AppointmentDto create(@Valid @RequestBody AppointmentDtoCreate toCreate) throws ConflictException {
         LOG.info("POST" + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
         return this.appointmentService.create(toCreate);

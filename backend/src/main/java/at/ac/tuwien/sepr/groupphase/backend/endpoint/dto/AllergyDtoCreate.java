@@ -4,14 +4,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class AllergieDtoCreate {
+public class AllergyDtoCreate {
     @NotEmpty
     @NotNull
-    @Size(max = 255, message = "Name is too long")
+    @Size(min = 1, max = 255, message = "Name is too long")
     private String name;
 
     private Long id;
-
 
     public void setName(String name) {
         this.name = name;

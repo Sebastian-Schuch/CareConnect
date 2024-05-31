@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -53,7 +53,7 @@ public class DoctorEndpoint {
     @Secured("ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody DoctorCreateDto toCreate) {
+    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody DoctorDtoCreate toCreate) {
         LOG.info("POST " + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
         PDDocument accountDataSheet = userService.createDoctor(toCreate);

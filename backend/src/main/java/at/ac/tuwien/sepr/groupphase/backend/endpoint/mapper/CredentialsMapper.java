@@ -1,9 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import org.mapstruct.Mapper;
 
 @Mapper
@@ -15,7 +15,7 @@ public interface CredentialsMapper {
      * @param doctorCreateDto the doctorCreateDto to convert
      * @return the credentialCreateDto
      */
-    CredentialCreateDto doctorCreateDtoToCredentialCreateDto(DoctorCreateDto doctorCreateDto);
+    CredentialDtoCreate doctorCreateDtoToCredentialCreateDto(DoctorDtoCreate doctorCreateDto);
 
     /**
      * Converts the secretaryCreateDto to the credentialCreateDto.
@@ -23,7 +23,7 @@ public interface CredentialsMapper {
      * @param secretaryCreateDto the secretaryCreateDto to convert
      * @return the credentialCreateDto
      */
-    CredentialCreateDto secretaryCreateDtoToCredentialCreateDto(SecretaryCreateDto secretaryCreateDto);
+    CredentialDtoCreate secretaryCreateDtoToCredentialCreateDto(SecretaryDtoCreate secretaryCreateDto);
 
     /**
      * Converts the patientCreateDto to the credentialCreateDto.
@@ -31,5 +31,5 @@ public interface CredentialsMapper {
      * @param patientCreateDto the patientCreateDto to convert
      * @return the credentialCreateDto
      */
-    CredentialCreateDto patientCreateDtoToCredentialCreateDto(PatientCreateDto patientCreateDto);
+    CredentialDtoCreate patientCreateDtoToCredentialCreateDto(PatientCreateDto patientCreateDto);
 }

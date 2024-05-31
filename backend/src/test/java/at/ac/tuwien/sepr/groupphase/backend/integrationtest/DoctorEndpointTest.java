@@ -2,8 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
@@ -84,7 +84,7 @@ public class DoctorEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenValidCreateDoctorDto_whenCreateDoctor_thenReturnCreatedDoctor() throws Exception {
-        String json = ow.writeValueAsString(new DoctorCreateDto("a@a.a", "a", "b"));
+        String json = ow.writeValueAsString(new DoctorDtoCreate("a@a.a", "a", "b"));
         byte[] body = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -101,7 +101,7 @@ public class DoctorEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenCreateDoctorDtoWithInvalidEmail_whenCreateDoctor_thenReturns422UnprocessableEntity() throws Exception {
-        String json = ow.writeValueAsString(new DoctorCreateDto("a.a.a", "a", "b"));
+        String json = ow.writeValueAsString(new DoctorDtoCreate("a.a.a", "a", "b"));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -112,7 +112,7 @@ public class DoctorEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenCreateDoctorDtoWithInvalidFirstname_whenCreateDoctor_thenReturns422UnprocessableEntity() throws Exception {
-        String json = ow.writeValueAsString(new DoctorCreateDto("a@a.a", "", "b"));
+        String json = ow.writeValueAsString(new DoctorDtoCreate("a@a.a", "", "b"));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
@@ -123,7 +123,7 @@ public class DoctorEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenCreateDoctorDtoWithInvalidLastname_whenCreateDoctor_thenReturns422UnprocessableEntity() throws Exception {
-        String json = ow.writeValueAsString(new DoctorCreateDto("a@a.a", "a",
+        String json = ow.writeValueAsString(new DoctorDtoCreate("a@a.a", "a",
             "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +135,7 @@ public class DoctorEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenCreatedDoctor_whenGetDoctor_thenReturnDoctor() throws Exception {
-        String json = ow.writeValueAsString(new DoctorCreateDto("a@a.a", "a", "b"));
+        String json = ow.writeValueAsString(new DoctorDtoCreate("a@a.a", "a", "b"));
         byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)

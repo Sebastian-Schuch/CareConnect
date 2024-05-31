@@ -9,7 +9,7 @@ import java.util.Date;
 
 import static at.ac.tuwien.sepr.groupphase.backend.config.TimeSlotConfig.MIN_APPOINTMENT_LENGTH_IN_MINUTES;
 
-public record AppointmentCreateDto(
+public record AppointmentDtoCreate(
     @NotNull(message = "is required")
     PatientDto patient,
 

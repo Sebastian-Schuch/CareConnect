@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
@@ -29,7 +29,7 @@ public class DoctorServiceImpl implements DoctorService {
 
 
     @Override
-    public DoctorDto createDoctor(DoctorCreateDto toCreate, Credential credentials) {
+    public DoctorDto createDoctor(DoctorDtoCreate toCreate, Credential credentials) {
         LOG.trace("createDoctor({})", toCreate);
         Doctor doctor = new Doctor();
         doctor.setCredential(credentials);

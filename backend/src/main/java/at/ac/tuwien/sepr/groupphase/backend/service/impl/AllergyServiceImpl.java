@@ -1,18 +1,22 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AllergyServiceImpl implements AllergyService {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AllergyRepository allergyRepository;
 
     public AllergyServiceImpl(AllergyRepository allergyRepository) {
@@ -20,7 +24,7 @@ public class AllergyServiceImpl implements AllergyService {
     }
 
     @Override
-    public Allergy createAllergy(AllergyCreateDto toCreate) {
+    public Allergy createAllergy(AllergyDtoCreate toCreate) {
         Allergy allergy = new Allergy();
         allergy.setName(toCreate.getName());
         return allergyRepository.save(allergy);
@@ -64,5 +68,15 @@ public class AllergyServiceImpl implements AllergyService {
         Allergy existingAllergy = findById(allergy.getUid());
         existingAllergy.setName(allergy.getName());
         return allergyRepository.save(existingAllergy);
+    }
+
+    @Override
+    public Allergy getEntityById(Long id) {
+        LOG.trace("getEntityById({})", id);
+        Allergy allergy = allergyRepository.findAllergyById(id);
+        if (allergy == null) {
+            throw new NotFoundException("Allergy not found");
+        }
+        return allergy;
     }
 }

@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
@@ -27,7 +27,7 @@ public class DoctorServiceTest extends TestBase {
 
     @Test
     public void givenValidDoctorCreateDto_whenCreateDoctor_thenCreatedDoctorIsReturned() {
-        DoctorCreateDto toCreate = new DoctorCreateDto("a@a.a", "a", "b");
+        DoctorDtoCreate toCreate = new DoctorDtoCreate("a@a.a", "a", "b");
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);
@@ -50,7 +50,7 @@ public class DoctorServiceTest extends TestBase {
 
     @Test
     public void givenCreateDoctor_whenGetDoctorById_thenDoctorIsReturned() {
-        DoctorCreateDto toCreate = new DoctorCreateDto("a@a.a", "a", "b");
+        DoctorDtoCreate toCreate = new DoctorDtoCreate("a@a.a", "a", "b");
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);

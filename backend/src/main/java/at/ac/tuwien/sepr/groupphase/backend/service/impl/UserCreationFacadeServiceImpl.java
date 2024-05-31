@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
@@ -26,12 +26,12 @@ public class UserCreationFacadeServiceImpl implements UserCreationFacadeService 
     }
 
     @Override
-    public DoctorDto createUser(DoctorCreateDto toCreate, Credential credential) {
+    public DoctorDto createUser(DoctorDtoCreate toCreate, Credential credential) {
         return doctorService.createDoctor(toCreate, credential);
     }
 
     @Override
-    public SecretaryDetailDto createUser(SecretaryCreateDto toCreate, Credential credential) {
+    public SecretaryDto createUser(SecretaryDtoCreate toCreate, Credential credential) {
         return secretaryService.create(toCreate, credential);
     }
 

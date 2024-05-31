@@ -31,7 +31,7 @@ public class PatientServiceTest extends TestBase {
 
     @Test
     public void givenValidPatientCreateDto_whenCreatePatient_thenCreatedPatientIsReturned() {
-        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b");
+        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b", null, null);
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);
@@ -55,7 +55,7 @@ public class PatientServiceTest extends TestBase {
 
     @Test
     public void givenCreatePatient_whenGetPatientById_thenPatientIsReturned() {
-        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b");
+        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b", null, null);
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);

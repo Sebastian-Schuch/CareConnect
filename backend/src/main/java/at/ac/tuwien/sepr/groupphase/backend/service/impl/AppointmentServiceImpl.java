@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AppointmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
@@ -47,7 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public AppointmentDto create(AppointmentCreateDto toCreate) throws ConflictException {
+    public AppointmentDto create(AppointmentDtoCreate toCreate) throws ConflictException {
         LOG.trace("create{}", toCreate);
         int currentAppointmentCount = appointmentRepository.getCountFromAllAppointmentsOnOutpatientDepartmentDuringSpecificTime(toCreate.outpatientDepartment().id(), toCreate.startDate());
         if (currentAppointmentCount >= toCreate.outpatientDepartment().capacity()) {

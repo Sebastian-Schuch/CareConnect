@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -53,7 +53,7 @@ public class SecretaryEndpoint {
     @Secured("ADMIN")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody SecretaryCreateDto toCreate) {
+    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody SecretaryDtoCreate toCreate) {
         LOG.info("POST" + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
         PDDocument accountDataSheet = userService.createSecretary(toCreate);
@@ -95,7 +95,7 @@ public class SecretaryEndpoint {
 
     @GetMapping({"/{id}"})
     @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
-    public SecretaryDetailDto getById(@PathVariable("id") long id) {
+    public SecretaryDto getById(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/{}", id);
         return secretaryService.getById(id);
     }
@@ -107,7 +107,7 @@ public class SecretaryEndpoint {
      */
     @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
     @GetMapping
-    public List<SecretaryDetailDto> getAll() {
+    public List<SecretaryDto> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.secretaryService.getAllSecretaries();
     }

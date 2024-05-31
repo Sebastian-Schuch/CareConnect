@@ -2,7 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
@@ -71,7 +71,7 @@ public class CredentialEndpoint {
      */
     @Secured({"ADMIN", "DOCTOR", "SECRETARY"})
     @GetMapping({"/secretaries"})
-    public SecretaryDetailDto getSecretaryByToken() {
+    public SecretaryDto getSecretaryByToken() {
         LOG.trace("getSecretaryByToken()");
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Credential credential = customUserDetailService.findApplicationUserByEmail(email);

@@ -26,4 +26,13 @@ export class AllergyService {
     return this.http.post<AllergyDetailDto>(this.allergyUri, allergyCreateDto);
   }
 
+  /**
+   * Get all allergies from the backend.
+   *
+   * @return an Observable of the allergies
+   */
+  getAllergiesAll() {
+    return this.http.get<AllergyDetailDto[]>(`${this.allergyUri}`);
+  }
+
 }

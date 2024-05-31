@@ -86,6 +86,8 @@ class TreatmentEndpointTest extends TestBase {
             new PatientDto(
                 2L,
                 "1234567890",
+                null,
+                null,
                 "test2",
                 "test1",
                 "test@g.c",
