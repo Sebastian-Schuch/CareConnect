@@ -125,7 +125,7 @@
         >
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-label>Medications</mat-label>
-            <input type="text" matInput formControlName="medication" [matAutocomplete]="medicationAuto">
+            <input tabindex="25" type="text" matInput formControlName="medication" [matAutocomplete]="medicationAuto">
             <mat-autocomplete #medicationAuto="matAutocomplete">
               <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication.name"
                           (onSelectionChange)="addMedicationToSelection(medication)">
@@ -152,7 +152,7 @@
         >
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-label>Allergies</mat-label>
-            <input type="text" matInput formControlName="allergy" [matAutocomplete]="allergyAuto">
+            <input tabindex="26" type="text" matInput formControlName="allergy" [matAutocomplete]="allergyAuto">
             <mat-autocomplete #allergyAuto="matAutocomplete">
               <mat-option *ngFor="let allergy of filteredAllergyOptions | async" [value]="allergy.name"
                           (onSelectionChange)="addAllergyToSelection(allergy)">
@@ -180,7 +180,7 @@
     <span class="flex-grow-1"></span>
     <button type="submit"
             class="btn btn-primary"
-            tabindex="25"
+            tabindex="27"
     >
       Register {{ role }}
     </button>
