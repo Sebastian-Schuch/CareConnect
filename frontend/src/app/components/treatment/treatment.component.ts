@@ -13,6 +13,8 @@ import {MedicationDto} from "../../dtos/medication";
 import {TreatmentService} from "../../services/treatment.service";
 import {TreatmentMedicineDtoCreate} from "../../dtos/treatmentMedicine";
 import {ToastrService} from "ngx-toastr";
+import {ErrorFormatterService} from "../../services/error-formatter.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-treatment',
@@ -26,7 +28,6 @@ import {ToastrService} from "ngx-toastr";
 
 export class TreatmentComponent implements OnInit {
 
-  private readonly baseUrl = '/api/v1';
   treatmentForm: FormGroup;
   medicationAdministeredForm: FormGroup;
   doctorOptions: UserDetailDto[] = [];
@@ -50,7 +51,9 @@ export class TreatmentComponent implements OnInit {
               private medicineService: MedicationService,
               private outpatientDepartmentService: OutpatientDepartmentService,
               private treatmentService: TreatmentService,
-              private notification: ToastrService
+              private notification: ToastrService,
+              private errorFormatterService: ErrorFormatterService,
+              private router: Router
   ) {
 
     this.dataSource = new MatTableDataSource<any>();
@@ -146,9 +149,22 @@ export class TreatmentComponent implements OnInit {
         next: data => {
           this.notification.success('Successfully created treatment ' + data.treatmentTitle);
         },
-        error: error => {
-          this.notification.error('Failed creating treatment!')
-          console.error('There was an error!', error);
+        error: async error => {
+          switch (error.status) {
+            case 422:
+              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Treatment`, {
+                enableHtml: true,
+                timeOut: 10000
+              });
+              break;
+            case 401:
+              this.notification.error(await error.error.text(), `Could not create Treatment`);
+              this.router.navigate(['/']);
+              break;
+            default:
+              this.notification.error(await error.error.text(), `Could not create Treatment`);
+              break;
+          }
         }
       })
     }

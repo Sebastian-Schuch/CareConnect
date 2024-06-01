@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
@@ -31,7 +31,7 @@ public class PatientServiceTest extends TestBase {
 
     @Test
     public void givenValidPatientCreateDto_whenCreatePatient_thenCreatedPatientIsReturned() {
-        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b", null, null);
+        PatientDtoCreate toCreate = new PatientDtoCreate("0123456789", "a@a.a", "a", "b", null, null);
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);
@@ -55,7 +55,7 @@ public class PatientServiceTest extends TestBase {
 
     @Test
     public void givenCreatePatient_whenGetPatientById_thenPatientIsReturned() {
-        PatientCreateDto toCreate = new PatientCreateDto("0123456789", "a@a.a", "a", "b", null, null);
+        PatientDtoCreate toCreate = new PatientDtoCreate("0123456789", "a@a.a", "a", "b", null, null);
         Credential credential = new Credential();
         credential.setEmail("a@a.a");
         credential.setActive(true);

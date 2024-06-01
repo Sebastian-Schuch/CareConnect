@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
@@ -63,7 +63,7 @@ public class PatientMapper {
         return patientDtos;
     }
 
-    public Patient dtoToEntity(PatientCreateDto toCreate, Credential credentials) {
+    public Patient dtoToEntity(PatientDtoCreate toCreate, Credential credentials) {
         Patient patient = new Patient();
         patient.setSvnr(toCreate.svnr());
         if (toCreate.medicines() != null) {

@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {MedicationCreateDto} from "../../dtos/medication";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {MedicationService} from "../../services/medication.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
+import {ErrorFormatterService} from "../../services/error-formatter.service";
 
 @Component({
   selector: 'app-medication-create',
@@ -20,9 +21,8 @@ export class MedicationCreateComponent implements OnInit {
   constructor(
     private service: MedicationService,
     private router: Router,
-    private route: ActivatedRoute,
-    private notification: ToastrService
-    //private errorFormatter: ErrorFormatterService
+    private notification: ToastrService,
+    private errorFormatterService: ErrorFormatterService,
   ) {
   }
 
@@ -43,9 +43,22 @@ export class MedicationCreateComponent implements OnInit {
         next: () => {
           this.notification.success('Successfully created ' + this.medication.name + ' Medication');
         },
-        error: error => {
-          this.notification.error('Error creating Medication');
-          console.error('Error creating Medication', error);
+        error: async error => {
+          switch (error.status) {
+            case 422:
+              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Medication`, {
+                enableHtml: true,
+                timeOut: 10000
+              });
+              break;
+            case 401:
+              this.notification.error(await error.error.text(), `Could not create Medication`);
+              this.router.navigate(['/']);
+              break;
+            default:
+              this.notification.error(await error.error.text(), `Could not create Medication`);
+              break;
+          }
         }
       });
     }

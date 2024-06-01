@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -64,7 +64,7 @@ public interface UserService extends UserDetailsService {
      * @param toCreate the data of the patient for the credential entity
      * @return the users login data
      */
-    PDDocument createPatient(PatientCreateDto toCreate);
+    PDDocument createPatient(PatientDtoCreate toCreate);
 
     /**
      * Changes the password of the user who sent the request.

@@ -2,8 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -36,7 +36,7 @@ public class UserCreationFacadeServiceImpl implements UserCreationFacadeService 
     }
 
     @Override
-    public PatientDto createUser(PatientCreateDto toCreate, Credential credential) {
+    public PatientDto createUser(PatientDtoCreate toCreate, Credential credential) {
         return patientService.createPatient(toCreate, credential);
     }
 }

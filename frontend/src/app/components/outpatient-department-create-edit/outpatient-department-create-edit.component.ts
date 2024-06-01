@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {OutpatientDepartmentDtoCreate} from "../../dtos/outpatient-department";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
+import {ErrorFormatterService} from "../../services/error-formatter.service";
 
 @Component({
   selector: 'app-outpatient-department-create-edit',
@@ -12,7 +14,9 @@ export class OutpatientDepartmentComponent {
 
   constructor(
     private outpatientDepartmentService: OutpatientDepartmentService,
-    private notification: ToastrService
+    private notification: ToastrService,
+    private errorFormatterService: ErrorFormatterService,
+    private router: Router
   ) {
   }
 
@@ -93,9 +97,22 @@ export class OutpatientDepartmentComponent {
       next: data => {
         this.notification.success('Outpatient Department ' + data.name + ' created');
       },
-      error: error => {
-        this.notification.error('Outpatient Department could not be created');
-        console.error('There was an error!', error);
+      error: async error => {
+        switch (error.status) {
+          case 422:
+            this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Outpatient Department`, {
+              enableHtml: true,
+              timeOut: 10000
+            });
+            break;
+          case 401:
+            this.notification.error(await error.error.text(), `Could not create Outpatient Department`);
+            this.router.navigate(['/']);
+            break;
+          default:
+            this.notification.error(await error.error.text(), `Could not create Outpatient Department`);
+            break;
+        }
       }
     })
   }

@@ -2,8 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -73,7 +71,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             .stream()
             .map(err -> err.getField() + " " + err.getDefaultMessage())
             .collect(Collectors.toList());
-        body.put("Validation errors", errors);
+        body.put("ValidationErrors", errors);
 
         return new ResponseEntity<>(body, headers, HttpStatus.UNPROCESSABLE_ENTITY);
 

@@ -1,14 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
-import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +23,14 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
-    private final MedicationService medicationService;
-    private final AllergyService allergyService;
 
-    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper, MedicationService medicationService, AllergyService allergyService) {
+    public PatientServiceImpl(PatientRepository patientRepository, PatientMapper patientMapper) {
         this.patientRepository = patientRepository;
         this.patientMapper = patientMapper;
-        this.medicationService = medicationService;
-        this.allergyService = allergyService;
     }
 
     @Override
-    public PatientDto createPatient(PatientCreateDto toCreate, Credential credentials) {
+    public PatientDto createPatient(PatientDtoCreate toCreate, Credential credentials) {
         LOG.trace("createPatient({})", toCreate);
         return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.dtoToEntity(toCreate, credentials)));
     }

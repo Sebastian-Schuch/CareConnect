@@ -126,7 +126,7 @@
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-label>Medications</mat-label>
             <input tabindex="25" type="text" matInput formControlName="medication" [matAutocomplete]="medicationAuto">
-            <mat-autocomplete #medicationAuto="matAutocomplete">
+            <mat-autocomplete #medicationAuto="matAutocomplete" autoActiveFirstOption="true">
               <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication.name"
                           (onSelectionChange)="addMedicationToSelection(medication)">
                 {{ medication.name }}
@@ -135,10 +135,13 @@
           </mat-form-field>
         </div>
         <div class="badge-container">
-          <span class="badge rounded-pill bg-secondary" *ngFor="let medication of selectedMedicationOptions">
+          <span *ngFor="let medication of selectedMedicationOptions" class="badge rounded-pill">
             {{ medication.name }}
-            <button type="button" class="btn-close" aria-label="Close"
-                    (click)="removeMedicationFromSelection(medication)"></button>
+            <button (click)="removeMedicationFromSelection(medication)" class="btn-close btn-close-white"
+                    type="button"
+                    [attr.aria-label]="'Remove ' + medication.name">
+              <span class="visually-hidden">Remove {{ medication.name }}</span>
+            </button>
           </span>
         </div>
       </div>
@@ -153,7 +156,7 @@
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-label>Allergies</mat-label>
             <input tabindex="26" type="text" matInput formControlName="allergy" [matAutocomplete]="allergyAuto">
-            <mat-autocomplete #allergyAuto="matAutocomplete">
+            <mat-autocomplete #allergyAuto="matAutocomplete" autoActiveFirstOption="true">
               <mat-option *ngFor="let allergy of filteredAllergyOptions | async" [value]="allergy.name"
                           (onSelectionChange)="addAllergyToSelection(allergy)">
                 {{ allergy.name }}
@@ -162,24 +165,24 @@
           </mat-form-field>
         </div>
         <div class="badge-container">
-          <span class="badge rounded-pill bg-secondary" *ngFor="let allergy of selectedAllergyOptions">
+          <span *ngFor="let allergy of selectedAllergyOptions" class="badge rounded-pill">
             {{ allergy.name }}
-            <button type="button" class="btn-close" aria-label="Close"
-                    (click)="removeAllergyFromSelection(allergy)"></button>
+            <button (click)="removeAllergyFromSelection(allergy)" class="btn-close btn-close-white"
+                    type="button"
+                    [attr.aria-label]="'Remove ' + allergy.name">
+              <span class="visually-hidden">Remove {{ allergy.name }}</span>
+            </button>
           </span>
         </div>
       </div>
-    </div>
-    <div class="row">
-
     </div>
   </fieldset>
 
 
   <div class="mt-4 d-flex flex-row">
     <span class="flex-grow-1"></span>
-    <button type="submit"
-            class="btn btn-primary"
+    <button mat-button type="submit"
+            class="sepr-btn-submit"
             tabindex="27"
     >
       Register {{ role }}

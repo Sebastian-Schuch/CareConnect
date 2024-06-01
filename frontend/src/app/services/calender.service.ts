@@ -9,10 +9,14 @@ import {
   getMinutes,
   getMonth,
   getYear,
+  isAfter,
   isBefore,
   isEqual,
   setDay,
+  setHours,
+  setMinutes,
   startOfDay,
+  subDays,
   subSeconds
 } from "date-fns";
 import {CalendarEvent} from "angular-calendar";
@@ -108,7 +112,7 @@ export class CalenderService {
         start: addMinutes(addHours(startOfDay(setDay(new Date(), 3)), 7), i * 30),
         end: addMinutes(addHours(startOfDay(setDay(new Date(), 3)), 7), 30 + i * 30),
         title: curCap + '/' + maxCap + ' ' + ((ratio < 1) ? 'Open' : 'Already booked out'),
-        color: this.getEventColor(curCap, maxCap),
+        color: this.getEventColor(curCap, maxCap, addMinutes(addHours(startOfDay(setDay(new Date(), 3)), 7), i * 30)),
         draggable: false,
         cssClass: 'open-time',
         meta: {
@@ -166,12 +170,15 @@ export class CalenderService {
    *
    * @param curCap is the current fullness
    * @param maxCap is the maximum fullness
+   * @param date is the date of the event
    *
    * @private
    */
-  public getEventColor(curCap: number, maxCap: number): EventColor {
+  public getEventColor(curCap: number, maxCap: number, date: Date): EventColor {
     const fullness = curCap / maxCap;
-
+    if (isBefore(date, new Date())) {
+      return colors.full;
+    }
     if (fullness <= 0.1) {
       return colors.empty;
     } else if (fullness < 0.25) {
@@ -183,6 +190,55 @@ export class CalenderService {
     } else if (fullness === 1) {
       return colors.full;
     } else return colors.green;
+  }
+
+  /**
+   * This function maps fullness to a color representation
+   *
+   * @param curCap is the current fullness
+   * @param maxCap is the maximum fullness
+   * @param date is the date of the event
+   * @param openingHoursDay is the opening and closing hours of the day
+   *
+   * @private
+   */
+  public getEventColorBadgeMonth(curCap: number, maxCap: number, date: Date, openingHoursDay: OpeningHoursDayDto): EventColor {
+    const fullness = curCap / maxCap;
+    if (openingHoursDay != null) {
+      if (this.isInPast(date, openingHoursDay)) {
+        return colors.full;
+      }
+    } else {
+      if (isBefore(date, new Date())) {
+        return colors.full;
+      }
+    }
+    if (fullness <= 0.1) {
+      return colors.empty;
+    } else if (fullness < 0.25) {
+      return colors.minimal
+    } else if (fullness < 0.5) {
+      return colors.minimal;
+    } else if (fullness < 1) {
+      return colors.mostlyFull;
+    } else if (fullness === 1) {
+      return colors.full;
+    } else return colors.green;
+  }
+
+  public isInPast(date: Date, openingHoursDay: OpeningHoursDayDto): boolean {
+    if (openingHoursDay == null) {
+      return isBefore(date, new Date());
+    }
+    if (getDate(date) == getDate(new Date()) && getMonth(date) == getMonth(new Date()) && getYear(date) == getYear(new Date())) {
+      return isAfter(addMinutes(new Date(), 30), setMinutes(setHours(new Date(), this.getCloseHourOfDay(openingHoursDay)), this.getCloseMinuteOfDay(openingHoursDay)));
+    }
+    if (isAfter(addDays(date, 1), new Date())) {
+      return false;
+    }
+    if (isBefore(subDays(date, 1), new Date())) {
+      return true;
+    }
   }
 
   /**
@@ -273,6 +329,13 @@ export class CalenderService {
         let title: string = curCap + '/' + capacity + ' ' + ((ratio < 1) ? 'Open' : 'Already booked out');
         let appointmentId: number = -1;
         let isMyAppointment: boolean = false;
+        let pastTime: boolean = false;
+        let tooltip = curCap + '/' + capacity;
+        if (isBefore(addMinutes(startTime, currentDiff), new Date())) {
+          title = "Past timeslot";
+          pastTime = true;
+          tooltip = "This timeslot is in the past";
+        }
         // Check if the current timeslot is an appointment of the patient
         for (let j = 0; j < patientAppointment.length; j++) {
           if (isEqual(addMinutes(startTime, currentDiff), patientAppointment[j].startDate)) {
@@ -286,15 +349,16 @@ export class CalenderService {
           start: addMinutes(startTime, currentDiff),
           end: addMinutes(startTime, currentDiff + 30),
           title: title,
-          color: this.getEventColor(curCap, capacity),
+          color: this.getEventColor(curCap, capacity, addMinutes(startTime, currentDiff)),
           draggable: false,
           cssClass: 'open-time',
           meta: {
             maxCapacity: capacity,
             curCapacity: curCap,
-            tooltip: curCap + '/' + capacity,
+            tooltip: tooltip,
             isMyAppointment: isMyAppointment,
-            appointmentId: appointmentId
+            appointmentId: appointmentId,
+            pastTime: pastTime
           }
         }
         // If the event falls into the open timeframe of the outpatient department, add it to the calendar events
