@@ -10,13 +10,14 @@ import {MedicationDto} from "../../dtos/medication";
 import {MedicationService} from "../../services/medication.service";
 import {AllergyDetailDto} from "../../dtos/allergy";
 import {AllergyService} from "../../services/allergy.service";
+import {ErrorFormatterService} from "../../services/error-formatter.service";
 
 //import {ErrorFormatterService} from "../../../service/error-formatter.service";
 
 @Component({
   selector: 'app-user-create',
   templateUrl: './user-create.component.html',
-  styleUrl: './user-create.component.scss'
+  styleUrls: ['./user-create.component.scss', '../../../styles.scss']
 })
 
 
@@ -42,12 +43,12 @@ export class UserCreateComponent implements OnInit {
 
   constructor(
     private service: UserService,
-    private router: Router,
     private route: ActivatedRoute,
+    private router: Router,
     private notification: ToastrService,
     private medicationService: MedicationService,
-    private allergyService: AllergyService
-    //private errorFormatter: ErrorFormatterService
+    private allergyService: AllergyService,
+    private errorFormatterService: ErrorFormatterService
   ) {
   }
 
@@ -97,6 +98,7 @@ export class UserCreateComponent implements OnInit {
             this.resetAllSearchInputs();
           },
           error: error => {
+            this.notification.error('Loading of resources failed', 'Error loading resources');
             console.error('error while getting data from database', error);
           }
         });
@@ -269,11 +271,24 @@ export class UserCreateComponent implements OnInit {
 
           const url = window.URL.createObjectURL(response);
           window.open(url);
-          //this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         },
-        error: error => {
-          console.error('Error creating User', error);
-          this.notification.error(`Could not create ${this.role}`);
+        error: async error => {
+          switch (error.status) {
+            case 422:
+              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create ${this.role}`, {
+                enableHtml: true,
+                timeOut: 10000
+              });
+              break;
+            case 401:
+              this.notification.error(await error.error.text(), `Could not create ${this.role}`);
+              this.router.navigate(['/']);
+              break;
+            default:
+              this.notification.error(await error.error.text(), `Could not create ${this.role}`);
+              break;
+          }
         }
       });
     }

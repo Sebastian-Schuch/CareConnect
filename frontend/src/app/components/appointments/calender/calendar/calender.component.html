@@ -98,11 +98,14 @@
 </div>
 <ng-template #customMonthCellTemplate let-day="day" let-locale="locale">
   <div class="cal-cell-top">
-    <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) > 0"
+    <span class="cal-day-badge" *ngIf="isInPast(day.date)" [style]="{ backgroundColor: this.getBadgeColor(day.date) }">
+      Past Date
+    </span>
+    <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) > 0 && !isInPast(day.date)"
           [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
     >Free: {{ calcFreeSlots(day.date) }}</span
     >
-    <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) <= 0"
+    <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) <= 0 && !isInPast(day.date)"
           [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
     >Booked out!</span
     >
@@ -117,13 +120,22 @@
     <h5 class="modal-title" id="confirmationModalLabel">
       <div *ngIf="modalData.event.meta.isMyAppointment; then thenBlockHeader else elseBlockHeader"></div>
       <ng-template #thenBlockHeader>
-        <div>
+        <div *ngIf="!modalData.event.meta.pastTime">
           Confirmation
+        </div>
+        <div *ngIf="modalData.event.meta.pastTime">
+          Notice
         </div>
       </ng-template>
       <ng-template #elseBlockHeader>
-        <div *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity">Confirmation</div>
-        <div *ngIf="modalData.event.meta.curCapacity >= modalData.event.meta.maxCapacity">Notice</div>
+        <div
+          *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity && !modalData.event.meta.pastTime">
+          Confirmation
+        </div>
+        <div
+          *ngIf="modalData.event.meta.curCapacity >= modalData.event.meta.maxCapacity || modalData.event.meta.pastTime">
+          Notice
+        </div>
       </ng-template>
     </h5>
     <div *ngIf="modalData.event.meta.isMyAppointment"></div>
@@ -131,15 +143,25 @@
   <div class="modal-body">
     <div *ngIf="modalData.event.meta.isMyAppointment; then thenBlockBody else elseBlockBody"></div>
     <ng-template #thenBlockBody>
-      <div>
+      <div *ngIf="!modalData.event.meta.pastTime">
         Are you certain you want to cancel your appointment on {{ modalData?.event?.start | date:'medium' }}?
+      </div>
+      <div *ngIf="modalData.event.meta.pastTime">
+        Your Appointment on {{ modalData?.event?.start | date:'medium' }} has already passed
       </div>
     </ng-template>
     <ng-template #elseBlockBody>
-      <div *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity">Are you certain you want to
+      <div *ngIf="modalData.event.meta.pastTime">
+        The Appointment on {{ modalData?.event?.start | date:'medium' }} has already passed
+      </div>
+      <div
+        *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity && !modalData.event.meta.pastTime">
+        Are you certain you want to
         schedule the appointment for {{ modalData?.event?.start | date:'medium' }}?
       </div>
-      <div *ngIf="modalData.event.meta.curCapacity >= modalData.event.meta.maxCapacity">The Appointment
+      <div
+        *ngIf="modalData.event.meta.curCapacity >= modalData.event.meta.maxCapacity && !modalData.event.meta.pastTime">
+        The Appointment
         on {{ modalData?.event?.start | date:'medium' }} is fully booked
       </div>
     </ng-template>
@@ -150,7 +172,8 @@
       <button type="button" class="btn btn-secondary" (click)="close()">
         Close
       </button>
-      <button type="button" class="btn btn-primary" (click)="cancelAppointment(modalData.event); close()">
+      <button *ngIf="!modalData.event.meta.pastTime" type="button" class="btn btn-primary"
+              (click)="cancelAppointment(modalData.event); close()">
         Confirm
       </button>
     </ng-template>
@@ -158,8 +181,10 @@
       <button type="button" class="btn btn-secondary" (click)="close()">
         Close
       </button>
-      <button *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity" type="button"
-              class="btn btn-primary" (click)="bookAppointment(modalData.event); close()">
+      <button
+        *ngIf="modalData.event.meta.curCapacity < modalData.event.meta.maxCapacity && !modalData.event.meta.pastTime"
+        type="button"
+        class="btn btn-primary" (click)="bookAppointment(modalData.event); close()">
         Confirm
       </button>
     </ng-template>

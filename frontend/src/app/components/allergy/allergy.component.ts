@@ -4,6 +4,8 @@ import {AllergyService} from "../../services/allergy.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
+import {ErrorFormatterService} from "../../services/error-formatter.service";
 
 @Component({
   selector: 'app-allergy',
@@ -14,7 +16,9 @@ export class AllergyComponent implements OnInit {
 
   constructor(
     private allergyService: AllergyService,
-    private notification: ToastrService
+    private notification: ToastrService,
+    private errorFormatterService: ErrorFormatterService,
+    private router: Router
   ) {
   }
 
@@ -34,9 +38,22 @@ export class AllergyComponent implements OnInit {
         next: data => {
           this.notification.success('Successfully created ' + data.name + ' Allergy');
         },
-        error: error => {
-          this.notification.error('Error creating Allergy');
-          console.error('Error creating User', error);
+        error: async error => {
+          switch (error.status) {
+            case 422:
+              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Allergy`, {
+                enableHtml: true,
+                timeOut: 10000
+              });
+              break;
+            case 401:
+              this.notification.error(await error.error.text(), `Could not create Allergy`);
+              this.router.navigate(['/']);
+              break;
+            default:
+              this.notification.error(await error.error.text(), `Could not create Allergy`);
+              break;
+          }
         }
       });
     }

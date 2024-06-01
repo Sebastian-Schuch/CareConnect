@@ -6,13 +6,13 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
-public record PatientCreateDto(
+public record PatientDtoCreate(
     @NotBlank(message = "cannot be empty")
     @Size(max = 10, min = 10, message = "must have 10 digits")
     String svnr,
 
     @NotBlank
-    @Email(message = "Please provide a valid email address")
+    @Email(message = "is not a valid email address")
     String email,
 
     @NotBlank(message = "cannot be empty")

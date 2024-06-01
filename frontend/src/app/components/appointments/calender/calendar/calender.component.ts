@@ -3,10 +3,12 @@ import {
   addMonths,
   endOfMonth,
   getDate,
+  getDay,
   getHours,
   getMinutes,
   getMonth,
   getYear,
+  isBefore,
   startOfMonth,
   subMonths,
 } from 'date-fns';
@@ -30,6 +32,8 @@ import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
 import {AppointmentCalendarDto, AppointmentCreateDto} from "../../../../dtos/appointment";
 import {UserDetailDto} from "../../../../dtos/user";
 import {OpeningHoursDto} from "../../../../dtos/opening-hours";
+import {Router} from "@angular/router";
+import {ErrorFormatterService} from "../../../../services/error-formatter.service";
 
 
 @Component({
@@ -87,7 +91,10 @@ export class CalenderComponent implements OnInit {
     private modal: NgbModal,
     private service: CalenderService,
     private notification: ToastrService,
-    private appointmentService: AppointmentService) {
+    private appointmentService: AppointmentService,
+    private errorFormatterService: ErrorFormatterService,
+    private router: Router
+  ) {
   }
 
   ngOnInit(): void {
@@ -177,7 +184,11 @@ export class CalenderComponent implements OnInit {
    * @param date the date to set the badge color for
    */
   public getBadgeColor(date: Date) {
-    return this.service.getEventColor(this.calcCurrentSlots(date), this.calcMaxSlots(date)).primary;
+    return this.service.getEventColorBadgeMonth(this.calcCurrentSlots(date), this.calcMaxSlots(date), date, this.service.getDayOfWeek(this.outpatientDepartment.openingHours, getDay(date))).primary;
+  }
+
+  public isInPast(date: Date): boolean {
+    return this.service.isInPast(date, this.service.getDayOfWeek(this.outpatientDepartment.openingHours, getDay(date)));
   }
 
   /**
@@ -196,7 +207,7 @@ export class CalenderComponent implements OnInit {
    * @param date the date to calculate the free slots for
    */
   public calcFreeSlots(date: Date): number {
-    let currentday = this.events.filter(event => (event.start.getFullYear() === date.getFullYear() && event.start.getMonth() === date.getMonth() && event.start.getDate() === date.getDate() && event.meta.maxCapacity >= 0 && event.meta.curCapacity >= 0));
+    let currentday = this.events.filter(event => (event.start.getFullYear() === date.getFullYear() && event.start.getMonth() === date.getMonth() && event.start.getDate() === date.getDate() && event.meta.maxCapacity >= 0 && event.meta.curCapacity >= 0 && !event.meta.pastTime));
     let maxCap = currentday.reduce((acc, event) => acc + event.meta.maxCapacity, 0);
     let curCap = currentday.reduce((acc, event) => acc + event.meta.curCapacity, 0);
     return maxCap - curCap;
@@ -222,9 +233,25 @@ export class CalenderComponent implements OnInit {
           this.notification.success('Success', `Appointment booked at ${this.getStringDate(appointment.startDate.toString())}`);
           this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
         },
-        error: error => {
-          console.error(error);
-          this.notification.error('Error', 'Could not book appointment');
+        error: async error => {
+          switch (error.status) {
+            case 422:
+              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not book appointment`, {
+                enableHtml: true,
+                timeOut: 10000
+              });
+              break;
+            case 400:
+              this.notification.error(`No Patient selected`, `Could not book appointment`);
+              break;
+            case 401:
+              this.notification.error(await error.error.text(), `Could not book appointment`);
+              this.router.navigate(['/']);
+              break;
+            default:
+              this.notification.error(await error.error.text(), `Could not book appointment`);
+              break;
+          }
         }
       });
     } else {
@@ -374,4 +401,6 @@ export class CalenderComponent implements OnInit {
       });
     });
   }
+
+  protected readonly isBefore = isBefore;
 }

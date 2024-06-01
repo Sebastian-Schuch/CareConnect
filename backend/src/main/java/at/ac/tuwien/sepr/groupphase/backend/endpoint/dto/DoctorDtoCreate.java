@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public record DoctorDtoCreate(
     @NotBlank
-    @Email(message = "Please provide a valid email address")
+    @Email(message = "is not a valid email address")
     String email,
 
     @NotBlank(message = "cannot be empty")

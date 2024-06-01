@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -54,37 +56,43 @@ public class PatientEndpoint {
     @Secured("SECRETARY")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody PatientCreateDto toCreate) {
+    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody PatientDtoCreate toCreate) {
         LOG.info("POST " + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
-        PDDocument accountDataSheet = userService.createPatient(toCreate);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ByteArrayInputStream inputStream = null;
         try {
-            accountDataSheet.save(outputStream);
-            accountDataSheet.close();
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attachment; filename=accountDataSheet.pdf");
+            this.userService.findApplicationUserByEmail(toCreate.email());
+        } catch (NotFoundException ex) {
+            // User was not found and therefor can be created
+            PDDocument accountDataSheet = userService.createPatient(toCreate);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ByteArrayInputStream inputStream = null;
+            try {
+                accountDataSheet.save(outputStream);
+                accountDataSheet.close();
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", "attachment; filename=accountDataSheet.pdf");
 
-            byte[] bytes = outputStream.toByteArray();
+                byte[] bytes = outputStream.toByteArray();
 
-            inputStream = new ByteArrayInputStream(bytes);
-            return ResponseEntity
-                .created(URI.create(""))
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(inputStream));
-        } catch (IOException e) {
-            throw new PdfCouldNotBeCreatedException("Could not create PDF document: " + e.getMessage());
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    LOG.error("Could not close input stream: {}", e.getMessage());
+                inputStream = new ByteArrayInputStream(bytes);
+                return ResponseEntity
+                    .created(URI.create(""))
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(inputStream));
+            } catch (IOException e) {
+                throw new PdfCouldNotBeCreatedException("Could not create PDF document: " + e.getMessage());
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        LOG.error("Could not close input stream: {}", e.getMessage());
+                    }
                 }
             }
         }
+        throw new ConflictException("User with email " + toCreate.email() + " already exists");
     }
 
     /**

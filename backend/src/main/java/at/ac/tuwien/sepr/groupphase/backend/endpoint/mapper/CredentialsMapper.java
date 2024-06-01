@@ -2,7 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import org.mapstruct.Mapper;
 
@@ -31,5 +31,5 @@ public interface CredentialsMapper {
      * @param patientCreateDto the patientCreateDto to convert
      * @return the credentialCreateDto
      */
-    CredentialDtoCreate patientCreateDtoToCredentialCreateDto(PatientCreateDto patientCreateDto);
+    CredentialDtoCreate patientCreateDtoToCredentialCreateDto(PatientDtoCreate patientCreateDto);
 }

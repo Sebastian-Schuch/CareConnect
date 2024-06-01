@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 
@@ -15,7 +15,7 @@ public interface PatientService {
      * @param credentials the credentials of the patient
      * @return the created patient
      */
-    PatientDto createPatient(PatientCreateDto toCreate, Credential credentials);
+    PatientDto createPatient(PatientDtoCreate toCreate, Credential credentials);
 
     /**
      * Get the specified patient.

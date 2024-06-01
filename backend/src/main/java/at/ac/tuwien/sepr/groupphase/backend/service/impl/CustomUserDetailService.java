@@ -3,8 +3,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
@@ -121,7 +121,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public PDDocument createPatient(PatientCreateDto toCreate) {
+    public PDDocument createPatient(PatientDtoCreate toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.patientCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.patientCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.PATIENT);
         PatientDto patientDto = userCreationFacadeService.createUser(toCreate, credential);
