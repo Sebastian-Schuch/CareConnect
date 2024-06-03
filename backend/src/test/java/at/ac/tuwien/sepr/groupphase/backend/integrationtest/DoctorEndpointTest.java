@@ -65,6 +65,10 @@ public class DoctorEndpointTest extends TestBase {
     @Autowired
     private SecurityProperties securityProperties;
 
+    public DoctorEndpointTest() {
+        super("doctor");
+    }
+
 
     @BeforeEach
     public void beforeEach() {

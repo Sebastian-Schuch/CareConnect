@@ -25,6 +25,10 @@ public class DoctorServiceTest extends TestBase {
     @Autowired
     private DoctorService doctorService;
 
+    public DoctorServiceTest() {
+        super("doctor");
+    }
+
     @Test
     public void givenValidDoctorCreateDto_whenCreateDoctor_thenCreatedDoctorIsReturned() {
         DoctorDtoCreate toCreate = new DoctorDtoCreate("a@a.a", "a", "b");

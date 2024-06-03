@@ -34,6 +34,10 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
     @Autowired
     private ObjectMapper mapper;
 
+    public AllergyEndpointTest() {
+        super("allergy");
+    }
+
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})

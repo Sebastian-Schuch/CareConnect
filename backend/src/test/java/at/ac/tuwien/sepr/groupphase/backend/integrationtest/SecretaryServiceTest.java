@@ -29,6 +29,10 @@ public class SecretaryServiceTest extends TestBase {
     @Autowired
     SecretaryRepository secretaryRepository;
 
+    public SecretaryServiceTest() {
+        super("secretary");
+    }
+
 
     @Test
     public void givenNewlyCreatedSecretary_whenGettingSecretaryWithId_thenReturnSecretary() {

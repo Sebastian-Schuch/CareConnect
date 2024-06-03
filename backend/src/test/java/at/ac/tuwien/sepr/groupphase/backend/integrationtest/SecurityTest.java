@@ -90,6 +90,10 @@ public class SecurityTest extends TestBase {
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzZWN1cmUtYmFja2VuZCIsImF1ZCI6InNlY3VyZS1hcHAiLCJzdWIiOiJhZG1pbiIsImV4cC" +
             "I6MTcxNTUyMjkyMywicm9sIjpbIkFETUlOIl19.3Srm1hYPbIsSQLOEv92yRERxSmPpsECw72Juna-WHDy7Y8yM1SMnDGe-vuRaFuAfLjRylvER7H6f5MBQFBwDPw";
 
+    public SecurityTest() {
+        super("security");
+    }
+
 
     @BeforeEach
     public void beforeEach() {

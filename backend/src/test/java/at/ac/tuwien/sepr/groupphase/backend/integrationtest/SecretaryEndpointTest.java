@@ -58,6 +58,10 @@ public class SecretaryEndpointTest extends TestBase {
     @Autowired
     CredentialRepository credentialRepository;
 
+    public SecretaryEndpointTest() {
+        super("secretary");
+    }
+
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();

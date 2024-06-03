@@ -29,6 +29,10 @@ public class PatientServiceTest extends TestBase {
     @Autowired
     PatientRepository patientRepository;
 
+    public PatientServiceTest() {
+        super("patient");
+    }
+
     @Test
     public void givenValidPatientCreateDto_whenCreatePatient_thenCreatedPatientIsReturned() {
         PatientDtoCreate toCreate = new PatientDtoCreate("0123456789", "a@a.a", "a", "b", null, null);
