@@ -11,7 +11,7 @@ public class Station {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Long capacity;
+    private int capacity;
 
     public void setId(long id) {
         this.id = id;
@@ -21,7 +21,7 @@ public class Station {
         this.name = name;
     }
 
-    public void setCapacity(Long capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
@@ -33,7 +33,7 @@ public class Station {
         return name;
     }
 
-    public Long getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
