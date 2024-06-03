@@ -34,6 +34,10 @@ public class StationEndpointTest extends TestBase {
     @Autowired
     private ObjectMapper objectMapper;
 
+    public StationEndpointTest() {
+        super("station");
+    }
+
     @Test
     public void givenStation_whenCreateStation_thenStationIsCreated() throws Exception {
         // given

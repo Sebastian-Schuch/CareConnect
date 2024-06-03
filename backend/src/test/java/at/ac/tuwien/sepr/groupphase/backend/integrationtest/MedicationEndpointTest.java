@@ -47,6 +47,10 @@ public class MedicationEndpointTest extends TestBase {
     @Autowired
     private MedicationMapper medicationMapper;
 
+    public MedicationEndpointTest() {
+        super("medication");
+    }
+
 
     @BeforeEach
     public void beforeEach() {

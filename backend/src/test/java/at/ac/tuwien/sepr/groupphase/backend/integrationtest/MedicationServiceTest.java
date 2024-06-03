@@ -28,6 +28,11 @@ public class MedicationServiceTest extends TestBase {
     @Autowired
     MedicationRepository medicationRepository;
 
+    public MedicationServiceTest() {
+        super("medication");
+    }
+
+
     @Test
     public void givenNewlyCreatedMedication_whenGettingMedicationWithId_thenReturnMedication() {
         MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");

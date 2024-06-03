@@ -57,6 +57,10 @@ public class PatientEndpointTest extends TestBase {
     @Autowired
     CredentialRepository credentialRepository;
 
+    public PatientEndpointTest() {
+        super("patient");
+    }
+
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();

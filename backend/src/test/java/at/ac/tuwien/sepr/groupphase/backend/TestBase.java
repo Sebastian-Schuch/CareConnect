@@ -9,10 +9,16 @@ public abstract class TestBase {
     @Autowired
     DataGenerator dataGenerator;
 
+    private final String dataType;
+
+    public TestBase(String dataType) {
+        this.dataType = dataType;
+    }
+
 
     @BeforeEach
     public void setupDb() {
-        dataGenerator.generateData();
+        dataGenerator.generateData(dataType);
     }
 
     @AfterEach

@@ -64,6 +64,10 @@ class TreatmentEndpointTest extends TestBase {
     @Autowired
     OutpatientDepartmentRepository outpatientDepartmentRepository;
 
+    public TreatmentEndpointTest() {
+        super("treatment");
+    }
+
     @BeforeEach
     public void beforeEach() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();

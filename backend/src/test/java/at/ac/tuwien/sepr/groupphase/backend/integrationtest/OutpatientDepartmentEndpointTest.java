@@ -99,6 +99,10 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
 
     private long testObjectId = 1L;
 
+    public OutpatientDepartmentEndpointTest() {
+        super("outpatientDepartment");
+    }
+
     @BeforeEach
     public void setUp() {
         testObjectId = outpatientDepartmentRepository.save(outpatientDepartment).getId();

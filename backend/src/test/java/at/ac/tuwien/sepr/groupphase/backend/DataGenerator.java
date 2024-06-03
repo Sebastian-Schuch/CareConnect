@@ -110,9 +110,20 @@ public class DataGenerator {
     /**
      * Generates dummy data in the database. This method is executed once when the component is instantiated.
      */
-    public void generateData() {
+    public void generateData(String dataType) {
         LOGGER.info("Generating data…");
-        generateDataInDb();
+        switch (dataType) {
+            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false);
+            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false);
+            case "station" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false);
+            case "appointment" -> generateDataInDb(false, false, false, true, false, true, false, true, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false);
+            case "treatment" -> generateDataInDb(false, true, false, true, true, true, false, false, true, true);
+        }
         LOGGER.info("Finished generating data without error.");
     }
 
@@ -140,17 +151,38 @@ public class DataGenerator {
         credentialRepository.deleteAll();
     }
 
-    private void generateDataInDb() {
-        generateDataForAllergies();
-        generateDataForDoctors();
-        generateDataForSecretary();
-        generateDataForPatients();
-        generateDataForMedication();
-        generateDataForOutpatientDepartments();
-        generateDataForStations();
-        generateDataForAppointments();
-        generateDataForTreatmentMedicines();
-        generateDataForTreatments();
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
+                                  boolean generateForStations, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
+        if (generateForAllergies) {
+            generateDataForAllergies();
+        }
+        if (generateForDoctors) {
+            generateDataForDoctors();
+        }
+        if (generateForSecretary) {
+            generateDataForSecretary();
+        }
+        if (generateForPatients) {
+            generateDataForPatients();
+        }
+        if (generateForMedication) {
+            generateDataForMedication();
+        }
+        if (generateForOutpatientDepartments) {
+            generateDataForOutpatientDepartments();
+        }
+        if (generateForStations) {
+            generateDataForStations();
+        }
+        if (generateForAppointments) {
+            generateDataForAppointments();
+        }
+        if (generateForTreatmentMedicines) {
+            generateDataForTreatmentMedicines();
+        }
+        if (generateForTreatments) {
+            generateDataForTreatments();
+        }
     }
 
     private void generateDataForAllergies() {
@@ -162,162 +194,210 @@ public class DataGenerator {
     }
 
     private void generateDataForDoctors() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Doctor doctor = new Doctor();
-
-            Credential credential = new Credential();
-            credential.setEmail("doctor" + i + "@email.com");
-            credential.setFirstName("Doctor" + i);
-            credential.setLastName("Doctor" + i);
-            credential.setPassword("dPassword" + i);
-            credential.setActive(true);
-            credential.setRole(Role.DOCTOR);
-            credential.setInitialPassword(false);
-            doctor.setCredential(credential);
-
-            doctorRepository.save(doctor);
-        }
+        //Normal Doctors
+        doctorRepository.save(setDoctor("doctor.eggman@email.com", "Doctor", "Eggman", "ChaosEmeralds", true, Role.DOCTOR, false));
+        doctorRepository.save(setDoctor("doctor.oetker@email.com", "Doctor", "Oetker", "SchokoladenPizza", true, Role.DOCTOR, false));
+        doctorRepository.save(setDoctor("doctor.johnnySins@email.com", "Doctor", "JohnnySins", "RohreVerleger", true, Role.DOCTOR, false));
+        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis", true, Role.DOCTOR, false));
+        doctorRepository.save(setDoctor("doctor.strange@email.com", "Doctor", "Strange", "TimeStone", true, Role.DOCTOR, false));
+        //Special Doctors (Inactive + Initial Password)
+        doctorRepository.save(setDoctor("doctor.inactive@email.com", "Doctor", "Inactive", "404NotFound", false, Role.DOCTOR, false));
+        doctorRepository.save(setDoctor("doctor.initial@email.com", "Doctor", "Initial", "InitialPassword", true, Role.DOCTOR, true));
     }
 
-    private void generateDataForSecretary() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Secretary secretary = new Secretary();
-
-
-            Credential credential = new Credential();
-            credential.setEmail("secretary" + i + "@email.com");
-            credential.setFirstName("Secretary" + i);
-            credential.setLastName("Secretary" + i);
-            credential.setPassword("sPassword" + i);
-            credential.setActive(true);
-            credential.setRole(Role.SECRETARY);
-            credential.setInitialPassword(false);
-            secretary.setCredential(credential);
-
-            secretaryRepository.save(secretary);
-        }
+    private Doctor setDoctor(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+        Doctor doctor = new Doctor();
+        Credential credential = new Credential();
+        credential.setEmail(email);
+        credential.setFirstName(firstName);
+        credential.setLastName(lastName);
+        credential.setPassword(password);
+        credential.setActive(active);
+        credential.setRole(role);
+        credential.setInitialPassword(initialPassword);
+        doctor.setCredential(credential);
+        return doctor;
     }
 
     private void generateDataForPatients() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Patient patient = new Patient();
+        //Normal Patients
+        patientRepository.save(setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, Role.PATIENT, false, "6912120520"));
+        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, Role.PATIENT, false, "6912225164"));
+        patientRepository.save(setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, Role.PATIENT, false, "6912225111"));
+        patientRepository.save(setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, Role.PATIENT, false, "6912034156"));
+        patientRepository.save(setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, Role.PATIENT, false, "6912222173"));
+        patientRepository.save(setPatient("sebastian.schuch@email.com", "Sebastian", "Schuch", "scHuchWirHabenSchonWiederEinenFehlerBeimEncrypten", true, Role.PATIENT, false, "6912222156"));
+        //Special Patients (Inactive + Initial Password)
+        patientRepository.save(setPatient("patient.inactive@email.com", "Patient", "Inactive", "404NotFound", false, Role.PATIENT, false, "0000000000"));
+        patientRepository.save(setPatient("patient.intial@email.com", "Patient", "Initial", "InitialPassword", true, Role.PATIENT, true, "1111111111"));
+    }
 
+    private Patient setPatient(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword, String svnr) {
+        Patient patient = new Patient();
+        Credential credential = new Credential();
+        credential.setEmail(email);
+        credential.setFirstName(firstName);
+        credential.setLastName(lastName);
+        credential.setPassword(password);
+        credential.setActive(active);
+        credential.setRole(role);
+        credential.setInitialPassword(initialPassword);
+        patient.setCredential(credential);
+        patient.setSvnr(svnr);
+        return patient;
+    }
 
-            Credential credential = new Credential();
-            credential.setEmail("patient" + i + "@email.com");
-            credential.setFirstName("Patient" + i);
-            credential.setLastName("Patient" + i);
-            credential.setPassword("pPassword" + i);
-            credential.setActive(true);
-            credential.setRole(Role.PATIENT);
-            credential.setInitialPassword(false);
-            patient.setCredential(credential);
+    private void generateDataForSecretary() {
+        //Normal Secretary
+        secretaryRepository.save(setSecretary("secretary1@email.com", "Secretary", "One", "OnePassword", true, Role.SECRETARY, false));
+        secretaryRepository.save(setSecretary("secretary2@email.com", "Secretary", "Two", "TwoPassword", true, Role.SECRETARY, false));
+        secretaryRepository.save(setSecretary("secretary3@email.com", "Secretary", "Three", "ThreePassword", true, Role.SECRETARY, false));
+        secretaryRepository.save(setSecretary("secretary4@email.com", "Secretary", "Four", "FourPassword", true, Role.SECRETARY, false));
+        secretaryRepository.save(setSecretary("secretary5@email.com", "Secretary", "Five", "FivePassword", true, Role.SECRETARY, false));
+        //Special Secretary (Inactive + Initial Password)
+        secretaryRepository.save(setSecretary("secretary.inactive.email.com", "Secretary", "Inactive", "404NotFound", false, Role.SECRETARY, false));
+        secretaryRepository.save(setSecretary("secretary.initial.email.com", "Secretary", "Initial", "InitialPassword", true, Role.SECRETARY, true));
+    }
 
-            String svnr = "";
-            for (int j = 0; j < 10; j++) {
-                svnr += (int) (Math.random() * 10);
-            }
-            patient.setSvnr(svnr);
-
-            patientRepository.save(patient);
-        }
+    private Secretary setSecretary(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+        Secretary secretary = new Secretary();
+        Credential credential = new Credential();
+        credential.setEmail(email);
+        credential.setFirstName(firstName);
+        credential.setLastName(lastName);
+        credential.setPassword(password);
+        credential.setActive(active);
+        credential.setRole(role);
+        credential.setInitialPassword(initialPassword);
+        secretary.setCredential(credential);
+        return secretary;
     }
 
     private void generateDataForMedication() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Medication medication = new Medication();
-            medication.setName("Medication" + i);
-            medication.setActive(true);
-            medicationRepository.save(medication);
-        }
+        medicationRepository.save(setMedication("Medication1", true));
+        medicationRepository.save(setMedication("Medication2", true));
+        medicationRepository.save(setMedication("Medication3", true));
+        medicationRepository.save(setMedication("Medication4", true));
+        medicationRepository.save(setMedication("Medication5", true));
+        medicationRepository.save(setMedication("WieAgra", true));
+
+        medicationRepository.save(setMedication("InactiveMedication", false));
+    }
+
+    private Medication setMedication(String name, Boolean active) {
+        Medication medication = new Medication();
+        medication.setName(name);
+        medication.setActive(active);
+        return medication;
     }
 
     private void generateDataForOutpatientDepartments() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            OutpatientDepartment outpatientDepartment = new OutpatientDepartment();
-            outpatientDepartment.setName("OutpatientDepartment" + i);
-            outpatientDepartment.setDescription("Description" + i);
-            outpatientDepartment.setCapacity((int) (i * 5) % 25 + 5);
+        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00")));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00")));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00")));
+    }
 
-            OpeningHours openingHours = new OpeningHours();
-            String hours = "00:00-24:00";
-            openingHours.setMonday(hours);
-            openingHours.setTuesday(hours);
-            openingHours.setWednesday(hours);
-            openingHours.setThursday(hours);
-            openingHours.setFriday(hours);
-            openingHours.setSaturday(hours);
-            openingHours.setSunday(hours);
-            outpatientDepartment.setOpeningHours(openingHours);
+    private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours) {
+        OutpatientDepartment outpatientDepartment = new OutpatientDepartment();
+        outpatientDepartment.setName(name);
+        outpatientDepartment.setDescription(description);
+        outpatientDepartment.setCapacity(capacity);
+        outpatientDepartment.setOpeningHours(openingHours);
+        return outpatientDepartment;
+    }
 
-            outpatientDepartmentRepository.save(outpatientDepartment);
-        }
+    private OpeningHours setOpeningHours(String monday, String tuesday, String wednesday, String thursday, String friday, String saturday, String sunday) {
+        OpeningHours openingHours = new OpeningHours();
+        openingHours.setMonday(monday);
+        openingHours.setTuesday(tuesday);
+        openingHours.setWednesday(wednesday);
+        openingHours.setThursday(thursday);
+        openingHours.setFriday(friday);
+        openingHours.setSaturday(saturday);
+        openingHours.setSunday(sunday);
+        return openingHours;
     }
 
     private void generateDataForStations() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Station station = new Station();
-            station.setName("Station" + i);
-            station.setCapacity((int) (((i * 5) % 25) + 5));
-            stationRepository.save(station);
-        }
+        stationRepository.save(setStation("Station1", 5));
+        stationRepository.save(setStation("Station2", 10));
+        stationRepository.save(setStation("Station3", 15));
+        stationRepository.save(setStation("Station4", 20));
+        stationRepository.save(setStation("Station5", 25));
+    }
+
+    private Station setStation(String name, int capacity) {
+        Station station = new Station();
+        station.setName(name);
+        station.setCapacity(capacity);
+        return station;
     }
 
     private void generateDataForAppointments() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Appointment appointment = new Appointment();
+        //Three appointments for the same outpatient department at the same time to fill up the capacity
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 8, 30), "Notes1"));
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 8, 30), "Notes2"));
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 8, 30), "Notes3"));
 
-            appointment.setPatient(patientRepository.findAll().get((int) (i)));
+        //Two appointments for the same outpatient department at the same time - one spot left
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(3), outpatientDepartmentRepository.findAll().get(0), new Date(2022, Calendar.JANUARY, 1, 13, 30), new Date(2022, Calendar.JANUARY, 1, 14, 0), "Notes4"));
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(4), outpatientDepartmentRepository.findAll().get(0), new Date(2022, Calendar.JANUARY, 1, 13, 30), new Date(2022, Calendar.JANUARY, 1, 14, 0), "Notes5"));
+    }
 
-            appointment.setOutpatientDepartment(outpatientDepartmentRepository.findAll().get(1));
 
-            appointment.setStartDate(new Date(2022, Calendar.JANUARY, 1, 8, 0));
-            appointment.setEndDate(new Date(2022, Calendar.JANUARY, 1, 8, 30));
-            appointment.setNotes("Notes" + i);
-            appointmentRepository.save(appointment);
-        }
+    private Appointment setAppointment(Patient patient, OutpatientDepartment outpatientDepartment, Date startDate, Date endDate, String notes) {
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setOutpatientDepartment(outpatientDepartment);
+        appointment.setStartDate(startDate);
+        appointment.setEndDate(endDate);
+        appointment.setNotes(notes);
+        return appointment;
     }
 
     private void generateDataForTreatmentMedicines() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, "mg", new Date(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, "mg", new Date(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, "mg", new Date(2022, Calendar.JANUARY, 1, 8, 0)));
+    }
 
-            treatmentMedicine.setMedicine(medicationRepository.findMedicationById(i));
-
-            treatmentMedicine.setAmount((i * 50) % 300 + 50);
-            treatmentMedicine.setUnitOfMeasurement("mg");
-            treatmentMedicine.setTimeOfAdministration(new Date());
-            treatmentMedicineRepository.save(treatmentMedicine);
-        }
+    private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, String unitOfMeasurement, Date timeOfAdministration) {
+        TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
+        treatmentMedicine.setMedicine(medication);
+        treatmentMedicine.setAmount(amount);
+        treatmentMedicine.setUnitOfMeasurement(unitOfMeasurement);
+        treatmentMedicine.setTimeOfAdministration(timeOfAdministration);
+        return treatmentMedicine;
     }
 
     private void generateDataForTreatments() {
-        for (long i = 0; i < numberOfTestData; i++) {
-            Treatment treatment = new Treatment();
-            ;
-            treatment.setTreatmentTitle("Title" + i);
+        List<TreatmentMedicine> medicine = new ArrayList<>();
+        medicine.add(treatmentMedicineRepository.findAll().get(0));
+        List<Doctor> doctors = new ArrayList<>();
+        doctors.add(doctorRepository.findAll().get(0));
+        treatmentRepository.save(
+            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, null));
+        treatmentRepository.save(
+            setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
+        doctors.add(doctorRepository.findAll().get(1));
+        medicine.clear();
+        medicine.add(treatmentMedicineRepository.findAll().get(1));
+        medicine.add(treatmentMedicineRepository.findAll().get(2));
+        treatmentRepository.save(
+            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors, medicine));
+    }
 
-            treatment.setTreatmentStart(new Date(2022, Calendar.JANUARY, 1, 8, 0));
-            treatment.setTreatmentEnd(new Date(2022, Calendar.JANUARY, 1, 8, 30));
-
-            treatment.setPatient(patientRepository.findAll().get((int) (i)));
-
-            treatment.setOutpatientDepartment(outpatientDepartmentRepository.findAll().get((int) i));
-
-            treatment.setTreatmentText("Text" + i);
-
-            List<Doctor> doctors = new ArrayList<>();
-            for (long j = 0; j < i; j++) {
-                doctors.add(doctorRepository.findDoctorById(j));
-            }
-            treatment.setDoctors(doctors);
-
-            List<TreatmentMedicine> treatmentMedicines = new ArrayList<>();
-            treatmentMedicines.add(treatmentMedicineRepository.findAll().get((int) (i)));
-            treatment.setMedicines(treatmentMedicines);
-
-            treatmentRepository.save(treatment);
-        }
+    private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment, String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {
+        Treatment treatment = new Treatment();
+        treatment.setTreatmentTitle(treatmentTitle);
+        treatment.setTreatmentStart(treatmentStart);
+        treatment.setTreatmentEnd(treatmentEnd);
+        treatment.setPatient(patient);
+        treatment.setOutpatientDepartment(outpatientDepartment);
+        treatment.setTreatmentText(treatmentText);
+        treatment.setDoctors(doctors);
+        treatment.setMedicines(medicines);
+        return treatment;
     }
 }
 

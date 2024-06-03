@@ -10,5 +10,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "datagen"})
 public class TreatmentServiceTest extends TestBase {
+    public TreatmentServiceTest() {
+        super("treatment");
+    }
     //TODO: Add further tests as soon as test-data is available (Issue #41)
 }
