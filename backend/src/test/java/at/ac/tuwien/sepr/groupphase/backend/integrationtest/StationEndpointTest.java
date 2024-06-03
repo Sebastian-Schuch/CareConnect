@@ -93,7 +93,7 @@ public class StationEndpointTest extends TestBase {
     @Test
     public void givenInvalidStation_whenCreateStation_then400() throws Exception {
         // given
-        StationDtoCreate stationDtoCreate = new StationDtoCreate(STATION_NAME, -1L);
+        StationDtoCreate stationDtoCreate = new StationDtoCreate(STATION_NAME, -1);
 
         // when
         MockHttpServletResponse response = mockMvc.perform(post(MESSAGE_BASE_URI)

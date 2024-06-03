@@ -87,9 +87,12 @@ public class DataGenerator {
     /**
      * Executed once when the component is instantiated. Inserts some dummy data.
      */
-    public DataGenerator(AllergyRepository allergyRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository, DoctorRepository doctorRepository,
-                         MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository, OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
-                         SecretaryRepository secretaryRepository, StationRepository stationRepository, TreatmentMedicineRepository treatmentMedicineRepository, TreatmentRepository treatmentRepository) {
+    public DataGenerator(AllergyRepository allergyRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
+                         DoctorRepository doctorRepository,
+                         MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
+                         OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
+                         SecretaryRepository secretaryRepository, StationRepository stationRepository, TreatmentMedicineRepository treatmentMedicineRepository,
+                         TreatmentRepository treatmentRepository) {
         this.allergyRepository = allergyRepository;
         this.appointmentRepository = appointmentRepository;
         this.credentialRepository = credentialRepository;
@@ -255,7 +258,7 @@ public class DataGenerator {
         for (long i = 0; i < numberOfTestData; i++) {
             Station station = new Station();
             station.setName("Station" + i);
-            station.setCapacity(((i * 5) % 25) + 5);
+            station.setCapacity((int) (((i * 5) % 25) + 5));
             stationRepository.save(station);
         }
     }

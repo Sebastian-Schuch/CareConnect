@@ -13,12 +13,12 @@ public class StationDtoCreate {
     private String name;
 
     @Min(value = 0, message = "Capacity must be greater than 0")
-    private Long capacity;
+    private int capacity;
 
     public StationDtoCreate() {
     }
 
-    public StationDtoCreate(String name, Long capacity) {
+    public StationDtoCreate(String name, int capacity) {
         this.name = name;
         this.capacity = capacity;
     }
@@ -27,7 +27,7 @@ public class StationDtoCreate {
         this.name = name;
     }
 
-    public void setCapacity(Long capacity) {
+    public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
@@ -35,7 +35,7 @@ public class StationDtoCreate {
         return name;
     }
 
-    public Long getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 }
