@@ -22,7 +22,7 @@ import {
 import {CalendarEvent} from "angular-calendar";
 import {EventColor} from "calendar-utils";
 import {OutpatientDepartmentDto} from "../dtos/outpatient-department";
-import {AppointmentCalendarDto, AppointmentDetailDto} from "../dtos/appointment";
+import {AppointmentDto, AppointmentDtoCalendar} from "../dtos/appointment";
 import {OpeningHoursDayDto, OpeningHoursDto} from "../dtos/opening-hours";
 
 export const colors: Record<string, EventColor> = {
@@ -137,7 +137,7 @@ export class CalenderService {
    * @param startDate the start date of the time period
    * @param endDate the end date of the time period
    */
-  public getCalendarEventDataForSpecifiedTime(outpatientDepartment: OutpatientDepartmentDto, bookedAppointments: AppointmentCalendarDto[], patientAppointment: AppointmentDetailDto[], startDate: Date, endDate: Date): CalendarEvent[] {
+  public getCalendarEventDataForSpecifiedTime(outpatientDepartment: OutpatientDepartmentDto, bookedAppointments: AppointmentDtoCalendar[], patientAppointment: AppointmentDto[], startDate: Date, endDate: Date): CalendarEvent[] {
     let events: CalendarEvent[] = [];
     for (let currentDiff = 0; addDays(startDate, currentDiff) < endDate; currentDiff++) {
       let currentOpeningHours: OpeningHoursDayDto = this.getDayOfWeek(outpatientDepartment.openingHours, getDay(addDays(startDate, currentDiff)));
@@ -155,8 +155,8 @@ export class CalenderService {
    * @param outpatientDepartmentId the id of the outpatient department
    * @param patientAppointment the appointments of the patient
    */
-  private getPatientAppointmentFromOutpatientDepartment(outpatientDepartmentId: number, patientAppointment: AppointmentDetailDto[]): AppointmentDetailDto[] {
-    let appointmentsFromThisOutpatientDepartment: AppointmentDetailDto[] = [];
+  private getPatientAppointmentFromOutpatientDepartment(outpatientDepartmentId: number, patientAppointment: AppointmentDto[]): AppointmentDto[] {
+    let appointmentsFromThisOutpatientDepartment: AppointmentDto[] = [];
     for (let i = 0; i < patientAppointment.length; i++) {
       if (patientAppointment[i].outpatientDepartment.id == outpatientDepartmentId) {
         appointmentsFromThisOutpatientDepartment.push(patientAppointment[i]);
@@ -277,7 +277,7 @@ export class CalenderService {
    * @param weekdate the date of the week
    * @param i the offset from the start of the week
    */
-  private calculateSlotsOfDay(openingHours: OpeningHoursDayDto, capacity: number, bookedAppointments: AppointmentCalendarDto[], patientAppointment: AppointmentDetailDto[], weekdate: Date, i: number): CalendarEvent[] {
+  private calculateSlotsOfDay(openingHours: OpeningHoursDayDto, capacity: number, bookedAppointments: AppointmentDtoCalendar[], patientAppointment: AppointmentDto[], weekdate: Date, i: number): CalendarEvent[] {
     let calendarEvents: CalendarEvent[] = [];
     if (openingHours == null || openingHours.isClosed) {
       // This case represents the outpatient department being closed
@@ -377,7 +377,7 @@ export class CalenderService {
    * @param bookedAppointments the booked appointments of the outpatient department
    * @param currentTime the current time
    */
-  private getCurrentCapacity(bookedAppointments: AppointmentCalendarDto[], currentTime: Date): number {
+  private getCurrentCapacity(bookedAppointments: AppointmentDtoCalendar[], currentTime: Date): number {
     for (let i = 0; i < bookedAppointments.length; i++) {
       if (this.isSameTimeSlot(currentTime, bookedAppointments[i])) {
         return bookedAppointments[i].count;
@@ -392,7 +392,7 @@ export class CalenderService {
    * @param currentTime the current time
    * @param bookedAppointment the booked appointment
    */
-  private isSameTimeSlot(currentTime: Date, bookedAppointment: AppointmentCalendarDto): boolean {
+  private isSameTimeSlot(currentTime: Date, bookedAppointment: AppointmentDtoCalendar): boolean {
     if (getYear(currentTime) == getYear(bookedAppointment.startDate) && getYear(addMinutes(currentTime, 30)) == getYear(bookedAppointment.endDate)) {
       if (getMonth(currentTime) == getMonth(bookedAppointment.startDate) && getMonth(addMinutes(currentTime, 30)) == getMonth(bookedAppointment.endDate)) {
         if (getDate(currentTime) == getDate(bookedAppointment.startDate) && getDate(addMinutes(currentTime, 30)) == getDate(bookedAppointment.endDate)) {

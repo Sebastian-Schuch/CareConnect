@@ -1,4 +1,4 @@
-export interface MedicationCreateDto {
+export interface MedicationDtoCreate {
   name: string;
 }
 

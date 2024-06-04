@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MedicationCreateDto} from "../../dtos/medication";
+import {MedicationDtoCreate} from "../../dtos/medication";
 import {Router} from "@angular/router";
 import {MedicationService} from "../../services/medication.service";
 import {NgForm, NgModel} from "@angular/forms";
@@ -14,7 +14,7 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
 })
 export class MedicationCreateComponent implements OnInit {
 
-  medication: MedicationCreateDto = {
+  medication: MedicationDtoCreate = {
     name: ''
   };
 
@@ -37,7 +37,7 @@ export class MedicationCreateComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
-      let observable: Observable<MedicationCreateDto>;
+      let observable: Observable<MedicationDtoCreate>;
       observable = this.service.createMedication(this.medication);
       observable.subscribe({
         next: () => {

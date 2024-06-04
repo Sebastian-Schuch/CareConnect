@@ -72,4 +72,11 @@ public interface UserService extends UserDetailsService {
      * @param newLogin the new user login data
      */
     void changePassword(UserLoginDto newLogin);
+
+    /**
+     * Disables a user.
+     *
+     * @param email the email of the user to disable
+     */
+    void disableUser(String email);
 }

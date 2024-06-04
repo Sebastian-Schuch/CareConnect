@@ -18,7 +18,7 @@ import {CalendarWrapperComponent} from "./components/appointments/calender/calen
 import {
   AppointmentsSecretaryComponent
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
-import {UserCreateComponent} from "./components/user-create/user-create.component";
+import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-create-edit/user-create.component";
 import {Role} from "./dtos/Role";
 import {TreatmentComponent} from "./components/treatment/treatment.component";
 import {
@@ -28,6 +28,7 @@ import {StationComponent} from "./components/station/station.component";
 import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
+import {UserListComponent} from "./components/user/user-list/user-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -37,40 +38,184 @@ const routes: Routes = [
       {
         path: 'patient', canActivate: [PatientGuard], children: [
           {path: '', component: LandingPatientComponent},
-          {path: 'book-appointment', component: CalendarWrapperComponent},
-          {path: 'appointments', component: AppointmentsPatientComponent},
+          {
+            path: 'appointments', children: [
+              {path: '', component: AppointmentsPatientComponent},
+              {path: 'book', component: CalendarWrapperComponent},
+            ]
+          },
           {path: 'telemedicine', component: ChatComponent},
+          {
+            path: ':id', children: [
+              {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
+              {path: 'edit', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.edit}}
+            ]
+          }
         ]
       },
       {
         path: 'admin', canActivate: [AdminGuard], children: [
           {path: '', component: LandingAdminComponent},
-          //{path: 'register-admin', component: UserCreateComponent, data: {role: Role.admin}},
-          {path: 'register-doctor', component: UserCreateComponent, data: {role: Role.doctor}},
-          {path: 'register-secretary', component: UserCreateComponent, data: {role: Role.secretary}},
-          {path: 'register-outpatient-department', component: OutpatientDepartmentComponent},
-          {path: 'register-inpatient-department', component: StationComponent},
-          {path: 'register-medicine', component: MedicationCreateComponent},
-          {path: 'register-allergy', component: AllergyComponent}
+          {
+            path: 'register', children: [
+              //{path: 'admin', component: UserCreateComponent, data: {roleString: Role.admin, mode: UserCreateEditMode.create}},
+              {
+                path: 'doctor',
+                component: UserCreateComponent,
+                data: {role: Role.doctor, mode: UserCreateEditMode.create}
+              },
+              {
+                path: 'secretary',
+                component: UserCreateComponent,
+                data: {role: Role.secretary, mode: UserCreateEditMode.create}
+              },
+              {path: 'outpatient-department', component: OutpatientDepartmentComponent},
+              {path: 'inpatient-department', component: StationComponent},
+              {path: 'medicine', component: MedicationCreateComponent},
+              {path: 'allergy', component: AllergyComponent}
+            ]
+          },
+          {
+            path: 'users', children: [
+              {
+                path: 'doctors', children: [
+                  {path: '', component: UserListComponent, data: {role: Role.doctor}},
+                  {
+                    path: ':id', children: [
+                      {
+                        path: '',
+                        component: UserCreateComponent,
+                        data: {role: Role.doctor, mode: UserCreateEditMode.view}
+                      },
+                      {
+                        path: 'edit',
+                        component: UserCreateComponent,
+                        data: {role: Role.doctor, mode: UserCreateEditMode.edit}
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                path: 'secretaries', children: [
+                  {path: '', component: UserListComponent, data: {role: Role.secretary}},
+                  {
+                    path: ':id', children: [
+                      {
+                        path: '',
+                        component: UserCreateComponent,
+                        data: {role: Role.secretary, mode: UserCreateEditMode.view}
+                      },
+                      {
+                        path: 'edit',
+                        component: UserCreateComponent,
+                        data: {role: Role.secretary, mode: UserCreateEditMode.edit}
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                path: 'admins', children: [
+                  {path: '', component: UserListComponent, data: {role: Role.admin}},
+                  {
+                    path: ':id', children: [
+                      {
+                        path: '',
+                        component: UserCreateComponent,
+                        data: {role: Role.admin, mode: UserCreateEditMode.view}
+                      },
+                      {
+                        path: 'edit',
+                        component: UserCreateComponent,
+                        data: {role: Role.admin, mode: UserCreateEditMode.edit}
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            path: ':id', children: [
+              {path: '', component: UserCreateComponent, data: {role: Role.admin, mode: UserCreateEditMode.view}},
+              {path: 'edit', component: UserCreateComponent, data: {role: Role.admin, mode: UserCreateEditMode.edit}}
+            ]
+          }
         ]
       },
       {
         path: 'doctor', canActivate: [DoctorGuard], children: [
           {path: '', component: LandingDoctorComponent},
           {path: 'telemedicine', component: ChatComponent},
-          {path: 'log-treatment', component: TreatmentComponent},
-          //{path: 'edit-treatment', component: null}
+          {
+            path: 'treatment', children: [
+              {path: 'log', component: TreatmentComponent},
+              {
+                path: ':id', children: [
+                  //{path: '', component: TreatmentViewComponent},
+                  //{path: 'edit', component: TreatmentEditComponent}
+                ],
+              }
+            ]
+          },
+          {
+            path: ':id', children: [
+              {path: '', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.view}},
+              {path: 'edit', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.edit}}
+            ]
+          }
         ]
       },
       {
         path: 'secretary', canActivate: [SecretaryGuard], children: [
           {path: '', component: LandingSecretaryComponent},
-          {path: 'book-appointment', component: CalendarWrapperComponent},
-          {path: 'appointments', component: AppointmentsSecretaryComponent},
-          {path: 'register-patient', component: UserCreateComponent, data: {role: Role.patient}},
-          //{path: 'edit-patient', component: null},
-          //{path: 'register-stay', component: null},
-          //{path: 'edit-stay', component: null},
+          {
+            path: 'appointments', children: [
+              {path: '', component: AppointmentsSecretaryComponent},
+              {path: 'book', component: CalendarWrapperComponent},
+            ]
+          },
+          {
+            path: 'patients', children: [
+              {path: '', component: UserListComponent, data: {role: Role.patient}},
+              {
+                path: 'register',
+                component: UserCreateComponent,
+                data: {role: Role.patient, mode: UserCreateEditMode.create}
+              },
+              {
+                path: ':id',
+                children: [
+                  {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
+                  {
+                    path: 'edit',
+                    component: UserCreateComponent,
+                    data: {role: Role.patient, mode: UserCreateEditMode.edit}
+                  }
+                ]
+              },
+            ]
+          },
+          {
+            path: 'stay', children: [
+              //{path: 'register', component: null},
+              //{path: ':id', children: [
+              //{path: '', component: stayViewComponent},
+              //{path: 'edit', component: stayEditComponent}
+              //]},
+            ]
+          },
+          {
+            path: ':id', children: [
+              {path: '', component: UserCreateComponent, data: {role: Role.secretary, mode: UserCreateEditMode.view}},
+              {
+                path: 'edit',
+                component: UserCreateComponent,
+                data: {role: Role.secretary, mode: UserCreateEditMode.edit}
+              }
+            ]
+          }
         ]
       }
     ]

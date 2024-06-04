@@ -175,6 +175,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void changePassword(UserLoginDto newLogin) {
+        LOGGER.trace("changePassword({})", newLogin);
         Credential credential = findApplicationUserByEmail(newLogin.getEmail());
         credential.setPassword(passwordEncoder.encode(newLogin.getPassword() + passwordPepper));
         credential.setInitialPassword(false);
@@ -195,5 +196,18 @@ public class CustomUserDetailService implements UserService {
             randomPassword.append(characters.charAt(random.nextInt(characters.length())));
         }
         return randomPassword.toString();
+    }
+
+    /**
+     * Disable a user with the given email.
+     *
+     * @param email the email of the user to disable
+     */
+    @Override
+    public void disableUser(String email) {
+        LOGGER.trace("disableUser({})", email);
+        Credential credential = findApplicationUserByEmail(email);
+        credential.setActive(false);
+        credentialRepository.save(credential);
     }
 }

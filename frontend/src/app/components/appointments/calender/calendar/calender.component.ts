@@ -29,8 +29,8 @@ import {CalenderService} from "../../../../services/calender.service";
 import {ToastrService} from "ngx-toastr";
 import {AppointmentService} from "../../../../services/appointment.service";
 import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
-import {AppointmentCalendarDto, AppointmentCreateDto} from "../../../../dtos/appointment";
-import {UserDetailDto} from "../../../../dtos/user";
+import {AppointmentDtoCalendar, AppointmentDtoCreate} from "../../../../dtos/appointment";
+import {UserDto} from "../../../../dtos/user";
 import {OpeningHoursDto} from "../../../../dtos/opening-hours";
 import {Router} from "@angular/router";
 import {ErrorFormatterService} from "../../../../services/error-formatter.service";
@@ -54,7 +54,7 @@ import {ErrorFormatterService} from "../../../../services/error-formatter.servic
 })
 export class CalenderComponent implements OnInit {
   @Input() outpatientDepartment: OutpatientDepartmentDto;
-  @Input() patient: UserDetailDto;
+  @Input() patient: UserDto;
   @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
 
 
@@ -79,7 +79,7 @@ export class CalenderComponent implements OnInit {
 
   activeDayIsOpen: boolean = false;
 
-  bookedAppointments: AppointmentCalendarDto[] = [];
+  bookedAppointments: AppointmentDtoCalendar[] = [];
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -220,7 +220,7 @@ export class CalenderComponent implements OnInit {
    */
   public bookAppointment(event: CalendarEvent) {
     if (event.meta.curCapacity < event.meta.maxCapacity) {
-      let appointment: AppointmentCreateDto = {
+      let appointment: AppointmentDtoCreate = {
         startDate: event.start,
         endDate: event.end,
         outpatientDepartment: this.outpatientDepartment,

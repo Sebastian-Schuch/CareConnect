@@ -1,0 +1,98 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>Search for {{ roleString }}</span><br>
+    </h1>
+  </div>
+  <div>
+    <h3>Here you can search and filter for a {{ roleString.toLowerCase() }}</h3>
+    <br>
+  </div>
+</div>
+<form class="d-flex flex-row w-auto mb-3" (submit)="reloadUsers()">
+  <button type="submit" hidden="hidden">submit</button>
+  <div class="flex-grow-1">
+    <label for="searchUserFirstname" class="col-form-label">
+      Firstname
+    </label>
+    <input type="text" id="searchUserFirstname" name="searchUserFirstname"
+           class="form-control"
+           [(ngModel)]="searchParams.firstname"
+           (ngModelChange)="searchChanged()"
+           tabindex="20"
+    >
+  </div>
+  <div class="ms-4"></div>
+  <div class="flex-grow-1">
+    <label for="searchUserLastname" class="col-form-label">
+      Lastname
+    </label>
+    <input type="text" id="searchUserLastname" name="searchUserLastname"
+           class="form-control"
+           [(ngModel)]="searchParams.lastname"
+           (ngModelChange)="searchChanged()"
+           tabindex="21"
+    >
+  </div>
+  <div class="ms-4"></div>
+  <div class="flex-grow-1">
+    <label for="searchUserEmail" class="col-form-label">
+      Email
+    </label>
+    <input type="text" id="searchUserEmail" name="searchUserEmail"
+           class="form-control"
+           [(ngModel)]="searchParams.email"
+           (ngModelChange)="searchChanged()"
+           tabindex="22"
+    >
+  </div>
+</form>
+<div class="mt-3">
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>Firstname</th>
+      <th>Lastname</th>
+      <th>Email</th>
+      <th *ngIf="isPatientList">Social security number</th>
+      <th class="min-width">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users; let i = index" class="center-td">
+      <td aria-label="Firstname" [tabindex]="i+'23'">{{ user.firstname }}</td>
+      <td aria-label="Lastname" [tabindex]="i+'24'">{{ user.lastname }}</td>
+      <td aria-label="Email" [tabindex]="i+'25'">{{ user.email }}</td>
+      <td aria-label="Social security number" *ngIf="isPatientList" [tabindex]="i+'26'">{{ user.svnr }}</td>
+      <td>
+        <div class="btn-group">
+          <label hidden [for]="i+'details'">User details</label>
+          <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
+                  [routerLink]="[user.id]"
+                  aria-label="Show user details"
+                  [tabindex]="i+'27'"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <label hidden [for]="i+'edit'">Edit User</label>
+          <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
+                  [routerLink]="[user.id, 'edit']"
+                  aria-label="Edit user"
+                  [tabindex]="i+'28'"
+          >
+            <mat-icon>mode_edit</mat-icon>
+          </button>
+          <label hidden [for]="i+'delete'">User details</label>
+          <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
+                  (click)="openDeleteModal(user.email)"
+                  aria-label="Delete user"
+                  [tabindex]="i+'29'"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

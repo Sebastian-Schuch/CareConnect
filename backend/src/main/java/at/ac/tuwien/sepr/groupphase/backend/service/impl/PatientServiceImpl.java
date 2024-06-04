@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
@@ -32,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto createPatient(PatientDtoCreate toCreate, Credential credentials) {
         LOG.trace("createPatient({})", toCreate);
-        return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.dtoToEntity(toCreate, credentials)));
+        return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.createDtoToEntity(toCreate, credentials)));
     }
 
     @Override
@@ -68,6 +70,17 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public PatientDto updatePatient(Long id, PatientDtoUpdate toUpdate) {
+        LOG.trace("updatePatient({}, {})", id, toUpdate);
+        Patient patient = patientRepository.findById(id).orElse(null);
+        if (patient == null) {
+            LOG.warn("patient with id {} not found", id);
+            throw new NotFoundException("Patient not found");
+        }
+        return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.updateDtoToEntity(toUpdate, patient)));
+    }
+
+    @Override
     public PatientDto findPatientByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Patient patient = patientRepository.findByCredential(credential);
@@ -78,12 +91,36 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public List<PatientDto> searchPatients(UserDtoSearch search) {
+        LOG.trace("searchPatients({})", search);
+        String email = null;
+        String firstName = null;
+        String lastName = null;
+        if (search.email() != null) {
+            email = search.email().toUpperCase();
+        }
+        if (search.firstName() != null) {
+            firstName = search.firstName().toUpperCase();
+        }
+        if (search.lastName() != null) {
+            lastName = search.lastName().toUpperCase();
+        }
+        return patientMapper.patientsToPatientDtos(patientRepository.searchPatient(email, firstName, lastName));
+    }
+
+    @Override
     public List<PatientDto> getAllPatients() {
         return patientMapper.patientsToPatientDtos(patientRepository.findAll());
     }
 
     @Override
-    public boolean isValidPatientRequest(Long userId) {
+    public boolean isValidPatientRequest() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("PATIENT"));
+    }
+
+    @Override
+    public boolean isOwnRequest(Long userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("PATIENT"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

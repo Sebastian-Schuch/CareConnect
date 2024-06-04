@@ -37,7 +37,7 @@ public class AllergyEndpoint {
         this.allergyMapper = allergyMapper;
     }
 
-    @Secured({"ADMIN", "Doctor"})
+    @Secured({"ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new allergy")
@@ -46,7 +46,7 @@ public class AllergyEndpoint {
         return allergyMapper.allergyToDto(this.allergyService.createAllergy(toCreate));
     }
 
-    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR", "PATIENT"})
 
     @GetMapping(value = "/{id}")
     public AllergyDto find(@PathVariable(name = "id") Long id) {
@@ -54,7 +54,7 @@ public class AllergyEndpoint {
         return allergyMapper.allergyToDto(this.allergyService.findById(id));
     }
 
-    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR", "PATIENT"})
     @GetMapping
     @Operation(summary = "Get list of allergies without details")
     public List<AllergyDto> findAll() {

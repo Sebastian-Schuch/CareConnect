@@ -1,11 +1,15 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>Register {{ role }}</span><br>
+      <span>
+        <div *ngIf="modeIsView || modeIsEdit">{{ modeString }} Profile</div><div
+        *ngIf="modeIsCreate">{{ modeString }} {{ roleString }}</div></span>
     </h1>
   </div>
-  <div *ngIf="modeIsPatient">
-    <h3>Here you can register a new {{ role.toLowerCase() }}</h3>
+  <div *ngIf="roleIsPatient">
+    <h3 *ngIf="modeIsCreate">Here you can register a new {{ roleString.toLowerCase() }}</h3>
+    <h3 *ngIf="modeIsView || modeIsEdit">Here you can {{ modeString.toLowerCase() }} your {{ roleString.toLowerCase() }}
+      profile</h3>
     <br>
   </div>
 </div>
@@ -19,15 +23,15 @@
       <div class="mb-2 col-lg-6">
         <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
         <div class="row form-group">
-          <label for="{{mode}}userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          <label for="{{role}}userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
             First Name
           </label>
           <div class="col-md-10 col-lg-8"
           >
             <input type="text"
-                   id="{{mode}}userFirstName"
+                   id="{{role}}userFirstName"
                    name="userFirstName"
-                   placeholder="First Name of {{ role}}"
+                   placeholder="First Name of {{ roleString}}"
                    class="form-control"
                    tabindex="21"
                    formControlName="firstname"
@@ -42,7 +46,7 @@
       </div>
       <div class="mb-2 col-lg-6">
         <div class="row form-group">
-          <label for="{{mode}}userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          <label for="{{role}}userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
             Last Name
           </label>
           <div class="col-md-10 col-lg-8"
@@ -51,9 +55,9 @@
                  The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
               -->
             <input type="text"
-                   id="{{mode}}userLastName"
+                   id="{{role}}userLastName"
                    name="userLastName"
-                   placeholder="Last Name of {{role}}"
+                   placeholder="Last Name of {{roleString}}"
                    class="form-control"
                    tabindex="22"
                    formControlName="lastname"
@@ -71,15 +75,15 @@
       <!-- Start email row -->
       <div class="mb-2 col-lg-6">
         <div class="row form-group">
-          <label for="{{mode}}userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          <label for="{{role}}userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
             Email
           </label>
           <div class="col-md-10 col-lg-8"
           >
             <input type="text"
-                   id="{{mode}}userEmail"
+                   id="{{role}}userEmail"
                    name="userEmail"
-                   placeholder="Email of {{role}}"
+                   placeholder="Email of {{roleString}}"
                    class="form-control"
                    formControlName="email"
                    tabindex="23"
@@ -90,24 +94,24 @@
           </div>
         </div>
       </div>
-      <div class="mb-2 col-lg-6" *ngIf="modeIsPatient">
+      <div class="mb-2 col-lg-6" *ngIf="roleIsPatient">
         <div class="row form-group">
-          <label for="{{mode}}userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"
+          <label for="{{role}}userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"
           >
             Svnr
           </label>
           <div class="col-md-10 col-lg-8"
           >
             <input type="text"
-                   id="{{mode}}userSvnr"
+                   id="{{role}}userSvnr"
                    name="userSvnr"
-                   placeholder="Svnr of {{role}}"
+                   placeholder="Svnr of {{roleString}}"
                    class="form-control"
-                   *ngIf="modeIsPatient"
+                   *ngIf="roleIsPatient"
                    tabindex="24"
                    formControlName="svnr"
             >
-            <div class="invalid-feedback" *ngIf="modeIsPatient">
+            <div class="invalid-feedback" *ngIf="roleIsPatient">
               Svnr is required
             </div>
           </div>
@@ -117,7 +121,7 @@
     </div>
     <div class="row">
       <!-- Start medication row-->
-      <div class="row form-group col-lg-6" *ngIf="modeIsPatient">
+      <div class="row form-group col-lg-6" *ngIf="roleIsPatient">
         <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
           Medications
         </label>
@@ -139,7 +143,7 @@
             {{ medication.name }}
             <button (click)="removeMedicationFromSelection(medication)" class="btn-close btn-close-white"
                     type="button"
-                    [attr.aria-label]="'Remove ' + medication.name">
+                    [attr.aria-label]="'Remove ' + medication.name" tabindex="25">
               <span class="visually-hidden">Remove {{ medication.name }}</span>
             </button>
           </span>
@@ -147,7 +151,7 @@
       </div>
 
 
-      <div class="row form-group col-lg-6" *ngIf="modeIsPatient">
+      <div class="row form-group col-lg-6" *ngIf="roleIsPatient">
         <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
           Allergies
         </label>
@@ -169,7 +173,7 @@
             {{ allergy.name }}
             <button (click)="removeAllergyFromSelection(allergy)" class="btn-close btn-close-white"
                     type="button"
-                    [attr.aria-label]="'Remove ' + allergy.name">
+                    [attr.aria-label]="'Remove ' + allergy.name" tabindex="26">
               <span class="visually-hidden">Remove {{ allergy.name }}</span>
             </button>
           </span>
@@ -180,12 +184,19 @@
 
 
   <div class="mt-4 d-flex flex-row">
+    <button *ngIf="modeIsEdit && isOwnEdit" mat-button type="button"
+            class="sepr-btn-submit"
+            (click)="openPasswordModal()"
+            tabindex="27">Change Password
+    </button>
     <span class="flex-grow-1"></span>
     <button mat-button type="submit"
             class="sepr-btn-submit"
-            tabindex="27"
+            tabindex="28"
     >
-      Register {{ role }}
+      <div *ngIf="modeIsCreate">Register {{ roleString }}</div>
+      <div *ngIf="modeIsEdit">Save changes</div>
+      <div *ngIf="modeIsView">Edit Account</div>
     </button>
   </div>
 </form>

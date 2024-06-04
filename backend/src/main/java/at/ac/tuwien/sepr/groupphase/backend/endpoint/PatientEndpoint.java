@@ -2,10 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
+import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,10 +23,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,10 +45,13 @@ public class PatientEndpoint {
 
     private final PatientService patientService;
 
+    private final SecretaryService secretaryService;
+
     private final UserService userService;
 
-    public PatientEndpoint(PatientService patientService, UserService userService) {
+    public PatientEndpoint(PatientService patientService, SecretaryService secretaryService, UserService userService) {
         this.patientService = patientService;
+        this.secretaryService = secretaryService;
         this.userService = userService;
     }
 
@@ -118,5 +126,23 @@ public class PatientEndpoint {
     public List<PatientDto> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.patientService.getAllPatients();
+    }
+
+    @Secured({"SECRETARY", "PATIENT"})
+    @PutMapping({"/{id}"})
+    public PatientDto update(@PathVariable("id") long id, @Valid @RequestBody PatientDtoUpdate toUpdate) {
+        LOG.info("PUT " + BASE_PATH + "/{}", id);
+        if (secretaryService.isValidSecretaryRequest() || patientService.isOwnRequest(id)) {
+            return this.patientService.updatePatient(id, toUpdate);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
+        }
+    }
+
+    @Secured({"SECRETARY"})
+    @GetMapping({"/search"})
+    public List<PatientDto> search(UserDtoSearch toSearch) {
+        LOG.info("GET " + BASE_PATH + "/search");
+        return this.patientService.searchPatients(toSearch);
     }
 }

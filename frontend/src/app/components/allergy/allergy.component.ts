@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AllergyCreateDto} from "../../dtos/allergy";
+import {AllergyDtoCreate} from "../../dtos/allergy";
 import {AllergyService} from "../../services/allergy.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
@@ -29,10 +29,10 @@ export class AllergyComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
-      const allergy: AllergyCreateDto = {
+      const allergy: AllergyDtoCreate = {
         name: this.allergyname
       };
-      let observable: Observable<AllergyCreateDto> = this.allergyService.createAllergy(allergy);
+      let observable: Observable<AllergyDtoCreate> = this.allergyService.createAllergy(allergy);
 
       observable.subscribe({
         next: data => {

@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {Role} from "../../dtos/Role";
-import {UserDetailDto} from "../../dtos/user";
+import {UserDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 import {MatDrawerMode} from "@angular/material/sidenav";
 import {debounceTime, fromEvent} from "rxjs";
 import {BooleanInput} from "@angular/cdk/coercion";
+import {end, right} from "@popperjs/core";
 
 @Component({
   selector: 'app-header',
@@ -19,6 +20,7 @@ export class HeaderComponent implements OnInit {
   isHandheld: boolean = false;
   mdcBackdrop: BooleanInput = true;
   drawerMode: MatDrawerMode = "push";
+  userId: number;
 
   constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService) {
   }
@@ -42,7 +44,8 @@ export class HeaderComponent implements OnInit {
     if (this.authService.getUserRole() != Role.admin) {
       let observable = this.getCorrectObservable();
       observable.subscribe({
-        next: (user: UserDetailDto) => {
+        next: (user: UserDto) => {
+          this.userId = user.id;
           this.formatName(user);
         },
         error: error => {
@@ -99,7 +102,7 @@ export class HeaderComponent implements OnInit {
     return (this.authService.getUserRole() === Role.admin)
   }
 
-  private formatName(user: UserDetailDto) {
+  private formatName(user: UserDto) {
     this.name = (user.firstname + " " + user.lastname.charAt(0));
   }
 
@@ -107,5 +110,22 @@ export class HeaderComponent implements OnInit {
     this.isHandheld = window.innerWidth < 1100;
   }
 
+  public getEditProfilePath() {
+    switch (this.authService.getUserRole()) {
+      case Role.admin:
+        return '/home/admin/' + this.userId;
+      case Role.doctor:
+        return '/home/doctor/' + this.userId;
+      case Role.secretary:
+        return '/home/secretary/' + this.userId;
+      case Role.patient:
+        return '/home/patient/' + this.userId;
+      default:
+        return '/';
+    }
+  }
+
   protected readonly Role = Role;
+  protected readonly right = right;
+  protected readonly end = end;
 }

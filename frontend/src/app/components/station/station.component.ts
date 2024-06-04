@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {StationCreateDto} from "../../dtos/Station";
+import {StationDtoCreate} from "../../dtos/Station";
 import {StationService} from "../../services/station.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
@@ -18,7 +18,7 @@ export class StationComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  station: StationCreateDto = {
+  station: StationDtoCreate = {
     name: '',
     capacity: 0
   };
@@ -33,7 +33,7 @@ export class StationComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
-      let observable: Observable<StationCreateDto> = this.stationService.createStation(this.station);
+      let observable: Observable<StationDtoCreate> = this.stationService.createStation(this.station);
 
       observable.subscribe({
         next: data => {

@@ -10,7 +10,7 @@ import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
-import {UserCreateComponent} from "./components/user-create/user-create.component";
+import {UserCreateComponent} from "./components/user/user-create-edit/user-create.component";
 import {
   OutpatientDepartmentComponent
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
@@ -124,7 +124,8 @@ import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog
   exports: [
     CalenderComponent,
     AppointmentsPatientComponent,
-    AppointmentsSecretaryComponent
+    AppointmentsSecretaryComponent,
+    UserCreateComponent
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -8,7 +8,7 @@ import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
 import {UserService} from "../../services/user.service";
 import {MedicationService} from "../../services/medication.service";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
-import {UserDetailDto} from "../../dtos/user";
+import {UserDto} from "../../dtos/user";
 import {MedicationDto} from "../../dtos/medication";
 import {TreatmentService} from "../../services/treatment.service";
 import {TreatmentMedicineDtoCreate} from "../../dtos/treatmentMedicine";
@@ -30,16 +30,16 @@ export class TreatmentComponent implements OnInit {
 
   treatmentForm: FormGroup;
   medicationAdministeredForm: FormGroup;
-  doctorOptions: UserDetailDto[] = [];
-  patientOptions: UserDetailDto[] = [];
+  doctorOptions: UserDto[] = [];
+  patientOptions: UserDto[] = [];
   medicineOptions: MedicationDto[] = [];
   treatmentMedicines: TreatmentMedicineDtoCreate[] = [];
   outpatientDepartments: OutpatientDepartmentDto[] = [];
 
-  selectedDoctorOptions: UserDetailDto[] = [];
-  filteredDoctorOptions: Observable<UserDetailDto[]>;
+  selectedDoctorOptions: UserDto[] = [];
+  filteredDoctorOptions: Observable<UserDto[]>;
   filteredMedicineOptions: Observable<MedicationDto[]>;
-  filteredPatientOptions: Observable<UserDetailDto[]>;
+  filteredPatientOptions: Observable<UserDto[]>;
   filteredOutPatDep: Observable<OutpatientDepartmentDto[]>;
 
   displayedColumns: string[] = ['Medication', 'Amount', 'Unit', 'Date', 'Time', 'Delete'];
@@ -319,7 +319,7 @@ export class TreatmentComponent implements OnInit {
    * @param value the input value to filter for
    * @returns the filtered patients
    */
-  private filterPatients(value: string): UserDetailDto[] {
+  private filterPatients(value: string): UserDto[] {
     const filterValue = value.toString().toLowerCase();
     return this.patientOptions.filter(option =>
       option.firstname.toString().toLowerCase().includes(filterValue) ||
@@ -333,7 +333,7 @@ export class TreatmentComponent implements OnInit {
    * @param value the input value to filter for
    * @returns the filtered doctors
    */
-  private filterDoctors(value: string): UserDetailDto[] {
+  private filterDoctors(value: string): UserDto[] {
     const filterValue = value.toString().toLowerCase();
     return this.doctorOptions.filter(option =>
       option.firstname.toLowerCase().includes(filterValue) ||
@@ -360,7 +360,7 @@ export class TreatmentComponent implements OnInit {
    * resets the input field after adding the doctor
    * @param doctor the doctor to add
    */
-  addDoctorToSelection(doctor: UserDetailDto): void {
+  addDoctorToSelection(doctor: UserDto): void {
     if (!this.selectedDoctorOptions.some(d => d.id === doctor.id)) {
       this.selectedDoctorOptions.push(doctor);
     }
@@ -375,7 +375,7 @@ export class TreatmentComponent implements OnInit {
    * helper method to remove a doctor from the selection
    * @param doctor the doctor to remove
    */
-  removeDoctorFromSelection(doctor: UserDetailDto): void {
+  removeDoctorFromSelection(doctor: UserDto): void {
     const index = this.selectedDoctorOptions.findIndex(d => d.id === doctor.id);
     if (index >= 0) {
       this.selectedDoctorOptions.splice(index, 1);

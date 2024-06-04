@@ -17,4 +17,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     Patient findByCredential_Email(String email);
 
+    @Query("SELECT p FROM Patient p WHERE (?1 IS NULL OR UPPER(p.credential.email) LIKE %?1% ) AND ( ?2 IS NULL OR UPPER(p.credential.firstName) LIKE %?2% ) AND "
+        + "( ?3 IS NULL OR UPPER(p.credential.lastName) LIKE %?3% ) AND p.credential.active ORDER BY p.credential.lastName ASC")
+    List<Patient> searchPatient(String email, String firstName, String lastName);
 }

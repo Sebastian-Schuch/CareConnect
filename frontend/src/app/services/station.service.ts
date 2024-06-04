@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {StationCreateDto} from "../dtos/Station";
+import {StationDtoCreate} from "../dtos/Station";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
 
@@ -16,7 +16,7 @@ export class StationService {
   ) {
   }
 
-  public createStation(station: StationCreateDto): Observable<any> {
+  public createStation(station: StationDtoCreate): Observable<any> {
     return this.http.post(this.stationUri, station);
   }
 }

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
-import {AppointmentCalendarDto, AppointmentCreateDto, AppointmentDetailDto} from "../dtos/appointment";
+import {AppointmentDto, AppointmentDtoCalendar, AppointmentDtoCreate} from "../dtos/appointment";
 
 
 @Injectable({
@@ -24,8 +24,8 @@ export class AppointmentService {
    * @param appointment the data for the appointment that should be created
    * @return an Observable for the created appointment
    */
-  createAppointment(appointment: AppointmentCreateDto): Observable<AppointmentDetailDto> {
-    return this.http.post<AppointmentDetailDto>(
+  createAppointment(appointment: AppointmentDtoCreate): Observable<AppointmentDto> {
+    return this.http.post<AppointmentDto>(
       this.appointmentBaseUri,
       appointment
     );
@@ -36,8 +36,8 @@ export class AppointmentService {
    *
    * @return an Observable for the appointments
    */
-  getAppointmentsFromPatient(id: number): Observable<AppointmentDetailDto[]> {
-    return this.http.get<AppointmentDetailDto[]>(
+  getAppointmentsFromPatient(id: number): Observable<AppointmentDto[]> {
+    return this.http.get<AppointmentDto[]>(
       this.appointmentBaseUri + "/patients/" + id
     );
   }
@@ -47,8 +47,8 @@ export class AppointmentService {
    *
    * @return an Observable for the appointments
    */
-  getAppointments(): Observable<AppointmentDetailDto[]> {
-    return this.http.get<AppointmentDetailDto[]>(
+  getAppointments(): Observable<AppointmentDto[]> {
+    return this.http.get<AppointmentDto[]>(
       this.appointmentBaseUri + "/all"
     );
   }
@@ -61,13 +61,13 @@ export class AppointmentService {
    * @param endDate the end date for which the appointments should be retrieved
    * @return an Observable for the calendar appointments
    */
-  getAppointmentsFromOutpatientDepartmentForTimePeriod(id: number, startDate: Date, endDate: Date): Observable<AppointmentCalendarDto[]> {
+  getAppointmentsFromOutpatientDepartmentForTimePeriod(id: number, startDate: Date, endDate: Date): Observable<AppointmentDtoCalendar[]> {
 
     let params = new HttpParams();
     params = params.append('outpatientDepartmentId', id);
     params = params.append('startDate', startDate.toISOString());
     params = params.append('endDate', endDate.toISOString());
-    return this.http.get<AppointmentCalendarDto[]>(
+    return this.http.get<AppointmentDtoCalendar[]>(
       this.appointmentBaseUri,
       {params}
     );
