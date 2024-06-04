@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {MedicationCreateDto, MedicationDto} from "../dtos/medication";
+import {MedicationDto, MedicationDtoCreate} from "../dtos/medication";
 import {Globals} from "../global/globals";
 
 @Injectable({
@@ -43,7 +43,7 @@ export class MedicationService {
    * @param medication the data for the medication that should be created
    * @return an Observable for the created medication
    */
-  createMedication(medication: MedicationCreateDto): Observable<MedicationDto> {
+  createMedication(medication: MedicationDtoCreate): Observable<MedicationDto> {
     return this.http.post<MedicationDto>(
       this.medicationBaseUri,
       medication

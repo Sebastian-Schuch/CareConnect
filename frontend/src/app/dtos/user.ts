@@ -1,16 +1,16 @@
 import {MedicationDto} from "./medication";
-import {AllergyDetailDto} from "./allergy";
+import {AllergyDto} from "./allergy";
 
-export interface UserCreateDto {
+export interface UserDtoCreate {
   svnr?: string;
   email: string;
   firstname: string;
   lastname: string;
   medicines?: MedicationDto[];
-  allergies?: AllergyDetailDto[];
+  allergies?: AllergyDto[];
 }
 
-export interface UserDetailDto {
+export interface UserDto {
   id: number;
   svnr?: string;
   email: string;
@@ -18,10 +18,31 @@ export interface UserDetailDto {
   lastname: string;
   password: string;
   medicines?: MedicationDto[];
-  allergies?: AllergyDetailDto[];
+  allergies?: AllergyDto[];
+  active?: boolean;
 }
 
-export interface UserLoginDto {
+export interface UserDtoUpdate {
+  svnr?: string;
   email: string;
-  password: string;
+  firstname: string;
+  lastname: string;
+  medicines?: MedicationDto[];
+  allergies?: AllergyDto[];
+  active?: boolean;
+}
+
+export interface UserDtoSearch {
+  email?: string;
+  firstname?: string;
+  lastname?: string;
+  limit?: number;
+}
+
+export interface UserDtoList {
+  id: number,
+  firstname: string,
+  lastname: string,
+  email: string,
+  svnr?: string
 }

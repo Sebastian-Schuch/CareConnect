@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 
@@ -33,6 +35,15 @@ public interface DoctorService {
      */
     Doctor getDoctorEntityById(Long id);
 
+    /**
+     * Update the doctor with the given id.
+     *
+     * @param id       the id of the doctor to update
+     * @param toUpdate the data to update the doctor with
+     * @return the updated doctor
+     */
+    DoctorDto updateDoctor(Long id, DoctorDtoUpdate toUpdate);
+
 
     /**
      * Get all Doctors from the repository.
@@ -56,5 +67,21 @@ public interface DoctorService {
      * @return the doctor with the given credential
      */
     DoctorDto findDoctorByCredential(Credential credential);
+
+    /**
+     * Search for doctors based on the search criteria.
+     *
+     * @param search the search criteria
+     * @return a list of doctors
+     */
+    List<DoctorDto> searchDoctors(UserDtoSearch search);
+
+    /**
+     * Check if the used id matches the token given.
+     *
+     * @param userId the id of the user
+     * @return true if the userId is from the doctor that is sending the request, false otherwise
+     */
+    boolean isOwnRequest(Long userId);
 
 }

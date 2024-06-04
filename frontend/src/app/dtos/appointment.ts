@@ -1,30 +1,30 @@
-import {UserDetailDto} from "./user";
+import {UserDto} from "./user";
 import {OutpatientDepartmentDto} from "./outpatient-department";
 
-export interface AppointmentCreateDto {
-  patient: UserDetailDto;
+export interface AppointmentDtoCreate {
+  patient: UserDto;
   outpatientDepartment: OutpatientDepartmentDto;
   startDate: Date;
   endDate: Date;
   notes: string;
 }
 
-export interface AppointmentDetailDto {
+export interface AppointmentDto {
   id: number;
-  patient: UserDetailDto;
+  patient: UserDto;
   outpatientDepartment: OutpatientDepartmentDto;
   startDate: Date;
   endDate: Date;
   notes: string;
 }
 
-export interface AppointmentSearchDto {
+export interface AppointmentDtoSearch {
   outpatientDepartmentId: number;
   startDate: Date;
   endDate: Date;
 }
 
-export interface AppointmentCalendarDto {
+export interface AppointmentDtoCalendar {
   outpatientDepartmentId: number;
   startDate: Date;
   endDate: Date;

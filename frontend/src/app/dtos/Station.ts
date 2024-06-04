@@ -1,9 +1,9 @@
-export interface StationCreateDto {
+export interface StationDtoCreate {
   name: string;
   capacity: number;
 }
 
-export interface StationDetailDto {
+export interface StationDto {
   id: number;
   name: string;
   capacity: number;

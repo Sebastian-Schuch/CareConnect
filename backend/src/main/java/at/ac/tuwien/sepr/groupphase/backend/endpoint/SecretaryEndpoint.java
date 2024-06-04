@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
@@ -20,10 +22,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -120,5 +124,21 @@ public class SecretaryEndpoint {
         return this.secretaryService.getAllSecretaries();
     }
 
+    @Secured({"ADMIN", "SECRETARY"})
+    @PutMapping({"/{id}"})
+    public SecretaryDto update(@PathVariable("id") long id, @Valid @RequestBody SecretaryDtoUpdate toUpdate) {
+        LOG.info("PUT " + BASE_PATH + "/{}", id);
+        if (secretaryService.isOwnRequest(id)) { //TODO: add check if the token is from an admin (Issue: #15)
+            return this.secretaryService.updateSecretary(id, toUpdate);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
+        }
+    }
 
+    @Secured({"ADMIN"})
+    @GetMapping({"/search"})
+    public List<SecretaryDto> search(UserDtoSearch toSearch) {
+        LOG.info("GET " + BASE_PATH + "/search");
+        return this.secretaryService.searchSecretaries(toSearch);
+    }
 }

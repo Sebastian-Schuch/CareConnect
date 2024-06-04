@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,11 +23,9 @@ public class Credential implements Serializable {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Convert(converter = EncryptorConverter.class)
     @Column(nullable = false, name = "first_name")
     private String firstName;
 
-    @Convert(converter = EncryptorConverter.class)
     @Column(nullable = false, name = "last_name")
     private String lastName;
 

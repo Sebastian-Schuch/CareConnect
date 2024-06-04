@@ -82,6 +82,10 @@ export class AuthService {
     }
   }
 
+  updateUserInformation() {
+    this.isLogged.next(true);
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
@@ -97,5 +101,4 @@ export class AuthService {
     date.setUTCSeconds(decoded.exp);
     return date;
   }
-
 }

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {AppointmentDetailDto} from "../../../dtos/appointment";
+import {AppointmentDto} from "../../../dtos/appointment";
 import {AppointmentService} from "../../../services/appointment.service";
 import {UserService} from "../../../services/user.service";
 import {ToastrService} from "ngx-toastr";
@@ -14,10 +14,10 @@ import {getDate, getMonth, getYear} from "date-fns";
   styleUrls: ['./appointments-patient.component.scss']
 })
 export class AppointmentsPatientComponent implements OnInit {
-  appointmentToBeCancelled: AppointmentDetailDto | undefined;
-  patientAppointments: AppointmentDetailDto[] = [];
-  futureAppointments: AppointmentDetailDto[] = [];
-  pastAppointments: AppointmentDetailDto[] = [];
+  appointmentToBeCancelled: AppointmentDto | undefined;
+  patientAppointments: AppointmentDto[] = [];
+  futureAppointments: AppointmentDto[] = [];
+  pastAppointments: AppointmentDto[] = [];
   outpatientDepartments: string[] = [];
   filteredDepartments: Observable<string[]>;
   departmentControl = new FormControl();
@@ -46,13 +46,13 @@ export class AppointmentsPatientComponent implements OnInit {
     );
   }
 
-  getVisibleFutureAppointments(): AppointmentDetailDto[] {
+  getVisibleFutureAppointments(): AppointmentDto[] {
     const startIndex = (this.currentPageFuture - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     return this.futureAppointments.slice(startIndex, endIndex);
   }
 
-  getVisiblePastAppointments(): AppointmentDetailDto[] {
+  getVisiblePastAppointments(): AppointmentDto[] {
     const startIndex = (this.currentPagePast - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     return this.pastAppointments.slice(startIndex, endIndex);

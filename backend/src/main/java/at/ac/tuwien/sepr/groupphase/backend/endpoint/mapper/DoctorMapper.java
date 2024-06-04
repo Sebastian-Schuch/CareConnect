@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.mapstruct.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,5 +42,21 @@ public class DoctorMapper {
             doctorDtos.add(doctorToDoctorDto(doctor));
         }
         return doctorDtos;
+    }
+
+    public Doctor updateDtoToEntity(DoctorDtoUpdate toUpdate, Doctor doctor) {
+        LOG.trace("dtoToEntity({})", toUpdate);
+        Doctor doctorUpdate = new Doctor();
+        doctorUpdate.setDoctorId(doctor.getDoctorId());
+        Credential credential = new Credential();
+        credential.setRole(Role.DOCTOR);
+        credential.setPassword(doctor.getCredential().getPassword());
+        credential.setId(doctor.getCredential().getId());
+        credential.setFirstName(toUpdate.firstname());
+        credential.setLastName(toUpdate.lastname());
+        credential.setEmail(toUpdate.email());
+        credential.setActive(doctor.getCredential().getActive());
+        doctorUpdate.setCredential(credential);
+        return doctorUpdate;
     }
 }

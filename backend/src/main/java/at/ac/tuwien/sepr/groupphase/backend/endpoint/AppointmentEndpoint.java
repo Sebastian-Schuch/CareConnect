@@ -69,7 +69,7 @@ public class AppointmentEndpoint {
     public void delete(@PathVariable("id") long id) {
         LOG.info("DELETE" + BASE_PATH + "/{}", id);
         long userId = appointmentService.getAppointmentById(id).patient().id();
-        if (secretaryService.isValidSecretaryRequest(userId) || patientService.isValidPatientRequest(userId)) {
+        if (secretaryService.isValidSecretaryRequest() || patientService.isOwnRequest(userId)) {
             appointmentService.delete(id);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to delete this appointment");
@@ -86,7 +86,7 @@ public class AppointmentEndpoint {
     @GetMapping({"/patients/{id}"})
     public ResponseEntity<List<AppointmentDto>> getAllAppointmentsFromPatientWithPatientId(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/patients/{}", id);
-        if (secretaryService.isValidSecretaryRequest(id) || patientService.isValidPatientRequest(id)) {
+        if (secretaryService.isValidSecretaryRequest() || patientService.isOwnRequest(id)) {
             return ResponseEntity.status(200).body(appointmentService.getAllAppointmentsFromPatientWithPatientId(id));
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");

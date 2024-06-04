@@ -1,14 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -63,7 +66,8 @@ public class PatientMapper {
         return patientDtos;
     }
 
-    public Patient dtoToEntity(PatientDtoCreate toCreate, Credential credentials) {
+    public Patient createDtoToEntity(PatientDtoCreate toCreate, Credential credentials) {
+        LOG.trace("createDtoToEntity({}, {})", toCreate, credentials);
         Patient patient = new Patient();
         patient.setSvnr(toCreate.svnr());
         if (toCreate.medicines() != null) {
@@ -82,5 +86,36 @@ public class PatientMapper {
         }
         patient.setCredential(credentials);
         return patient;
+    }
+
+    public Patient updateDtoToEntity(PatientDtoUpdate toUpdate, Patient patient) {
+        LOG.trace("dtoToEntity({})", toUpdate);
+        Patient patientUpdate = new Patient();
+        patientUpdate.setPatientId(patient.getPatientId());
+        patientUpdate.setSvnr(toUpdate.svnr());
+        if (toUpdate.medicines() != null) {
+            List<Medication> medications = new ArrayList<>();
+            for (MedicationDto medication : toUpdate.medicines()) {
+                medications.add(medicationService.getEntityById(medication.id()));
+            }
+            patientUpdate.setMedicines(medications);
+        }
+        if (toUpdate.allergies() != null) {
+            List<Allergy> allergies = new ArrayList<>();
+            for (AllergyDto allergy : toUpdate.allergies()) {
+                allergies.add(allergyService.getEntityById(allergy.uid));
+            }
+            patientUpdate.setAllergies(allergies);
+        }
+        Credential credential = new Credential();
+        credential.setRole(Role.PATIENT);
+        credential.setPassword(patient.getCredential().getPassword());
+        credential.setId(patient.getCredential().getId());
+        credential.setFirstName(toUpdate.firstname());
+        credential.setLastName(toUpdate.lastname());
+        credential.setEmail(toUpdate.email());
+        credential.setActive(patient.getCredential().getActive());
+        patientUpdate.setCredential(credential);
+        return patientUpdate;
     }
 }

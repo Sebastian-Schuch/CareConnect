@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 
@@ -49,6 +51,15 @@ public interface PatientService {
     PatientDto getPatientByEmail(String email);
 
     /**
+     * Update the patient with the given id.
+     *
+     * @param id       the id of the patient to update
+     * @param toUpdate the data to update the patient with
+     * @return the updated patient
+     */
+    PatientDto updatePatient(Long id, PatientDtoUpdate toUpdate);
+
+    /**
      * Find a patient by the given credential.
      *
      * @param credential the credential to find the patient by
@@ -57,10 +68,25 @@ public interface PatientService {
     PatientDto findPatientByCredential(Credential credential);
 
     /**
+     * Search for patients based on the search criteria.
+     *
+     * @param search the search criteria
+     * @return a list of patients
+     */
+    List<PatientDto> searchPatients(UserDtoSearch search);
+
+    /**
+     * Check if the user is a patient.
+     *
+     * @return true if the user is from the patient that is sending the request, false otherwise
+     */
+    boolean isValidPatientRequest();
+
+    /**
      * Check if the used id matches the token given.
      *
      * @param userId the id of the user
-     * @return true if the user is from the patient that is sending the request, false otherwise
+     * @return true if the userId is from the patient that is sending the request, false otherwise
      */
-    boolean isValidPatientRequest(Long userId);
+    boolean isOwnRequest(Long userId);
 }

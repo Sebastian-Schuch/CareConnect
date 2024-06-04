@@ -14,7 +14,7 @@
       </button>
       <mat-menu #appointmentsMenu="matMenu">
         <div class="dropdown-card">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/book-appointment']">Book Appointment
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/appointments/book']">Book Appointment
           </button>
           <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/appointments']">My Appointments
           </button>
@@ -43,7 +43,7 @@
       </button>
       <mat-menu #appointmentsMenu="matMenu">
         <div class="dropdown-card">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/book-appointment']">Book
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/appointments/book']">Book
             Appointment
           </button>
           <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/appointments']">All Appointments
@@ -57,11 +57,14 @@
       </button>
       <mat-menu #patientMenu="matMenu">
         <div class="dropdown-card">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-patient']">Register
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/patients']">Search
+            Patient
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/patients/register']">Register
             Patient
           </button>
           <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/dit-patient']">Edit Patient
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/patients/edit']">Edit Patient
             Information
           </button>
           -->
@@ -75,9 +78,9 @@
           </button>
           <mat-menu #stayMenu="matMenu">
             <div class="dropdown-card">
-              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-stay']">Register stay
+              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/register']">Register stay
               </button>
-              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/edit-stay']">Edit stay
+              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/edit']">Edit stay
               </button>
             </div>
           </mat-menu>
@@ -92,10 +95,10 @@
       </button>
       <mat-menu #treatmentMenu="matMenu">
         <div class="dropdown-card">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/log-treatment']">Log Treatment
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/log']">Log Treatment
           </button>
           <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/edit-treatment']">Edit Treatment
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
           </button>
           -->
         </div>
@@ -109,35 +112,49 @@
 
     <!-- Logged in as admin -->
     <ng-container *ngIf="authService.isLoggedIn() && authService.getUserRole() === Role.admin">
-      <button mat-button [matMenuTriggerFor]="userMenu" tabindex="10">
+      <button mat-button [matMenuTriggerFor]="userListMenu" tabindex="10">
+        <mat-icon>search</mat-icon>
+        Search Accounts
+      </button>
+      <mat-menu #userListMenu="matMenu">
+        <div class="dropdown-card">
+          <!--<button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/admins']">Administrators
+          </button>-->
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/doctors']">Doctors
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/secretaries']">Secretaries
+          </button>
+        </div>
+      </mat-menu>
+      <button mat-button [matMenuTriggerFor]="userMenu" tabindex="11">
         <mat-icon>person_add</mat-icon>
         Register Account
       </button>
       <mat-menu #userMenu="matMenu">
         <div class="dropdown-card">
           <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-admin']">Register Administrator
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/admin']">Register Administrator
           </button>
           -->
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-doctor']">Register Doctor
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/doctor']">Register Doctor
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-secretary']">Register
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/secretary']">Register
             Secretary
           </button>
         </div>
       </mat-menu>
 
-      <button mat-button [matMenuTriggerFor]="departmentMenu" tabindex="11">
+      <button mat-button [matMenuTriggerFor]="departmentMenu" tabindex="12">
         <mat-icon>add_business</mat-icon>
         Register Department
       </button>
       <mat-menu #departmentMenu="matMenu">
         <div class="dropdown-card">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-outpatient-department']">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/outpatient-department']">
             Register Outpatient
             Department
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-inpatient-department']">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/inpatient-department']">
             Register
             Inpatient
             Department
@@ -145,12 +162,12 @@
         </div>
       </mat-menu>
 
-      <button mat-button routerLink="/home/admin/register-medicine" tabindex="12">
+      <button mat-button routerLink="/home/admin/register/medicine" tabindex="13">
         <mat-icon>medication</mat-icon>
         Register Medication
       </button>
 
-      <button mat-button routerLink="/home/admin/register-allergy" tabindex="13">
+      <button mat-button routerLink="/home/admin/register/allergy" tabindex="14">
         <mat-icon>thermostat</mat-icon>
         Register Allergy
       </button>
@@ -164,7 +181,7 @@
   </ng-container>
   <ng-template #loggedIn>
     <ng-container>
-      <button mat-button style="height: 80%" [matMenuTriggerFor]="userMenu" class="user-card" tabindex="14">
+      <button mat-button style="height: 80%" [matMenuTriggerFor]="userMenu" class="user-card" tabindex="15">
         <div class="user-info">
           <div class="user-text">
             <div
@@ -178,15 +195,16 @@
         </div>
       </button>
     </ng-container>
-    <mat-menu #userMenu="matMenu">
+    <mat-menu xPosition="before" #userMenu="matMenu">
       <button mat-menu-item routerLink="/" (click)="authService.logoutUser()" class="clean-button">Logout</button>
-      <!--<button mat-menu-item routerLink="/profile" class="clean-button">Edit Profile</button>-->
+      <button mat-menu-item [routerLink]="[this.getEditProfilePath()]" class="clean-button">Profile
+      </button>
       <div *ngIf="isHandheld">
         <!-- Role specific actions -->
         <!-- patient -->
         <div *ngIf="isRolePatient()">
           <button mat-menu-item class="clean-button"
-                  [routerLink]="['/home/patient/book-appointment']">Book Appointment
+                  [routerLink]="['/home/patient/appointments/book']">Book Appointment
           </button>
           <button mat-menu-item class="clean-button"
                   [routerLink]="['/home/patient/appointments']">My Appointments
@@ -197,29 +215,29 @@
         </div>
         <!-- secretary -->
         <div *ngIf="isRoleSecretary()">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/book-appointment']">Book
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/appointments/book']">Book
             Appointment
           </button>
           <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/appointments']">All Appointments
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-patient']">Register
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/patients']">Search
+            Patient
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/patients/register']">Register
             Patient
           </button>
           <!--
-            <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/dit-patient']">Edit Patient
-              Information
-            </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/register-stay']">Register stay
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/register']">Register stay
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/edit-stay']">Edit stay
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/edit']">Edit stay
           </button>-->
         </div>
         <!-- doctor -->
         <div *ngIf="isRoleDoctor()">
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/log-treatment']">Log Treatment
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/log']">Log Treatment
           </button>
           <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/edit-treatment']">Edit Treatment
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
           </button>
           -->
           <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/telemedicine']">
@@ -228,29 +246,35 @@
         </div>
         <!-- admin -->
         <div *ngIf="isRoleAdmin()">
+          <!--<button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/admins']">Search Administrators
+          </button>-->
+
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/doctors']">Search Doctors
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/secretaries']">Search Secretaries
+          </button>
           <!--
             <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-admin']">Register Administrator
             </button>
             -->
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-doctor']">Register Doctor
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/doctor']">Register Doctor
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-secretary']">Register
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/secretary']">Register
             Secretary
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-outpatient-department']">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/outpatient-department']">
             Register Outpatient
             Department
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-inpatient-department']">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/inpatient-department']">
             Register
             Inpatient
             Department
           </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-medicine']">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/medicine']">
             Register Medication
           </button>
-
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register-allergy']">
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/allergy']">
             Register Allergy
           </button>
         </div>

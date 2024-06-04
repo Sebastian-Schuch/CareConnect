@@ -4,7 +4,7 @@ import {catchError, forkJoin, Observable, of} from 'rxjs';
 import {map, startWith, tap} from 'rxjs/operators';
 import {AppointmentService} from '../../../services/appointment.service';
 import {OutpatientDepartmentService} from '../../../services/outpatient-department.service';
-import {AppointmentDetailDto} from '../../../dtos/appointment';
+import {AppointmentDto} from '../../../dtos/appointment';
 import {OutpatientDepartmentDto} from '../../../dtos/outpatient-department';
 import {ToastrService} from 'ngx-toastr';
 import {getDate, getMonth, getYear} from "date-fns";
@@ -15,14 +15,14 @@ import {getDate, getMonth, getYear} from "date-fns";
   styleUrls: ['./appointments-secretary.component.scss']
 })
 export class AppointmentsSecretaryComponent implements OnInit {
-  appointments: AppointmentDetailDto[] = [];
-  futureAppointments: AppointmentDetailDto[] = [];
-  pastAppointments: AppointmentDetailDto[] = [];
+  appointments: AppointmentDto[] = [];
+  futureAppointments: AppointmentDto[] = [];
+  pastAppointments: AppointmentDto[] = [];
   outpatientDepartments: OutpatientDepartmentDto[] = [];
   filteredDepartments: Observable<OutpatientDepartmentDto[]>;
   filteredPatients: Observable<string[]>;
   showPastAppointments: boolean = false;
-  appointmentToBeCancelled: AppointmentDetailDto | undefined;
+  appointmentToBeCancelled: AppointmentDto | undefined;
   patients: string[] = [];
   showFilters: boolean = true;
   appointmentFilterForm: FormGroup;
@@ -59,13 +59,13 @@ export class AppointmentsSecretaryComponent implements OnInit {
     });
   }
 
-  getVisibleFutureAppointments(): AppointmentDetailDto[] {
+  getVisibleFutureAppointments(): AppointmentDto[] {
     const startIndex = (this.currentPageFuture - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     return this.futureAppointments.slice(startIndex, endIndex);
   }
 
-  getVisiblePastAppointments(): AppointmentDetailDto[] {
+  getVisiblePastAppointments(): AppointmentDto[] {
     const startIndex = (this.currentPagePast - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     return this.pastAppointments.slice(startIndex, endIndex);

@@ -5,7 +5,7 @@ import {forkJoin, map, Observable, startWith} from "rxjs";
 import {OutpatientDepartmentService} from "../../../../services/outpatient-department.service";
 import {ToastrService} from "ngx-toastr";
 import {Role} from "../../../../dtos/Role";
-import {UserDetailDto} from "../../../../dtos/user";
+import {UserDto} from "../../../../dtos/user";
 import {UserService} from "../../../../services/user.service";
 import {AuthService} from "../../../../services/auth.service";
 
@@ -19,9 +19,9 @@ export class CalendarWrapperComponent implements OnInit {
   appointmentForm: FormGroup;
   outpatientDepartments: OutpatientDepartmentDto[] = [];
   filteredOutPatDep: Observable<OutpatientDepartmentDto[]>;
-  filteredPatientOptions: Observable<UserDetailDto[]>;
-  patientOptions: UserDetailDto[] = [];
-  patient: UserDetailDto;
+  filteredPatientOptions: Observable<UserDto[]>;
+  patientOptions: UserDto[] = [];
+  patient: UserDto;
 
   constructor(
     private outpatientDepartmentService: OutpatientDepartmentService,
@@ -113,7 +113,7 @@ export class CalendarWrapperComponent implements OnInit {
    * @param value the input value to filter for
    * @returns the filtered patients
    */
-  private filterPatients(value: string): UserDetailDto[] {
+  private filterPatients(value: string): UserDto[] {
     const filterValue = value.toString().toLowerCase();
     return this.patientOptions.filter(option =>
       option.firstname.toString().toLowerCase().includes(filterValue) ||
@@ -156,7 +156,7 @@ export class CalendarWrapperComponent implements OnInit {
   /**
    * Get the active patient
    */
-  GetActivePatient(): UserDetailDto {
+  GetActivePatient(): UserDto {
     if (this.isRoleSecretary()) {
       return this.appointmentForm.get('patient').value;
     } else {

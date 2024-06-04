@@ -1,8 +1,8 @@
-export interface AllergyCreateDto {
+export interface AllergyDtoCreate {
   name: string;
 }
 
-export interface AllergyDetailDto {
+export interface AllergyDto {
   id: number;
   name: string;
 }
