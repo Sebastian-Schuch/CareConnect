@@ -9,6 +9,7 @@ public record PatientDtoUpdate(
     String firstname,
     String lastname,
     String email,
-    Boolean active
+    boolean isInitialPassword,
+    boolean active
 ) {
 }

@@ -87,19 +87,8 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorDto> searchDoctors(UserDtoSearch search) {
         LOG.trace("searchDoctors({})", search);
-        String email = null;
-        String firstName = null;
-        String lastName = null;
-        if (search.email() != null) {
-            email = search.email().toUpperCase();
-        }
-        if (search.firstName() != null) {
-            firstName = search.firstName().toUpperCase();
-        }
-        if (search.lastName() != null) {
-            lastName = search.lastName().toUpperCase();
-        }
-        return doctorMapper.doctorsToDoctorDtos(doctorRepository.searchDoctor(email, firstName, lastName));
+        return doctorMapper.doctorsToDoctorDtos(
+            doctorRepository.searchDoctor(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
@@ -126,5 +115,19 @@ public class DoctorServiceImpl implements DoctorService {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Make a string searchable by converting it to upper case.
+     *
+     * @param input the string to make searchable
+     * @return the searchable string
+     */
+    private String makeStringSearchable(String input) {
+        String search = null;
+        if (input != null) {
+            search = input.toUpperCase();
+        }
+        return search;
     }
 }

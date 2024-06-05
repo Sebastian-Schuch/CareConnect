@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,6 +40,7 @@ public class StationEndpointTest extends TestBase {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenStation_whenCreateStation_thenStationIsCreated() throws Exception {
         // given
         StationDtoCreate stationDtoCreate = new StationDtoCreate(STATION_NAME, STATION_CAPACITY);
@@ -60,6 +62,7 @@ public class StationEndpointTest extends TestBase {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenStation_whenCreateAndRetrieveStation_thenStationIsCreatedAndRetrieved() throws Exception {
         // given
         StationDtoCreate stationDtoCreate = new StationDtoCreate(STATION_NAME, STATION_CAPACITY);

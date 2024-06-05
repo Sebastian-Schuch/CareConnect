@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -123,11 +124,18 @@ public class DoctorEndpoint {
         return this.doctorService.getAllDoctors();
     }
 
+    /**
+     * Update a doctor.
+     *
+     * @param id       the id of the doctor to update
+     * @param toUpdate the data to update the doctor with
+     * @return the updated doctor
+     */
     @Secured({"ADMIN", "DOCTOR"})
     @PutMapping({"/{id}"})
     public DoctorDto update(@PathVariable("id") long id, @Valid @RequestBody DoctorDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
-        if (doctorService.isOwnRequest(id)) { //TODO: add check if the token is from an admin (Issue: #15)
+        if (doctorService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
             return this.doctorService.updateDoctor(id, toUpdate);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
@@ -135,6 +143,12 @@ public class DoctorEndpoint {
 
     }
 
+    /**
+     * Search for doctors.
+     *
+     * @param toSearch the data to search for
+     * @return a list of doctors matching the search criteria
+     */
     @Secured({"ADMIN"})
     @GetMapping({"/search"})
     public List<DoctorDto> search(UserDtoSearch toSearch) {

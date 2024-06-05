@@ -19,6 +19,7 @@ export interface UserDto {
   password: string;
   medicines?: MedicationDto[];
   allergies?: AllergyDto[];
+  isInitialPassword?: boolean;
   active?: boolean;
 }
 
@@ -29,6 +30,7 @@ export interface UserDtoUpdate {
   lastname: string;
   medicines?: MedicationDto[];
   allergies?: AllergyDto[];
+  isInitialPassword?: boolean;
   active?: boolean;
 }
 

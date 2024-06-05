@@ -22,6 +22,7 @@ public record CredentialDto(
     @NotBlank(message = "cannot be empty")
     @Size(max = 255, message = "cannot be longer than 255 characters")
     String password,
+    boolean isInitialPassword,
     boolean active
 
 ) {

@@ -75,12 +75,6 @@ public interface PatientService {
      */
     List<PatientDto> searchPatients(UserDtoSearch search);
 
-    /**
-     * Check if the user is a patient.
-     *
-     * @return true if the user is from the patient that is sending the request, false otherwise
-     */
-    boolean isValidPatientRequest();
 
     /**
      * Check if the used id matches the token given.

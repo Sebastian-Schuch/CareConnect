@@ -23,8 +23,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -129,6 +131,12 @@ public class CustomUserDetailService implements UserService {
         return pdfService.getAccountDataSheet(userLogin);
     }
 
+    @Override
+    public boolean isValidRequestOfRole(Role role) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(role.name()));
+    }
+
     /**
      * Create a credentials with the given data.
      *
@@ -182,6 +190,20 @@ public class CustomUserDetailService implements UserService {
         credentialRepository.save(credential);
     }
 
+    @Override
+    public PDDocument resetPassword(String email) {
+        LOGGER.trace("resetPassword({})", email);
+        Credential credential = findApplicationUserByEmail(email);
+        UserLoginDto userLogin = new UserLoginDto();
+        userLogin.setEmail(credential.getEmail());
+        userLogin.setPassword(this.generateRandomPassword());
+        userLogin.setId(credential.getId());
+        credential.setPassword(passwordEncoder.encode(userLogin.getPassword() + passwordPepper));
+        credential.setInitialPassword(true);
+        credentialRepository.save(credential);
+        return pdfService.getAccountDataSheet(userLogin);
+    }
+
     /**
      * Generate a random password of length 12.
      *
@@ -198,11 +220,6 @@ public class CustomUserDetailService implements UserService {
         return randomPassword.toString();
     }
 
-    /**
-     * Disable a user with the given email.
-     *
-     * @param email the email of the user to disable
-     */
     @Override
     public void disableUser(String email) {
         LOGGER.trace("disableUser({})", email);

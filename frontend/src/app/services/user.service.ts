@@ -37,6 +37,20 @@ export class UserService {
   }
 
   /**
+   * Reset the password of the user with the given email.
+   *
+   * @param email the email of the user that should be reset
+   * @return an Observable for the email of the reset user
+   */
+  resetPassword(email: AuthRequest): Observable<Blob> {
+    return this.http.post(
+      `${this.credentialBaseUri}/reset`,
+      email,
+      {responseType: 'blob'}
+    );
+  }
+
+  /**
    * Disable the user with the given email.
    *
    * @param email the email of the user that should be disabled

@@ -65,19 +65,8 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public List<SecretaryDto> searchSecretaries(UserDtoSearch search) {
         LOG.trace("searchSecretaries({})", search);
-        String email = null;
-        String firstName = null;
-        String lastName = null;
-        if (search.email() != null) {
-            email = search.email().toUpperCase();
-        }
-        if (search.firstName() != null) {
-            firstName = search.firstName().toUpperCase();
-        }
-        if (search.lastName() != null) {
-            lastName = search.lastName().toUpperCase();
-        }
-        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.searchSecretary(email, firstName, lastName));
+        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(
+            secretaryRepository.searchSecretary(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
@@ -95,12 +84,6 @@ public class SecretaryServiceImpl implements SecretaryService {
     public List<SecretaryDto> getAllSecretaries() {
         LOG.trace("getAllSecretaries()");
         return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
-    }
-
-    @Override
-    public boolean isValidSecretaryRequest() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("SECRETARY"));
     }
 
     @Override
@@ -127,6 +110,20 @@ public class SecretaryServiceImpl implements SecretaryService {
             return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
+    }
+
+    /**
+     * Make a string searchable by converting it to upper case.
+     *
+     * @param input the string to make searchable
+     * @return the searchable string
+     */
+    private String makeStringSearchable(String input) {
+        String search = null;
+        if (input != null) {
+            search = input.toUpperCase();
+        }
+        return search;
     }
 }
 

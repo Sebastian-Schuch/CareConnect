@@ -5,23 +5,36 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
 
 @RestController
 @RequestMapping(value = CredentialEndpoint.BASE_PATH)
@@ -83,19 +96,24 @@ public class CredentialEndpoint {
         return secretaryService.findSecretaryByCredential(credential);
     }
 
+    /**
+     * Disable user endpoint.
+     *
+     * @param toDisable the user to disable
+     * @return a Response Entity with the status and a message depending on the validity of the request
+     */
     @Secured({"ADMIN", "SECRETARY"})
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping({"/disable"})
-    public ResponseEntity<String> disableUser(@RequestBody UserLoginDto toDisable) {
+    public String disableUser(@RequestBody UserLoginDto toDisable) {
         LOG.trace("disableUser()");
         Credential credential = customUserDetailService.findApplicationUserByEmail(toDisable.getEmail());
-        if (secretaryService.isValidSecretaryRequest() && credential.getRole() == Role.PATIENT) {
+        if (customUserDetailService.isValidRequestOfRole(Role.SECRETARY) && credential.getRole() == Role.PATIENT
+            || (customUserDetailService.isValidRequestOfRole(Role.ADMIN) && (credential.getRole() == Role.DOCTOR || credential.getRole() == Role.SECRETARY || credential.getRole() == Role.ADMIN))) {
             customUserDetailService.disableUser(toDisable.getEmail());
-            return ResponseEntity.ok("User disabled");
+            return "User disabled";
         } else {
-            //if(adminService.isValidAdminRequest() && (credential.getRole() == Role.DOCTOR || credential.getRole() == Role.SECRETARY || credential.getRole() == Role.ADMIN)) {
-            //customUserDetailService.disableUser(email);
-            //} else {
-            return ResponseEntity.status(403).body("You are not allowed to disable this user.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to disable this user.");
         }
     }
 
@@ -106,16 +124,65 @@ public class CredentialEndpoint {
      * @return a Response Entity with the status and a message depending on the validity of the request
      */
     @Secured({"SECRETARY", "PATIENT", "ADMIN", "DOCTOR"})
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping
-    public ResponseEntity<String> changePassword(@RequestBody UserLoginDto newLogin) {
+    public String changePassword(@RequestBody UserLoginDto newLogin) {
         LOG.info("PUT " + BASE_PATH);
         LOG.debug("Body of request:\n{}", newLogin);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!principal.equals(newLogin.getEmail())) {
-            return ResponseEntity.status(403).body("You can only change your own password.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to change the password of another user.");
         }
 
         customUserDetailService.changePassword(newLogin);
-        return ResponseEntity.ok().body("Password changed successfully.");
+        return "Password changed successfully.";
+    }
+
+    /**
+     * Reset password endpoint.
+     *
+     * @param toReset the user to reset the password for
+     * @return the user login PDF stream
+     */
+    @Secured({"SECRETARY", "ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/reset")
+    public ResponseEntity<InputStreamResource> resetPassword(@RequestBody UserLoginDto toReset) {
+        LOG.info("POST " + BASE_PATH);
+        LOG.debug("Body of request:\n{}", toReset);
+        Credential credential = customUserDetailService.findApplicationUserByEmail(toReset.getEmail());
+        if (credential.getRole() == Role.PATIENT && customUserDetailService.isValidRequestOfRole(Role.SECRETARY)
+            || (credential.getRole() == Role.DOCTOR || credential.getRole() == Role.SECRETARY || credential.getRole() == Role.ADMIN) && customUserDetailService.isValidRequestOfRole(Role.ADMIN)) {
+            PDDocument accountDataSheet = customUserDetailService.resetPassword(toReset.getEmail());
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ByteArrayInputStream inputStream = null;
+            try {
+                accountDataSheet.save(outputStream);
+                accountDataSheet.close();
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Content-Disposition", "attachment; filename=accountDataSheet.pdf");
+
+                byte[] bytes = outputStream.toByteArray();
+
+                inputStream = new ByteArrayInputStream(bytes);
+                return ResponseEntity
+                    .created(URI.create(""))
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(inputStream));
+            } catch (IOException e) {
+                throw new PdfCouldNotBeCreatedException("Could not create PDF document: " + e.getMessage());
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        LOG.error("Could not close input stream: {}", e.getMessage());
+                    }
+                }
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to reset the password of this user.");
+        }
     }
 }

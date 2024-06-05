@@ -4,6 +4,7 @@ public record SecretaryDtoUpdate(
     String firstname,
     String lastname,
     String email,
-    Boolean active
+    boolean isInitialPassword,
+    boolean active
 ) {
 }

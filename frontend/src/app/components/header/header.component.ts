@@ -4,10 +4,12 @@ import {Role} from "../../dtos/Role";
 import {UserDto} from "../../dtos/user";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
-import {MatDrawerMode} from "@angular/material/sidenav";
 import {debounceTime, fromEvent} from "rxjs";
-import {BooleanInput} from "@angular/cdk/coercion";
 import {end, right} from "@popperjs/core";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  ChangePasswordFormModalComponent
+} from "../user/change-password-form-modal/change-password-form-modal.component";
 
 @Component({
   selector: 'app-header',
@@ -16,13 +18,10 @@ import {end, right} from "@popperjs/core";
 })
 export class HeaderComponent implements OnInit {
   name: string = ''
-  isLogged: boolean = false;
   isHandheld: boolean = false;
-  mdcBackdrop: BooleanInput = true;
-  drawerMode: MatDrawerMode = "push";
-  userId: number;
+  user: UserDto;
 
-  constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService) {
+  constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -45,13 +44,22 @@ export class HeaderComponent implements OnInit {
       let observable = this.getCorrectObservable();
       observable.subscribe({
         next: (user: UserDto) => {
-          this.userId = user.id;
+          this.user = user;
           this.formatName(user);
+          this.initialPassword();
         },
         error: error => {
           this.notification.error('Error', 'Error loading user credentials', error);
           console.error(error);
         }
+      });
+    }
+  }
+
+  private initialPassword() {
+    if (this.user.isInitialPassword) {
+      this.dialog.open(ChangePasswordFormModalComponent, {
+        width: '500px', data: {email: this.user.email, mode: 'initial'}, disableClose: true
       });
     }
   }
@@ -111,18 +119,23 @@ export class HeaderComponent implements OnInit {
   }
 
   public getEditProfilePath() {
-    switch (this.authService.getUserRole()) {
-      case Role.admin:
-        return '/home/admin/' + this.userId;
-      case Role.doctor:
-        return '/home/doctor/' + this.userId;
-      case Role.secretary:
-        return '/home/secretary/' + this.userId;
-      case Role.patient:
-        return '/home/patient/' + this.userId;
-      default:
-        return '/';
+    if (this.user) {
+      switch (this.authService.getUserRole()) {
+        case Role.admin:
+          return '/home/admin/' + this.user.id;
+        case Role.doctor:
+          return '/home/doctor/' + this.user.id;
+        case Role.secretary:
+          return '/home/secretary/' + this.user.id;
+        case Role.patient:
+          return '/home/patient/' + this.user.id;
+        default:
+          return '/';
+      }
+    } else {
+      return '/';
     }
+
   }
 
   protected readonly Role = Role;

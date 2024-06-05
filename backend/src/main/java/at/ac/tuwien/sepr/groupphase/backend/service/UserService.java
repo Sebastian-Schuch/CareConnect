@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -67,11 +68,27 @@ public interface UserService extends UserDetailsService {
     PDDocument createPatient(PatientDtoCreate toCreate);
 
     /**
+     * Check if the user is from the specified role.
+     *
+     * @param role the role to check
+     * @return true if the user is from the patient that is sending the request, false otherwise
+     */
+    boolean isValidRequestOfRole(Role role);
+
+    /**
      * Changes the password of the user who sent the request.
      *
      * @param newLogin the new user login data
      */
     void changePassword(UserLoginDto newLogin);
+
+    /**
+     * Resets the password of the user.
+     *
+     * @param email the email of the user to reset the password
+     * @return the user login data
+     */
+    PDDocument resetPassword(String email);
 
     /**
      * Disables a user.

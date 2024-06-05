@@ -30,6 +30,13 @@ public class OutpatientDepartmentEndpoint {
         this.outpatientDepartmentService = outpatientDepartmentService;
     }
 
+    /**
+     * Create a new outpatient department.
+     *
+     * @param outpatientDepartmentDto the data for the outpatient department to create
+     * @return the created outpatient department
+     * @throws MethodArgumentNotValidException if the outpatient department is not valid
+     */
     @Secured({"ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -39,6 +46,12 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.createOutpatientDepartment(outpatientDepartmentDto);
     }
 
+    /**
+     * Get an outpatient department by its id.
+     *
+     * @param id the id of the outpatient department
+     * @return the outpatient department
+     */
     @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/{id}"})
     public OutpatientDepartmentDto getOutpatientDepartmentById(@PathVariable("id") Long id) {
@@ -46,6 +59,11 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.getOutpatientDepartmentById(id);
     }
 
+    /**
+     * Get all outpatient departments.
+     *
+     * @return list of outpatient departments
+     */
     @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
