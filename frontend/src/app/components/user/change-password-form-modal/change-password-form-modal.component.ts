@@ -70,7 +70,7 @@ export class ChangePasswordFormModalComponent implements OnInit {
   onSubmit() {
     if (this.changePasswordForm.valid && this.equalPasswords()) {
       let auth: AuthRequest = {
-        email: this.data,
+        email: this.data.email,
         password: this.newPwRepeatControl.value
       }
       let observable = this.userService.changePassword(auth);

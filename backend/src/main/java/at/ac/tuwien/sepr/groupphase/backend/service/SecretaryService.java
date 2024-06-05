@@ -62,13 +62,6 @@ public interface SecretaryService {
     List<SecretaryDto> getAllSecretaries();
 
     /**
-     * Check if the user is a secretary.
-     *
-     * @return true if the user is from the secretary that is sending the request, false otherwise
-     */
-    boolean isValidSecretaryRequest();
-
-    /**
      * Check if the used id matches the token given.
      *
      * @param userId the id of the user

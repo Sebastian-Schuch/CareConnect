@@ -6,11 +6,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.StationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Station;
 import at.ac.tuwien.sepr.groupphase.backend.service.StationService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +36,13 @@ public class StationEndpoint {
         this.stationMapper = stationMapper;
     }
 
-    @PermitAll
+    /**
+     * Create a new station.
+     *
+     * @param toCreate the data for the station to create
+     * @return the created station
+     */
+    @Secured({"ADMIN"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new station")
@@ -46,7 +52,12 @@ public class StationEndpoint {
         return stationMapper.stationToDto(newStation);
     }
 
-    @PermitAll
+    /**
+     * Get all stations.
+     *
+     * @return list of stations
+     */
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping
     @Operation(summary = "Get list of stations")
     public List<StationDto> getAllStations() {
@@ -55,7 +66,13 @@ public class StationEndpoint {
     }
 
 
-    @PermitAll
+    /**
+     * Get a station by id.
+     *
+     * @param id the id of the station
+     * @return the station
+     */
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get a station")
     public StationDto getById(@PathVariable(name = "id") Long id) {

@@ -1,144 +1,146 @@
-<div class="start-page-container on-landing-hidden">
-  <div style="position: relative;">
-    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+<div *ngIf="this.user || modeIsCreate">
+  <div class="start-page-container on-landing-hidden">
+    <div style="position: relative;">
+      <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
       <span>
         <div *ngIf="modeIsView || modeIsEdit">{{ modeString }} Profile</div><div
         *ngIf="modeIsCreate">{{ modeString }} {{ roleString }}</div></span>
-    </h1>
-  </div>
-  <div *ngIf="roleIsPatient">
-    <h3 *ngIf="modeIsCreate">Here you can register a new {{ roleString.toLowerCase() }}</h3>
-    <h3 *ngIf="modeIsView || modeIsEdit">Here you can {{ modeString.toLowerCase() }} your {{ roleString.toLowerCase() }}
-      profile</h3>
-    <br>
-  </div>
-</div>
-
-<form [formGroup]="userForm" #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="submitForm()"
-      aria-label="Form to create a user" xmlns="http://www.w3.org/1999/html">
-  <fieldset aria-label="Inputs for user creation">
-    <!-- <legend>Inputs for user creation</legend> -->
-    <div class="row">
-      <!-- Start first name and last name row -->
-      <div class="mb-2 col-lg-6">
-        <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
-        <div class="row form-group">
-          <label for="{{role}}userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-            First Name
-          </label>
-          <div class="col-md-10 col-lg-8"
-          >
-            <input type="text"
-                   id="{{role}}userFirstName"
-                   name="userFirstName"
-                   placeholder="First Name of {{ roleString}}"
-                   class="form-control"
-                   tabindex="21"
-                   formControlName="firstname"
-            >
-
-            <div class="invalid-feedback">
-              <!-- This is shown, when the form validation deems the name input to be invalid -->
-              First Name is required
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mb-2 col-lg-6">
-        <div class="row form-group">
-          <label for="{{role}}userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-            Last Name
-          </label>
-          <div class="col-md-10 col-lg-8"
-          >
-            <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
-                 The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
-              -->
-            <input type="text"
-                   id="{{role}}userLastName"
-                   name="userLastName"
-                   placeholder="Last Name of {{roleString}}"
-                   class="form-control"
-                   tabindex="22"
-                   formControlName="lastname"
-            >
-            <div class="invalid-feedback">
-              Last Name is required
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- End first name and last name row -->
+      </h1>
     </div>
-
-    <div class="row">
-      <!-- Start email row -->
-      <div class="mb-2 col-lg-6">
-        <div class="row form-group">
-          <label for="{{role}}userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-            Email
-          </label>
-          <div class="col-md-10 col-lg-8"
-          >
-            <input type="text"
-                   id="{{role}}userEmail"
-                   name="userEmail"
-                   placeholder="Email of {{roleString}}"
-                   class="form-control"
-                   formControlName="email"
-                   tabindex="23"
-            >
-            <div class="invalid-feedback">
-              Email is required
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mb-2 col-lg-6" *ngIf="roleIsPatient">
-        <div class="row form-group">
-          <label for="{{role}}userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"
-          >
-            Svnr
-          </label>
-          <div class="col-md-10 col-lg-8"
-          >
-            <input type="text"
-                   id="{{role}}userSvnr"
-                   name="userSvnr"
-                   placeholder="Svnr of {{roleString}}"
-                   class="form-control"
-                   *ngIf="roleIsPatient"
-                   tabindex="24"
-                   formControlName="svnr"
-            >
-            <div class="invalid-feedback" *ngIf="roleIsPatient">
-              Svnr is required
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- End email row -->
+    <div *ngIf="roleIsPatient">
+      <h3 *ngIf="modeIsCreate">Here you can register a new {{ roleString.toLowerCase() }}</h3>
+      <h3 *ngIf="modeIsView || modeIsEdit">Here you can {{ modeString.toLowerCase() }}
+        your {{ roleString.toLowerCase() }}
+        profile</h3>
+      <br>
     </div>
-    <div class="row">
-      <!-- Start medication row-->
-      <div class="row form-group col-lg-6" *ngIf="roleIsPatient">
-        <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          Medications
-        </label>
-        <div class="col-md-10 col-lg-8"
-        >
-          <mat-form-field appearance="fill" class="matFormFieldFullWidth">
-            <mat-label>Medications</mat-label>
-            <input tabindex="25" type="text" matInput formControlName="medication" [matAutocomplete]="medicationAuto">
-            <mat-autocomplete #medicationAuto="matAutocomplete" autoActiveFirstOption="true">
-              <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication.name"
-                          (onSelectionChange)="addMedicationToSelection(medication)">
-                {{ medication.name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+  </div>
+
+  <form [formGroup]="userForm" #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="submitForm()"
+        aria-label="Form to create a user" xmlns="http://www.w3.org/1999/html">
+    <fieldset aria-label="Inputs for user creation">
+      <!-- <legend>Inputs for user creation</legend> -->
+      <div class="row">
+        <!-- Start first name and last name row -->
+        <div class="mb-2 col-lg-6">
+          <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+          <div class="row form-group">
+            <label for="{{role}}userFirstName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+              First Name
+            </label>
+            <div class="col-md-10 col-lg-8"
+            >
+              <input type="text"
+                     id="{{role}}userFirstName"
+                     name="userFirstName"
+                     placeholder="First Name of {{ roleString}}"
+                     class="form-control"
+                     tabindex="21"
+                     formControlName="firstname"
+              >
+
+              <div class="invalid-feedback">
+                <!-- This is shown, when the form validation deems the name input to be invalid -->
+                First Name is required
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="badge-container">
+        <div class="mb-2 col-lg-6">
+          <div class="row form-group">
+            <label for="{{role}}userLastName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+              Last Name
+            </label>
+            <div class="col-md-10 col-lg-8"
+            >
+              <!-- pattern and placeholder are fallbacks for browser, that use a simple text input for type="date"
+                   The date format of the plain HTML date input, in browser that support it is, sadly, not changeable in a cross-browser way
+                -->
+              <input type="text"
+                     id="{{role}}userLastName"
+                     name="userLastName"
+                     placeholder="Last Name of {{roleString}}"
+                     class="form-control"
+                     tabindex="22"
+                     formControlName="lastname"
+              >
+              <div class="invalid-feedback">
+                Last Name is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End first name and last name row -->
+      </div>
+
+      <div class="row">
+        <!-- Start email row -->
+        <div class="mb-2 col-lg-6">
+          <div class="row form-group">
+            <label for="{{role}}userEmail" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+              Email
+            </label>
+            <div class="col-md-10 col-lg-8"
+            >
+              <input type="text"
+                     id="{{role}}userEmail"
+                     name="userEmail"
+                     placeholder="Email of {{roleString}}"
+                     class="form-control"
+                     formControlName="email"
+                     tabindex="23"
+              >
+              <div class="invalid-feedback">
+                Email is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-2 col-lg-6" *ngIf="roleIsPatient">
+          <div class="row form-group">
+            <label for="{{role}}userSvnr" class="col-form-label text-md-end text-muted col-md-2 col-lg-4"
+            >
+              Svnr
+            </label>
+            <div class="col-md-10 col-lg-8"
+            >
+              <input type="text"
+                     id="{{role}}userSvnr"
+                     name="userSvnr"
+                     placeholder="Svnr of {{roleString}}"
+                     class="form-control"
+                     *ngIf="roleIsPatient"
+                     tabindex="24"
+                     formControlName="svnr"
+              >
+              <div class="invalid-feedback" *ngIf="roleIsPatient">
+                Svnr is required
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End email row -->
+      </div>
+      <div class="row">
+        <!-- Start medication row-->
+        <div class="row form-group col-lg-6" *ngIf="roleIsPatient">
+          <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+            Medications
+          </label>
+          <div class="col-md-10 col-lg-8"
+          >
+            <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+              <mat-label>Medications</mat-label>
+              <input tabindex="25" type="text" matInput formControlName="medication" [matAutocomplete]="medicationAuto">
+              <mat-autocomplete #medicationAuto="matAutocomplete" autoActiveFirstOption="true">
+                <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication.name"
+                            (onSelectionChange)="addMedicationToSelection(medication)">
+                  {{ medication.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div class="badge-container">
           <span *ngFor="let medication of selectedMedicationOptions" class="badge rounded-pill">
             {{ medication.name }}
             <button (click)="removeMedicationFromSelection(medication)" class="btn-close btn-close-white"
@@ -147,28 +149,28 @@
               <span class="visually-hidden">Remove {{ medication.name }}</span>
             </button>
           </span>
+          </div>
         </div>
-      </div>
 
 
-      <div class="row form-group col-lg-6" *ngIf="roleIsPatient">
-        <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
-          Allergies
-        </label>
-        <div class="col-md-10 col-lg-8"
-        >
-          <mat-form-field appearance="fill" class="matFormFieldFullWidth">
-            <mat-label>Allergies</mat-label>
-            <input tabindex="26" type="text" matInput formControlName="allergy" [matAutocomplete]="allergyAuto">
-            <mat-autocomplete #allergyAuto="matAutocomplete" autoActiveFirstOption="true">
-              <mat-option *ngFor="let allergy of filteredAllergyOptions | async" [value]="allergy.name"
-                          (onSelectionChange)="addAllergyToSelection(allergy)">
-                {{ allergy.name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-        <div class="badge-container">
+        <div class="row form-group col-lg-6" *ngIf="roleIsPatient">
+          <label class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+            Allergies
+          </label>
+          <div class="col-md-10 col-lg-8"
+          >
+            <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+              <mat-label>Allergies</mat-label>
+              <input tabindex="26" type="text" matInput formControlName="allergy" [matAutocomplete]="allergyAuto">
+              <mat-autocomplete #allergyAuto="matAutocomplete" autoActiveFirstOption="true">
+                <mat-option *ngFor="let allergy of filteredAllergyOptions | async" [value]="allergy.name"
+                            (onSelectionChange)="addAllergyToSelection(allergy)">
+                  {{ allergy.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+          <div class="badge-container">
           <span *ngFor="let allergy of selectedAllergyOptions" class="badge rounded-pill">
             {{ allergy.name }}
             <button (click)="removeAllergyFromSelection(allergy)" class="btn-close btn-close-white"
@@ -177,26 +179,32 @@
               <span class="visually-hidden">Remove {{ allergy.name }}</span>
             </button>
           </span>
+          </div>
         </div>
       </div>
+    </fieldset>
+
+
+    <div class="mt-4 d-flex flex-row">
+      <button *ngIf="modeIsEdit && isOwnEdit" mat-button type="button"
+              class="sepr-btn-submit"
+              (click)="openPasswordModal()"
+              tabindex="27">Change Password
+      </button>
+      <button *ngIf="modeIsEdit && !isOwnEdit" mat-button type="button"
+              class="sepr-btn-submit"
+              (click)="openResetModal()"
+              tabindex="27">Reset Password
+      </button>
+      <span class="flex-grow-1"></span>
+      <button mat-button type="submit"
+              class="sepr-btn-submit"
+              tabindex="28"
+      >
+        <div *ngIf="modeIsCreate">Register {{ roleString }}</div>
+        <div *ngIf="modeIsEdit">Save changes</div>
+        <div *ngIf="modeIsView">Edit Account</div>
+      </button>
     </div>
-  </fieldset>
-
-
-  <div class="mt-4 d-flex flex-row">
-    <button *ngIf="modeIsEdit && isOwnEdit" mat-button type="button"
-            class="sepr-btn-submit"
-            (click)="openPasswordModal()"
-            tabindex="27">Change Password
-    </button>
-    <span class="flex-grow-1"></span>
-    <button mat-button type="submit"
-            class="sepr-btn-submit"
-            tabindex="28"
-    >
-      <div *ngIf="modeIsCreate">Register {{ roleString }}</div>
-      <div *ngIf="modeIsEdit">Save changes</div>
-      <div *ngIf="modeIsView">Edit Account</div>
-    </button>
-  </div>
-</form>
+  </form>
+</div>

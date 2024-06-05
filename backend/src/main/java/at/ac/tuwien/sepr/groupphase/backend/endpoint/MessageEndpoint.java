@@ -32,6 +32,12 @@ public class MessageEndpoint {
         this.messageService = messageService;
     }
 
+    /**
+     * Send a message to a treatment chat.
+     *
+     * @param message        the message to send
+     * @param headerAccessor the header accessor
+     */
     @MessageMapping("/chat/{to}")
     public void sendMessage(@Payload MessageDtoCreate message, SimpMessageHeaderAccessor headerAccessor) {
         LOGGER.info("Message sent to treatment chat: {}", message.treatmentId());
@@ -41,6 +47,12 @@ public class MessageEndpoint {
         }
     }
 
+    /**
+     * Get all messages for a treatment.
+     *
+     * @param treatmentId the id of the treatment
+     * @return the chat
+     */
     @Secured({"PATIENT", "DOCTOR"})
     @GetMapping("/{treatmentId}")
     public ChatDto getMessages(@PathVariable("treatmentId") long treatmentId) {
@@ -48,6 +60,11 @@ public class MessageEndpoint {
         return messageService.getChat(treatmentId);
     }
 
+    /**
+     * Get all active chats.
+     *
+     * @return list of active chats
+     */
     @GetMapping("/active")
     @Secured({"PATIENT", "DOCTOR"})
     public List<ChatDto> getActiveChats() {
@@ -55,6 +72,11 @@ public class MessageEndpoint {
         return messageService.getChats(true);
     }
 
+    /**
+     * Get all available chats.
+     *
+     * @return list of available chats
+     */
     @GetMapping("/available")
     @Secured("PATIENT")
     public List<ChatDto> getAvailableChats() {

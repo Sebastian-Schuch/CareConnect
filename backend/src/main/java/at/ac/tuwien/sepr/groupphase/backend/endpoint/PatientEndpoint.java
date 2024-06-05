@@ -8,8 +8,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -45,13 +45,10 @@ public class PatientEndpoint {
 
     private final PatientService patientService;
 
-    private final SecretaryService secretaryService;
-
     private final UserService userService;
 
-    public PatientEndpoint(PatientService patientService, SecretaryService secretaryService, UserService userService) {
+    public PatientEndpoint(PatientService patientService, UserService userService) {
         this.patientService = patientService;
-        this.secretaryService = secretaryService;
         this.userService = userService;
     }
 
@@ -109,11 +106,15 @@ public class PatientEndpoint {
      * @param id the id of patient requested
      * @return the patient requested
      */
-    @Secured({"SECRETARY", "PATIENT", "ADMIN", "DOCTOR"})
+    @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping({"/{id}"})
     public PatientDto get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
-        return this.patientService.getPatientById(id);
+        if (patientService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR)) {
+            return this.patientService.getPatientById(id);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
+        }
     }
 
     /**
@@ -128,17 +129,30 @@ public class PatientEndpoint {
         return this.patientService.getAllPatients();
     }
 
+    /**
+     * Update the patient with the given id.
+     *
+     * @param id       the id of the patient to update
+     * @param toUpdate the data to update the patient with
+     * @return the updated patient
+     */
     @Secured({"SECRETARY", "PATIENT"})
     @PutMapping({"/{id}"})
     public PatientDto update(@PathVariable("id") long id, @Valid @RequestBody PatientDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
-        if (secretaryService.isValidSecretaryRequest() || patientService.isOwnRequest(id)) {
+        if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(id)) {
             return this.patientService.updatePatient(id, toUpdate);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }
     }
 
+    /**
+     * Search for patients.
+     *
+     * @param toSearch the search parameters
+     * @return a list of patients matching the search parameters
+     */
     @Secured({"SECRETARY"})
     @GetMapping({"/search"})
     public List<PatientDto> search(UserDtoSearch toSearch) {

@@ -6,6 +6,7 @@ public record SecretaryDto(
     String lastname,
     String email,
     String password,
+    boolean isInitialPassword,
     boolean active
 ) {
 }

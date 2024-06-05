@@ -7,7 +7,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +36,12 @@ public class AppointmentEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AppointmentService appointmentService;
     private final PatientService patientService;
-    private final SecretaryService secretaryService;
+    private final UserService userService;
 
-    public AppointmentEndpoint(AppointmentService appointmentService, PatientService patientService, SecretaryService secretaryService) {
+    public AppointmentEndpoint(AppointmentService appointmentService, PatientService patientService, UserService userService) {
         this.appointmentService = appointmentService;
         this.patientService = patientService;
-        this.secretaryService = secretaryService;
+        this.userService = userService;
     }
 
     /**
@@ -55,7 +56,11 @@ public class AppointmentEndpoint {
     public AppointmentDto create(@Valid @RequestBody AppointmentDtoCreate toCreate) throws ConflictException {
         LOG.info("POST" + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
-        return this.appointmentService.create(toCreate);
+        if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(toCreate.patient().id())) {
+            return this.appointmentService.create(toCreate);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
+        }
     }
 
     /**
@@ -69,7 +74,7 @@ public class AppointmentEndpoint {
     public void delete(@PathVariable("id") long id) {
         LOG.info("DELETE" + BASE_PATH + "/{}", id);
         long userId = appointmentService.getAppointmentById(id).patient().id();
-        if (secretaryService.isValidSecretaryRequest() || patientService.isOwnRequest(userId)) {
+        if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(userId)) {
             appointmentService.delete(id);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unauthorized to delete this appointment");
@@ -86,7 +91,7 @@ public class AppointmentEndpoint {
     @GetMapping({"/patients/{id}"})
     public ResponseEntity<List<AppointmentDto>> getAllAppointmentsFromPatientWithPatientId(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/patients/{}", id);
-        if (secretaryService.isValidSecretaryRequest() || patientService.isOwnRequest(id)) {
+        if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(id)) {
             return ResponseEntity.status(200).body(appointmentService.getAllAppointmentsFromPatientWithPatientId(id));
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");

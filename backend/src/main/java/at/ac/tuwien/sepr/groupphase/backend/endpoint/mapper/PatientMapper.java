@@ -47,6 +47,7 @@ public class PatientMapper {
         return new PatientDto(patient.getPatientId(), patient.getSvnr(), medicationMapper.medicationEntitiesToListOfMedicationDto(patient.getMedicines()), allergyMapper.allergyToDto(patient.getAllergies()),
             patient.getCredential().getFirstName(), patient.getCredential().getLastName(), patient.getCredential().getEmail(),
             patient.getCredential().getPassword(),
+            patient.getCredential().isInitialPassword(),
             patient.getCredential().getActive());
 
     }

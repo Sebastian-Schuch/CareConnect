@@ -26,6 +26,7 @@ public class SecretaryMapper {
     public SecretaryDto secretaryEntityToSecretaryDtoDetail(Secretary secretary) {
         LOG.trace("secretaryEntityToSecretaryDtoDetail({})", secretary);
         return new SecretaryDto(secretary.getSecretaryId(), secretary.getCredential().getFirstName(), secretary.getCredential().getLastName(), secretary.getCredential().getEmail(), secretary.getCredential().getPassword(),
+            secretary.getCredential().isInitialPassword(),
             secretary.getCredential().getActive());
     }
 

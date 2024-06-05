@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
@@ -106,7 +107,7 @@ public class SecretaryEndpoint {
      */
 
     @GetMapping({"/{id}"})
-    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
     public SecretaryDto getById(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/{}", id);
         return secretaryService.getById(id);
@@ -117,24 +118,37 @@ public class SecretaryEndpoint {
      *
      * @return a list of all secretaries
      */
-    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
     @GetMapping
     public List<SecretaryDto> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.secretaryService.getAllSecretaries();
     }
 
+    /**
+     * Update a secretary.
+     *
+     * @param id       the id of the secretary to update
+     * @param toUpdate the data to update the secretary with
+     * @return the updated secretary
+     */
     @Secured({"ADMIN", "SECRETARY"})
     @PutMapping({"/{id}"})
     public SecretaryDto update(@PathVariable("id") long id, @Valid @RequestBody SecretaryDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
-        if (secretaryService.isOwnRequest(id)) { //TODO: add check if the token is from an admin (Issue: #15)
+        if (secretaryService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
             return this.secretaryService.updateSecretary(id, toUpdate);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }
     }
 
+    /**
+     * Search for secretaries.
+     *
+     * @param toSearch the data to search for
+     * @return a list of secretaries that match the search criteria
+     */
     @Secured({"ADMIN"})
     @GetMapping({"/search"})
     public List<SecretaryDto> search(UserDtoSearch toSearch) {

@@ -96,6 +96,7 @@ class TreatmentEndpointTest extends TestBase {
                 "test1",
                 "test@g.c",
                 "om08slg7p96o8rvl7ea0fl514g",
+                true,
                 true
 
             ),
@@ -113,6 +114,7 @@ class TreatmentEndpointTest extends TestBase {
                 "Smith",
                 "alice@test.c",
                 "cpde6mofjrqnbmc6t3d7cpmp6d",
+                true,
                 true)),
             List.of(new TreatmentMedicineDtoCreate(
                 new MedicationDto(1L, "m2", true),

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserDtoCreate, UserDtoUpdate} from "../../../dtos/user";
+import {UserDto, UserDtoCreate, UserDtoUpdate} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup, NgModel, Validators} from "@angular/forms";
@@ -14,6 +14,7 @@ import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {AuthService} from "../../../services/auth.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordFormModalComponent} from "../change-password-form-modal/change-password-form-modal.component";
+import {ResetPasswordDialogComponent} from "../reset-password-dialog/reset-password-dialog.component";
 
 export enum UserCreateEditMode {
   create,
@@ -35,7 +36,7 @@ export class UserCreateComponent implements OnInit {
   mode: UserCreateEditMode = null;
 
   userId: number = null;
-  userEmail: string = null;
+  user: UserDto = null;
 
   create: UserDtoCreate = {
     email: '',
@@ -129,7 +130,11 @@ export class UserCreateComponent implements OnInit {
   }
 
   get isOwnEdit(): boolean {
-    return this.authService.getUserEmail() === this.userEmail;
+    if (this.user) {
+      return this.authService.getUserEmail() === this.user.email;
+    } else {
+      return false;
+    }
   }
 
   ngOnInit(): void {
@@ -183,7 +188,7 @@ export class UserCreateComponent implements OnInit {
     }
     observable.subscribe({
       next: user => {
-        this.userEmail = user.email;
+        this.user = user;
         this.userForm.get('email').setValue(user.email);
         this.userForm.get('firstname').setValue(user.firstname);
         this.userForm.get('lastname').setValue(user.lastname);
@@ -336,7 +341,13 @@ export class UserCreateComponent implements OnInit {
 
   openPasswordModal() {
     this.dialog.open(ChangePasswordFormModalComponent, {
-      width: '500px', data: this.userEmail
+      width: '500px', data: {email: this.user.email, mode: 'edit'}, disableClose: false
+    });
+  }
+
+  openResetModal() {
+    this.dialog.open(ResetPasswordDialogComponent, {
+      width: '500px', data: {user: this.user}, disableClose: false
     });
   }
 
