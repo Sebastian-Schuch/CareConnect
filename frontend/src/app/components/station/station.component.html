@@ -23,7 +23,7 @@
                  placeholder="Inpatient Department Name"
                  class="form-control"
                  [class]="dynamicCssClassesForInput(InpatientModel)"
-                 [(ngModel)]="station.name"
+                 [(ngModel)]="getModel().name"
                  #InpatientModel="ngModel"
                  required
           >
@@ -47,7 +47,7 @@
                  placeholder="Capacity"
                  class="form-control"
                  [class]="dynamicCssClassesForInput(CapacityModel)"
-                 [(ngModel)]="station.capacity"
+                 [(ngModel)]="getModel().capacity"
                  #CapacityModel="ngModel"
                  required
                  tabindex="22"
@@ -67,7 +67,7 @@
             class="btn btn-primary"
             [disabled]="!form.valid"
     >
-      Register Inpatient Department
+      {{mode === InpatientDepartmentCreateEditMode.create ? "Register Inpatient Department" : "Edit Inpatient Department"}}
     </button>
   </div>
 </form>

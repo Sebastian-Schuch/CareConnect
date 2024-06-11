@@ -90,6 +90,16 @@
           >
             <mat-icon>delete</mat-icon>
           </button>
+          <div *ngIf="isPatientList">
+            <label hidden [for]="i+'stay'">Stay Overview</label>
+            <button [id]="i+'stay'" class="btn btn-sm responsive-info-button"
+                    [routerLink]="[user.id, 'stay']"
+                    aria-label="Stay Overview"
+                    [tabindex]="i+'30'"
+            >
+              <span class="material-icons">bed</span>
+            </button>
+          </div>
         </div>
       </td>
     </tr>

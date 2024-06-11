@@ -8,3 +8,8 @@ export interface StationDto {
   name: string;
   capacity: number;
 }
+
+export interface StationPageDto {
+  stations: StationDto[];
+  totalItems: number;
+}

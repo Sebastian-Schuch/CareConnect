@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StationDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Station;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 public interface StationService {
 
@@ -28,7 +30,7 @@ public interface StationService {
      *
      * @return all stations in the db
      */
-    List<Station> findAll();
+    StationPageDto findAll(Specification<Station> spec, Pageable pageable);
 
     /**
      * This function creates a new station and assigns a new auto-generated id to it.
@@ -39,10 +41,18 @@ public interface StationService {
     Station createStation(StationDtoCreate toCreate);
 
     /**
-     * This function counts the number of stations in the db.
+     * This function updates a station in the db.
      *
      * @param toUpdate the station to update
-     * @return the number of stations in the db
+     * @return the new station
      */
-    Station updateStation(Station toUpdate);
+    StationDto updateStation(StationDto toUpdate);
+
+    /**
+     * This function deletes a station from the db.
+     *
+     * @param id the id of the station to delete
+     * @return the deleted station
+     */
+    StationDto deleteStation(Long id);
 }
