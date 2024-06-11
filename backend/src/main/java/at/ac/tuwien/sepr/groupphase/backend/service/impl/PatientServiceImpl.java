@@ -70,6 +70,16 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public Patient getPatientEntityByEmail(String email) {
+        Patient patient = patientRepository.findByCredential_Email(email);
+        if (patient == null) {
+            LOG.warn("patient with email {} not found", email);
+            throw new NotFoundException("Patient not found");
+        }
+        return patient;
+    }
+
+    @Override
     public PatientDto updatePatient(Long id, PatientDtoUpdate toUpdate) {
         LOG.trace("updatePatient({}, {})", id, toUpdate);
         Patient patient = patientRepository.findById(id).orElse(null);

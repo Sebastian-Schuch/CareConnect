@@ -26,6 +26,21 @@
         Telemedicine
       </button>
 
+      <button mat-button [matMenuTriggerFor]="departmentmentsMenu" tabindex="4">
+        <mat-icon>add_business</mat-icon>
+        View Departments
+      </button>
+      <mat-menu #departmentmentsMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button">
+            Outpatient Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/patient/inpatient-department']">
+            Inpatient Department
+          </button>
+        </div>
+      </mat-menu>
+
       <!-- Hidden until feature is available-->
       <!--
       <button mat-button [routerLink]="['/home/patient/treatments']" tabindex="4">
@@ -71,6 +86,21 @@
         </div>
       </mat-menu>
 
+      <button mat-button [matMenuTriggerFor]="departmentmentsMenu" tabindex="7">
+        <mat-icon>add_business</mat-icon>
+        View Departments
+      </button>
+      <mat-menu #departmentmentsMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button">
+            Outpatient Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/inpatient-department']">
+            Inpatient Department
+          </button>
+        </div>
+      </mat-menu>
+
       <!--
           <button mat-button [matMenuTriggerFor]="stayMenu" tabindex="7">
             <mat-icon>medical_information</mat-icon>
@@ -108,6 +138,22 @@
         <mat-icon>chat_bubble</mat-icon>
         Telemedicine
       </button>
+
+      <button mat-button [matMenuTriggerFor]="departmentmentsMenu" tabindex="10">
+        <mat-icon>add_business</mat-icon>
+        View Departments
+      </button>
+      <mat-menu #departmentmentsMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button">
+            Outpatient Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/inpatient-department']">
+            Inpatient Department
+          </button>
+        </div>
+      </mat-menu>
+
     </ng-container>
 
     <!-- Logged in as admin -->
@@ -158,6 +204,11 @@
             Register
             Inpatient
             Department
+          </button>
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/inpatient-department']">
+            View
+            Inpatient
+            Departments
           </button>
         </div>
       </mat-menu>

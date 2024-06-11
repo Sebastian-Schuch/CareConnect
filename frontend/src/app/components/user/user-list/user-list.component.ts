@@ -10,6 +10,7 @@ import {UserService} from "../../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 import {MatDialog} from "@angular/material/dialog";
 import {DeleteUserDialogComponent} from "../delete-user-dialog/delete-user-dialog.component";
+import {StaysManageComponent} from "../../stays/stays-manage/stays-manage.component";
 
 @Component({
   selector: 'app-user-list',
@@ -97,6 +98,12 @@ export class UserListComponent implements OnInit {
 
     dialogRef.componentInstance.deletedUser.subscribe(() => {
       this.reloadUsers();
+    });
+  }
+
+  public stayMenu(user: UserDtoList){
+    this.dialog.open(StaysManageComponent, {
+      data: user
     });
   }
 

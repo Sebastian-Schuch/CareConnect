@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Edit Stay</h2>
+<form [formGroup]="updateDate">
+<mat-dialog-content>
+  <div class="DatePickerElement">
+    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+      <mat-hint>DD/MM/YYYY</mat-hint>
+      <input matInput formControlName="StartDate" [matDatepicker]="startpicker" placeholder="Start Date">
+      <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+      <mat-datepicker #startpicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div >
+    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+      <mat-label>start - time</mat-label>
+      <mat-hint>HH:MM</mat-hint>
+      <input matInput [type]="'time'" formControlName="StartTime" placeholder="HH:mm" required>
+    </mat-form-field>
+  </div>
+
+
+  <div class="DatePickerElement">
+    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+      <mat-hint>DD/MM/YYYY</mat-hint>
+      <input matInput formControlName="EndDate" [matDatepicker]="endpicker" placeholder="End Date">
+      <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+      <mat-datepicker #endpicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="DatePickerElement">
+    <mat-form-field appearance="fill" class="matFormFieldFullWidth">
+      <mat-label>end - time</mat-label>
+      <mat-hint>HH:MM</mat-hint>
+      <input matInput [type]="'time'" formControlName="EndTime" placeholder="HH:mm" required>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="close()">Close</button>
+  <button mat-button (click)="submit()">Save</button>
+</mat-dialog-actions>
+</form>

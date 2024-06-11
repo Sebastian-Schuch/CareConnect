@@ -24,11 +24,15 @@ import {TreatmentComponent} from "./components/treatment/treatment.component";
 import {
   OutpatientDepartmentComponent
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
-import {StationComponent} from "./components/station/station.component";
+import {InpatientDepartmentCreateEditMode, StationComponent} from "./components/station/station.component";
 import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
+import {StaysListComponent} from "./components/stays/stays-list/stays-list.component";
+import {
+  InpatientDepartmentListComponent
+} from "./components/station/inpatient-department-list/inpatient-department-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -45,6 +49,7 @@ const routes: Routes = [
             ]
           },
           {path: 'telemedicine', component: ChatComponent},
+          {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
@@ -70,7 +75,7 @@ const routes: Routes = [
                 data: {role: Role.secretary, mode: UserCreateEditMode.create}
               },
               {path: 'outpatient-department', component: OutpatientDepartmentComponent},
-              {path: 'inpatient-department', component: StationComponent},
+              {path: 'inpatient-department', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.create}},
               {path: 'medicine', component: MedicationCreateComponent},
               {path: 'allergy', component: AllergyComponent}
             ]
@@ -137,6 +142,14 @@ const routes: Routes = [
             ]
           },
           {
+            path: 'inpatient-department', children: [
+              {path: '', component: InpatientDepartmentListComponent},
+              {path: ':id', children: [
+                  {path: 'edit', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.edit}}
+                ]}
+            ]
+          },
+          {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.admin, mode: UserCreateEditMode.view}},
               {path: 'edit', component: UserCreateComponent, data: {role: Role.admin, mode: UserCreateEditMode.edit}}
@@ -148,6 +161,7 @@ const routes: Routes = [
         path: 'doctor', canActivate: [DoctorGuard], children: [
           {path: '', component: LandingDoctorComponent},
           {path: 'telemedicine', component: ChatComponent},
+          {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: 'treatment', children: [
               {path: 'log', component: TreatmentComponent},
@@ -192,6 +206,10 @@ const routes: Routes = [
                     path: 'edit',
                     component: UserCreateComponent,
                     data: {role: Role.patient, mode: UserCreateEditMode.edit}
+                  },
+                  {
+                    path: 'stay',
+                    component: StaysListComponent
                   }
                 ]
               },
@@ -206,6 +224,7 @@ const routes: Routes = [
               //]},
             ]
           },
+          {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.secretary, mode: UserCreateEditMode.view}},
