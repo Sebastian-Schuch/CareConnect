@@ -29,7 +29,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatAnchor, MatButton, MatIconButton} from "@angular/material/button";
+import {MatAnchor, MatButton, MatFabButton, MatIconButton} from "@angular/material/button";
 import {StationComponent} from "./components/station/station.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {LoginComponent} from "./components/login/login.component";
@@ -57,6 +57,11 @@ import {
   AppointmentsSecretaryComponent
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
 import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog/new-chat-dialog.component";
+import {
+  MedicationFormModalComponent
+} from "./components/treatment/medication-form-modal/medication-form-modal.component";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -77,7 +82,8 @@ import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog
     CalendarWrapperComponent,
     AppointmentsPatientComponent,
     AppointmentsSecretaryComponent,
-    LandingPatientComponent
+    LandingPatientComponent,
+    MedicationFormModalComponent
   ],
   imports: [
     BrowserModule,
@@ -116,7 +122,16 @@ import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog
     ConfirmDeleteDialogComponent,
     MatIconButton,
     ChatComponent,
-    NewChatDialogComponent
+    NewChatDialogComponent,
+    MatDialogContent,
+    MatDialogTitle,
+    MatDialogActions,
+    MatDialogClose,
+    MatCard,
+    MatCardHeader,
+    MatCardContent,
+    MatFabButton,
+    MatCardSubtitle
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()

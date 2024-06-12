@@ -3,7 +3,11 @@ package at.ac.tuwien.sepr.groupphase.backend;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public abstract class TestBase {
 
     @Autowired

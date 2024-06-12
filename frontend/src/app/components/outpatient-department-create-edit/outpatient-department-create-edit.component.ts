@@ -98,21 +98,7 @@ export class OutpatientDepartmentComponent {
         this.notification.success('Outpatient Department ' + data.name + ' created');
       },
       error: async error => {
-        switch (error.status) {
-          case 422:
-            this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Outpatient Department`, {
-              enableHtml: true,
-              timeOut: 10000
-            });
-            break;
-          case 401:
-            this.notification.error(await error.error.text(), `Could not create Outpatient Department`);
-            this.router.navigate(['/']);
-            break;
-          default:
-            this.notification.error(await error.error.text(), `Could not create Outpatient Department`);
-            break;
-        }
+        await this.errorFormatterService.printErrorToNotification(error, `Could not create Outpatient Department`, this.notification);
       }
     })
   }

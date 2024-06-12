@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
@@ -14,7 +15,7 @@ public record TreatmentMedicineDtoCreate(
     @NotNull(message = "must not be null")
     String unitOfMeasurement,
 
-    @Size(min = 0, message = "must be between 1 and 255 characters")
+    @Min(value = 0, message = "must be greater than or equal to 0")
     @NotNull(message = "must not be null")
     long amount,
 

@@ -20,7 +20,7 @@ import {
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
 import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-create-edit/user-create.component";
 import {Role} from "./dtos/Role";
-import {TreatmentComponent} from "./components/treatment/treatment.component";
+import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatment/treatment.component";
 import {
   OutpatientDepartmentComponent
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
@@ -171,22 +171,14 @@ const routes: Routes = [
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: 'treatment', children: [
-              {path: 'log', component: TreatmentComponent},
+              {path: 'log', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.log}},
               {
                 path: ':id', children: [
-                  //{path: '', component: TreatmentViewComponent},
-                  //{path: 'edit', component: TreatmentEditComponent}
-                ],
-              }
-            ]
-          },
-          {
-            path: ':id', children: [
-              {path: '', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.view}},
-              {path: 'edit', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.edit}}
-            ]
-          }
-        ]
+                  {
+                    path: 'edit', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.edit}
+                  }]
+              }]
+          }]
       },
       {
         path: 'secretary', canActivate: [SecretaryGuard], children: [

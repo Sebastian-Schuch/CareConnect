@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -118,15 +119,18 @@ public class PatientServiceImpl implements PatientService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("PATIENT"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String email = principal.toString();
+            if (principal instanceof UserDetails) {
+                email = ((UserDetails) principal).getUsername();
+            }
             try {
                 Patient patient = this.getPatientEntityById(userId);
-                return principal.toString().equals(patient.getCredential().getEmail());
+                return email.equals(patient.getCredential().getEmail());
             } catch (NotFoundException e) {
                 return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

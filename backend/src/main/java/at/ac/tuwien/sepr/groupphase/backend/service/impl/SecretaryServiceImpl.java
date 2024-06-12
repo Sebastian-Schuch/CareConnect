@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -92,9 +93,13 @@ public class SecretaryServiceImpl implements SecretaryService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("SECRETARY"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String email = principal.toString();
+            if (principal instanceof UserDetails) {
+                email = ((UserDetails) principal).getUsername();
+            }
             try {
                 Secretary secretary = this.getEntityById(userId);
-                return principal.toString().equals(secretary.getCredential().getEmail());
+                return email.equals(secretary.getCredential().getEmail());
             } catch (NotFoundException e) {
                 return false;
             }

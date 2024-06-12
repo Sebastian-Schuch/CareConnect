@@ -233,24 +233,8 @@ export class CalenderComponent implements OnInit {
           this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
         },
         error: async error => {
-          switch (error.status) {
-            case 422:
-              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not book appointment`, {
-                enableHtml: true,
-                timeOut: 10000
-              });
-              break;
-            case 400:
-              this.notification.error(`No Patient selected`, `Could not book appointment`);
-              break;
-            case 401:
-              this.notification.error(await error.error.text(), `Could not book appointment`);
-              this.router.navigate(['/']);
-              break;
-            default:
-              this.notification.error(await error.error.text(), `Could not book appointment`);
-              break;
-          }
+          await this.errorFormatterService.printErrorToNotification(error, `Could not book appointment`, this.notification, "Not patient selected");
+
         }
       });
     } else {
@@ -363,7 +347,7 @@ export class CalenderComponent implements OnInit {
   }
 
   public getDayString(day: any): string {
-    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
+    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day)
   }
 
   public getWeekdayString(i: number) {
