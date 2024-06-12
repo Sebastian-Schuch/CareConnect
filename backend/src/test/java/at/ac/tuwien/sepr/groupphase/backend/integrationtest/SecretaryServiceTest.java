@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
@@ -46,14 +47,12 @@ public class SecretaryServiceTest extends TestBase {
         credential.setInitialPassword(false);
         credential.setRole(Role.SECRETARY);
         SecretaryDto createdSecretary = secretaryService.create(createSecretary, credential);
-        SecretaryDto foundSecretary = secretaryService.getById(createdSecretary.id());
+        SecretaryDtoSparse foundSecretary = secretaryService.getById(createdSecretary.id());
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(createdSecretary.id(), foundSecretary.id(), "ID should be equal"),
             () -> assertEquals(createdSecretary.email(), foundSecretary.email(), "Email should be equal"),
             () -> assertEquals(createdSecretary.firstname(), foundSecretary.firstname(), "Firstname should be equal"),
-            () -> assertEquals(createdSecretary.lastname(), foundSecretary.lastname(), "Lastname should be equal"),
-            () -> assertEquals(createdSecretary.password(), foundSecretary.password(), "Password should be equal"),
-            () -> assertEquals(createdSecretary.active(), foundSecretary.active(), "Active should be equal"));
+            () -> assertEquals(createdSecretary.lastname(), foundSecretary.lastname(), "Lastname should be equal"));
     }
 
     @Test

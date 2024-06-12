@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
@@ -38,14 +39,14 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto getPatientById(Long id) {
+    public PatientDtoSparse getPatientById(Long id) {
         LOG.trace("getPatientById({})", id);
         Patient patient = patientRepository.findById(id).orElse(null);
         if (patient == null) {
             LOG.warn("patient with id {} not found", id);
             throw new NotFoundException("Patient not found");
         }
-        return patientMapper.patientToPatientDto(patient);
+        return patientMapper.patientToPatientDtoSparse(patient);
     }
 
     @Override
@@ -80,14 +81,14 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto updatePatient(Long id, PatientDtoUpdate toUpdate) {
+    public PatientDtoSparse updatePatient(Long id, PatientDtoUpdate toUpdate) {
         LOG.trace("updatePatient({}, {})", id, toUpdate);
         Patient patient = patientRepository.findById(id).orElse(null);
         if (patient == null) {
             LOG.warn("patient with id {} not found", id);
             throw new NotFoundException("Patient not found");
         }
-        return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.updateDtoToEntity(toUpdate, patient)));
+        return patientMapper.patientToPatientDtoSparse(patientRepository.save(patientMapper.updateDtoToEntity(toUpdate, patient)));
     }
 
     @Override
@@ -101,15 +102,15 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<PatientDto> searchPatients(UserDtoSearch search) {
+    public List<PatientDtoSparse> searchPatients(UserDtoSearch search) {
         LOG.trace("searchPatients({})", search);
-        return patientMapper.patientsToPatientDtos(
+        return patientMapper.patientsToPatientDtosSparse(
             patientRepository.searchPatient(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
-    public List<PatientDto> getAllPatients() {
-        return patientMapper.patientsToPatientDtos(patientRepository.findAll());
+    public List<PatientDtoSparse> getAllPatients() {
+        return patientMapper.patientsToPatientDtosSparse(patientRepository.findAll());
     }
 
     @Override

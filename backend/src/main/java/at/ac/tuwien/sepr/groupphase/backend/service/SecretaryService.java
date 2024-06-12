@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -26,7 +27,7 @@ public interface SecretaryService {
      * @param id the id of the secretary requested
      * @return the secretary with the id given
      */
-    SecretaryDto getById(Long id);
+    SecretaryDtoSparse getById(Long id);
 
     /**
      * Get the specified secretary Entity.
@@ -43,7 +44,7 @@ public interface SecretaryService {
      * @param toUpdate the data to update the secretary with
      * @return the updated secretary
      */
-    SecretaryDto updateSecretary(Long id, SecretaryDtoUpdate toUpdate);
+    SecretaryDtoSparse updateSecretary(Long id, SecretaryDtoUpdate toUpdate);
 
     /**
      * Search for secretaries based on the search criteria.
@@ -51,7 +52,7 @@ public interface SecretaryService {
      * @param search the search criteria
      * @return a list of secretaries
      */
-    List<SecretaryDto> searchSecretaries(UserDtoSearch search);
+    List<SecretaryDtoSparse> searchSecretaries(UserDtoSearch search);
 
 
     /**
@@ -59,7 +60,7 @@ public interface SecretaryService {
      *
      * @return the list of all secretaries
      */
-    List<SecretaryDto> getAllSecretaries();
+    List<SecretaryDtoSparse> getAllSecretaries();
 
     /**
      * Check if the used id matches the token given.

@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -108,7 +108,7 @@ public class SecretaryEndpoint {
 
     @GetMapping({"/{id}"})
     @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
-    public SecretaryDto getById(@PathVariable("id") long id) {
+    public SecretaryDtoSparse getById(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/{}", id);
         return secretaryService.getById(id);
     }
@@ -120,7 +120,7 @@ public class SecretaryEndpoint {
      */
     @Secured({"ADMIN", "SECRETARY", "DOCTOR"})
     @GetMapping
-    public List<SecretaryDto> getAll() {
+    public List<SecretaryDtoSparse> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.secretaryService.getAllSecretaries();
     }
@@ -134,7 +134,7 @@ public class SecretaryEndpoint {
      */
     @Secured({"ADMIN", "SECRETARY"})
     @PutMapping({"/{id}"})
-    public SecretaryDto update(@PathVariable("id") long id, @Valid @RequestBody SecretaryDtoUpdate toUpdate) {
+    public SecretaryDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody SecretaryDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
         if (secretaryService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
             return this.secretaryService.updateSecretary(id, toUpdate);
@@ -151,7 +151,7 @@ public class SecretaryEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping({"/search"})
-    public List<SecretaryDto> search(UserDtoSearch toSearch) {
+    public List<SecretaryDtoSparse> search(UserDtoSearch toSearch) {
         LOG.info("GET " + BASE_PATH + "/search");
         return this.secretaryService.searchSecretaries(toSearch);
     }

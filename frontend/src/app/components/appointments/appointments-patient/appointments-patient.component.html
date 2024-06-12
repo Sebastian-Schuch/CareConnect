@@ -90,10 +90,10 @@
           <div class="flex-start"><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}
           </div>
           <div><strong>Start
-            Date:</strong> {{ appointment.startDate.toLocaleDateString() }} {{ appointment.startDate.toLocaleTimeString() }}
+            Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}
           </div>
           <div class="flex-start"><strong>End
-            Date:</strong> {{ appointment.endDate.toLocaleDateString() }} {{ appointment.endDate.toLocaleTimeString() }}
+            Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}
           </div>
         </div>
       </div>

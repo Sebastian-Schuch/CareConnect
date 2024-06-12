@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -107,7 +107,7 @@ public class DoctorEndpoint {
      */
     @Secured({"SECRETARY", "ADMIN", "DOCTOR"})
     @GetMapping({"/{id}"})
-    public DoctorDto get(@PathVariable("id") long id) {
+    public DoctorDtoSparse get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
         return this.doctorService.getDoctorById(id);
     }
@@ -119,7 +119,7 @@ public class DoctorEndpoint {
      */
     @Secured({"SECRETARY", "DOCTOR", "ADMIN"})
     @GetMapping
-    public List<DoctorDto> getAll() {
+    public List<DoctorDtoSparse> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.doctorService.getAllDoctors();
     }
@@ -133,7 +133,7 @@ public class DoctorEndpoint {
      */
     @Secured({"ADMIN", "DOCTOR"})
     @PutMapping({"/{id}"})
-    public DoctorDto update(@PathVariable("id") long id, @Valid @RequestBody DoctorDtoUpdate toUpdate) {
+    public DoctorDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody DoctorDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
         if (doctorService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
             return this.doctorService.updateDoctor(id, toUpdate);
@@ -151,7 +151,7 @@ public class DoctorEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping({"/search"})
-    public List<DoctorDto> search(UserDtoSearch toSearch) {
+    public List<DoctorDtoSparse> search(UserDtoSearch toSearch) {
         LOG.info("GET " + BASE_PATH + "/search");
         return this.doctorService.searchDoctors(toSearch);
     }

@@ -25,16 +25,16 @@ export class StationComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.route.params.subscribe(params => {
-        if (isNaN(params['id']) === false) {
-          this.mode = data.mode;
-          if (this.mode == InpatientDepartmentCreateEditMode.edit) {
+        this.mode = data.mode;
+        if (this.mode == InpatientDepartmentCreateEditMode.edit) {
+          if (isNaN(params['id']) === false) {
             this.stationService.getStationById(params['id']).subscribe({
               next: data => this.update = data,
               error: error => console.error(error)
             })
+          } else {
+            this.router.navigate(['/home/admin/inpatient-department']);
           }
-        } else {
-          this.router.navigate(['/home/admin/inpatient-department']);
         }
       })
     });
