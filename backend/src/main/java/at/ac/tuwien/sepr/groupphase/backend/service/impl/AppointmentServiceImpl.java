@@ -99,7 +99,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, start, end);
             return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, outpatientDepartmentId);
         } catch (ParseException e) {
-            LOG.warn("Invalid date format {}, {}", searchParams.startDate(), searchParams.endDate());
+            LOG.warn("Invalid date format {}, {}", startDate, endDate);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
         }
     }
