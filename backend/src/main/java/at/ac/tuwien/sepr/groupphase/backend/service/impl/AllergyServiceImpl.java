@@ -26,7 +26,7 @@ public class AllergyServiceImpl implements AllergyService {
     @Override
     public Allergy createAllergy(AllergyDtoCreate toCreate) {
         Allergy allergy = new Allergy();
-        allergy.setName(toCreate.getName());
+        allergy.setName(toCreate.name());
         return allergyRepository.save(allergy);
     }
 
@@ -65,8 +65,8 @@ public class AllergyServiceImpl implements AllergyService {
 
     @Override
     public Allergy updateAllergy(AllergyDto allergy) {
-        Allergy existingAllergy = findById(allergy.getUid());
-        existingAllergy.setName(allergy.getName());
+        Allergy existingAllergy = findById(allergy.id());
+        existingAllergy.setName(allergy.name());
         return allergyRepository.save(existingAllergy);
     }
 

@@ -14,7 +14,7 @@ public class Allergy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uid;
+    private Long id;
 
     public String getName() {
         return name;
@@ -24,12 +24,12 @@ public class Allergy {
     @Column(nullable = false, name = "name")
     private String name;
 
-    public Long getUid() {
-        return uid;
+    public Long getId() {
+        return id;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setId(Long uid) {
+        this.id = uid;
     }
 
     public void setName(String name) {
@@ -44,18 +44,18 @@ public class Allergy {
         if (!(o instanceof Allergy allergies)) {
             return false;
         }
-        return getUid().equals(allergies.getUid()) && getName().equals(allergies.getName());
+        return getId().equals(allergies.getId()) && getName().equals(allergies.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUid(), getName());
+        return Objects.hash(getId(), getName());
     }
 
     @Override
     public String toString() {
         return "allergies{"
-            + "uid=" + uid
+            + "uid=" + id
             + ", name='" + name + '\''
             + '}';
     }
@@ -83,7 +83,7 @@ public class Allergy {
 
         public Allergy build() {
             Allergy allergies = new Allergy();
-            allergies.setUid(uid);
+            allergies.setId(uid);
             allergies.setName(name);
             return allergies;
         }

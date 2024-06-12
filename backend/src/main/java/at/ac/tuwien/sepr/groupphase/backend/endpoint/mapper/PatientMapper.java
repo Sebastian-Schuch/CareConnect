@@ -93,8 +93,8 @@ public class PatientMapper {
         }
         if (toCreate.allergies() != null) {
             List<Allergy> allergies = new ArrayList<>();
-            for (MedicationDto medication : toCreate.medicines()) {
-                allergies.add(allergyService.getEntityById(medication.id()));
+            for (AllergyDto allergy : toCreate.allergies()) {
+                allergies.add(allergyService.getEntityById(allergy.id()));
             }
             patient.setAllergies(allergies);
         }
@@ -117,7 +117,7 @@ public class PatientMapper {
         if (toUpdate.allergies() != null) {
             List<Allergy> allergies = new ArrayList<>();
             for (AllergyDto allergy : toUpdate.allergies()) {
-                allergies.add(allergyService.getEntityById(allergy.uid));
+                allergies.add(allergyService.getEntityById(allergy.id()));
             }
             patientUpdate.setAllergies(allergies);
         }

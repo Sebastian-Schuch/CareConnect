@@ -56,9 +56,9 @@ public class StationEndpointTest extends TestBase {
         // then
         assertEquals(201, response.getStatus());
         StationDto stationDto = objectMapper.readValue(response.getContentAsString(), StationDto.class);
-        assertNotNull(stationDto.getId());
-        assertEquals(STATION_NAME, stationDto.getName());
-        assertEquals(STATION_CAPACITY, stationDto.getCapacity());
+        assertNotNull(stationDto.id());
+        assertEquals(STATION_NAME, stationDto.name());
+        assertEquals(STATION_CAPACITY, stationDto.capacity());
     }
 
     @Test
@@ -78,12 +78,12 @@ public class StationEndpointTest extends TestBase {
         // then
         assertEquals(201, createResponse.getStatus());
         StationDto createdStationDto = objectMapper.readValue(createResponse.getContentAsString(), StationDto.class);
-        assertNotNull(createdStationDto.getId());
-        assertEquals(STATION_NAME, createdStationDto.getName());
-        assertEquals(STATION_CAPACITY, createdStationDto.getCapacity());
+        assertNotNull(createdStationDto.id());
+        assertEquals(STATION_NAME, createdStationDto.name());
+        assertEquals(STATION_CAPACITY, createdStationDto.capacity());
 
         // when
-        MockHttpServletResponse retrieveResponse = mockMvc.perform(get(MESSAGE_BASE_URI + "/" + createdStationDto.getId())
+        MockHttpServletResponse retrieveResponse = mockMvc.perform(get(MESSAGE_BASE_URI + "/" + createdStationDto.id())
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andReturn()
@@ -92,9 +92,9 @@ public class StationEndpointTest extends TestBase {
         // then
         assertEquals(200, retrieveResponse.getStatus());
         StationDto retrievedStationDto = objectMapper.readValue(retrieveResponse.getContentAsString(), StationDto.class);
-        assertNotNull(retrievedStationDto.getId());
-        assertEquals(STATION_NAME, retrievedStationDto.getName());
-        assertEquals(STATION_CAPACITY, retrievedStationDto.getCapacity());
+        assertNotNull(retrievedStationDto.id());
+        assertEquals(STATION_NAME, retrievedStationDto.name());
+        assertEquals(STATION_CAPACITY, retrievedStationDto.capacity());
     }
 
     @Test
