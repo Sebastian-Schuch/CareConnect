@@ -10,22 +10,22 @@ import java.util.Date;
 import static at.ac.tuwien.sepr.groupphase.backend.config.TimeSlotConfig.MIN_APPOINTMENT_LENGTH_IN_MINUTES;
 
 public record AppointmentDtoCreate(
-    @NotNull(message = "is required")
+    @NotNull(message = "Patient is required")
     PatientDto patient,
 
-    @NotNull(message = "is required")
+    @NotNull(message = "Outpatient Department is required")
     OutpatientDepartmentDto outpatientDepartment,
 
-    @NotNull(message = "cannot be empty")
-    @FutureOrPresent(message = "has to be Date after today")
+    @NotNull(message = "Start date cannot be empty")
+    @FutureOrPresent(message = "Start date has to be now or in the future")
     Date startDate,
 
-    @NotNull(message = "cannot be empty")
-    @FutureOrPresent(message = "has to be Date after today")
+    @NotNull(message = "End date cannot be empty")
+    @FutureOrPresent(message = "End date has to be now or in the future")
     Date endDate,
 
-    @NotNull(message = "cannot be empty")
-    @Size(max = 1024, message = "cannot be longer than 1024 characters")
+    @NotNull(message = "Notes cannot be empty")
+    @Size(max = 1024, message = "Notes cannot be longer than 1024 characters")
     String notes
 ) {
     @AssertTrue(message = "Appointment startDate must be before endDate")

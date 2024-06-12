@@ -92,7 +92,6 @@ public class TreatmentMapperTest {
 
     @Test
     @DisplayName("dtoToEntity: valid TreatmentDtoCreate - expect success")
-    @Disabled
     void shouldConvertDtoToEntity_whenGivenValidDtoCreate() {
         Patient patient = new Patient();
         patient.setPatientId(1L);
@@ -170,7 +169,6 @@ public class TreatmentMapperTest {
 
     @Test
     @DisplayName("entityToDto: valid Treatment - expect success")
-    @Disabled
     void shouldConvertEntityToDto_whenGivenValidEntity() {
         // Arrange
         Patient patient = new Patient();
@@ -199,9 +197,8 @@ public class TreatmentMapperTest {
                 Collections.singletonList(new DoctorDtoSparse(2L, null, null, null,   false)),
                 Collections.singletonList(new TreatmentMedicineDto(3L, null, null, 0, null))
             );
-
-        when(patientMapper.patientToPatientDto(patient)).thenReturn(new PatientDto(1L, null, null, null, null, null, null, null, false, false));
-        when(doctorMapper.doctorToDoctorDto(doctor1)).thenReturn(new DoctorDto(2L, null, null, null, null, false, false));
+        when(patientMapper.patientToPatientDtoSparse(patient)).thenReturn(new PatientDtoSparse(1L, null, null, null, null, null, null,  true));
+        when(doctorMapper.doctorToDoctorDtoSparse(doctor1)).thenReturn(new DoctorDtoSparse(2L, null, null, null, true));
         when(treatmentMedicineMapper.entityToDto(treatmentMedicine)).thenReturn(new TreatmentMedicineDto(3L, null, null, 0, null));
         when(outpatientDepartmentService.getOutpatientDepartmentById(1L)).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null));
 
@@ -218,15 +215,14 @@ public class TreatmentMapperTest {
         assertEquals(expectedTreatmentDto.medicines().size(), treatmentDto.medicines().size());
         assertEquals(expectedTreatmentDto.medicines().getFirst().id(), treatmentDto.medicines().getFirst().id());
 
-        verify(patientMapper, times(1)).patientToPatientDto(patient);
-        verify(doctorMapper, times(1)).doctorToDoctorDto(doctor1);
+        verify(patientMapper, times(1)).patientToPatientDtoSparse(patient);
+        verify(doctorMapper, times(1)).doctorToDoctorDtoSparse(doctor1);
         verify(treatmentMedicineMapper, times(1)).entityToDto(treatmentMedicine);
         verify(outpatientDepartmentService, times(1)).getOutpatientDepartmentById(anyLong());
     }
 
     @Test
     @DisplayName("entityListToDtoList: valid Treatment list - expect success")
-    @Disabled
     void shouldConvertEntityListToDtoList_whenGivenValidEntityList() {
 
         Treatment treatment1 = createTreatment(1L, new Patient(), new Doctor(), new TreatmentMedicine(), new OutpatientDepartment(), new Date(), new Date());
