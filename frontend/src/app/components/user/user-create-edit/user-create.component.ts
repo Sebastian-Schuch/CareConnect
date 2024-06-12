@@ -397,21 +397,7 @@ export class UserCreateComponent implements OnInit {
               this.router.navigate(['/']);
             },
             error: async error => {
-              switch (error.status) {
-                case 422:
-                  this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create ${this.roleString}`, {
-                    enableHtml: true,
-                    timeOut: 10000
-                  });
-                  break;
-                case 401:
-                  this.notification.error(await error.error.text(), `Could not create ${this.roleString}`);
-                  this.router.navigate(['/']);
-                  break;
-                default:
-                  this.notification.error(await error.error.text(), `Could not create ${this.roleString}`);
-                  break;
-              }
+              this.errorFormatterService.printErrorToNotification(error, 'Error creating user', this.notification);
             }
           });
         }
@@ -450,9 +436,8 @@ export class UserCreateComponent implements OnInit {
                 this.authService.updateUserInformation();
               }
             },
-            error: error => {
-              this.notification.error('Could not update profile', 'Error updating profile');
-              console.error('error while updating user', error);
+            error: async error => {
+              await this.errorFormatterService.printErrorToNotification(error, 'Error updating user', this.notification);
             }
           });
         }

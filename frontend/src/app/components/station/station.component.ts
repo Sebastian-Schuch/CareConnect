@@ -79,21 +79,7 @@ export class StationComponent implements OnInit {
           this.router.navigate(['/home/admin/inpatient-department']);
         },
         error: async error => {
-          switch (error.status) {
-            case 422:
-              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not ${this.mode === InpatientDepartmentCreateEditMode.create ? "create" : "update"} Inpatient Department`, {
-                enableHtml: true,
-                timeOut: 10000
-              });
-              break;
-            case 401:
-              this.notification.error(await error.error.text(), `Could not ${this.mode === InpatientDepartmentCreateEditMode.create ? "create" : "update"} Inpatient Department`);
-              this.router.navigate(['/']);
-              break;
-            default:
-              this.notification.error(await error.error.text(), `Could not ${this.mode === InpatientDepartmentCreateEditMode.create ? "create" : "update"} Inpatient Department`);
-              break;
-          }
+          await this.errorFormatterService.printErrorToNotification(error, `Error ${this.mode === InpatientDepartmentCreateEditMode.create ? "created" : "updated"} Station`, this.notification);
         }
       });
     }

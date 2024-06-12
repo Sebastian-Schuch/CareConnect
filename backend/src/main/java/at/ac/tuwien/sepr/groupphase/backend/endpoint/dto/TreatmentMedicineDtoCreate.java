@@ -9,18 +9,18 @@ import java.util.Date;
 
 public record TreatmentMedicineDtoCreate(
 
-    @NotNull(message = "must not be null")
+    @NotNull(message = "Medication must not be null")
     MedicationDto medication,
 
-    @NotNull(message = "must not be null")
+    @NotNull(message = "Units of measurement must not be null")
     String unitOfMeasurement,
 
-    @Min(value = 0, message = "must be greater than or equal to 0")
-    @NotNull(message = "must not be null")
+    @Min(value = 0, message = "Amount must be greater than or equal to 0")
+    @NotNull(message = "Amount must not be null")
     long amount,
 
-    @NotNull(message = "must not be null")
-    @PastOrPresent(message = "Date must be in the past or present")
+    @NotNull(message = "Administration date must not be null")
+    @PastOrPresent(message = "Administration date must be in the past or present")
     Date medicineAdministrationDate
 ) {
 }
