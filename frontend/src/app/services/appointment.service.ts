@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
-import {AppointmentDto, AppointmentDtoCalendar, AppointmentDtoCreate} from "../dtos/appointment";
+import {AppointmentDto, AppointmentDtoCalendar, AppointmentDtoCreate, AppointmentDtoSearch} from "../dtos/appointment";
 
 
 @Injectable({
@@ -55,18 +55,16 @@ export class AppointmentService {
 
   /**
    * Get all appointments for an outpatient department for a specified month.
-   * .
-   * @param id the id of the outpatient department
-   * @param startDate the start date for which the appointments should be retrieved
-   * @param endDate the end date for which the appointments should be retrieved
+   *
+   *
    * @return an Observable for the calendar appointments
    */
-  getAppointmentsFromOutpatientDepartmentForTimePeriod(id: number, startDate: Date, endDate: Date): Observable<AppointmentDtoCalendar[]> {
+  getAppointmentsFromOutpatientDepartmentForTimePeriod(appointmentSarch: AppointmentDtoSearch): Observable<AppointmentDtoCalendar[]> {
 
     let params = new HttpParams();
-    params = params.append('outpatientDepartmentId', id);
-    params = params.append('startDate', startDate.toISOString());
-    params = params.append('endDate', endDate.toISOString());
+    params = params.append('outpatientDepartmentId', appointmentSarch.outpatientDepartmentId);
+    params = params.append('startDate', appointmentSarch.startDate.toISOString());
+    params = params.append('endDate', appointmentSarch.endDate.toISOString());
     return this.http.get<AppointmentDtoCalendar[]>(
       this.appointmentBaseUri,
       {params}

@@ -29,7 +29,7 @@ import {CalenderService} from "../../../../services/calender.service";
 import {ToastrService} from "ngx-toastr";
 import {AppointmentService} from "../../../../services/appointment.service";
 import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
-import {AppointmentDtoCalendar, AppointmentDtoCreate} from "../../../../dtos/appointment";
+import {AppointmentDtoCalendar, AppointmentDtoCreate, AppointmentDtoSearch} from "../../../../dtos/appointment";
 import {UserDto} from "../../../../dtos/user";
 import {OpeningHoursDto} from "../../../../dtos/opening-hours";
 import {Router} from "@angular/router";
@@ -142,10 +142,14 @@ export class CalenderComponent implements OnInit {
   public loadSlotsAndBookedAppointmentsOfMonth(dateOfMonth: Date) {
     this.startDate = startOfMonth(subMonths(dateOfMonth, 1));
     this.endDate = endOfMonth(addMonths(dateOfMonth, 1));
-
+    let search: AppointmentDtoSearch = {
+      outpatientDepartmentId: this.outpatientDepartment.id,
+      startDate: this.startDate,
+      endDate: this.endDate
+    }
     if (this.patient) {
       forkJoin({
-        bookedAppointments: this.appointmentService.getAppointmentsFromOutpatientDepartmentForTimePeriod(this.outpatientDepartment.id, this.startDate, this.endDate),
+        bookedAppointments: this.appointmentService.getAppointmentsFromOutpatientDepartmentForTimePeriod(search),
         patientAppointments: this.appointmentService.getAppointmentsFromPatient(this.patient.id),
       }).subscribe(({bookedAppointments, patientAppointments}) => {
         this.bookedAppointments = bookedAppointments;
@@ -153,7 +157,7 @@ export class CalenderComponent implements OnInit {
         this.refresh.next();
       });
     } else {
-      let observable = this.appointmentService.getAppointmentsFromOutpatientDepartmentForTimePeriod(this.outpatientDepartment.id, this.startDate, this.endDate)
+      let observable = this.appointmentService.getAppointmentsFromOutpatientDepartmentForTimePeriod(search)
       observable.subscribe({
         next: (bookedAppointments) => {
           this.bookedAppointments = bookedAppointments;
