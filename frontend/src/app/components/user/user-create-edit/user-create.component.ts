@@ -262,6 +262,7 @@ export class UserCreateComponent implements OnInit {
       this.selectedMedicationOptions.push(medication);
     }
     this.userForm.get('medication').setValue('');
+    this.userForm.get('medication').reset();
     this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
       startWith(''),
       map(value => this.filterMedications(value))
@@ -278,6 +279,7 @@ export class UserCreateComponent implements OnInit {
       this.selectedAllergyOptions.push(allergy);
     }
     this.userForm.get('allergy').setValue('');
+    this.userForm.get('allergy').reset();
     this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
       map(value => this.filterAllergies(value))
@@ -328,7 +330,7 @@ export class UserCreateComponent implements OnInit {
    * @returns the filtered medications
    */
   private filterMedications(value: string): MedicationDto[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = (value || '').toString().toLowerCase();
     return this.medicationOptions.filter(option =>
       option.name.toLowerCase().includes(filterValue)
     );
@@ -340,7 +342,7 @@ export class UserCreateComponent implements OnInit {
    * @returns the filtered allergies
    */
   private filterAllergies(value: string): MedicationDto[] {
-    const filterValue = value.toString().toLowerCase();
+    const filterValue = (value || '').toString().toLowerCase();
     return this.allergyOptions.filter(option =>
       option.name.toLowerCase().includes(filterValue)
     );
