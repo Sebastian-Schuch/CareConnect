@@ -140,28 +140,32 @@ export class UserCreateComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.route.params.subscribe(params => {
-        if (data.role != null && data.mode != null) {
-          this.userId = params['id'];
-          this.role = data.role;
-          this.mode = data.mode;
-          this.generateForm();
-          forkJoin({
-            allergies: this.loadAllergies(),
-            medications: this.loadMedications()
-          }).subscribe({
-            next: ({allergies, medications}) => {
-              this.allergyOptions = allergies;
-              this.medicationOptions = medications;
-              this.resetAllSearchInputs();
-              if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
-                this.loadUser(this.userId);
+        if (isNaN(params['id']) === false) {
+          if (data.role != null && data.mode != null) {
+            this.userId = params['id'];
+            this.role = data.role;
+            this.mode = data.mode;
+            this.generateForm();
+            forkJoin({
+              allergies: this.loadAllergies(),
+              medications: this.loadMedications()
+            }).subscribe({
+              next: ({allergies, medications}) => {
+                this.allergyOptions = allergies;
+                this.medicationOptions = medications;
+                this.resetAllSearchInputs();
+                if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
+                  this.loadUser(this.userId);
+                }
+              },
+              error: error => {
+                this.notification.error('Loading of resources failed', 'Error loading resources');
+                console.error('error while getting data from database', error);
               }
-            },
-            error: error => {
-              this.notification.error('Loading of resources failed', 'Error loading resources');
-              console.error('error while getting data from database', error);
-            }
-          });
+            });
+          }
+        } else {
+          this.router.navigate(['/']);
         }
       });
     });

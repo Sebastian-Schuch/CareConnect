@@ -19,7 +19,7 @@ export class PatientGuard implements CanActivate {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === Role.patient) {
       return true;
     } else {
-      this.router.navigate(['/']);
+      this.router.navigate(['/not-found']);
       return false;
     }
   }

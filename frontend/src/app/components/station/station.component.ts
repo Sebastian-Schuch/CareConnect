@@ -6,7 +6,6 @@ import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {da} from "date-fns/locale";
 
 export enum InpatientDepartmentCreateEditMode {
   create,
@@ -26,12 +25,16 @@ export class StationComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.route.params.subscribe(params => {
-        this.mode = data.mode;
-        if(this.mode == InpatientDepartmentCreateEditMode.edit){
-          this.stationService.getStationById(params['id']).subscribe({
-            next: data => this.update = data,
-            error: error => console.error(error)
-          })
+        if (isNaN(params['id']) === false) {
+          this.mode = data.mode;
+          if (this.mode == InpatientDepartmentCreateEditMode.edit) {
+            this.stationService.getStationById(params['id']).subscribe({
+              next: data => this.update = data,
+              error: error => console.error(error)
+            })
+          }
+        } else {
+          this.router.navigate(['/home/admin/inpatient-department']);
         }
       })
     });
@@ -64,9 +67,9 @@ export class StationComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     if (form.valid) {
       let observable: Observable<StationDto>;
-      if(this.mode == InpatientDepartmentCreateEditMode.create){
+      if (this.mode == InpatientDepartmentCreateEditMode.create) {
         observable = this.stationService.createStation(this.create);
-      } else if(this.mode == InpatientDepartmentCreateEditMode.edit){
+      } else if (this.mode == InpatientDepartmentCreateEditMode.edit) {
         observable = this.stationService.editStation(this.update);
       }
 
