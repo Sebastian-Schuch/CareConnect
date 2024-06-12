@@ -96,7 +96,7 @@ public class AllergyEndpoint {
     public AllergyDto update(@PathVariable(name = "id") Long id, @RequestBody AllergyDto toUpdate) {
         LOGGER.info("POST " + BASE_PATH + "/{}", id);
         try {
-            return allergyMapper.allergyToDto(this.allergyService.updateAllergy(new AllergyDto(id, toUpdate.getName())));
+            return allergyMapper.allergyToDto(this.allergyService.updateAllergy(new AllergyDto(id, toUpdate.name())));
         } catch (NotFoundException e) {
             LOGGER.info("Could not find allergy with id {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find allergy");

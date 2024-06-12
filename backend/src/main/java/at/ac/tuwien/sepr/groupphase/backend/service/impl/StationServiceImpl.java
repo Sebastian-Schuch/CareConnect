@@ -66,17 +66,17 @@ public class StationServiceImpl implements StationService {
     @Override
     public Station createStation(StationDtoCreate toCreate) {
         Station station = new Station();
-        station.setName(toCreate.getName());
-        station.setCapacity(toCreate.getCapacity());
+        station.setName(toCreate.name());
+        station.setCapacity(toCreate.capacity());
         return stationRepository.save(station);
     }
 
     @Override
     public StationDto updateStation(StationDto toUpdate) {
         LOGGER.trace("updateStation({})", toUpdate);
-        Station stationToUpdate = stationRepository.findById(toUpdate.getId()).orElseThrow(() -> new NotFoundException("Station not found"));
-        stationToUpdate.setName(toUpdate.getName());
-        stationToUpdate.setCapacity(toUpdate.getCapacity());
+        Station stationToUpdate = stationRepository.findById(toUpdate.id()).orElseThrow(() -> new NotFoundException("Station not found"));
+        stationToUpdate.setName(toUpdate.name());
+        stationToUpdate.setCapacity(toUpdate.capacity());
         return stationMapper.stationToDto(stationRepository.save(stationToUpdate));
     }
 

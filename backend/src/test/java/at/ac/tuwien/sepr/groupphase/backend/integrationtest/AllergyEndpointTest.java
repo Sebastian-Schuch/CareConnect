@@ -42,8 +42,7 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAValidAllergyCreateDto_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
-        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate();
-        allergyCreateDto.setName(ALLERGY_NAME_1);
+        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate(ALLERGY_NAME_1);
 
         MvcResult mvcResult = mockMvc.perform(post(baseUri)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -57,14 +56,13 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
 
         AllergyDto allergyDto = mapper.readValue(response.getContentAsString(), AllergyDto.class);
 
-        assertEquals(ALLERGY_NAME_1, allergyDto.getName());
+        assertEquals(ALLERGY_NAME_1, allergyDto.name());
     }
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenAnInvalidAllergyCreateDto_whenCreateAllergy_thenBadRequest() throws Exception {
-        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate();
-        allergyCreateDto.setName(null);
+        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate(null);
 
         MvcResult mvcResult = mockMvc.perform(post(baseUri)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -74,28 +72,6 @@ public class AllergyEndpointTest extends TestBase implements AllergyTestData {
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(422, response.getStatus());
-    }
-
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenAnAllergyId_whenCreateAllergy_thenAllergyIsCreated() throws Exception {
-        AllergyDtoCreate allergyCreateDto = new AllergyDtoCreate();
-        allergyCreateDto.setName(ALLERGY_NAME_1);
-        allergyCreateDto.setId(1L);
-
-        MvcResult mvcResult = mockMvc.perform(post(baseUri)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(allergyCreateDto)))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(201, response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        AllergyDto allergyDto = mapper.readValue(response.getContentAsString(), AllergyDto.class);
-
-        assertEquals(ALLERGY_NAME_1, allergyDto.getName());
     }
 
     @Test
