@@ -8,7 +8,7 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
 @Component({
   selector: 'app-outpatient-department-create-edit',
   templateUrl: './outpatient-department.component-create-edit.html',
-  styleUrl: './outpatient-department.component-create-edit.scss'
+  styleUrls: ['./outpatient-department.component-create-edit.scss', '../../../styles.scss']
 })
 export class OutpatientDepartmentComponent {
 

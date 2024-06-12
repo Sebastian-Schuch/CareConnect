@@ -15,7 +15,7 @@ export enum InpatientDepartmentCreateEditMode {
 @Component({
   selector: 'app-station',
   templateUrl: './station.component.html',
-  styleUrl: './station.component.scss',
+  styleUrls: ['./station.component.scss', '../../../styles.scss'],
 })
 
 export class StationComponent implements OnInit {

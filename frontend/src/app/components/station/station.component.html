@@ -64,10 +64,10 @@
   <div class="mt-4 d-flex flex-row">
     <span class="flex-grow-1"></span>
     <button type="submit"
-            class="btn btn-primary"
+            mat-button class="sepr-btn-submit"
             [disabled]="!form.valid"
     >
-      {{mode === InpatientDepartmentCreateEditMode.create ? "Register Inpatient Department" : "Edit Inpatient Department"}}
+      {{ mode === InpatientDepartmentCreateEditMode.create ? "Register Inpatient Department" : "Edit Inpatient Department" }}
     </button>
   </div>
 </form>
