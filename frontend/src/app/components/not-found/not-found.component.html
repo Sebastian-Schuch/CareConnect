@@ -1,0 +1,17 @@
+<div aria-labelledby="not-found-heading" class="start-page-container" role="main">
+  <div style="position: relative;">
+    <h1 class="headline" id="not-found-heading" style="position: relative; z-index: 1;">
+      <span>Page Not Found</span><br>
+    </h1>
+  </div>
+
+  <h3 id="error-heading">The page you're looking for doesn't exist</h3>
+  <p class="subheadline" id="error-description">
+    The page you're trying to access doesn't exist, has been moved or you do not have permission to access. <br> Please
+    check
+    the URL and try again.
+  </p>
+  <a aria-label="Navigate to homepage">
+    <button [routerLink]="['/']" class="sepr-btn-submit" color="primary" mat-button>Navigate to Homepage</button>
+  </a>
+</div>

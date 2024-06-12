@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 
 import java.util.List;
@@ -29,10 +28,12 @@ public interface AppointmentService {
     /**
      * Get the specified appointments.
      *
-     * @param searchParams the search parameters
+     * @param outpatientDepartmentId the id of the outpatient department
+     * @param startDate              the start date of the appointments
+     * @param endDate                the end date of the appointments
      * @return the booked appointments
      */
-    List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(AppointmentSearchDto searchParams);
+    List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, String startDate, String endDate);
 
     /**
      * Get the specified appointment.

@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -105,10 +105,12 @@ public class AppointmentEndpoint {
      */
     @Secured({"SECRETARY", "PATIENT"})
     @GetMapping
-    public List<AppointmentCalendarDto> getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId(@Valid AppointmentSearchDto searchParams) {
+    public List<AppointmentCalendarDto> getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId(@RequestParam(name = "outpatientDepartmentId") long outpatientDepartmentId,
+                                                                                                             @RequestParam(name = "startDate") String startDate,
+                                                                                                             @RequestParam(name = "endDate") String endDate) {
         LOG.info("GET" + BASE_PATH);
-        LOG.debug("Body of request:\n{}", searchParams);
-        return appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(searchParams);
+        LOG.debug("Params of request:\n{},{},{}", outpatientDepartmentId, startDate, endDate);
+        return appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);
     }
 
     /**

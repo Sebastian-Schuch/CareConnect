@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AppointmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -90,14 +89,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(AppointmentSearchDto searchParams) {
-        LOG.trace("getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId({})", searchParams);
+    public List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, String startDate, String endDate) {
+        LOG.trace("getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId({},{},{})", outpatientDepartmentId, startDate, endDate);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date startDate = sdf.parse(searchParams.startDate().split("T")[0]);
-            Date endDate = sdf.parse(searchParams.endDate().split("T")[0]);
-            List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(searchParams.outpatientDepartmentId(), startDate, endDate);
-            return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, searchParams.outpatientDepartmentId());
+            Date start = sdf.parse(startDate.split("T")[0]);
+            Date end = sdf.parse(endDate.split("T")[0]);
+            List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, start, end);
+            return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, outpatientDepartmentId);
         } catch (ParseException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
         }

@@ -29,6 +29,7 @@ import {MedicationCreateComponent} from "./components/medication-create/medicati
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
+import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {StaysListComponent} from "./components/stays/stays-list/stays-list.component";
 import {
   InpatientDepartmentListComponent
@@ -75,7 +76,11 @@ const routes: Routes = [
                 data: {role: Role.secretary, mode: UserCreateEditMode.create}
               },
               {path: 'outpatient-department', component: OutpatientDepartmentComponent},
-              {path: 'inpatient-department', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.create}},
+              {
+                path: 'inpatient-department',
+                component: StationComponent,
+                data: {mode: InpatientDepartmentCreateEditMode.create}
+              },
               {path: 'medicine', component: MedicationCreateComponent},
               {path: 'allergy', component: AllergyComponent}
             ]
@@ -144,9 +149,11 @@ const routes: Routes = [
           {
             path: 'inpatient-department', children: [
               {path: '', component: InpatientDepartmentListComponent},
-              {path: ':id', children: [
+              {
+                path: ':id', children: [
                   {path: 'edit', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.edit}}
-                ]}
+                ]
+              }
             ]
           },
           {
@@ -239,6 +246,8 @@ const routes: Routes = [
       }
     ]
   },
+  {path: 'not-found', component: NotFoundComponent},
+  {path: '**', redirectTo: '/not-found'}
 ];
 
 @NgModule({
