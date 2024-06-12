@@ -71,7 +71,7 @@ export class AppointmentsPatientComponent implements OnInit {
   }
 
   public getDayString(day: any): string {
-    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
+    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day)
   }
 
   nextPastPage(): void {

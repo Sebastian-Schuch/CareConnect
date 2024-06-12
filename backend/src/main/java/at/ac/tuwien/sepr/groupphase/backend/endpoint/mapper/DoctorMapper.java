@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
@@ -31,16 +32,28 @@ public class DoctorMapper {
     }
 
     /**
+     * Converts the doctor entity to the doctorDtoSparse without the password.
+     *
+     * @param doctor the doctor to convert
+     * @return the doctorDto
+     */
+    public DoctorDtoSparse doctorToDoctorDtoSparse(Doctor doctor) {
+        LOG.trace("doctorToDoctorDtoSparse({})", doctor);
+        return new DoctorDtoSparse(doctor.getDoctorId(), doctor.getCredential().getFirstName(), doctor.getCredential().getLastName(), doctor.getCredential().getEmail(),
+            doctor.getCredential().isInitialPassword());
+    }
+
+    /**
      * Converts all the doctor entities to doctorDtos.
      *
      * @param doctors the doctor entities to convert
      * @return the converted doctorDtos
      */
-    public List<DoctorDto> doctorsToDoctorDtos(List<Doctor> doctors) {
+    public List<DoctorDtoSparse> doctorsToDoctorDtosSparse(List<Doctor> doctors) {
         LOG.trace("doctorsToDoctorDtos({})", doctors);
-        List<DoctorDto> doctorDtos = new ArrayList<>();
+        List<DoctorDtoSparse> doctorDtos = new ArrayList<>();
         for (Doctor doctor : doctors) {
-            doctorDtos.add(doctorToDoctorDto(doctor));
+            doctorDtos.add(doctorToDoctorDtoSparse(doctor));
         }
         return doctorDtos;
     }

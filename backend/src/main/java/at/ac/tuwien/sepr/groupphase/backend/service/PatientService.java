@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -25,14 +26,14 @@ public interface PatientService {
      * @param id the id of the patient requested
      * @return the patient with the id given
      */
-    PatientDto getPatientById(Long id);
+    PatientDtoSparse getPatientById(Long id);
 
     /**
      * Get all patients from repository.
      *
      * @return the list of all patients
      */
-    List<PatientDto> getAllPatients();
+    List<PatientDtoSparse> getAllPatients();
 
     /**
      * Get the specified patient Entity.
@@ -65,7 +66,7 @@ public interface PatientService {
      * @param toUpdate the data to update the patient with
      * @return the updated patient
      */
-    PatientDto updatePatient(Long id, PatientDtoUpdate toUpdate);
+    PatientDtoSparse updatePatient(Long id, PatientDtoUpdate toUpdate);
 
     /**
      * Find a patient by the given credential.
@@ -81,7 +82,7 @@ public interface PatientService {
      * @param search the search criteria
      * @return a list of patients
      */
-    List<PatientDto> searchPatients(UserDtoSearch search);
+    List<PatientDtoSparse> searchPatients(UserDtoSearch search);
 
 
     /**

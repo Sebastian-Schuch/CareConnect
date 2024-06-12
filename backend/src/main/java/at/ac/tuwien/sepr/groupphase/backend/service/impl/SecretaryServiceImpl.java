@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
@@ -41,14 +42,14 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDto getById(Long id) {
+    public SecretaryDtoSparse getById(Long id) {
         LOG.trace("getById({})", id);
         Secretary secretary = secretaryRepository.findById(id).orElse(null);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
         }
-        return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
+        return secretaryMapper.secretaryEntityToSecretaryDtoSparse(secretary);
     }
 
     @Override
@@ -63,27 +64,27 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public List<SecretaryDto> searchSecretaries(UserDtoSearch search) {
+    public List<SecretaryDtoSparse> searchSecretaries(UserDtoSearch search) {
         LOG.trace("searchSecretaries({})", search);
-        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(
+        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoSparse(
             secretaryRepository.searchSecretary(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
-    public SecretaryDto updateSecretary(Long id, SecretaryDtoUpdate toUpdate) {
+    public SecretaryDtoSparse updateSecretary(Long id, SecretaryDtoUpdate toUpdate) {
         LOG.trace("updateSecretary({}, {})", id, toUpdate);
         Secretary secretary = secretaryRepository.findById(id).orElse(null);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
         }
-        return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretaryRepository.save(secretaryMapper.updateDtoToEntity(toUpdate, secretary)));
+        return secretaryMapper.secretaryEntityToSecretaryDtoSparse(secretaryRepository.save(secretaryMapper.updateDtoToEntity(toUpdate, secretary)));
     }
 
     @Override
-    public List<SecretaryDto> getAllSecretaries() {
+    public List<SecretaryDtoSparse> getAllSecretaries() {
         LOG.trace("getAllSecretaries()");
-        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
+        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoSparse(secretaryRepository.findAll());
     }
 
     @Override

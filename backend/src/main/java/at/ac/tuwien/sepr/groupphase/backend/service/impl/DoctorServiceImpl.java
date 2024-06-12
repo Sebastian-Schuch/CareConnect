@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
@@ -42,14 +43,14 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDto getDoctorById(Long id) {
+    public DoctorDtoSparse getDoctorById(Long id) {
         LOG.trace("getDoctorById({})", id);
         Doctor doctor = doctorRepository.findById(id).orElse(null);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
         }
-        return doctorMapper.doctorToDoctorDto(doctor);
+        return doctorMapper.doctorToDoctorDtoSparse(doctor);
     }
 
     @Override
@@ -64,14 +65,14 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDto updateDoctor(Long id, DoctorDtoUpdate toUpdate) {
+    public DoctorDtoSparse updateDoctor(Long id, DoctorDtoUpdate toUpdate) {
         LOG.trace("updateDoctor({}, {})", id, toUpdate);
         Doctor doctor = doctorRepository.findById(id).orElse(null);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
         }
-        return doctorMapper.doctorToDoctorDto(doctorRepository.save(doctorMapper.updateDtoToEntity(toUpdate, doctor)));
+        return doctorMapper.doctorToDoctorDtoSparse(doctorRepository.save(doctorMapper.updateDtoToEntity(toUpdate, doctor)));
     }
 
     @Override
@@ -85,15 +86,15 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorDto> searchDoctors(UserDtoSearch search) {
+    public List<DoctorDtoSparse> searchDoctors(UserDtoSearch search) {
         LOG.trace("searchDoctors({})", search);
-        return doctorMapper.doctorsToDoctorDtos(
+        return doctorMapper.doctorsToDoctorDtosSparse(
             doctorRepository.searchDoctor(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
-    public List<DoctorDto> getAllDoctors() {
-        return doctorMapper.doctorsToDoctorDtos(doctorRepository.findAll());
+    public List<DoctorDtoSparse> getAllDoctors() {
+        return doctorMapper.doctorsToDoctorDtosSparse(doctorRepository.findAll());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -108,7 +108,7 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping({"/{id}"})
-    public PatientDto get(@PathVariable("id") long id) {
+    public PatientDtoSparse get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
         if (patientService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR)) {
             return this.patientService.getPatientById(id);
@@ -124,7 +124,7 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY", "DOCTOR"})
     @GetMapping
-    public List<PatientDto> getAll() {
+    public List<PatientDtoSparse> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.patientService.getAllPatients();
     }
@@ -138,7 +138,7 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY", "PATIENT"})
     @PutMapping({"/{id}"})
-    public PatientDto update(@PathVariable("id") long id, @Valid @RequestBody PatientDtoUpdate toUpdate) {
+    public PatientDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody PatientDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
         if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(id)) {
             return this.patientService.updatePatient(id, toUpdate);
@@ -155,7 +155,7 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY"})
     @GetMapping({"/search"})
-    public List<PatientDto> search(UserDtoSearch toSearch) {
+    public List<PatientDtoSparse> search(UserDtoSearch toSearch) {
         LOG.info("GET " + BASE_PATH + "/search");
         return this.patientService.searchPatients(toSearch);
     }

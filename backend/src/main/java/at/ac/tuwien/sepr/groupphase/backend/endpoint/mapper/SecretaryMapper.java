@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
@@ -31,16 +32,28 @@ public class SecretaryMapper {
     }
 
     /**
+     * Converts the secretary entity to the SecretaryDtoSparse without the password.
+     *
+     * @param secretary the secretary to convert
+     * @return the SecretaryDtoDetail
+     */
+    public SecretaryDtoSparse secretaryEntityToSecretaryDtoSparse(Secretary secretary) {
+        LOG.trace("secretaryEntityToSecretaryDtoSparse({})", secretary);
+        return new SecretaryDtoSparse(secretary.getSecretaryId(), secretary.getCredential().getFirstName(), secretary.getCredential().getLastName(), secretary.getCredential().getEmail(),
+            secretary.getCredential().isInitialPassword());
+    }
+
+    /**
      * Converts the secretary entity list into a SecretaryDtoDetail list.
      *
      * @param secretaries the secretaries to convert
      * @return the converted secretaries
      */
-    public List<SecretaryDto> secretaryEntitiesToListOfSecretaryDtoDetail(List<Secretary> secretaries) {
-        LOG.trace("secretaryEntitiesToListOfSecretaryDtoDetail({})", secretaries);
-        List<SecretaryDto> secretariesDto = new ArrayList<>();
+    public List<SecretaryDtoSparse> secretaryEntitiesToListOfSecretaryDtoSparse(List<Secretary> secretaries) {
+        LOG.trace("secretaryEntitiesToListOfSecretaryDtoSparse({})", secretaries);
+        List<SecretaryDtoSparse> secretariesDto = new ArrayList<>();
         for (Secretary secretary : secretaries) {
-            secretariesDto.add(secretaryEntityToSecretaryDtoDetail(secretary));
+            secretariesDto.add(secretaryEntityToSecretaryDtoSparse(secretary));
         }
         return secretariesDto;
     }

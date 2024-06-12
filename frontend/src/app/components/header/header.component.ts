@@ -10,6 +10,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   ChangePasswordFormModalComponent
 } from "../user/change-password-form-modal/change-password-form-modal.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,7 @@ export class HeaderComponent implements OnInit {
   isHandheld: boolean = false;
   user: UserDto;
 
-  constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService, private dialog: MatDialog) {
+  constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService, private dialog: MatDialog, private router: Router) {
   }
 
   ngOnInit() {
@@ -136,6 +137,118 @@ export class HeaderComponent implements OnInit {
       return '/';
     }
 
+  }
+
+  public patientNavigateToAppointmentBook() {
+    this.router.navigate(['/home/patient/appointments/book']);
+  }
+
+  public patientNavigateToAppointment() {
+    this.router.navigate(['/home/patient/appointments']);
+  }
+
+  public patientNavigateToOutpatientDepartment() {
+    //this.router.navigate(['/home/patient/outpatient-department']);
+  }
+
+  public patientNavigateToInpatientDepartment() {
+    this.router.navigate(['/home/patient/inpatient-department']);
+  }
+
+  public patientNavigateToTelemedicine() {
+    this.router.navigate(['/home/patient/telemedicine']);
+  }
+
+  public secretaryNavigateToAppointmentBook() {
+    this.router.navigate(['/home/secretary/appointments/book']);
+  }
+
+  public secretaryNavigateToAppointment() {
+    this.router.navigate(['/home/secretary/appointments']);
+  }
+
+  public secretaryNavigateToPatients() {
+    this.router.navigate(['/home/secretary/patients']);
+  }
+
+  public secretaryNavigateToPatientsRegister() {
+    this.router.navigate(['/home/secretary/patients/register']);
+  }
+
+  public secretaryNavigateToOutpatientDepartment() {
+    //this.router.navigate(['/home/secretary/outpatient-department']);
+  }
+
+  public secretaryNavigateToInpatientDepartment() {
+    this.router.navigate(['/home/secretary/inpatient-department']);
+  }
+
+  public doctorNavigateToTreatmentLog() {
+    this.router.navigate(['/home/doctor/treatment/log']);
+  }
+
+  public doctorNavigateToTelemedicine() {
+    this.router.navigate(['/home/doctor/telemedicine']);
+  }
+
+  public doctorNavigateToOutpatientDepartment() {
+    //this.router.navigate(['/home/doctor/outpatient-department']);
+  }
+
+  public doctorNavigateToInpatientDepartment() {
+    this.router.navigate(['/home/doctor/inpatient-department']);
+  }
+
+  public adminNavigateToUsersAdmins() {
+    //this.router.navigate(['/home/admin/users/admins']);
+  }
+
+  public adminNavigateToUsersDoctors() {
+    this.router.navigate(['/home/admin/users/doctors']);
+  }
+
+  public adminNavigateToUsersSecretaries() {
+    this.router.navigate(['/home/admin/users/secretaries']);
+  }
+
+  public adminNavigateToRegisterAdmin() {
+    //this.router.navigate(['/home/admin/register/admin']);
+  }
+
+  public adminNavigateToRegisterDoctor() {
+    this.router.navigate(['/home/admin/register/doctor']);
+  }
+
+  public adminNavigateToRegisterSecretary() {
+    this.router.navigate(['/home/admin/register/secretary']);
+  }
+
+  public adminNavigateToRegisterOutpatientDepartment() {
+    this.router.navigate(['/home/admin/register/outpatient-department']);
+  }
+
+  public adminNavigateToRegisterInpatientDepartment() {
+    this.router.navigate(['/home/admin/register/inpatient-department']);
+  }
+
+  public adminNavigateToOutpatientDepartment() {
+    this.router.navigate(['/home/admin/outpatient-department']);
+  }
+
+  public adminNavigateToInpatientDepartment() {
+    this.router.navigate(['/home/admin/inpatient-department']);
+  }
+
+  public adminNavigateToRegisterMedicine() {
+    this.router.navigate(['/home/admin/register/medicine']);
+  }
+
+  public adminNavigateToRegisterAllergy() {
+    this.router.navigate(['/home/admin/register/allergy']);
+  }
+
+  public userNavigateToEditProfile() {
+    this.router.navigate([this.getEditProfilePath()]);
   }
 
   protected readonly Role = Role;

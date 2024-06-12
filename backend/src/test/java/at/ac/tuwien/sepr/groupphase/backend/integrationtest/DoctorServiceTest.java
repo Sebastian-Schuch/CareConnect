@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
@@ -64,14 +65,12 @@ public class DoctorServiceTest extends TestBase {
         credential.setInitialPassword(false);
         credential.setRole(Role.DOCTOR);
         DoctorDto createdDoctor = doctorService.createDoctor(toCreate, credential);
-        DoctorDto searchedDoctor = doctorService.getDoctorById(createdDoctor.id());
+        DoctorDtoSparse searchedDoctor = doctorService.getDoctorById(createdDoctor.id());
         assertAll("Grouped Assertions of Doctor",
             () -> assertEquals(createdDoctor.id(), searchedDoctor.id(), "ID should be equal"),
             () -> assertEquals(createdDoctor.email(), searchedDoctor.email(), "Email should be equal"),
             () -> assertEquals(createdDoctor.firstname(), searchedDoctor.firstname(), "Firstname should be equal"),
-            () -> assertEquals(createdDoctor.lastname(), searchedDoctor.lastname(), "Lastname should be equal"),
-            () -> assertEquals(createdDoctor.password(), searchedDoctor.password(), "Password should be equal"),
-            () -> assertEquals(createdDoctor.active(), searchedDoctor.active(), "Active should be equal"));
+            () -> assertEquals(createdDoctor.lastname(), searchedDoctor.lastname(), "Lastname should be equal"));
     }
     //TODO: adjust and refactor tests (Issue #60)
     /*
