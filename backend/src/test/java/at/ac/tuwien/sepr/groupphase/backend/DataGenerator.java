@@ -103,8 +103,9 @@ public class DataGenerator {
         this.patientRepository = patientRepository;
         this.secretaryRepository = secretaryRepository;
         this.stationRepository = stationRepository;
-        this.treatmentMedicineRepository = treatmentMedicineRepository;
         this.treatmentRepository = treatmentRepository;
+        this.treatmentMedicineRepository = treatmentMedicineRepository;
+
     }
 
     /**
@@ -137,18 +138,18 @@ public class DataGenerator {
     }
 
     private void clearDb() {
-        allergyRepository.deleteAll();
-        appointmentRepository.deleteAll();
         treatmentRepository.deleteAll();
         treatmentMedicineRepository.deleteAll();
-        outpatientDepartmentRepository.deleteAll();
-        openingHoursRepository.deleteAll();
-        stationRepository.deleteAll();
+        appointmentRepository.deleteAll();
         doctorRepository.deleteAll();
+        outpatientDepartmentRepository.deleteAll();
         patientRepository.deleteAll();
         secretaryRepository.deleteAll();
         medicationRepository.deleteAll();
+        allergyRepository.deleteAll();
         credentialRepository.deleteAll();
+        stationRepository.deleteAll();
+        openingHoursRepository.deleteAll();
     }
 
     private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
@@ -294,7 +295,7 @@ public class DataGenerator {
     private void generateDataForOutpatientDepartments() {
         outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00")));
         outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00")));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00")));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00")));
     }
 
     private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours) {
@@ -354,12 +355,16 @@ public class DataGenerator {
         appointment.setNotes(notes);
         return appointment;
     }
-
-    private void generateDataForTreatmentMedicines() {
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, "mg", new Date(2022, Calendar.JANUARY, 1, 8, 0)));
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, "mg", new Date(2022, Calendar.JANUARY, 1, 8, 0)));
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, "mg", new Date(2022, Calendar.JANUARY, 1, 8, 0)));
+    private Date createDate(int year, int month, int day, int hour, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hour, minute);
+        return calendar.getTime();
     }
+    private void generateDataForTreatmentMedicines() {
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        }
 
     private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, String unitOfMeasurement, Date timeOfAdministration) {
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
@@ -376,11 +381,11 @@ public class DataGenerator {
         List<Doctor> doctors = new ArrayList<>();
         doctors.add(doctorRepository.findAll().get(0));
         treatmentRepository.save(
-            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, null));
+            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
         treatmentRepository.save(
             setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
         doctors.add(doctorRepository.findAll().get(1));
-        medicine.clear();
+        medicine = new ArrayList<>();
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(

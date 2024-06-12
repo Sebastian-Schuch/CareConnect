@@ -39,21 +39,7 @@ export class AllergyComponent implements OnInit {
           this.notification.success('Successfully created ' + data.name + ' Allergy');
         },
         error: async error => {
-          switch (error.status) {
-            case 422:
-              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Allergy`, {
-                enableHtml: true,
-                timeOut: 10000
-              });
-              break;
-            case 401:
-              this.notification.error(await error.error.text(), `Could not create Allergy`);
-              this.router.navigate(['/']);
-              break;
-            default:
-              this.notification.error(await error.error.text(), `Could not create Allergy`);
-              break;
-          }
+          await this.errorFormatterService.printErrorToNotification(error, `Could not create Allergy`, this.notification);
         }
       });
     }

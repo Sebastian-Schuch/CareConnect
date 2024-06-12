@@ -4,7 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -19,10 +18,18 @@ public interface TreatmentService {
      *
      * @param treatmentDtoCreate the treatment to create
      * @return the created
-     * @throws MethodArgumentNotValidException if the treatment is not valid
      */
-    TreatmentDto createTreatment(TreatmentDtoCreate treatmentDtoCreate) throws MethodArgumentNotValidException;
+    TreatmentDto createTreatment(TreatmentDtoCreate treatmentDtoCreate);
 
+    /**
+     * Updates an existing treatment.
+     *
+     * @param id the id of the treatment to update
+     * @param treatmentDto the treatment with updated details
+     * @return the updated treatment
+     * @throws NotFoundException if the treatment with the given ID does not exist
+     */
+    TreatmentDto updateTreatment(Long id, TreatmentDtoCreate treatmentDto) throws NotFoundException;
 
     /**
      * Gets a treatmentDto by its id.

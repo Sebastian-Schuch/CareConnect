@@ -5,8 +5,7 @@ import java.util.Date;
 
 public record TreatmentMedicineDto(
     long id,
-
-    MedicationDto medicine,
+    MedicationDto medication,
     String unitOfMeasurement,
     long amount,
     Date medicineAdministrationDate) {

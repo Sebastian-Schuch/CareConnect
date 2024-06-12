@@ -44,21 +44,7 @@ export class MedicationCreateComponent implements OnInit {
           this.notification.success('Successfully created ' + this.medication.name + ' Medication');
         },
         error: async error => {
-          switch (error.status) {
-            case 422:
-              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create Medication`, {
-                enableHtml: true,
-                timeOut: 10000
-              });
-              break;
-            case 401:
-              this.notification.error(await error.error.text(), `Could not create Medication`);
-              this.router.navigate(['/']);
-              break;
-            default:
-              this.notification.error(await error.error.text(), `Could not create Medication`);
-              break;
-          }
+          await this.errorFormatterService.printErrorToNotification(error, `Could not create Medication`, this.notification);
         }
       });
     }

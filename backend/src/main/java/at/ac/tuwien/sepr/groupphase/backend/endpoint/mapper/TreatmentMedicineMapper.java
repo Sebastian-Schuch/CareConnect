@@ -8,6 +8,9 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Mapper for converting between TreatmentMedicine and TreatmentMedicineDto objects.
  */
@@ -52,5 +55,19 @@ public class TreatmentMedicineMapper {
             treatmentMedicine.getAmount(),
             treatmentMedicine.getTimeOfAdministration()
         );
+    }
+
+    /**
+     * Converts a list of TreatmentMedicine entities to a list of TreatmentMedicineDto dtos.
+     *
+     * @param treatmentMedicines the list of TreatmentMedicine entities to convert
+     * @return the converted list of TreatmentMedicineDto dtos
+     */
+    public List<TreatmentMedicineDto> entityListToDtoList(List<TreatmentMedicine> treatmentMedicines) {
+        List<TreatmentMedicineDto> treatmentMedicineDtos = new ArrayList<>();
+        for (TreatmentMedicine treatmentMedicine : treatmentMedicines) {
+            treatmentMedicineDtos.add(entityToDto(treatmentMedicine));
+        }
+        return treatmentMedicineDtos;
     }
 }

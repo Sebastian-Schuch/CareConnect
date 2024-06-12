@@ -10,7 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.List;
 
 /**
  * Service for the treatment medicine entity.
@@ -27,7 +28,7 @@ public class TreatmentMedicineServiceImpl implements TreatmentMedicineService {
     }
 
     @Override
-    public TreatmentMedicineDto createTreatmentMedicine(TreatmentMedicineDtoCreate treatmentMedicineDtoCreate) throws MethodArgumentNotValidException {
+    public TreatmentMedicineDto createTreatmentMedicine(TreatmentMedicineDtoCreate treatmentMedicineDtoCreate) {
         log.trace("createTreatment()");
         TreatmentMedicine savedTreatmentMedicine = treatmentMedicineRepository.save(treatmentMedicineMapper.dtoToEntity(treatmentMedicineDtoCreate));
         return treatmentMedicineMapper.entityToDto(savedTreatmentMedicine);
@@ -53,5 +54,21 @@ public class TreatmentMedicineServiceImpl implements TreatmentMedicineService {
             throw new NotFoundException("Treatment medicine not found");
         }
         return treatmentMedicine;
+    }
+
+    @Override
+    public void deleteTreatmentMedicine(long id) throws NotFoundException {
+        log.trace("deleteTreatmentMedicine()");
+        if (!treatmentMedicineRepository.existsById(id)) {
+            log.warn("treatmentMedicine with id {} not found", id);
+            throw new NotFoundException("Treatment medicine not found");
+        }
+        treatmentMedicineRepository.deleteById(id);
+    }
+
+    @Override
+    public List<TreatmentMedicineDto> getAllTreatmentMedicines() {
+        log.trace("getAllTreatmentMedicines()");
+        return treatmentMedicineMapper.entityListToDtoList(treatmentMedicineRepository.findAll());
     }
 }

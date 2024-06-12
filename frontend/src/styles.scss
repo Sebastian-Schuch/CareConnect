@@ -77,6 +77,8 @@ html, body {
   overflow-y: auto;
 }
 
+// styling for the badges
+
 .badge-container {
   display: flex;
   justify-content: flex-start;
@@ -130,3 +132,7 @@ html, body {
   cursor: not-allowed;
   opacity: 0.6;
 }
+.toast-container{
+  margin-top: 60px!important;
+}
+
