@@ -7,11 +7,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AppointmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -72,7 +72,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void delete(long id) {
         if (!appointmentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Appointment not found with id " + id);
+            LOG.warn("Appointment {} not found", id);
+            throw new NotFoundException("Appointment not found");
         }
         appointmentRepository.deleteById(id);
     }
@@ -99,13 +100,19 @@ public class AppointmentServiceImpl implements AppointmentService {
             List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(searchParams.outpatientDepartmentId(), startDate, endDate);
             return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, searchParams.outpatientDepartmentId());
         } catch (ParseException e) {
+            LOG.warn("Invalid date format {}, {}", searchParams.startDate(), searchParams.endDate());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
         }
     }
 
     @Override
     public AppointmentDto getAppointmentById(long id) {
-        return appointmentMapper.appointmentEntityToAppointmentDto(appointmentRepository.findById(id).orElse(null));
+        var appointment = appointmentRepository.findById(id).orElse(null);
+        if (appointment == null) {
+            LOG.warn("Appointment {} not found", id);
+            throw new NotFoundException("Appointment not found");
+        }
+        return appointmentMapper.appointmentEntityToAppointmentDto(appointment);
     }
 
     /**
@@ -116,6 +123,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @return the list of AppointmentCalendarDto
      */
     private List<AppointmentCalendarDto> appointmentEntitiesToListOfAppointmentCalendarDto(List<Appointment> appointments, Long outpatientDepartmentId) {
+        LOG.trace("appointmentEntitiesToListOfAppointmentCalendarDto({},{})", appointments, outpatientDepartmentId);
         List<AppointmentCalendarDto> appointmentCalendarDtos = new ArrayList<>();
         for (Appointment appointment : appointments) {
             if (appointmentCalendarDtos.isEmpty()) {

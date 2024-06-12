@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     /**
      * Exception handler for NotFoundException.
      */
-    @ExceptionHandler(value = {NotFoundException.class, EntityNotFoundException.class})
+    @ExceptionHandler(value = {NotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
