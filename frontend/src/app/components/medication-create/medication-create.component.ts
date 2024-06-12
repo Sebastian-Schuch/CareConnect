@@ -10,7 +10,7 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
 @Component({
   selector: 'app-medication-create',
   templateUrl: './medication-create.component.html',
-  styleUrl: './medication-create.component.scss'
+  styleUrls: ['./medication-create.component.scss', '../../../styles.scss']
 })
 export class MedicationCreateComponent implements OnInit {
 

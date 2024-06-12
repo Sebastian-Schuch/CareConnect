@@ -10,7 +10,7 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
 @Component({
   selector: 'app-allergy',
   templateUrl: './allergy.component.html',
-  styleUrl: './allergy.component.scss'
+  styleUrls: ['./allergy.component.scss', '../../../styles.scss']
 })
 export class AllergyComponent implements OnInit {
 
