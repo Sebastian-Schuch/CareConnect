@@ -3,26 +3,28 @@
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <!-- Property1 Column -->
   <ng-container matColumnDef="inpatient_department">
-    <th mat-header-cell *matHeaderCellDef> inpatient department </th>
-    <td mat-cell *matCellDef="let stay"> {{stay.station.name}} </td>
+    <th mat-header-cell *matHeaderCellDef> inpatient department</th>
+    <td mat-cell *matCellDef="let stay"> {{ stay.station.name }}</td>
   </ng-container>
 
   <!-- Property2 Column -->
   <ng-container matColumnDef="check_in_time">
-    <th mat-header-cell *matHeaderCellDef> check in time </th>
-    <td mat-cell *matCellDef="let stay"> {{formatDate(stay.arrival + 'Z') | date:'dd-MM-yyyy HH:mm'}} </td>
+    <th mat-header-cell *matHeaderCellDef> check in time</th>
+    <td mat-cell *matCellDef="let stay"> {{ stay.arrival | date:'dd-MM-yyyy HH:mm' }}</td>
   </ng-container>
 
   <!-- Property3 Column -->
   <ng-container matColumnDef="discharge_time">
-    <th mat-header-cell *matHeaderCellDef> discharge time </th>
-    <td mat-cell *matCellDef="let stay"> {{formatDate(stay.discharge+"Z") | date:'dd-MM-yyyy HH:mm'}} </td>
+    <th mat-header-cell *matHeaderCellDef> discharge time</th>
+    <td mat-cell *matCellDef="let stay"> {{ stay.discharge | date:'dd-MM-yyyy HH:mm' }}</td>
   </ng-container>
 
   <ng-container matColumnDef="edit">
-    <th mat-header-cell *matHeaderCellDef> Edit </th>
+    <th mat-header-cell *matHeaderCellDef> Edit</th>
     <td mat-cell *matCellDef="let stay">
-      <button mat-button (click)="openEditStayDialog(stay)"><mat-icon>mode_edit</mat-icon></button>
+      <button mat-button (click)="openEditStayDialog(stay)">
+        <mat-icon>mode_edit</mat-icon>
+      </button>
     </td>
   </ng-container>
 
@@ -30,4 +32,5 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-paginator (page)="loadStays($event)" [length]="length" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator (page)="loadStays($event)" [length]="length" [pageSizeOptions]="[5, 10, 20]"
+               showFirstLastButtons></mat-paginator>

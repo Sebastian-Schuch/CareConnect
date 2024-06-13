@@ -3,13 +3,13 @@ import {StationDto} from "./Station";
 export interface StayDto {
   id: number;
   station: StationDto;
-  arrival: string;
-  discharge: string;
+  arrival: Date;
+  discharge: Date;
 }
 
 export interface StayDtoCreate {
   station: StationDto;
-  patientId: string;
+  patientId: number;
 }
 
 export interface StayDtoPage {

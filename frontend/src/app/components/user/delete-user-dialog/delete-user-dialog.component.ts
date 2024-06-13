@@ -24,7 +24,7 @@ import {AuthRequest} from "../../../dtos/auth-request";
     MatDialogContent
   ],
   templateUrl: './delete-user-dialog.component.html',
-  styleUrl: './delete-user-dialog.component.scss'
+  styleUrls: ['./delete-user-dialog.component.scss', '../../../../styles.scss']
 })
 export class DeleteUserDialogComponent {
 

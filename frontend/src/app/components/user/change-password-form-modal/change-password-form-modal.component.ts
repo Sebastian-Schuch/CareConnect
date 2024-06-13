@@ -34,7 +34,7 @@ import {UserService} from "../../../services/user.service";
     NgIf
   ],
   templateUrl: './change-password-form-modal.component.html',
-  styleUrl: './change-password-form-modal.component.scss'
+  styleUrls: ['./change-password-form-modal.component.scss', '../../../../styles.scss']
 })
 export class ChangePasswordFormModalComponent implements OnInit {
 

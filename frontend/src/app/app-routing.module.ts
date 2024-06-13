@@ -178,6 +178,16 @@ const routes: Routes = [
                     path: 'edit', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.edit}
                   }]
               }]
+          },
+          {
+            path: ':id', children: [
+              {path: '', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.view}},
+              {
+                path: 'edit',
+                component: UserCreateComponent,
+                data: {role: Role.doctor, mode: UserCreateEditMode.edit}
+              }
+            ]
           }]
       },
       {
