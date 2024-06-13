@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
@@ -10,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.CredentialsMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -182,12 +184,16 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void changePassword(UserLoginDto newLogin) {
-        LOGGER.trace("changePassword({})", newLogin);
-        Credential credential = findApplicationUserByEmail(newLogin.getEmail());
-        credential.setPassword(passwordEncoder.encode(newLogin.getPassword() + passwordPepper));
-        credential.setInitialPassword(false);
-        credentialRepository.save(credential);
+    public void changePassword(ChangePasswordDto passwords) {
+        LOGGER.trace("changePassword({})", passwords);
+        Credential credential = findApplicationUserByEmail(passwords.email());
+        if (passwordEncoder.matches(passwords.oldPassword() + passwordPepper, credential.getPassword())) {
+            credential.setPassword(passwordEncoder.encode(passwords.newPassword() + passwordPepper));
+            credential.setInitialPassword(false);
+            credentialRepository.save(credential);
+        } else {
+            throw new ConflictException("Old password is incorrect");
+        }
     }
 
     @Override

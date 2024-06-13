@@ -18,6 +18,7 @@ import {ActivatedRoute} from "@angular/router";
 import {TreatmentMedicineService} from "../../services/treatment-medicine.service";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
 import {MatAutocomplete} from "@angular/material/autocomplete";
+import {getDate, getMonth, getYear} from "date-fns";
 
 
 export enum TreatmentCreateEditMode {
@@ -55,7 +56,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['Medication', 'Amount', 'Unit', 'Date', 'Time', 'Delete'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild('doctorAuto', { static: false }) doctorAuto: MatAutocomplete;
+  @ViewChild('doctorAuto', {static: false}) doctorAuto: MatAutocomplete;
   dateToday: number = Date.now();
   treatmentDtoCreate: TreatmentDtoCreate = {
     treatmentTitle: null,
@@ -100,6 +101,11 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     });
   }
 
+  public getDayString(date): string {
+    let outDate = new Date(date);
+    return getDate(outDate) + "." + (getMonth(outDate) + 1) + "." + getYear(outDate);
+  }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
@@ -117,7 +123,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     });
   }
 
-  deleteMedicationFromPersistence(trMedIdToDelete:number[]): void {
+  deleteMedicationFromPersistence(trMedIdToDelete: number[]): void {
     for (let trMedId of trMedIdToDelete) {
       this.treatmentMedicineService.deleteTreatmentMedicine(trMedId).subscribe(
         () => {
@@ -362,7 +368,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     this.treatmentMedicineService.createTreatmentMedicine(treatmentMedicineDtoCreate).subscribe(
       {
         next: (newTreatmentMedicineSelection: TreatmentMedicineSelection) => {
-          medicationData.medicineDatePicker = new Date(medicationData.medicineDatePicker).toLocaleDateString();
+          medicationData.medicineDatePicker = this.getDayString(medicationData.medicineDatePicker);
           this.treatmentMedicationSelection.push(newTreatmentMedicineSelection);
           this.dataSource.data.push(medicationData);
           this.dataSource._updateChangeSubscription();

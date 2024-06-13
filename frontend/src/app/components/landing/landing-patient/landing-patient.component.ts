@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-landing-patient',
@@ -9,11 +8,13 @@ import {Router} from "@angular/router";
 })
 export class LandingPatientComponent implements OnInit {
 
-  constructor(public authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService) {
   }
 
   ngOnInit(): void {
   }
 
-
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
 }

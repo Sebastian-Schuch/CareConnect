@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
@@ -120,21 +121,21 @@ public class CredentialEndpoint {
     /**
      * Change password endpoint.
      *
-     * @param newLogin the new login
+     * @param passwords the new password
      * @return a Response Entity with the status and a message depending on the validity of the request
      */
     @Secured({"SECRETARY", "PATIENT", "ADMIN", "DOCTOR"})
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping
-    public String changePassword(@RequestBody UserLoginDto newLogin) {
+    public String changePassword(@RequestBody ChangePasswordDto passwords) {
         LOG.info("PUT " + BASE_PATH);
-        LOG.debug("Body of request:\n{}", newLogin);
+        LOG.debug("Body of request:\n{}", passwords);
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!principal.equals(newLogin.getEmail())) {
+        if (!principal.equals(passwords.email())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to change the password of another user.");
         }
 
-        customUserDetailService.changePassword(newLogin);
+        customUserDetailService.changePassword(passwords);
         return "Password changed successfully.";
     }
 

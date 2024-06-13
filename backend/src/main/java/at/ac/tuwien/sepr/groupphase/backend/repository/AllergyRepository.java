@@ -26,6 +26,6 @@ public interface AllergyRepository extends CrudRepository<Allergy, Long> {
     List<Allergy> findAll();
 
     @Transactional
-    @Query(value = "SELECT * FROM Allergy WHERE UID= ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Allergy WHERE ID= ?1", nativeQuery = true)
     Allergy findAllergyById(Long id);
 }

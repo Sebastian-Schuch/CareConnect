@@ -6,12 +6,13 @@
     </h1>
   </div>
   <h3 id="main-action-heading">Log a treatment or chat with patient about treatments!</h3>
-  <a aria-label="See more information about logging treatments and patient chats" href="#book-appointment-section">
+  <a aria-label="See more information about logging treatments and patient chats" (click)="scroll(doctor)">
     <button class="get-access-button" color="primary" mat-button>See more</button>
   </a>
 </div>
 
-<div aria-labelledby="log-treatment-title" class="booking-info-card" id="book-appointment-section" role="region">
+<div #doctor aria-labelledby="log-treatment-title" class="booking-info-card" id="book-appointment-section"
+     role="region">
 
   <div class="text-section">
     <h2 id="log-treatment-title">Log a treatment</h2>

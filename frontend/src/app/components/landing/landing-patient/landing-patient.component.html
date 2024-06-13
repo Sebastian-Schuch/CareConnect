@@ -19,12 +19,12 @@
     Check on your upcoming appointments, or chat with a doctor about your past treatments.<br>
     Access your Treatment history and see what medication you were given.
   </p>
-  <a aria-label="See more information about your appointments and treatments" href="#appointment-section">
+  <a aria-label="See more information about your appointments and treatments" (click)="scroll(patient)">
     <button class="get-access-button" color="primary" mat-button>See more</button>
   </a>
 </div>
 
-<div aria-labelledby="view-appointments-title" class="cta-section" id="appointment-section" role="region">
+<div #patient aria-labelledby="view-appointments-title" class="cta-section" id="appointment-section" role="region">
   <h2 id="view-appointments-title">View your upcoming appointments</h2>
   <app-appointments-patient></app-appointments-patient>
   <button aria-label="View all appointments" class="get-access-button-inverted" mat-button

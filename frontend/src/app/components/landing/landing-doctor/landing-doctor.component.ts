@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth.service";
-import {Router, RouterLink} from "@angular/router";
+import {RouterLink} from "@angular/router";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 
@@ -16,9 +16,13 @@ import {MatIcon} from "@angular/material/icon";
   styleUrls: ['./landing-doctor.component.scss', './../landing.scss']
 })
 export class LandingDoctorComponent implements OnInit {
-  constructor(public authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService) {
   }
 
   ngOnInit() {
+  }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
   }
 }

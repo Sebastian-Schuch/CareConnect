@@ -37,4 +37,8 @@ export class LandingLoggedOutComponent implements OnInit {
       }
     }
   }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
 }

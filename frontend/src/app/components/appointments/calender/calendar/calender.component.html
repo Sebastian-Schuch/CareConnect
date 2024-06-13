@@ -98,20 +98,22 @@
 </div>
 <ng-template #customMonthCellTemplate let-day="day" let-locale="locale">
   <div class="cal-cell-top">
-    <span class="cal-day-badge" *ngIf="isInPast(day.date)" [style]="{ backgroundColor: this.getBadgeColor(day.date) }">
+    <span class="cal-day-badge" *ngIf="isInPast(day.date)"
+          [style]="{ backgroundColor: this.getBadgeColor(day.date), color: this.getBadgeColorText(day.date) }">
       Past Date
     </span>
     <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) > 0 && !isInPast(day.date)"
-          [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
+          [style]="{ backgroundColor: this.getBadgeColor(day.date), color: this.getBadgeColorText(day.date) }"
     >Free: {{ calcFreeSlots(day.date) }}</span
     >
     <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) <= 0 && !isInPast(day.date)"
-          [style]="{ backgroundColor: this.getBadgeColor(day.date) }"
+          [style]="{ backgroundColor: this.getBadgeColor(day.date), color: this.getBadgeColorText(day.date) }"
     >Booked out!</span
     >
   </div>
-  <div style="text-align: center" class="cal-cell-row"><span style="margin-left: auto;margin-right: auto;color:black"
-                                                             class="cal-day-number"
+  <div style="text-align: center" class="cal-cell-row"><span
+    style="margin-left: auto;margin-right: auto;color:black; opacity: 80%"
+    class="cal-day-number"
   >{{ getWeekdayString(day.day) }}<br>{{ getDayString(day.date) }}</span
   ></div>
 </ng-template>
