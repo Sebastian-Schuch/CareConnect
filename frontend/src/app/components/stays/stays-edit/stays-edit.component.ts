@@ -16,6 +16,7 @@ import {StaysService} from "../../../services/stays.service";
 import {StayDto} from "../../../dtos/stays";
 import {ToastrService} from "ngx-toastr";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
+import {getHours, getMinutes} from "date-fns";
 
 @Component({
   selector: 'app-stays-edit',
@@ -38,17 +39,19 @@ import {ErrorFormatterService} from "../../../services/error-formatter.service";
     ReactiveFormsModule
   ],
   templateUrl: './stays-edit.component.html',
-  styleUrl: './stays-edit.component.scss'
+  styleUrls: ['./stays-edit.component.scss', '../../../../styles.scss']
 })
-export class StaysEditComponent implements OnInit{
+export class StaysEditComponent implements OnInit {
   startDate: Date;
   endDate: Date;
   updateDate: FormGroup;
+
   constructor(public dialogRef: MatDialogRef<StaysEditComponent>,
               @Inject(MAT_DIALOG_DATA) public data: StayDto,
               private stayService: StaysService,
               private notification: ToastrService,
-              private errorFormatterService: ErrorFormatterService) {}
+              private errorFormatterService: ErrorFormatterService) {
+  }
 
   ngOnInit() {
     this.updateDate = new FormGroup({
@@ -62,21 +65,23 @@ export class StaysEditComponent implements OnInit{
     this.updateDate.get('EndDate').setValue(new Date(this.data.discharge));
 
     // Format the time as HH:mm
-    const arrivalTime = new Date(this.data.arrival+"Z");
-    const dischargeTime = new Date(this.data.discharge+"Z");
-    const arrivalTimeString = `${arrivalTime.getHours()}:${arrivalTime.getMinutes() < 10 ? '0' : ''}${arrivalTime.getMinutes()}`;
-    const dischargeTimeString = `${dischargeTime.getHours()}:${dischargeTime.getMinutes() < 10 ? '0' : ''}${dischargeTime.getMinutes()}`;
+    const arrivalTime = this.data.arrival;
+    const dischargeTime = this.data.discharge;
+    const arrivalTimeString = `${getHours(arrivalTime)}:${getMinutes(arrivalTime) < 10 ? '0' : ''}${getMinutes(arrivalTime)}`;
+    const dischargeTimeString = `${getHours(dischargeTime)}:${getMinutes(dischargeTime) < 10 ? '0' : ''}${getMinutes(dischargeTime)}`;
 
     // Set the time inputs with the content from the StayDto object
     this.updateDate.get('StartTime').setValue(arrivalTimeString);
     this.updateDate.get('EndTime').setValue(dischargeTimeString);
   }
+
   combineDateAndTime(date: string, time: string): Date {
     const combinedDate = new Date(date);
     const [hours, minutes] = time.split(':');
     combinedDate.setHours(parseInt(hours), parseInt(minutes));
     return combinedDate;
   }
+
   submit() {
     const StartDate = this.updateDate.get('StartDate').value;
     const StartTime = this.updateDate.get('StartTime').value;
@@ -88,23 +93,25 @@ export class StaysEditComponent implements OnInit{
 
 
     const updateStay: StayDto = {
-      arrival: combinedStartDate.toISOString(),
-      discharge: combinedEndDate.toISOString(),
+      arrival: combinedStartDate,
+      discharge: combinedEndDate,
       id: this.data.id,
       station: this.data.station
     }
 
 
-    this.stayService.update(updateStay).subscribe({next: () =>{
-      this.notification.success('Stay edited successfully');
-      this.dialogRef.close();
-    },
-    error: error => {
-      this.notification.error(error?.error?.ValidationErrors.join(', '), 'Could not edit stay', {
-        enableHtml: true,
-        timeOut: 10000
-      });
-    }});
+    this.stayService.update(updateStay).subscribe({
+      next: () => {
+        this.notification.success('Stay edited successfully');
+        this.dialogRef.close();
+      },
+      error: error => {
+        this.notification.error(error?.error?.ValidationErrors.join(', '), 'Could not edit stay', {
+          enableHtml: true,
+          timeOut: 10000
+        });
+      }
+    });
   }
 
   close() {

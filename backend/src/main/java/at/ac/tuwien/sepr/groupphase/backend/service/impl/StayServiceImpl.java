@@ -18,8 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.util.Date;
 
 @Service
 public class StayServiceImpl implements StayService {
@@ -59,14 +58,14 @@ public class StayServiceImpl implements StayService {
     public StayDto createNewStay(StayDtoCreate stayDtoCreate) {
         Patient patient = patientService.getPatientEntityById(stayDtoCreate.patientId());
         Station station = stationMapper.dtoToStation(stayDtoCreate.station());
-        Stay stay = new Stay().setArrival(LocalDateTime.now(ZoneOffset.UTC)).setStation(station).setPatient(patient);
+        Stay stay = new Stay().setArrival(new Date()).setStation(station).setPatient(patient);
         return stayMapper.stayEntityToStayDto(stayRepository.save(stay));
     }
 
     @Override
     public StayDto endCurrentStay(StayDto stayDto) throws NotFoundException {
         Stay stay = stayRepository.findById(stayDto.id()).orElseThrow(() -> new NotFoundException("Stay not found"));
-        stay.setDeparture(LocalDateTime.now(ZoneOffset.UTC));
+        stay.setDeparture(new Date());
         return stayMapper.stayEntityToStayDto(stayRepository.save(stay));
     }
 

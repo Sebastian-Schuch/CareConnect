@@ -23,7 +23,7 @@ import {AuthRequest} from "../../../dtos/auth-request";
     MatDialogTitle
   ],
   templateUrl: './reset-password-dialog.component.html',
-  styleUrl: './reset-password-dialog.component.scss'
+  styleUrls: ['./reset-password-dialog.component.scss', '../../../../styles.scss']
 })
 export class ResetPasswordDialogComponent {
 

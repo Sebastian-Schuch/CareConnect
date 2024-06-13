@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Log medication</h1>
-<div mat-dialog-content>
+<mat-dialog-content>
   <form [formGroup]="medicationAdministeredForm" (ngSubmit)="onSubmit()" class="form-container">
     <mat-form-field class="full-width">
       <mat-label>Medication</mat-label>
@@ -27,9 +27,10 @@
 
     <mat-form-field class="half-width">
       <mat-label>Date</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="medicineDatePicker" [max]="dateToday| date:'yyyy-MM-dd'">
+      <input matInput [matDatepicker]="picker" formControlName="medicineDatePicker"
+             [max]="dateToday| date:'yyyy-MM-dd'">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker ></mat-datepicker>
+      <mat-datepicker #picker></mat-datepicker>
       <mat-error *ngIf="dateControl.hasError('required')">Date is required</mat-error>
       <mat-error *ngIf="dateControl.hasError('invalidDate')">Date must be in the past or today.</mat-error>
     </mat-form-field>
@@ -40,8 +41,10 @@
       <mat-error *ngIf="timeControl.hasError('required')">Time is required</mat-error>
     </mat-form-field>
   </form>
-</div>
-<div mat-dialog-actions class="button-container">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button (click)="onSubmit()" [disabled]="medicationAdministeredForm.invalid">Submit</button>
-</div>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'">
+  <button class="sepr-btn-cancel" mat-button mat-dialog-close>Cancel</button>
+  <button class="sepr-btn-submit" mat-button (click)="onSubmit()" [disabled]="medicationAdministeredForm.invalid">
+    Submit
+  </button>
+</mat-dialog-actions>

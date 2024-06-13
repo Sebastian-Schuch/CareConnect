@@ -2,36 +2,26 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import jakarta.validation.constraints.AssertTrue;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.util.Date;
 
 public record StayDto(
     Long id,
     StationDto station,
-    LocalDateTime arrival,
-    LocalDateTime discharge
+    Date arrival,
+    Date discharge
 ) {
     @AssertTrue(message = "discharge must be in the past or present")
     private boolean isValidDischargeTimeNow() {
-        if (discharge != null && discharge.isAfter(LocalDateTime.now(ZoneOffset.UTC))) {
-            return false;
-        }
-        return true;
+        return discharge == null || !discharge.after(new Date());
     }
 
     @AssertTrue(message = "arrival must be in the past or present")
     private boolean isValidArrivalTimeNow() {
-        if (arrival != null && arrival.isAfter(LocalDateTime.now(ZoneOffset.UTC))) {
-            return false;
-        }
-        return true;
+        return arrival == null || !arrival.after(new Date());
     }
 
     @AssertTrue(message = "discharge must be after arrival")
     private boolean isValidDischargeTime() {
-        if (discharge != null && discharge.isBefore(arrival)) {
-            return false;
-        }
-        return true;
+        return discharge == null || !discharge.before(arrival);
     }
 }
