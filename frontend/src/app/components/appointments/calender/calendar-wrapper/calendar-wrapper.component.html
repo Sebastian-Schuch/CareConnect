@@ -45,5 +45,6 @@
 
 <app-calender *ngIf="isOutpatientDepartmentSet()"
               [outpatientDepartment]="GetActiveOutpatientDepartment()"
-              [patient]="GetActivePatient()"></app-calender>
+              [patient]="GetActivePatient()"
+              [role]="mode"></app-calender>
 

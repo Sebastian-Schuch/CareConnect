@@ -4,6 +4,7 @@ import {UserDto, UserDtoCreate, UserDtoList, UserDtoSearch, UserDtoUpdate} from 
 import {Observable} from "rxjs";
 import {Globals} from "../global/globals";
 import {AuthRequest} from "../dtos/auth-request";
+import {Password} from "../dtos/password";
 
 
 @Injectable({
@@ -30,10 +31,10 @@ export class UserService {
   /**
    * Change the password of the user
    *
-   * @param authRequest User data with the new password
+   * @param passwords User data with the new password
    */
-  changePassword(authRequest: AuthRequest): Observable<string> {
-    return this.http.patch(this.credentialBaseUri, authRequest, {responseType: 'text'});
+  changePassword(passwords: Password): Observable<string> {
+    return this.http.patch(this.credentialBaseUri, passwords, {responseType: 'text'});
   }
 
   /**

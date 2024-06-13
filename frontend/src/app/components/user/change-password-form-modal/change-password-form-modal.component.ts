@@ -13,9 +13,9 @@ import {MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {eq} from "lodash";
-import {AuthRequest} from "../../../dtos/auth-request";
 import {ToastrService} from 'ngx-toastr';
 import {UserService} from "../../../services/user.service";
+import {Password} from "../../../dtos/password";
 
 @Component({
   selector: 'app-change-password-form-modal',
@@ -44,12 +44,17 @@ export class ChangePasswordFormModalComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ChangePasswordFormModalComponent>, private fb: FormBuilder, private userService: UserService, @Inject(MAT_DIALOG_DATA) public data: any, private notification: ToastrService) {
     this.changePasswordForm = this.fb.group({
       newPw: ['', Validators.required],
+      oldPw: ['', Validators.required],
       newPwRepeat: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
 
+  }
+
+  get oldPwControl() {
+    return this.changePasswordForm.get('oldPw');
   }
 
   get newPwControl() {
@@ -69,20 +74,20 @@ export class ChangePasswordFormModalComponent implements OnInit {
    */
   onSubmit() {
     if (this.changePasswordForm.valid && this.equalPasswords()) {
-      let auth: AuthRequest = {
+      let pw: Password = {
         email: this.data.email,
-        password: this.newPwRepeatControl.value
+        oldPassword: this.oldPwControl.value,
+        newPassword: this.newPwRepeatControl.value
       }
-      let observable = this.userService.changePassword(auth);
+      let observable = this.userService.changePassword(pw);
       observable.subscribe({
         next: () => {
           this.notification.success('Password changed successfully');
           this.dialogRef.close();
         },
-        error: error => {
-          console.error('There was an error!', error);
+        error: () => {
+          this.notification.error('Password change failed', 'Old password is incorrect');
         }
-
       })
     }
   }

@@ -32,14 +32,15 @@ import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
 import {AppointmentDtoCalendar, AppointmentDtoCreate} from "../../../../dtos/appointment";
 import {UserDto} from "../../../../dtos/user";
 import {OpeningHoursDto} from "../../../../dtos/opening-hours";
-import {Router} from "@angular/router";
 import {ErrorFormatterService} from "../../../../services/error-formatter.service";
+import {Role} from "../../../../dtos/Role";
 
 
 @Component({
   selector: 'app-calender',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'calender.component.html',
+  styleUrls: ['calender.component.scss'],
   providers: [
     {
       provide: CalendarDateFormatter,
@@ -55,6 +56,7 @@ import {ErrorFormatterService} from "../../../../services/error-formatter.servic
 export class CalenderComponent implements OnInit {
   @Input() outpatientDepartment: OutpatientDepartmentDto;
   @Input() patient: UserDto;
+  @Input() role: Role;
   @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
 
 
@@ -92,8 +94,7 @@ export class CalenderComponent implements OnInit {
     private service: CalenderService,
     private notification: ToastrService,
     private appointmentService: AppointmentService,
-    private errorFormatterService: ErrorFormatterService,
-    private router: Router
+    private errorFormatterService: ErrorFormatterService
   ) {
   }
 
@@ -148,7 +149,7 @@ export class CalenderComponent implements OnInit {
         patientAppointments: this.appointmentService.getAppointmentsFromPatient(this.patient.id),
       }).subscribe(({bookedAppointments, patientAppointments}) => {
         this.bookedAppointments = bookedAppointments;
-        this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, patientAppointments, this.startDate, this.endDate);
+        this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, patientAppointments, this.startDate, this.endDate, this.role);
         this.refresh.next();
       });
     } else {
@@ -156,7 +157,7 @@ export class CalenderComponent implements OnInit {
       observable.subscribe({
         next: (bookedAppointments) => {
           this.bookedAppointments = bookedAppointments;
-          this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, [], this.startDate, this.endDate);
+          this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, [], this.startDate, this.endDate, this.role);
           this.refresh.next();
         },
         error: error => {
@@ -184,6 +185,15 @@ export class CalenderComponent implements OnInit {
    */
   public getBadgeColor(date: Date) {
     return this.service.getEventColorBadgeMonth(this.calcCurrentSlots(date), this.calcMaxSlots(date), date, this.service.getDayOfWeek(this.outpatientDepartment.openingHours, getDay(date))).primary;
+  }
+
+  /**
+   * Set the badge text color for the given date
+   *
+   * @param date the date to set the badge color for
+   */
+  public getBadgeColorText(date: Date) {
+    return this.service.getEventColorBadgeMonth(this.calcCurrentSlots(date), this.calcMaxSlots(date), date, this.service.getDayOfWeek(this.outpatientDepartment.openingHours, getDay(date))).secondaryText;
   }
 
   public isInPast(date: Date): boolean {
