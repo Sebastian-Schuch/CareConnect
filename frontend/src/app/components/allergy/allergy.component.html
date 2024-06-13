@@ -50,3 +50,129 @@
     </button>
   </div>
 </form>
+
+<div class="container mt-3">
+  <button
+    class="btn btn-info"
+    (click)="isCollapsed = !isCollapsed"
+    aria-controls="collapseExample">
+    {{ isCollapsed ? 'Help' : 'Hide Guide' }}
+  </button>
+  <div id="collapseExample" [ngbCollapse]="isCollapsed" class="mt-3">
+    <div class="card card-body">
+      <h5>Feature Guide</h5>
+      <p>You can insert a svc file to register new entities instead of creating them manually</p>
+      <ul>
+        <li>Tip: Remember to have the files in the correct format. The format for files can be found in the help section.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" (click)="openModal()">Open Popup</button>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Popup Title</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>This is a small popup modal.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<div class="allergies-from-csv container mt-3">
+  <div class="mb-3">
+    <label for="csvFileInput" class="form-label">Upload CSV file</label>
+    <input
+      type="file"
+      class="form-control"
+      id="csvFileInput"
+      (change)="onFileChange($event)"
+    />
+  </div>
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    Error: {{ error }}
+  </div>
+  <div *ngIf="jsonData">
+    <button
+      class="btn btn-info mt-3"
+      (click)="isJsonCollapsed = !isJsonCollapsed"
+      aria-controls="jsonCollapse">
+      {{ isJsonCollapsed ? 'Show JSON Data' : 'Hide JSON Data' }}
+    </button>
+    <div id="jsonCollapse" [ngbCollapse]="isJsonCollapsed" class="mt-3">
+      <div class="card card-body">
+        <pre class="bg-light p-3 border">{{ jsonData | json }}</pre>
+      </div>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let entry of paginatedData; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+    <span>
+      {{ i + 1 + (currentPageNewAllergies - 1) * itemsPerPageNewAllergies }}. {{ entry.allergie }}
+    </span>
+        <span>
+      <ng-container *ngIf="checkExists(entry.allergie); else addButton">
+        <span class="text-success">&#10004;</span>
+      </ng-container>
+      <ng-template #addButton>
+        <button class="btn btn-primary btn-sm">Add</button>
+      </ng-template>
+    </span>
+      </li>
+    </ul>
+    <button
+      class="btn btn-info mt-3"
+      (click)="insertAll()"
+    >
+      insert all
+    </button>
+    <nav aria-label="Page navigation" class="mt-3">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPageNewAllergies === 1">
+          <a class="page-link" (click)="changePage(currentPageNewAllergies - 1)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" *ngFor="let page of totalPagesNewAllergies; let i = index" [class.active]="currentPageNewAllergies === i + 1">
+          <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPageNewAllergies === totalPagesNewAllergies.length">
+          <a class="page-link" (click)="changePage(currentPageNewAllergies + 1)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+</div>
+
+<div class="allergies-from-database container mt-3">
+  <h3>Allergies</h3>
+  <ul class="list-group">
+    <li *ngFor="let entry of paginatedAllergies; let i = index" class="list-group-item">
+      {{ i + 1 + (currentPage - 1) * itemsPerPage }}. {{ entry.name }}
+    </li>
+  </ul>
+  <nav aria-label="Page navigation" class="mt-3">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="changePageAllergies(currentPage - 1)" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" *ngFor="let page of totalPages; let i = index" [class.active]="currentPage === i + 1">
+        <a class="page-link" (click)="changePageAllergies(i + 1)">{{ i + 1 }}</a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages.length">
+        <a class="page-link" (click)="changePageAllergies(currentPage + 1)" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

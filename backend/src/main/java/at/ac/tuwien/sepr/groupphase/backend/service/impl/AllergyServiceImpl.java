@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
@@ -27,6 +28,9 @@ public class AllergyServiceImpl implements AllergyService {
     public Allergy createAllergy(AllergyDtoCreate toCreate) {
         Allergy allergy = new Allergy();
         allergy.setName(toCreate.getName());
+        if (allergyRepository.findByName(toCreate.getName()) != null) {
+            throw new ConflictException("Allergy already exists");
+        }
         return allergyRepository.save(allergy);
     }
 
@@ -51,7 +55,16 @@ public class AllergyServiceImpl implements AllergyService {
 
     @Override
     public Allergy findByName(String name) {
-        return allergyRepository.findByName(name);
+        if (name == null) {
+            throw new NotFoundException("Name is null");
+        }
+
+        Optional<Allergy> maybeAllergy = Optional.ofNullable(allergyRepository.findByName(name));
+        if (maybeAllergy.isPresent()) {
+            return maybeAllergy.get();
+        } else {
+            throw new NotFoundException(String.format("Could not find allergy with name %s", name));
+        }
     }
 
     @Override
