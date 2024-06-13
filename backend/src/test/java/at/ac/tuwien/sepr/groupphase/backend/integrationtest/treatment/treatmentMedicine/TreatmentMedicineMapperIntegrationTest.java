@@ -23,7 +23,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
@@ -52,7 +56,7 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
 
     @BeforeEach
     void createTestData() {
-        MedicationDto medicationDto = medicationService.getAllMedications().getFirst();
+        MedicationDto medicationDto = medicationService.getAllMedications().get(0);
         Date treatmentMedicationDate1 = treatmentTestUtils.createDate(2022, Calendar.JANUARY, 1, 10, 10);
 
         validTreatmentMedicineDtoCreate = new TreatmentMedicineDtoCreate(
@@ -62,7 +66,7 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
             treatmentMedicationDate1
         );
 
-        validTreatmentMedicineEntity = treatmentMedicineRepository.findAll().getFirst();
+        validTreatmentMedicineEntity = treatmentMedicineRepository.findAll().get(0);
         validTreatmentMedicineEntity2 = treatmentMedicineRepository.findAll().get(1);
     }
 
@@ -105,11 +109,11 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
         assertNotNull(treatmentMedicineDtoList);
         assertEquals(2, treatmentMedicineDtoList.size());
         assertAll("Verify treatment medicine DTO list properties",
-            () -> assertEquals(validTreatmentMedicineEntity.getId(), treatmentMedicineDtoList.getFirst().id()),
-            () -> assertEquals(validTreatmentMedicineEntity.getMedicine().getId(), treatmentMedicineDtoList.getFirst().medication().id()),
-            () -> assertEquals(validTreatmentMedicineEntity.getAmount(), treatmentMedicineDtoList.getFirst().amount()),
-            () -> assertEquals(validTreatmentMedicineEntity.getUnitOfMeasurement(), treatmentMedicineDtoList.getFirst().unitOfMeasurement()),
-            () -> assertEquals(validTreatmentMedicineEntity.getTimeOfAdministration(), treatmentMedicineDtoList.getFirst().medicineAdministrationDate()),
+            () -> assertEquals(validTreatmentMedicineEntity.getId(), treatmentMedicineDtoList.get(0).id()),
+            () -> assertEquals(validTreatmentMedicineEntity.getMedicine().getId(), treatmentMedicineDtoList.get(0).medication().id()),
+            () -> assertEquals(validTreatmentMedicineEntity.getAmount(), treatmentMedicineDtoList.get(0).amount()),
+            () -> assertEquals(validTreatmentMedicineEntity.getUnitOfMeasurement(), treatmentMedicineDtoList.get(0).unitOfMeasurement()),
+            () -> assertEquals(validTreatmentMedicineEntity.getTimeOfAdministration(), treatmentMedicineDtoList.get(0).medicineAdministrationDate()),
             () -> assertEquals(validTreatmentMedicineEntity2.getId(), treatmentMedicineDtoList.get(1).id()),
             () -> assertEquals(validTreatmentMedicineEntity2.getMedicine().getId(), treatmentMedicineDtoList.get(1).medication().id()),
             () -> assertEquals(validTreatmentMedicineEntity2.getAmount(), treatmentMedicineDtoList.get(1).amount()),

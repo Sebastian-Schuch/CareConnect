@@ -1,7 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest.treatment;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.integrationtest.treatment.util.TreatmentTestUtils;
@@ -23,7 +29,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
@@ -61,11 +72,11 @@ public class TreatmentServiceIntegrationTest extends TestBase {
     @BeforeEach
     void createTestData() {
 
-        PATIENT1 = patientService.getAllPatients().getFirst();
+        PATIENT1 = patientService.getAllPatients().get(0);
         PATIENT2 = patientService.getAllPatients().get(2);
-        DOCTOR1 = doctorService.getAllDoctors().getFirst();
+        DOCTOR1 = doctorService.getAllDoctors().get(0);
         DOCTOR2 = doctorService.getAllDoctors().get(2);
-        OutpatientDepartmentDto OUTPATIENT_DEPARTMENT1 = outpatientDepartmentService.getAllOutpatientDepartments().getFirst();
+        OutpatientDepartmentDto OUTPATIENT_DEPARTMENT1 = outpatientDepartmentService.getAllOutpatientDepartments().get(0);
         OUTPATIENT_DEPARTMENT2 = outpatientDepartmentService.getAllOutpatientDepartments().get(2);
         MEDICATION1 = medicationService.getAllMedications().get(1);
         MEDICATION2 = medicationService.getAllMedications().get(2);
@@ -124,7 +135,8 @@ public class TreatmentServiceIntegrationTest extends TestBase {
             OUTPATIENT_DEPARTMENT2,
             "Updated Treatment Text",
             List.of(DOCTOR2, DOCTOR1),
-            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE2), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2))
+            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE2),
+                treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2))
         );
 
         TreatmentDto updatedTreatment = treatmentService.updateTreatment(createdTreatment.id(), updateDto);

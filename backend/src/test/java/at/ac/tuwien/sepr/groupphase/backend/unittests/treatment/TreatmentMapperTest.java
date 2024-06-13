@@ -1,17 +1,28 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.treatment;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.TreatmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.TreatmentMedicineMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.*;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,8 +34,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TreatmentMapperTest {
     @Mock
@@ -52,9 +70,9 @@ public class TreatmentMapperTest {
     private TreatmentMapper treatmentMapper;
 
     private static TreatmentDtoCreate getTreatmentDtoCreate() {
-        PatientDtoSparse patientDto = new PatientDtoSparse(1L, "1234567891", List.of(), List.of(), "John", "Doe", "john@email.com",   true);
+        PatientDtoSparse patientDto = new PatientDtoSparse(1L, "1234567891", List.of(), List.of(), "John", "Doe", "john@email.com", true);
         DoctorDtoSparse doctorDto = new DoctorDtoSparse(2L, "John", "Smith", "john@email.com", false);
-        DoctorDtoSparse doctorDto2 = new DoctorDtoSparse(3L, "John", "Smith", "john@email.com",  false);
+        DoctorDtoSparse doctorDto2 = new DoctorDtoSparse(3L, "John", "Smith", "john@email.com", false);
         TreatmentMedicineDto treatmentMedicineDto = new TreatmentMedicineDto(3L, new MedicationDto(1L, "Med1", true), "mg", 100, new Date());
         TreatmentMedicineDto treatmentMedicineDto2 = new TreatmentMedicineDto(4L, new MedicationDto(1L, "Med1", true), "mg", 100, new Date());
         OutpatientDepartmentDto outpatientDepartmentDto = new OutpatientDepartmentDto(1L, "Cardiology", "Cardiology Department", 20, null);
@@ -190,14 +208,14 @@ public class TreatmentMapperTest {
                 "Treatment Title",
                 new Date(),
                 new Date(),
-                new PatientDtoSparse(1L, null, null, null, null, null, null,  false),
+                new PatientDtoSparse(1L, null, null, null, null, null, null, false),
                 new OutpatientDepartmentDto(
                     1L, null, null, 0, null),
                 "Treatment Text",
-                Collections.singletonList(new DoctorDtoSparse(2L, null, null, null,   false)),
+                Collections.singletonList(new DoctorDtoSparse(2L, null, null, null, false)),
                 Collections.singletonList(new TreatmentMedicineDto(3L, null, null, 0, null))
             );
-        when(patientMapper.patientToPatientDtoSparse(patient)).thenReturn(new PatientDtoSparse(1L, null, null, null, null, null, null,  true));
+        when(patientMapper.patientToPatientDtoSparse(patient)).thenReturn(new PatientDtoSparse(1L, null, null, null, null, null, null, true));
         when(doctorMapper.doctorToDoctorDtoSparse(doctor1)).thenReturn(new DoctorDtoSparse(2L, null, null, null, true));
         when(treatmentMedicineMapper.entityToDto(treatmentMedicine)).thenReturn(new TreatmentMedicineDto(3L, null, null, 0, null));
         when(outpatientDepartmentService.getOutpatientDepartmentById(1L)).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null));
@@ -211,9 +229,9 @@ public class TreatmentMapperTest {
         assertEquals(expectedTreatmentDto.patient().id(), treatmentDto.patient().id());
         assertEquals(expectedTreatmentDto.outpatientDepartment().id(), treatmentDto.outpatientDepartment().id());
         assertEquals(expectedTreatmentDto.doctors().size(), treatmentDto.doctors().size());
-        assertEquals(expectedTreatmentDto.doctors().getFirst().id(), treatmentDto.doctors().getFirst().id());
+        assertEquals(expectedTreatmentDto.doctors().get(0).id(), treatmentDto.doctors().get(0).id());
         assertEquals(expectedTreatmentDto.medicines().size(), treatmentDto.medicines().size());
-        assertEquals(expectedTreatmentDto.medicines().getFirst().id(), treatmentDto.medicines().getFirst().id());
+        assertEquals(expectedTreatmentDto.medicines().get(0).id(), treatmentDto.medicines().get(0).id());
 
         verify(patientMapper, times(1)).patientToPatientDtoSparse(patient);
         verify(doctorMapper, times(1)).doctorToDoctorDtoSparse(doctor1);
@@ -229,7 +247,7 @@ public class TreatmentMapperTest {
         Treatment treatment2 = createTreatment(2L, new Patient(), new Doctor(), new TreatmentMedicine(), new OutpatientDepartment(), new Date(), new Date());
 
         TreatmentDto treatmentDto1 = new TreatmentDto(1L, "Treatment Title", new Date(), new Date(), new PatientDtoSparse(
-            1L, "1234567891", Collections.emptyList(), Collections.emptyList(), "John", "Doe", null,  true
+            1L, "1234567891", Collections.emptyList(), Collections.emptyList(), "John", "Doe", null, true
         ), new OutpatientDepartmentDto(
             1L, "Cardiology", "Cardiology Department", 20, null
         ), "Treatment Text", Collections.emptyList(), Collections.emptyList());
