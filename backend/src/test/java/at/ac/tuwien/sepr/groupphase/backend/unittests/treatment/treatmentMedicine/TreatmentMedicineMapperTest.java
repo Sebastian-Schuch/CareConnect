@@ -18,9 +18,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TreatmentMedicineMapperTest {
 
@@ -130,13 +134,13 @@ public class TreatmentMedicineMapperTest {
         assertEquals(2, treatmentMedicineDtos.size());
 
         assertAll("Verify treatment medicine DTO properties for first entity",
-            () -> assertEquals(treatmentMedicine1.getId(), treatmentMedicineDtos.getFirst().id()),
-            () -> assertEquals(treatmentMedicine1.getMedicine().getId(), treatmentMedicineDtos.getFirst().medication().id()),
-            () -> assertEquals(treatmentMedicine1.getMedicine().getName(), treatmentMedicineDtos.getFirst().medication().name()),
-            () -> assertEquals(treatmentMedicine1.getMedicine().getActive(), treatmentMedicineDtos.getFirst().medication().active()),
-            () -> assertEquals(treatmentMedicine1.getAmount(), treatmentMedicineDtos.getFirst().amount()),
-            () -> assertEquals(treatmentMedicine1.getUnitOfMeasurement(), treatmentMedicineDtos.getFirst().unitOfMeasurement()),
-            () -> assertEquals(treatmentMedicine1.getTimeOfAdministration(), treatmentMedicineDtos.getFirst().medicineAdministrationDate())
+            () -> assertEquals(treatmentMedicine1.getId(), treatmentMedicineDtos.get(0).id()),
+            () -> assertEquals(treatmentMedicine1.getMedicine().getId(), treatmentMedicineDtos.get(0).medication().id()),
+            () -> assertEquals(treatmentMedicine1.getMedicine().getName(), treatmentMedicineDtos.get(0).medication().name()),
+            () -> assertEquals(treatmentMedicine1.getMedicine().getActive(), treatmentMedicineDtos.get(0).medication().active()),
+            () -> assertEquals(treatmentMedicine1.getAmount(), treatmentMedicineDtos.get(0).amount()),
+            () -> assertEquals(treatmentMedicine1.getUnitOfMeasurement(), treatmentMedicineDtos.get(0).unitOfMeasurement()),
+            () -> assertEquals(treatmentMedicine1.getTimeOfAdministration(), treatmentMedicineDtos.get(0).medicineAdministrationDate())
         );
 
         assertAll("Verify treatment medicine DTO properties for second entity",

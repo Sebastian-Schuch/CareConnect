@@ -49,7 +49,7 @@ public class StayServiceImpl implements StayService {
     @Override
     public StayDto getCurrentStay(Long patientId) {
         try {
-            return this.stayMapper.stayEntityToStayDto(stayRepository.findByPatient_PatientIdAndDepartureIsNull(patientId).getFirst());
+            return this.stayMapper.stayEntityToStayDto(stayRepository.findByPatient_PatientIdAndDepartureIsNull(patientId).get(0));
         } catch (Exception e) {
             return null;
         }

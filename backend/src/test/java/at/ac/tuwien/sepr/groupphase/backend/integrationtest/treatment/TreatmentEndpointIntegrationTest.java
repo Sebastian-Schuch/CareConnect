@@ -1,7 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest.treatment;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DtoValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.integrationtest.treatment.util.TreatmentTestUtils;
@@ -15,7 +21,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +52,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -114,11 +127,11 @@ class TreatmentEndpointIntegrationTest extends TestBase {
         ow = objectMapper.writer().withDefaultPrettyPrinter();
         dtoValidator = new DtoValidationUtils(validator);
 
-        PATIENT1 = patientServiceImpl.getAllPatients().getFirst();
+        PATIENT1 = patientServiceImpl.getAllPatients().get(0);
         PATIENT2 = patientServiceImpl.getAllPatients().get(2);
-        DOCTOR1 = doctorService.getAllDoctors().getFirst();
+        DOCTOR1 = doctorService.getAllDoctors().get(0);
         DOCTOR2 = doctorService.getAllDoctors().get(2);
-        OUTPATIENT_DEPARTMENT1 = outpatientDepartmentService.getAllOutpatientDepartments().getFirst();
+        OUTPATIENT_DEPARTMENT1 = outpatientDepartmentService.getAllOutpatientDepartments().get(0);
         OUTPATIENT_DEPARTMENT2 = outpatientDepartmentService.getAllOutpatientDepartments().get(2);
         MEDICATION1 = medicationService.getAllMedications().get(1);
         MEDICATION2 = medicationService.getAllMedications().get(2);
@@ -464,7 +477,7 @@ class TreatmentEndpointIntegrationTest extends TestBase {
      * @throws Exception if the request fails
      */
     private void tryGetTreatmentById_expectGivenStatus(List<Treatment> treatments, ResultMatcher status) throws Exception {
-        long id = treatments.getFirst().getId();
+        long id = treatments.get(0).getId();
         mockMvc.perform(get(BASE_PATH + "/" + id)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status);
@@ -477,7 +490,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
      * @throws Exception if the request fails
      */
     private void tryUpdateTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
-        TreatmentDtoCreate updatedTreatmentDtoCreate = new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+        TreatmentDtoCreate updatedTreatmentDtoCreate =
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         String json = ow.writeValueAsString(updatedTreatmentDtoCreate);
         mockMvc.perform(put(BASE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)

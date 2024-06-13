@@ -103,9 +103,8 @@ public class SecretaryServiceImpl implements SecretaryService {
             } catch (NotFoundException e) {
                 return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

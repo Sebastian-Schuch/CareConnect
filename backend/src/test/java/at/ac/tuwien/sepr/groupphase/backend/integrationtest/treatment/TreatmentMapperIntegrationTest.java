@@ -2,7 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest.treatment;
 
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.TreatmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
@@ -60,10 +66,10 @@ public class TreatmentMapperIntegrationTest extends TestBase {
 
     @BeforeEach
     void setUp() {
-        PatientDtoSparse patient = patientServiceImpl.getAllPatients().getFirst();
-        DoctorDtoSparse doctor = doctorServiceImpl.getAllDoctors().getFirst();
-        OutpatientDepartmentDto outpatientDepartment1 = outpatientDepartmentServiceImpl.getAllOutpatientDepartments().getFirst();
-        MedicationDto medication = medicationServiceImpl.getAllMedications().getFirst();
+        PatientDtoSparse patient = patientServiceImpl.getAllPatients().get(0);
+        DoctorDtoSparse doctor = doctorServiceImpl.getAllDoctors().get(0);
+        OutpatientDepartmentDto outpatientDepartment1 = outpatientDepartmentServiceImpl.getAllOutpatientDepartments().get(0);
+        MedicationDto medication = medicationServiceImpl.getAllMedications().get(0);
 
         Date treatmentMedicationDate = treatmentTestUtils.createDate(2022, Calendar.JANUARY, 1, 10, 10);
         TreatmentMedicineDto treatmentMedicineDto = treatmentTestUtils.createTreatmentMedicineDto(medication, treatmentMedicationDate);

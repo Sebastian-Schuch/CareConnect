@@ -118,9 +118,8 @@ public class DoctorServiceImpl implements DoctorService {
             } catch (NotFoundException e) {
                 return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**

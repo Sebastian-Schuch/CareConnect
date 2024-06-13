@@ -1,16 +1,20 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,13 +28,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -63,7 +70,10 @@ public class PatientEndpointTest extends TestBase {
 
     @BeforeEach
     public void beforeEach() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webAppContext)
+            .apply(springSecurity())
+            .build();
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ow = objectMapper.writer().withDefaultPrettyPrinter();
     }
@@ -79,19 +89,34 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenValidCreatePatientDto_whenCreatePatient_thenReturnCreatedPatient() throws Exception {
-        String json = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", null, null));
-        byte[] body = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        String json = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", medications, allergies));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
         List<Credential> credentials = patientRepository.findAllPatientCredentials();
 
         assertNotNull(credentials);
         assertThat(credentials).extracting(Credential::getEmail, Credential::getFirstName, Credential::getLastName).contains(
             tuple("a@a.a", "a", "b"));
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"DOCTOR"})
+    public void givenWrongAuthority_whenCreatePatient_thenReturnForbiddenStatus() throws Exception {
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        String json = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", medications, allergies));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -142,31 +167,39 @@ public class PatientEndpointTest extends TestBase {
 
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
-    public void givenCreatedPatient_whenGetPatient_thenReturnPatient() throws Exception {
-        String json = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", null, null));
-        byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+    public void givenValidCreatePatientDtoWithAlreadyExistingEmail_whenCreatePatient_thenReturn409ConflictStatus() throws Exception {
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        String json = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", medications, allergies));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated());
 
-        List<Patient> patients = patientRepository.findAll();
-        Patient patientCreate = patients.get(patients.size() - 1);
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isConflict());
+    }
 
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + patientCreate.getPatientId())
+    @Test
+    @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
+    public void givenCreatedPatient_whenGetPatient_thenReturnPatient() throws Exception {
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + patientRepository.findAll().get(0).getPatientId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
         List<PatientDto> patientsGet = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
         assertThat(patientsGet).extracting(PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
-            tuple("1234123456", "a@a.a", "a", "b"));
+            tuple("6912120520", "chris.anger@email.com", "Chris", "Anger"));
     }
 
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenNoPatientsInDatabase_whenGetPatientWithId1_thenReturns404NotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/1")
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/-1")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -186,34 +219,42 @@ public class PatientEndpointTest extends TestBase {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
     }
-    //TODO: adjust and refactor tests (Issue #60)
-    /*
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "patient", authorities = {"PATIENT"})
+    public void givenIdOfPatient_whenGetPatientWithWrongAuthority_thenReturnForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + patientRepository.findAll().get(0).getPatientId())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenThreeCreatedPatients_whenGetAllPatients_thenReturnsThreePatients() throws Exception {
-        String json1 = ow.writeValueAsString(new PatientCreateDto("1234123456", "a@a.a", "a", "b"));
-        byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        patientRepository.deleteAll();
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        String json1 = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", medications, allergies));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json1)
                 .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
-        String json2 = ow.writeValueAsString(new PatientCreateDto("6543214321", "b@b.b", "a", "b"));
-        bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        String json2 = ow.writeValueAsString(new PatientDtoCreate("6543214321", "b@b.b", "a", "b", medications, allergies));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json2)
                 .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
-        String json3 = ow.writeValueAsString(new PatientCreateDto("6543123456", "c@c.c", "a", "b"));
-        bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        String json3 = ow.writeValueAsString(new PatientDtoCreate("6543123456", "c@c.c", "a", "b", medications, allergies));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json3)
                 .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
         List<Credential> credentials = patientRepository.findAllPatientCredentials();
 
@@ -237,6 +278,7 @@ public class PatientEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     public void givenNoPatientsInDatabase_whenGetAllPatients_thenReturnsEmptyList() throws Exception {
+        patientRepository.deleteAll();
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -244,5 +286,113 @@ public class PatientEndpointTest extends TestBase {
         List<PatientDto> patients = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
         assertThat(patients).isEmpty();
     }
-    */
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"SECRETARY"})
+    public void givenNonExistentId_whenUpdateDoctor_thenReturns404NotFound() throws Exception {
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        PatientDtoUpdate patientToUpdate = new PatientDtoUpdate("0000000000", medications, allergies, "x", "y", "a@a.a", false, false);
+        String json = ow.writeValueAsString(patientToUpdate);
+        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_PDF))
+            .andExpect(status().isNotFound());
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"SECRETARY"})
+    public void givenSecretaryDtoUpdate_whenUpdateSecretary_thenDSecretaryGetsUpdatedAndNowHasUpdatedData() throws Exception {
+        long id = patientRepository.findAll().get(0).getPatientId();
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + id)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+        List<PatientDto> patientsGet = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
+        assertThat(patientsGet).extracting(PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
+            tuple("6912120520", "chris.anger@email.com", "Chris", "Anger"));
+
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        PatientDtoUpdate patientToUpdate = new PatientDtoUpdate("0000000000", medications, allergies, "x", "y", "a@a.a", false, false);
+        String json = ow.writeValueAsString(patientToUpdate);
+        byte[] bodyUpdate = mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+        patientsGet = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyUpdate).readAll();
+        assertThat(patientsGet).extracting(PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
+            tuple("0000000000", "a@a.a", "x", "y"));
+
+        bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + id)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+        patientsGet = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
+        assertThat(patientsGet).extracting(PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
+            tuple("0000000000", "a@a.a", "x", "y"));
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenWrongAuthority_whenUpdateSecretary_thenReturnForbiddenStatus() throws Exception {
+        List<MedicationDto> medications = new ArrayList<>();
+        List<AllergyDto> allergies = new ArrayList<>();
+        PatientDtoUpdate patientToUpdate = new PatientDtoUpdate("0000000000", medications, allergies, "x", "y", "a@a.a", false, false);
+        String json = ow.writeValueAsString(patientToUpdate);
+        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
+    public void givenUserDtoSearch_whenSearchPatients_thenReturnListOfMatchingPatients() throws Exception {
+        byte[] body = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/search")
+                .queryParam("email", "chris.anger@email.com")
+                .queryParam("firstName", "Chris")
+                .queryParam("lastName", "Anger")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        List<PatientDto> patients = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(body).readAll();
+        assertThat(patients).hasSize(1)
+            .extracting(PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
+                AssertionsForClassTypes.tuple("chris.anger@email.com", "Chris", "Anger"));
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
+    public void givenNonExistentUserDtoSearch_whenSearchPatients_thenReturnEmptyList() throws Exception {
+        byte[] body = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/search")
+                .queryParam("email", "patient.nonExistent@email.com")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        List<PatientDto> patients = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(body).readAll();
+        assertThat(patients).hasSize(0);
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"PATIENT"})
+    public void givenWrongAuthority_whenSearchPatients_thenReturnForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/search")
+                .queryParam("email", "asylum.patient@email.com")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
 }

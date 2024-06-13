@@ -3,14 +3,15 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,12 +25,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -53,9 +57,6 @@ public class SecretaryEndpointTest extends TestBase {
 
 
     @Autowired
-    private SecretaryMapper secretaryMapper;
-
-    @Autowired
     CredentialRepository credentialRepository;
 
     public SecretaryEndpointTest() {
@@ -64,11 +65,15 @@ public class SecretaryEndpointTest extends TestBase {
 
     @BeforeEach
     public void beforeEach() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webAppContext)
+            .apply(springSecurity())
+            .build();
         objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ow = objectMapper.writer().withDefaultPrettyPrinter();
     }
 
+    @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenInvalidUrl_whenSendRequest_Returns404NotFoundStatus() throws Exception {
@@ -79,16 +84,16 @@ public class SecretaryEndpointTest extends TestBase {
             ).andExpect(status().isNotFound());
     }
 
+    @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenValidCreateSecretaryDetailDto_whenCreateNewSecretary_thenReturn201CreatedStatusAndCreatedSecretary() throws Exception {
         String json = ow.writeValueAsString(new SecretaryDtoCreate("a.a@a.a", "a", "b"));
-        byte[] body = mockMvc
+        mockMvc
             .perform(MockMvcRequestBuilders
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
 
         List<Credential> credentials = secretaryRepository.findAllSecretariesCredentials();
@@ -99,6 +104,18 @@ public class SecretaryEndpointTest extends TestBase {
             .contains(
                 tuple("a.a@a.a", "a", "b")
             );
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"SECRETARY"})
+    public void givenWrongAuthority_whenCreateSecretary_thenReturnForbiddenStatus() throws Exception {
+        String json = ow.writeValueAsString(new SecretaryDtoCreate("a@a.a", "a", "b"));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -189,31 +206,42 @@ public class SecretaryEndpointTest extends TestBase {
             .andExpect(status().isUnprocessableEntity());
     }
 
+    @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenNewlyCreatedSecretary_whenGetSecretary_thenReturnSecretary() throws Exception {
-        String json = ow.writeValueAsString(new SecretaryDtoCreate("a@a.a", "a", "b"));
-        byte[] bodyCreate =
-            mockMvc
-                .perform(MockMvcRequestBuilders.post(BASE_PATH)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(json)
-                    .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsByteArray();
+    public void givenValidCreateSecretaryDetailDtoWithAlreadyExistingEmail_whenCreateNewSecretary_thenReturns409Conflict() throws Exception {
+        String json = ow.writeValueAsString(new SecretaryDtoCreate("a.a@a.a", "a", "b"));
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated());
 
-        List<Credential> credentials = secretaryRepository.findAllSecretariesCredentials();
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isConflict());
+    }
 
-        Secretary secretary = secretaryRepository.findByCredential(credentials.get(credentials.size() - 1));
-
-
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + secretary.getSecretaryId())
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenIdOfSecretary_whenGetSecretary_thenReturnSecretary() throws Exception {
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + secretaryRepository.findAll().get(0).getSecretaryId())
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
         List<SecretaryDto> secretaryGet = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(bodyGet).readAll();
+        assertNotNull(secretaryGet);
         assertThat(secretaryGet).extracting(SecretaryDto::email, SecretaryDto::firstname, SecretaryDto::lastname).contains(
-            tuple("a@a.a", "a", "b"));
+            AssertionsForClassTypes.tuple("secretary1@email.com", "Secretary", "One"));
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "patient", authorities = {"PATIENT"})
+    public void givenIdOfSecretary_whenGetSecretaryWithWrongAuthority_thenReturnForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + secretaryRepository.findAll().get(0).getSecretaryId())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -225,40 +253,68 @@ public class SecretaryEndpointTest extends TestBase {
             .andExpect(status().isNotFound());
     }
 
-    //TODO: adjust and refactor tests (Issue #60)
-    /*
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenNoMatchingSecretary_whenGetSecretaryWithNoId_thenReturns404NotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenNoMatchingSecretary_whenGetSecretaryWithInvalidId_thenReturns400BadRequest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/testen")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenNoSecretaryInDatabase_whenGetAllSecretaries_thenReturnsEmptyList() throws Exception {
+        secretaryRepository.deleteAll();
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+        List<SecretaryDto> secretaries = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(bodyGet).readAll();
+        assertThat(secretaries).isEmpty();
+    }
+
+    @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenThreeCreatedSecretaries_whenGetAllSecretaries_thenReturnsThreeSecretaries() throws Exception {
-        String json1 = ow.writeValueAsString(new SecretaryCreateDto("a@a.a", "a", "b"));
-        byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        secretaryRepository.deleteAll();
+        String json1 = ow.writeValueAsString(new SecretaryDtoCreate("a@a.a", "a", "b"));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json1)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
-        String json2 = ow.writeValueAsString(new SecretaryCreateDto("b@b.b", "a", "b"));
-        bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        String json2 = ow.writeValueAsString(new SecretaryDtoCreate("b@b.b", "a", "b"));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json2)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
-        String json3 = ow.writeValueAsString(new SecretaryCreateDto("c@c.c", "a", "b"));
-        bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
+        String json3 = ow.writeValueAsString(new SecretaryDtoCreate("c@c.c", "a", "b"));
+        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json3)
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
+            .andExpect(status().isCreated());
 
         List<Credential> credentials = secretaryRepository.findAllSecretariesCredentials();
 
         assertThat(credentials).hasSize(3);
 
-        Credential secretary1 = credentials.getFirst();
+        Credential secretary1 = credentials.get(0);
         Credential secretary2 = credentials.get(1);
         Credential secretary3 = credentials.get(2);
 
@@ -274,17 +330,102 @@ public class SecretaryEndpointTest extends TestBase {
                 secretary3.getEmail());
     }
 
+    @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenNoSecretariesInDatabase_whenGetAllSecretaries_thenReturnsEmptyList() throws Exception {
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
+    public void givenNonExistentId_whenUpdateSecretary_thenReturns404NotFound() throws Exception {
+        String json = ow.writeValueAsString(new SecretaryDtoUpdate("Updated", "Secretary", "updated@email.com", false, true));
+        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_PDF))
+            .andExpect(status().isNotFound());
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenSecretaryDtoUpdate_whenUpdateSecretary_thenSecretaryGetsUpdatedAndNowHasUpdatedData() throws Exception {
+        long id = secretaryRepository.findAll().get(0).getSecretaryId();
+        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + id)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
-        List<SecretaryDetailDto> secretaries = objectMapper.readerFor(SecretaryDetailDto.class).<SecretaryDetailDto>readValues(bodyGet).readAll();
-        assertThat(secretaries).isEmpty();
+        List<SecretaryDto> secretariesGet = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(bodyGet).readAll();
+        assertThat(secretariesGet).extracting(SecretaryDto::email, SecretaryDto::firstname, SecretaryDto::lastname).contains(
+            AssertionsForClassTypes.tuple("secretary1@email.com", "Secretary", "One"));
+
+        String json = ow.writeValueAsString(new SecretaryDtoUpdate("Updated", "Secretary", "updated@email.com", false, true));
+        byte[] bodyUpdate = mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+        secretariesGet = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(bodyUpdate).readAll();
+        assertThat(secretariesGet).extracting(SecretaryDto::email, SecretaryDto::firstname, SecretaryDto::lastname).contains(
+            AssertionsForClassTypes.tuple("updated@email.com", "Updated", "Secretary"));
+
+        bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + id)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+        secretariesGet = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(bodyGet).readAll();
+        assertThat(secretariesGet).extracting(SecretaryDto::email, SecretaryDto::firstname, SecretaryDto::lastname).contains(
+            AssertionsForClassTypes.tuple("updated@email.com", "Updated", "Secretary"));
     }
-     */
 
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"SECRETARY"})
+    public void givenWrongAuthority_whenUpdateSecretary_thenReturnForbiddenStatus() throws Exception {
+        String json = ow.writeValueAsString(new SecretaryDtoUpdate("Updated", "Secretary", "updated@email.com", false, true));
+        mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
 
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenUserDtoSearch_whenSearchSecretaries_thenReturnListOfMatchingSecretaries() throws Exception {
+        byte[] body = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/search")
+                .queryParam("email", "secretary1@email.com")
+                .queryParam("firstName", "Secretary")
+                .queryParam("lastName", "One")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        List<SecretaryDto> secretaries = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(body).readAll();
+        assertThat(secretaries).hasSize(1)
+            .extracting(SecretaryDto::email, SecretaryDto::firstname, SecretaryDto::lastname).contains(
+                AssertionsForClassTypes.tuple("secretary1@email.com", "Secretary", "One"));
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void givenNonExistentUserDtoSearch_whenSearchSecretaries_thenReturnEmptyList() throws Exception {
+        byte[] body = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/search")
+                .queryParam("email", "secretary-1@email.com")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        List<SecretaryDto> secretaries = objectMapper.readerFor(SecretaryDto.class).<SecretaryDto>readValues(body).readAll();
+        assertThat(secretaries).hasSize(0);
+    }
+
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"PATIENT"})
+    public void givenWrongAuthority_whenSearchSecretaries_thenReturnForbiddenStatus() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/search")
+                .queryParam("email", "secretary-1@email.com")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
 }
