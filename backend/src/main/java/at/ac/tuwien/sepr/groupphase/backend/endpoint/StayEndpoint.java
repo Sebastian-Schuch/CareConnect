@@ -4,7 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoPage;
 import at.ac.tuwien.sepr.groupphase.backend.service.StayService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +44,7 @@ public class StayEndpoint {
         return stayService.createNewStay(stayDto);
     }
 
-    //@Secured({"SECRETARY"})
-    @PermitAll
+    @Secured({"SECRETARY"})
     @PutMapping("/discharge")
     public StayDto endCurrentStay(@RequestBody StayDto stayDto) {
         return stayService.endCurrentStay(stayDto);

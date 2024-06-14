@@ -4,10 +4,10 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogRef, MatDialogTitle
+  MatDialogRef,
+  MatDialogTitle
 } from "@angular/material/dialog";
 import {MatFormField} from "@angular/material/form-field";
-import {DialogData} from "../../chat/add-chat/new-chat-dialog/new-chat-dialog.component";
 import {MatButton} from "@angular/material/button";
 
 @Component({
@@ -22,15 +22,12 @@ import {MatButton} from "@angular/material/button";
     MatDialogTitle
   ],
   templateUrl: './inpatient-department-delete.component.html',
-  styleUrl: './inpatient-department-delete.component.scss'
+  styleUrls: ['./inpatient-department-delete.component.scss', '../../../../styles.scss']
 })
 export class InpatientDepartmentDeleteComponent {
   constructor(
     public dialogRef: MatDialogRef<InpatientDepartmentDeleteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { name: string },
-  ) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
+  ) {
   }
 }

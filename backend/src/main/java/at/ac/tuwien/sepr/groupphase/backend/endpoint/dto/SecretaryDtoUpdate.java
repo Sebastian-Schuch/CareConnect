@@ -12,7 +12,7 @@ public record SecretaryDtoUpdate(
     @NotBlank(message = "Lastname cannot be empty")
     @Size(max = 255, message = "Lastname cannot be longer than 255 characters")
     String lastname,
-    
+
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not a valid email address")
     String email,

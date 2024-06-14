@@ -10,7 +10,7 @@ public record ChangePasswordDto(
     String email,
 
     String oldPassword,
-    
+
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     String newPassword

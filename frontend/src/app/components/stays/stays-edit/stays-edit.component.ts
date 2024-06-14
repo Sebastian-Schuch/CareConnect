@@ -61,14 +61,12 @@ export class StaysEditComponent implements OnInit {
       EndTime: new FormControl()
     });
 
-    this.updateDate.get('StartDate').setValue(new Date(this.data.arrival));
-    this.updateDate.get('EndDate').setValue(new Date(this.data.discharge));
+    this.updateDate.get('StartDate').setValue(this.data.arrival);
+    this.updateDate.get('EndDate').setValue(this.data.discharge);
 
     // Format the time as HH:mm
-    const arrivalTime = this.data.arrival;
-    const dischargeTime = this.data.discharge;
-    const arrivalTimeString = `${getHours(arrivalTime)}:${getMinutes(arrivalTime) < 10 ? '0' : ''}${getMinutes(arrivalTime)}`;
-    const dischargeTimeString = `${getHours(dischargeTime)}:${getMinutes(dischargeTime) < 10 ? '0' : ''}${getMinutes(dischargeTime)}`;
+    const arrivalTimeString = `${getHours(this.data.arrival) < 10 ? '0' : ''}${getHours(this.data.arrival)}:${getMinutes(this.data.arrival) < 10 ? '0' : ''}${getMinutes(this.data.arrival)}`;
+    const dischargeTimeString = `${getHours(this.data.discharge) < 10 ? '0' : ''}${getHours(this.data.discharge)}:${getMinutes(this.data.discharge) < 10 ? '0' : ''}${getMinutes(this.data.discharge)}`;
 
     // Set the time inputs with the content from the StayDto object
     this.updateDate.get('StartTime').setValue(arrivalTimeString);
@@ -91,12 +89,11 @@ export class StaysEditComponent implements OnInit {
     const combinedStartDate = this.combineDateAndTime(StartDate, StartTime)
     const combinedEndDate = this.combineDateAndTime(EndDate, EndTime)
 
-
     const updateStay: StayDto = {
       arrival: combinedStartDate,
       discharge: combinedEndDate,
       id: this.data.id,
-      station: this.data.station
+      inpatientDepartment: this.data.inpatientDepartment
     }
 
 
@@ -105,11 +102,8 @@ export class StaysEditComponent implements OnInit {
         this.notification.success('Stay edited successfully');
         this.dialogRef.close();
       },
-      error: error => {
-        this.notification.error(error?.error?.ValidationErrors.join(', '), 'Could not edit stay', {
-          enableHtml: true,
-          timeOut: 10000
-        });
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, "Couldn't edit stay", this.notification);
       }
     });
   }

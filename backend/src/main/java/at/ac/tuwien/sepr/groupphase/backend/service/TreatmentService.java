@@ -24,7 +24,7 @@ public interface TreatmentService {
     /**
      * Updates an existing treatment.
      *
-     * @param id the id of the treatment to update
+     * @param id           the id of the treatment to update
      * @param treatmentDto the treatment with updated details
      * @return the updated treatment
      * @throws NotFoundException if the treatment with the given ID does not exist

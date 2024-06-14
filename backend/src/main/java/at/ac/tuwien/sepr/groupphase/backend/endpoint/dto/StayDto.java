@@ -6,7 +6,7 @@ import java.util.Date;
 
 public record StayDto(
     Long id,
-    StationDto station,
+    InpatientDepartmentDto inpatientDepartment,
     Date arrival,
     Date discharge
 ) {

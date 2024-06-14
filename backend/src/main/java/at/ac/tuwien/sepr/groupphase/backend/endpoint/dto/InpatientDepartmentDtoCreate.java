@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record StationDtoCreate(
+public record InpatientDepartmentDtoCreate(
     @NotNull
     @NotEmpty
     @Size(max = 255, message = "Name is too long")

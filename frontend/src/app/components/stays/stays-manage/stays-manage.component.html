@@ -1,17 +1,18 @@
 <mat-card [class.checked-in]="isCheckedIn">
-  <mat-card-title *ngIf="!isCheckedIn">Check Patient in</mat-card-title>
+  <mat-card-title *ngIf="!isCheckedIn">Check {{ firstname }} {{ lastname }} in</mat-card-title>
   <mat-card-title *ngIf="isCheckedIn">Discharge Patient</mat-card-title>
   <mat-card-content>
     <mat-form-field *ngIf="!isCheckedIn">
       <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" [autoActiveFirstOption]="true" [displayWith]="displayFn">
-        <mat-option *ngFor="let station of filteredStations" [value]="station">
-          {{station.name}}
+        <mat-option *ngFor="let inpatientDepartment of filteredInpatientDepartments" [value]="inpatientDepartment">
+          {{ inpatientDepartment.name }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
     <div *ngIf="isCheckedIn">
-      <p>The patient is currently at {{currentStay.station.name}} since {{currentStay.arrival | date:'dd-MM-yyyy HH:mm'}}</p>
+      <p>The patient is currently at {{ currentStay.inpatientDepartment.name }}
+        since {{ currentStay.arrival | date:'dd-MM-yyyy HH:mm' }}</p>
     </div>
   </mat-card-content>
   <mat-card-actions>

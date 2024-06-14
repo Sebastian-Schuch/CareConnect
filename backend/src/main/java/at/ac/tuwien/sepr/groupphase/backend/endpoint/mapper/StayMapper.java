@@ -13,18 +13,18 @@ import java.util.List;
 @Component
 public class StayMapper {
 
-    private final StationMapper stationMapper;
+    private final InpatientDepartmentMapper inpatientDepartmentMapper;
 
-    public StayMapper(StationMapper stationMapper) {
-        this.stationMapper = stationMapper;
+    public StayMapper(InpatientDepartmentMapper inpatientDepartmentMapper) {
+        this.inpatientDepartmentMapper = inpatientDepartmentMapper;
     }
 
     public StayDto stayEntityToStayDto(Stay stay) {
-        return new StayDto(stay.getId(), stationMapper.stationToDto(stay.getStation()), stay.getArrival(), stay.getDeparture());
+        return new StayDto(stay.getId(), inpatientDepartmentMapper.inpatientDepartmentToDto(stay.getInpatientDepartment()), stay.getArrival(), stay.getDeparture());
     }
 
     public Stay stayDtoArrivalToStayEntity(StayDtoCreate stayDtoCreate) {
-        //return new Stay(null, stationMapper.stationDtoToStationEntity(stayDtoArrival.station()), stayDtoArrival.arrival(), null);
+        //return new Stay(null, inpatientDepartmentMapper.inpatientDepartmentDtoToInpatientDepartmentEntity(stayDtoArrival.inpatientDepartment()), stayDtoArrival.arrival(), null);
         return null;
     }
 

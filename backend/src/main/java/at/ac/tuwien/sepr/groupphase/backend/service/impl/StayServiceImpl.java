@@ -3,10 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoPage;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.StationMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.InpatientDepartmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.StayMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.InpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Station;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Stay;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.StayRepository;
@@ -30,19 +30,19 @@ public class StayServiceImpl implements StayService {
 
     private final PatientService patientService;
 
-    private final StationMapper stationMapper;
+    private final InpatientDepartmentMapper inpatientDepartmentMapper;
 
 
     public StayServiceImpl(StayRepository stayRepository,
                            StayMapper stayMapper,
                            CustomUserDetailService customUserDetailService,
                            PatientService patientService,
-                           StationMapper stationMapper) {
+                           InpatientDepartmentMapper inpatientDepartmentMapper) {
         this.stayRepository = stayRepository;
         this.stayMapper = stayMapper;
         this.customUserDetailService = customUserDetailService;
         this.patientService = patientService;
-        this.stationMapper = stationMapper;
+        this.inpatientDepartmentMapper = inpatientDepartmentMapper;
     }
 
     @Override
@@ -57,8 +57,8 @@ public class StayServiceImpl implements StayService {
     @Override
     public StayDto createNewStay(StayDtoCreate stayDtoCreate) {
         Patient patient = patientService.getPatientEntityById(stayDtoCreate.patientId());
-        Station station = stationMapper.dtoToStation(stayDtoCreate.station());
-        Stay stay = new Stay().setArrival(new Date()).setStation(station).setPatient(patient);
+        InpatientDepartment inpatientDepartment = inpatientDepartmentMapper.dtoToInpatientDepartment(stayDtoCreate.inpatientDepartment());
+        Stay stay = new Stay().setArrival(new Date()).setInpatientDepartment(inpatientDepartment).setPatient(patient);
         return stayMapper.stayEntityToStayDto(stayRepository.save(stay));
     }
 

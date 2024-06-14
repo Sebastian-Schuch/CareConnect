@@ -24,7 +24,10 @@ import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatmen
 import {
   OutpatientDepartmentComponent
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
-import {InpatientDepartmentCreateEditMode, StationComponent} from "./components/station/station.component";
+import {
+  InpatientDepartmentComponent,
+  InpatientDepartmentCreateEditMode
+} from "./components/inpatient-department/inpatient-department.component";
 import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
@@ -33,7 +36,7 @@ import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {StaysListComponent} from "./components/stays/stays-list/stays-list.component";
 import {
   InpatientDepartmentListComponent
-} from "./components/station/inpatient-department-list/inpatient-department-list.component";
+} from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -78,7 +81,7 @@ const routes: Routes = [
               {path: 'outpatient-department', component: OutpatientDepartmentComponent},
               {
                 path: 'inpatient-department',
-                component: StationComponent,
+                component: InpatientDepartmentComponent,
                 data: {mode: InpatientDepartmentCreateEditMode.create}
               },
               {path: 'medicine', component: MedicationCreateComponent},
@@ -151,7 +154,11 @@ const routes: Routes = [
               {path: '', component: InpatientDepartmentListComponent},
               {
                 path: ':id', children: [
-                  {path: 'edit', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.edit}}
+                  {
+                    path: 'edit',
+                    component: InpatientDepartmentComponent,
+                    data: {mode: InpatientDepartmentCreateEditMode.edit}
+                  }
                 ]
               }
             ]
