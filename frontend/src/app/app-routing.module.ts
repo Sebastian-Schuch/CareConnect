@@ -33,6 +33,7 @@ import {StaysListComponent} from "./components/stays/stays-list/stays-list.compo
 import {
   InpatientDepartmentListComponent
 } from "./components/station/inpatient-department-list/inpatient-department-list.component";
+import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -61,6 +62,7 @@ const routes: Routes = [
       {
         path: 'admin', canActivate: [AdminGuard], children: [
           {path: '', component: LandingAdminComponent},
+          {path:'setup', component: MainSetupPage},
           {
             path: 'register', children: [
               //{path: 'admin', component: UserCreateComponent, data: {roleString: Role.admin, mode: UserCreateEditMode.create}},

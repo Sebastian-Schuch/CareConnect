@@ -1,10 +1,3 @@
-<div class="start-page-container on-landing-hidden">
-  <div style="position: relative;">
-    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>Register Allergy</span><br>
-    </h1>
-  </div>
-</div>
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="row">
     <!-- Start first name and last name row -->
@@ -14,8 +7,7 @@
         <label for="allergyName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
           Allergy Name
         </label>
-        <div class="col-md-10 col-lg-8"
-        >
+        <div class="col-md-10 col-lg-8">
           <input type="text"
                  id="allergyName"
                  name="allergy"
@@ -25,8 +17,7 @@
                  [(ngModel)]="allergyname"
                  #AllergyModel="ngModel"
                  required
-                 tabindex="21"
-          >
+                 tabindex="21">
 
           <div class="invalid-feedback">
             <!-- This is shown, when the form validation deems the name input to be invalid -->
@@ -35,17 +26,14 @@
         </div>
       </div>
     </div>
-
     <!-- End first name and last name row -->
   </div>
 
-  <div class="mt-4 d-flex flex-row">
-    <span class="flex-grow-1"></span>
+  <div class="mt-4">
     <button type="submit"
             class="btn btn-primary"
             [disabled]="!form.valid"
-            tabindex="22"
-    >
+            tabindex="22">
       Register Allergy
     </button>
   </div>

@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col text-center">
+      <h1>Setup Wizard</h1>
+      <p>Follow the steps to complete the setup.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <app-allergy-list
+        [allergies]="allergies"
+        [itemsPerPage]="15">
+      </app-allergy-list>
+    </div>
+
+    <div class="col-md-8">
+      <mat-tab-group
+        dynamicHeight="true"
+      >
+        <mat-tab label="Add manual">
+          <h3>Add a new Allergy</h3>
+          <p>Insert a the name of an allergy you want to add to the system.</p>
+          <app-add-allergy-manual
+            (creationSuccess)="onAllergyCreated()"
+          ></app-add-allergy-manual>
+        </mat-tab>
+
+        <mat-tab label="Upload file">
+          <h3>Upload a File</h3>
+            <app-allergy-from-file
+            ></app-allergy-from-file>
+        </mat-tab>
+      </mat-tab-group>
+  </div>
+</div>
+</div>

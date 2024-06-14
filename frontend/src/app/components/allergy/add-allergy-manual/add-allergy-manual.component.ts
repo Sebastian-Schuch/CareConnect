@@ -1,35 +1,37 @@
-import {Component, input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {AllergyDto, AllergyDtoCreate} from "../../dtos/allergy";
-import {AllergyService} from "../../services/allergy.service";
-import {NgForm, NgModel} from "@angular/forms";
-import {observable, Observable} from "rxjs";
+import {Component, EventEmitter, Output} from '@angular/core';
+import {FormsModule, NgForm, NgModel, ReactiveFormsModule} from "@angular/forms";
+import {AllergyDtoCreate} from "../../../dtos/allergy";
+import {Observable} from "rxjs";
+import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {Router} from "@angular/router";
-import {ErrorFormatterService} from "../../services/error-formatter.service";
-import {CsvConverterService} from "../../services/csv-converter.service";
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import {error} from "@angular/compiler-cli/src/transformers/util";
+import {CsvConverterService} from "../../../services/csv-converter.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: 'app-allergy',
-  templateUrl: './allergy.component.html',
-  styleUrl: './allergy.component.scss'
+  selector: 'app-add-allergy-manual',
+  templateUrl: './add-allergy-manual.component.html',
+  styleUrl: './add-allergy-manual.component.scss'
 })
-export class AllergyComponent implements OnInit {
-
-  @ViewChild('content', { static: true }) content!: TemplateRef<any>;
-  private modalRef!: NgbModalRef;
-
+export class AddAllergyManualComponent {
+  @Output() creationSuccess = new EventEmitter<void>();
   allergyname: string = '';
-
-  public error: string | null = null;
 
   constructor(
     private allergyService: AllergyService,
     private notification: ToastrService,
     private errorFormatterService: ErrorFormatterService,
     private router: Router,
+    private csvService: CsvConverterService,
+    private modalService: NgbModal
   ) {
+  }
+
+  public dynamicCssClassesForInput(input: NgModel): any {
+    return {
+      'is-invalid': !input.valid && !input.pristine,
+    };
   }
 
   public onSubmit(form: NgForm): void {
@@ -42,6 +44,7 @@ export class AllergyComponent implements OnInit {
       observable.subscribe({
         next: data => {
           this.notification.success('Successfully created ' + data.name + ' Allergy');
+          this.onSuccessfulCreation();
         },
         error: async error => {
           switch (error.status) {
@@ -67,12 +70,8 @@ export class AllergyComponent implements OnInit {
     }
   }
 
-  public dynamicCssClassesForInput(input: NgModel): any {
-    return {
-      'is-invalid': !input.valid && !input.pristine,
-    };
+  private onSuccessfulCreation(): void {
+    this.creationSuccess.emit();
   }
 
-  ngOnInit(): void {
-  }
 }

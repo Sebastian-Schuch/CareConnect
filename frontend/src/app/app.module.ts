@@ -57,6 +57,11 @@ import {
   AppointmentsSecretaryComponent
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
 import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog/new-chat-dialog.component";
+import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
+import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
+import {AddAllergyManualComponent} from "./components/allergy/add-allergy-manual/add-allergy-manual.component";
+import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/allergy-from-file.component";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
@@ -77,7 +82,11 @@ import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog
     CalendarWrapperComponent,
     AppointmentsPatientComponent,
     AppointmentsSecretaryComponent,
-    LandingPatientComponent
+    LandingPatientComponent,
+    MainSetupPage,
+    AllergyListComponent,
+    AddAllergyManualComponent,
+    AllergyFromFileComponent
   ],
   imports: [
     BrowserModule,
@@ -116,7 +125,9 @@ import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog
     ConfirmDeleteDialogComponent,
     MatIconButton,
     ChatComponent,
-    NewChatDialogComponent
+    NewChatDialogComponent,
+    MatTabGroup,
+    MatTab
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()
