@@ -3,13 +3,12 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from
 import {MatFormField} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatButton} from "@angular/material/button";
-import {UserDtoList} from "../../../dtos/user";
 import {MatInput} from "@angular/material/input";
 import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {catchError, of, switchMap} from "rxjs";
-import {StationDto} from "../../../dtos/Station";
-import {StationService} from "../../../services/station.service";
+import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
+import {InpatientDepartmentService} from "../../../services/inpatient-department.service";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {StaysService} from "../../../services/stays.service";
 import {MatCard, MatCardActions, MatCardContent, MatCardTitle} from "@angular/material/card";
@@ -44,26 +43,27 @@ import {MatCard, MatCardActions, MatCardContent, MatCardTitle} from "@angular/ma
 
 
 export class StaysManageComponent implements OnInit {
-  user: UserDtoList;
-  filteredStations: StationDto[];
+  filteredInpatientDepartments: InpatientDepartmentDto[];
   myControl = new FormControl();
   isCheckedIn: boolean = false;
   currentStay = null;
+  @Input() firstname: string;
+  @Input() lastname: string;
   @Input() patientId: number;
   @Output() stayChanged = new EventEmitter<any>();
 
-  constructor(private stationService: StationService,
+  constructor(private inpatientDepartmentService: InpatientDepartmentService,
               private staysService: StaysService) {
 
     this.myControl.valueChanges.pipe(
       switchMap(value => {
         let searchTerm = value?.name || value;
 
-        return this.stationService.getStations(searchTerm, 0, 5).pipe(
-          catchError(() => of({stations: [], totalCount: 0}))
+        return this.inpatientDepartmentService.getInpatientDepartments(searchTerm, 0, 5).pipe(
+          catchError(() => of({inpatientDepartments: [], totalCount: 0}))
         );
       })
-    ).subscribe(stations => this.filteredStations = stations.stations);
+    ).subscribe(inpatientDepartments => this.filteredInpatientDepartments = inpatientDepartments.inpatientDepartments);
   }
 
   isInputEmpty(): boolean {
@@ -73,16 +73,15 @@ export class StaysManageComponent implements OnInit {
   checkPatientIn() {
     this.staysService.createNewStay({
       patientId: this.patientId,
-      station: this.myControl.value
+      inpatientDepartment: this.myControl.value
     }).subscribe(stay => {
       this.isCheckedIn = true;
-      stay.arrival = new Date(stay.arrival + "Z");
       this.currentStay = stay;
     });
   }
 
-  displayFn(station: StationDto): string {
-    return station && station.name ? station.name : '';
+  displayFn(inpatientDepartment: InpatientDepartmentDto): string {
+    return inpatientDepartment && inpatientDepartment.name ? inpatientDepartment.name : '';
   }
 
   dischargePatient() {
@@ -93,13 +92,10 @@ export class StaysManageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stationService.getStations('', 0, 5).subscribe(stations => this.filteredStations = stations.stations);
+    this.inpatientDepartmentService.getInpatientDepartments('', 0, 5).subscribe(inpatientDepartments => this.filteredInpatientDepartments = inpatientDepartments.inpatientDepartments);
     this.staysService.getCurrentStay(this.patientId).subscribe(stay => {
       this.isCheckedIn = stay != null
       this.currentStay = stay;
-      if (stay && stay.arrival) {
-        stay.arrival = new Date(stay.arrival + "Z");
-      }
     });
   }
 

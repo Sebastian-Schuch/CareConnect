@@ -394,7 +394,7 @@ export class UserCreateComponent implements OnInit {
 
               const url = window.URL.createObjectURL(response);
               window.open(url);
-              this.router.navigate(['/']);
+              this.routeUserCorrectly(this.role);
             },
             error: async error => {
               this.errorFormatterService.printErrorToNotification(error, 'Error creating user', this.notification);
@@ -448,6 +448,25 @@ export class UserCreateComponent implements OnInit {
       default:
         console.error('Unknown mode', this.mode);
         return;
+    }
+  }
+
+  private routeUserCorrectly(role: Role) {
+    switch (role) {
+      case Role.admin:
+        this.router.navigate(['/home/admin/users/admins']);
+        break;
+      case Role.doctor:
+        this.router.navigate(['/home/admin/users/doctors']);
+        break;
+      case Role.secretary:
+        this.router.navigate(['/home/admin/users/secretaries']);
+        break;
+      case Role.patient:
+        this.router.navigate(['/home/secretary/patients']);
+        break;
+      default:
+        this.router.navigate(['/']);
     }
   }
 }

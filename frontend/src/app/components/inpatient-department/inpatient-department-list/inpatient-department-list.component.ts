@@ -2,20 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {NgForOf, NgIf} from "@angular/common";
-import {StationDto} from "../../../dtos/Station";
-import {StationService} from "../../../services/station.service";
+import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
+import {InpatientDepartmentService} from "../../../services/inpatient-department.service";
 import {RouterLink} from "@angular/router";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {StationComponent} from "../station.component";
-import {finalize, map} from "rxjs";
-import {HttpResponse} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {InpatientDepartmentDeleteComponent} from "../inpatient-department-delete/inpatient-department-delete.component";
-import {result} from "lodash";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../dtos/Role";
-
 
 
 @Component({
@@ -33,16 +28,16 @@ import {Role} from "../../../dtos/Role";
   templateUrl: './inpatient-department-list.component.html',
   styleUrl: './inpatient-department-list.component.scss'
 })
-export class InpatientDepartmentListComponent implements OnInit{
-  inpatientDepartments: StationDto[];
-  pageProperties: {pageIndex: number, pageSize: number} = {pageIndex: 0, pageSize: 10};
+export class InpatientDepartmentListComponent implements OnInit {
+  inpatientDepartments: InpatientDepartmentDto[];
+  pageProperties: { pageIndex: number, pageSize: number } = {pageIndex: 0, pageSize: 10};
   totalItems: number = 0;
   searchedName = "";
   role: Role;
 
 
   constructor(
-    private inpatientDepartmentService: StationService,
+    private inpatientDepartmentService: InpatientDepartmentService,
     private notification: ToastrService,
     private authService: AuthService,
     public dialog: MatDialog) {
@@ -50,9 +45,9 @@ export class InpatientDepartmentListComponent implements OnInit{
 
   ngOnInit() {
     this.role = this.authService.getUserRole();
-    this.inpatientDepartmentService.getStations("", 0, 10).subscribe({
+    this.inpatientDepartmentService.getInpatientDepartments("", 0, 10).subscribe({
       next: value => {
-        this.inpatientDepartments = value.stations;
+        this.inpatientDepartments = value.inpatientDepartments;
         this.totalItems = value.totalItems;
       },
       error: err => console.error(err)
@@ -60,9 +55,9 @@ export class InpatientDepartmentListComponent implements OnInit{
   }
 
   reloadInpatientDepartments() {
-    this.inpatientDepartmentService.getStations(this.searchedName, this.pageProperties.pageIndex, this.pageProperties.pageSize).subscribe({
+    this.inpatientDepartmentService.getInpatientDepartments(this.searchedName, this.pageProperties.pageIndex, this.pageProperties.pageSize).subscribe({
       next: value => {
-        this.inpatientDepartments = value.stations;
+        this.inpatientDepartments = value.inpatientDepartments;
         this.totalItems = value.totalItems;
       },
       error: err => console.error(err)
@@ -74,16 +69,19 @@ export class InpatientDepartmentListComponent implements OnInit{
     this.reloadInpatientDepartments();
   }
 
-  openDeleteDialog(inpatientDepartment: StationDto) {
+  openDeleteDialog(inpatientDepartment: InpatientDepartmentDto) {
     const dialogRef = this.dialog.open(InpatientDepartmentDeleteComponent,
       {data: {name: inpatientDepartment.name}});
 
     dialogRef.afterClosed().subscribe({
       next: value => {
-        if(value) {
+        if (value) {
           this.deleteInpatientDepartment(inpatientDepartment.id);
-          if(this.inpatientDepartments.length === 1) {
-            this.pageProperties = {pageIndex: this.pageProperties.pageIndex-1, pageSize: this.pageProperties.pageSize};
+          if (this.inpatientDepartments.length === 1) {
+            this.pageProperties = {
+              pageIndex: this.pageProperties.pageIndex - 1,
+              pageSize: this.pageProperties.pageSize
+            };
             this.reloadInpatientDepartments();
           }
         }
@@ -93,11 +91,11 @@ export class InpatientDepartmentListComponent implements OnInit{
   }
 
   deleteInpatientDepartment(id: number) {
-    this.inpatientDepartmentService.deleteStation(id).subscribe({
+    this.inpatientDepartmentService.deleteInpatientDepartment(id).subscribe({
       next: value => {
-        this.notification.success(`Successfully deleted station ${value.name}`);
+        this.notification.success(`Successfully deleted inpatient department ${value.name}`);
         this.reloadInpatientDepartments();
-        },
+      },
       error: err => console.error(err)
     })
   }

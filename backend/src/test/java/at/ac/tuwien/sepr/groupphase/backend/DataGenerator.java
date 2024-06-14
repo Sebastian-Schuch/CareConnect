@@ -4,24 +4,24 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
+import at.ac.tuwien.sepr.groupphase.backend.entity.InpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Station;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.InpatientDepartmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MedicationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.OpeningHoursRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.StationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentMedicineRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
@@ -76,7 +76,7 @@ public class DataGenerator {
     private final SecretaryRepository secretaryRepository;
 
     @Autowired
-    private final StationRepository stationRepository;
+    private final InpatientDepartmentRepository inpatientDepartmentRepository;
 
     @Autowired
     private final TreatmentMedicineRepository treatmentMedicineRepository;
@@ -94,7 +94,7 @@ public class DataGenerator {
                          DoctorRepository doctorRepository,
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
-                         SecretaryRepository secretaryRepository, StationRepository stationRepository, TreatmentMedicineRepository treatmentMedicineRepository,
+                         SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
                          TreatmentRepository treatmentRepository) {
         this.allergyRepository = allergyRepository;
         this.appointmentRepository = appointmentRepository;
@@ -105,9 +105,9 @@ public class DataGenerator {
         this.outpatientDepartmentRepository = outpatientDepartmentRepository;
         this.patientRepository = patientRepository;
         this.secretaryRepository = secretaryRepository;
-        this.stationRepository = stationRepository;
-        this.treatmentRepository = treatmentRepository;
+        this.inpatientDepartmentRepository = inpatientDepartmentRepository;
         this.treatmentMedicineRepository = treatmentMedicineRepository;
+        this.treatmentRepository = treatmentRepository;
 
     }
 
@@ -123,7 +123,7 @@ public class DataGenerator {
             case "patient" -> generateDataInDb(true, false, false, true, true, false, false, false, false, false);
             case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false);
             case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false);
-            case "station" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false);
             case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false);
             case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false);
             case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true);
@@ -151,12 +151,12 @@ public class DataGenerator {
         medicationRepository.deleteAll();
         allergyRepository.deleteAll();
         credentialRepository.deleteAll();
-        stationRepository.deleteAll();
+        inpatientDepartmentRepository.deleteAll();
         openingHoursRepository.deleteAll();
     }
 
     private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
-                                  boolean generateForStations, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
+                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
         if (generateForAllergies) {
             generateDataForAllergies();
         }
@@ -175,8 +175,8 @@ public class DataGenerator {
         if (generateForOutpatientDepartments) {
             generateDataForOutpatientDepartments();
         }
-        if (generateForStations) {
-            generateDataForStations();
+        if (generateForInpatientDepartments) {
+            generateDataForInpatientDepartments();
         }
         if (generateForAppointments) {
             generateDataForAppointments();
@@ -327,19 +327,19 @@ public class DataGenerator {
         return openingHours;
     }
 
-    private void generateDataForStations() {
-        stationRepository.save(setStation("Station1", 5));
-        stationRepository.save(setStation("Station2", 10));
-        stationRepository.save(setStation("Station3", 15));
-        stationRepository.save(setStation("Station4", 20));
-        stationRepository.save(setStation("Station5", 25));
+    private void generateDataForInpatientDepartments() {
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25));
     }
 
-    private Station setStation(String name, int capacity) {
-        Station station = new Station();
-        station.setName(name);
-        station.setCapacity(capacity);
-        return station;
+    private InpatientDepartment setInpatientDepartment(String name, int capacity) {
+        InpatientDepartment inpatientDepartment = new InpatientDepartment();
+        inpatientDepartment.setName(name);
+        inpatientDepartment.setCapacity(capacity);
+        return inpatientDepartment;
     }
 
     private void generateDataForAppointments() {
@@ -381,16 +381,18 @@ public class DataGenerator {
         appointment.setNotes(notes);
         return appointment;
     }
+
     private Date createDate(int year, int month, int day, int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, day, hour, minute);
         return calendar.getTime();
     }
+
     private void generateDataForTreatmentMedicines() {
         treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
         treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
         treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
-        }
+    }
 
     private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, String unitOfMeasurement, Date timeOfAdministration) {
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();

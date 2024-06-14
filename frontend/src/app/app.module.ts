@@ -7,7 +7,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {UserCreateComponent} from "./components/user/user-create-edit/user-create.component";
@@ -30,7 +29,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatAnchor, MatButton, MatFabButton, MatIconButton} from "@angular/material/button";
-import {StationComponent} from "./components/station/station.component";
+import {InpatientDepartmentComponent} from "./components/inpatient-department/inpatient-department.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {LoginComponent} from "./components/login/login.component";
 import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
@@ -68,10 +67,9 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent,
     LoginComponent,
     TreatmentComponent,
-    StationComponent,
+    InpatientDepartmentComponent,
     AllergyComponent,
     UserCreateComponent,
     OutpatientDepartmentComponent,

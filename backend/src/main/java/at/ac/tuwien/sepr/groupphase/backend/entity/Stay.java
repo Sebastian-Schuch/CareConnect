@@ -15,7 +15,7 @@ public class Stay {
     private Long id;
 
     @ManyToOne
-    private Station station;
+    private InpatientDepartment inpatientDepartment;
 
     public Patient getPatient() {
         return patient;
@@ -41,12 +41,12 @@ public class Stay {
         return this;
     }
 
-    public Station getStation() {
-        return station;
+    public InpatientDepartment getInpatientDepartment() {
+        return inpatientDepartment;
     }
 
-    public Stay setStation(Station station) {
-        this.station = station;
+    public Stay setInpatientDepartment(InpatientDepartment inpatientDepartment) {
+        this.inpatientDepartment = inpatientDepartment;
         return this;
     }
 

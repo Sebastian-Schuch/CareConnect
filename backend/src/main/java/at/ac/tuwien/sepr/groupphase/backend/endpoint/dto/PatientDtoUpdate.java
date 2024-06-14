@@ -10,7 +10,7 @@ public record PatientDtoUpdate(
     @NotBlank(message = "Social security number cannot be empty")
     @Size(max = 10, min = 10, message = "Social security number must have 10 digits")
     String svnr,
-    
+
     List<MedicationDto> medicines,
     List<AllergyDto> allergies,
 
