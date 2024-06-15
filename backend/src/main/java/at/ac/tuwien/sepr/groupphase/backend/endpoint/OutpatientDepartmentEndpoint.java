@@ -2,10 +2,16 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentPageDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,5 +76,23 @@ public class OutpatientDepartmentEndpoint {
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
         LOGGER.info("getAllOutpatientDepartments()");
         return outpatientDepartmentService.getAllOutpatientDepartments();
+    }
+
+    /**
+     * Get either all or a page of outpatient departments.
+     *
+     * @return page of outpatient departments including the content of the list and the total number of elements
+     */
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping("page")
+    public OutpatientDepartmentPageDto getOutpatientDepartmentPage(
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "20") Integer size,
+        @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm
+    ) {
+        LOGGER.info("getOutpatientDepartmentPage()");
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
+        Specification<OutpatientDepartment> spec = (root, query, cb) -> cb.like(root.get("name"), "%" + searchTerm + "%");
+        return outpatientDepartmentService.getOutpatientDepartmentsPage(spec, pageable);
     }
 }
