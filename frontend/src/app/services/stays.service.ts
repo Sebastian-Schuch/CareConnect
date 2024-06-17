@@ -36,8 +36,10 @@ export class StaysService {
     return this.http.post<StayDto>(this.stayUri + `/arrival`, stay);
   }
 
-  public endStay(stay: StayDto): Observable<StayDto> {
-    return this.http.put<StayDto>(this.stayUri + `/discharge`, stay);
+  public endStay(stayId: number): Observable<StayDto> {
+    let params = new HttpParams();
+    params = params.set('id', stayId);
+    return this.http.put<StayDto>(this.stayUri + `/discharge`, {params: params});
   }
 
   public update(stay: StayDto): Observable<StayDto> {

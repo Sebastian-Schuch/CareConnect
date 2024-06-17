@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoPage;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.StayService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
@@ -40,14 +41,14 @@ public class StayEndpoint {
 
     @Secured({"SECRETARY"})
     @PostMapping("/arrival")
-    public StayDto createNewStay(@RequestBody StayDtoCreate stayDto) {
+    public StayDto createNewStay(@Valid @RequestBody StayDtoCreate stayDto) throws NotFoundException {
         return stayService.createNewStay(stayDto);
     }
 
     @Secured({"SECRETARY"})
     @PutMapping("/discharge")
-    public StayDto endCurrentStay(@RequestBody StayDto stayDto) {
-        return stayService.endCurrentStay(stayDto);
+    public StayDto endCurrentStay(@RequestParam(name = "id") Long stayId) {
+        return stayService.endCurrentStay(stayId);
     }
 
     @Secured({"SECRETARY"})
