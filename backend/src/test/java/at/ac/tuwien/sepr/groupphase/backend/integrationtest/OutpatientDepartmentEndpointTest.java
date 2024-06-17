@@ -95,7 +95,8 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         .setName("Outpatient Department")
         .setDescription("Outpatient Department Description")
         .setCapacity(25)
-        .setOpeningHours(openingHours);
+        .setOpeningHours(openingHours)
+        .setActive(true);
 
     private long testObjectId = 1L;
 
