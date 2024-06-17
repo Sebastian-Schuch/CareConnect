@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.InpatientDepartmentM
 import at.ac.tuwien.sepr.groupphase.backend.entity.InpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.service.InpatientDepartmentService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 import static at.ac.tuwien.sepr.groupphase.backend.endpoint.InpatientDepartmentEndpoint.BASE_PATH;
 
@@ -77,7 +80,12 @@ public class InpatientDepartmentEndpoint {
     ) {
         LOGGER.info("GET " + BASE_PATH);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
-        Specification<InpatientDepartment> spec = (root, query, cb) -> cb.like(root.get("name"), "%" + searchTerm + "%");
+        Specification<InpatientDepartment> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.like(root.get("name"), "%" + searchTerm + "%"));
+            predicates.add(cb.equal(root.get("active"), true));  // Check for active field
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
         return this.inpatientDepartmentService.findAll(spec, pageable);
     }
 

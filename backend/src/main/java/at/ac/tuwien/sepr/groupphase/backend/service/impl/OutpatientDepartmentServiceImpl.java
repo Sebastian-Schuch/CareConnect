@@ -53,7 +53,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     @Override
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
         LOGGER.trace("getAllOutpatientDepartments()");
-        List<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAll();
+        List<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAllByActiveTrue();
         return outpatientDepartments.stream()
             .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours())))
             .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     @Override
     public OutpatientDepartmentDto getOutpatientDepartmentById(Long id) throws NotFoundException {
         LOGGER.trace("getOutpatientDepartmentById({})", id);
-        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findById(id).orElse(null);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
         if (outpatientDepartment == null) {
             LOGGER.warn("Outpatient department with id {} not found", id);
             throw new NotFoundException("Outpatient department with id " + id + " not found");
@@ -73,7 +73,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     @Override
     public OutpatientDepartment getOutpatientDepartmentEntityById(Long id) throws NotFoundException {
         LOGGER.trace("getOutpatientDepartmentEntityById({})", id);
-        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findById(id).orElse(null);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
         if (outpatientDepartment == null) {
             LOGGER.warn("Outpatient department with id {} not found", id);
             throw new NotFoundException("Outpatient department with id " + id + " not found");
