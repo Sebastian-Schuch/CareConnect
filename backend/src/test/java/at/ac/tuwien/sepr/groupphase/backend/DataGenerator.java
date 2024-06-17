@@ -127,6 +127,7 @@ public class DataGenerator {
             case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false);
             case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false);
             case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true);
+            case "stay" -> generateDataInDb(false, false, true, true, false, false, true, false, false, false);
         }
         LOGGER.info("Finished generating data without error.");
     }

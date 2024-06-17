@@ -85,7 +85,7 @@ export class StaysManageComponent implements OnInit {
   }
 
   dischargePatient() {
-    this.staysService.endStay(this.currentStay).subscribe(stay => {
+    this.staysService.endStay(this.currentStay.id).subscribe(stay => {
       this.isCheckedIn = false;
       this.stayChanged.emit();
     });

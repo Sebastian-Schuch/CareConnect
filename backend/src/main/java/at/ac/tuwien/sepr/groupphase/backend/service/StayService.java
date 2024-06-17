@@ -20,16 +20,17 @@ public interface StayService {
      *
      * @param stayDtoCreate the arrival information of the user
      * @return the new stay
+     * @throws NotFoundException if the user or the inpatient department is not found
      */
-    StayDto createNewStay(StayDtoCreate stayDtoCreate);
+    StayDto createNewStay(StayDtoCreate stayDtoCreate) throws NotFoundException;
 
     /**
      * End the current stay of a user.
      *
-     * @param stayDto the StayDto
+     * @param stayId the id of the Stay
      * @return the ended stay
      */
-    StayDto endCurrentStay(StayDto stayDto) throws NotFoundException;
+    StayDto endCurrentStay(Long stayId) throws NotFoundException;
 
     /**
      * Get all stays of a user.
