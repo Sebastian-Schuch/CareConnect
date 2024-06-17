@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -123,6 +124,9 @@ public class InpatientDepartmentEndpoint {
     @Operation(summary = "Edit an inpatient department")
     public InpatientDepartmentDto edit(@PathVariable(name = "id") Long id, @Valid @RequestBody InpatientDepartmentDto toUpdate) {
         LOGGER.info("POST " + BASE_PATH + "/{id}");
+        if (!id.equals(toUpdate.id())) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");
+        }
         return this.inpatientDepartmentService.updateInpatientDepartment(toUpdate);
     }
 }
