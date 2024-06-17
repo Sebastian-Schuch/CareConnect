@@ -42,7 +42,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDtoSparse getPatientById(Long id) {
         LOG.trace("getPatientById({})", id);
-        Patient patient = patientRepository.findById(id).orElse(null);
+        Patient patient = patientRepository.findByPatientIdAndCredential_ActiveTrue(id);
         if (patient == null) {
             LOG.warn("patient with id {} not found", id);
             throw new NotFoundException("Patient not found");
@@ -53,7 +53,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient getPatientEntityById(Long id) {
         LOG.trace("getPatientEntityById({})", id);
-        Patient patient = patientRepository.findById(id).orElse(null);
+        Patient patient = patientRepository.findByPatientIdAndCredential_ActiveTrue(id);
         if (patient == null) {
             LOG.warn("patient with id {} not found", id);
             throw new NotFoundException("Patient not found");
@@ -63,7 +63,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public PatientDto getPatientByEmail(String email) {
-        Patient patient = patientRepository.findByCredential_Email(email);
+        Patient patient = patientRepository.findByCredential_EmailAndCredential_ActiveTrue(email);
         if (patient == null) {
             LOG.warn("patient with email {} not found", email);
             throw new NotFoundException("Patient not found");
@@ -73,7 +73,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getPatientEntityByEmail(String email) {
-        Patient patient = patientRepository.findByCredential_Email(email);
+        Patient patient = patientRepository.findByCredential_EmailAndCredential_ActiveTrue(email);
         if (patient == null) {
             LOG.warn("patient with email {} not found", email);
             throw new NotFoundException("Patient not found");
@@ -84,7 +84,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDtoSparse updatePatient(Long id, PatientDtoUpdate toUpdate) {
         LOG.trace("updatePatient({}, {})", id, toUpdate);
-        Patient patient = patientRepository.findById(id).orElse(null);
+        Patient patient = patientRepository.findByPatientIdAndCredential_ActiveTrue(id);
         if (patient == null) {
             LOG.warn("patient with id {} not found", id);
             throw new NotFoundException("Patient not found");
@@ -95,7 +95,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto findPatientByCredential(Credential credential) {
         LOG.debug("Find application user by email");
-        Patient patient = patientRepository.findByCredential(credential);
+        Patient patient = patientRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (patient != null) {
             return patientMapper.patientToPatientDto(patient);
         }
@@ -111,7 +111,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<PatientDtoSparse> getAllPatients() {
-        return patientMapper.patientsToPatientDtosSparse(patientRepository.findAll());
+        return patientMapper.patientsToPatientDtosSparse(patientRepository.findByCredential_ActiveTrue());
     }
 
     @Override

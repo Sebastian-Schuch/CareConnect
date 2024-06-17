@@ -16,7 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Optional;
 
 @Service
 public class InpatientDepartmentServiceImpl implements InpatientDepartmentService {
@@ -34,16 +33,19 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
     public InpatientDepartment findById(Long id) {
         try {
             if (id == null) {
+                LOGGER.warn("Id is null");
                 throw new IllegalArgumentException("Id is null");
             }
-            Optional<InpatientDepartment> data = inpatientDepartmentRepository.findById(id);
-            if (data.isPresent()) {
-                return data.get();
+            InpatientDepartment data = inpatientDepartmentRepository.findByIdAndActiveTrue(id);
+            if (data == null) {
+                LOGGER.warn("Could not find inpatient department with id {}", id);
+                throw new NotFoundException(String.format("Could not find inpatient department"));
             } else {
-                throw new NotFoundException(String.format("Could not find inpatient department with id %s", id));
+                return data;
             }
 
         } catch (IllegalArgumentException e) {
+            LOGGER.warn("Can not search for null id.");
             throw new IllegalArgumentException("Can not search for null id.");
         }
     }
@@ -65,6 +67,7 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
         InpatientDepartment inpatientDepartment = new InpatientDepartment();
         inpatientDepartment.setName(toCreate.name());
         inpatientDepartment.setCapacity(toCreate.capacity());
+        inpatientDepartment.setActive(true);
         return inpatientDepartmentRepository.save(inpatientDepartment);
     }
 
@@ -80,8 +83,8 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
     @Override
     public InpatientDepartmentDto deleteInpatientDepartment(Long id) {
         LOGGER.trace("deleteInpatientDepartment({})", id);
-        InpatientDepartment toDelete = inpatientDepartmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
-        inpatientDepartmentRepository.delete(toDelete);
-        return inpatientDepartmentMapper.inpatientDepartmentToDto(toDelete);
+        InpatientDepartment toDisable = inpatientDepartmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
+        inpatientDepartmentRepository.save(toDisable.setActive(false));
+        return inpatientDepartmentMapper.inpatientDepartmentToDto(toDisable);
     }
 }

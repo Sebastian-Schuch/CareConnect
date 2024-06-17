@@ -75,7 +75,7 @@ public class TreatmentMapperTest {
         DoctorDtoSparse doctorDto2 = new DoctorDtoSparse(3L, "John", "Smith", "john@email.com", false);
         TreatmentMedicineDto treatmentMedicineDto = new TreatmentMedicineDto(3L, new MedicationDto(1L, "Med1", true), "mg", 100, new Date());
         TreatmentMedicineDto treatmentMedicineDto2 = new TreatmentMedicineDto(4L, new MedicationDto(1L, "Med1", true), "mg", 100, new Date());
-        OutpatientDepartmentDto outpatientDepartmentDto = new OutpatientDepartmentDto(1L, "Cardiology", "Cardiology Department", 20, null);
+        OutpatientDepartmentDto outpatientDepartmentDto = new OutpatientDepartmentDto(1L, "Cardiology", "Cardiology Department", 20, null, true);
 
         return new TreatmentDtoCreate(
             "Treatment Title",
@@ -210,7 +210,7 @@ public class TreatmentMapperTest {
                 new Date(),
                 new PatientDtoSparse(1L, null, null, null, null, null, null, false),
                 new OutpatientDepartmentDto(
-                    1L, null, null, 0, null),
+                    1L, null, null, 0, null, true),
                 "Treatment Text",
                 Collections.singletonList(new DoctorDtoSparse(2L, null, null, null, false)),
                 Collections.singletonList(new TreatmentMedicineDto(3L, null, null, 0, null))
@@ -218,7 +218,7 @@ public class TreatmentMapperTest {
         when(patientMapper.patientToPatientDtoSparse(patient)).thenReturn(new PatientDtoSparse(1L, null, null, null, null, null, null, true));
         when(doctorMapper.doctorToDoctorDtoSparse(doctor1)).thenReturn(new DoctorDtoSparse(2L, null, null, null, true));
         when(treatmentMedicineMapper.entityToDto(treatmentMedicine)).thenReturn(new TreatmentMedicineDto(3L, null, null, 0, null));
-        when(outpatientDepartmentService.getOutpatientDepartmentById(1L)).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null));
+        when(outpatientDepartmentService.getOutpatientDepartmentById(1L)).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null, true));
 
 
         TreatmentDto treatmentDto = treatmentMapper.entityToDto(treatment);
@@ -249,18 +249,18 @@ public class TreatmentMapperTest {
         TreatmentDto treatmentDto1 = new TreatmentDto(1L, "Treatment Title", new Date(), new Date(), new PatientDtoSparse(
             1L, "1234567891", Collections.emptyList(), Collections.emptyList(), "John", "Doe", null, true
         ), new OutpatientDepartmentDto(
-            1L, "Cardiology", "Cardiology Department", 20, null
+            1L, "Cardiology", "Cardiology Department", 20, null, true
         ), "Treatment Text", Collections.emptyList(), Collections.emptyList());
         TreatmentDto treatmentDto2 = new TreatmentDto(2L, "Treatment Title", new Date(), new Date(), new PatientDtoSparse(
             1L, "1234567891", Collections.emptyList(), Collections.emptyList(), "John", "Doe", null, true
         ), new OutpatientDepartmentDto(
-            1L, "Cardiology", "Cardiology Department", 20, null
+            1L, "Cardiology", "Cardiology Department", 20, null, true
         ), "Treatment Text", Collections.emptyList(), Collections.emptyList());
 
         when(patientMapper.patientToPatientDto(any(Patient.class))).thenReturn(new PatientDto(1L, null, null, null, null, null, null, null, false, false));
         when(doctorMapper.doctorToDoctorDto(any(Doctor.class))).thenReturn(new DoctorDto(2L, null, null, null, null, false, false));
         when(treatmentMedicineMapper.entityToDto(any(TreatmentMedicine.class))).thenReturn(new TreatmentMedicineDto(3L, null, null, 0, null));
-        when(outpatientDepartmentService.getOutpatientDepartmentById(any())).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null));
+        when(outpatientDepartmentService.getOutpatientDepartmentById(any())).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null, true));
 
         List<Treatment> treatments = Arrays.asList(treatment1, treatment2);
         List<TreatmentDto> treatmentDtos = treatmentMapper.entityListToDtoList(treatments);
