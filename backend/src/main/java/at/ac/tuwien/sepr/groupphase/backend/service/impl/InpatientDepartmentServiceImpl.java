@@ -39,7 +39,7 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
             InpatientDepartment data = inpatientDepartmentRepository.findByIdAndActiveTrue(id);
             if (data == null) {
                 LOGGER.warn("Could not find inpatient department with id {}", id);
-                throw new NotFoundException(String.format("Could not find inpatient department"));
+                throw new NotFoundException("Could not find inpatient department");
             } else {
                 return data;
             }
