@@ -138,8 +138,8 @@ public class TreatmentEndpoint {
                         Join<Treatment, Doctor> doctorJoin = root.join("doctors");
                         Join<Doctor, Credential> credentialsJoin = doctorJoin.join("credential");
                         Predicate firstName = cb.like(cb.lower(credentialsJoin.get("firstName")), "%" + searchParams.doctorName().toLowerCase() + "%");
-                        Predicate LastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.doctorName().toLowerCase() + "%");
-                        predicates.add(cb.or(firstName, LastName));
+                        Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.doctorName().toLowerCase() + "%");
+                        predicates.add(cb.or(firstName, lastName));
                     }
                     if (searchParams.treatmentTitle() != null) {
                         predicates.add(cb.like(cb.lower(root.get("treatmentTitle")), "%" + searchParams.treatmentTitle().toLowerCase() + "%"));
