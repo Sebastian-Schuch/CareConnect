@@ -54,11 +54,7 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
     public InpatientDepartmentPageDto findAll(Specification<InpatientDepartment> spec, Pageable pageable) {
         LOGGER.trace("findAll({},{})", spec, pageable);
         Page<InpatientDepartment> inpatientDepartments = inpatientDepartmentRepository.findAll(spec, pageable);
-        InpatientDepartmentPageDto inpatientDepartmentPageDto = inpatientDepartmentMapper.toInpatientDepartmentPageDto(inpatientDepartments);
-        if (inpatientDepartments.isEmpty()) {
-            throw new NotFoundException("No inpatient departments found");
-        }
-        return inpatientDepartmentPageDto;
+        return inpatientDepartmentMapper.toInpatientDepartmentPageDto(inpatientDepartments);
     }
 
     @Override
