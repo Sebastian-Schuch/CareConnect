@@ -7,7 +7,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.TreatmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +28,11 @@ public class TreatmentServiceImpl implements TreatmentService {
     private static final Logger log = LoggerFactory.getLogger(TreatmentServiceImpl.class);
     private final TreatmentRepository treatmentRepository;
     private final TreatmentMapper treatmentMapper;
-    private final TreatmentMedicineServiceImpl treatmentMedicineServiceImpl;
 
     @Autowired
-    public TreatmentServiceImpl(TreatmentRepository treatmentRepository, TreatmentMapper treatmentMapper, TreatmentMedicineService treatmentMedicineService, TreatmentMedicineServiceImpl treatmentMedicineServiceImpl) {
+    public TreatmentServiceImpl(TreatmentRepository treatmentRepository, TreatmentMapper treatmentMapper, TreatmentMedicineServiceImpl treatmentMedicineServiceImpl) {
         this.treatmentRepository = treatmentRepository;
         this.treatmentMapper = treatmentMapper;
-        this.treatmentMedicineServiceImpl = treatmentMedicineServiceImpl;
     }
 
     @Override
