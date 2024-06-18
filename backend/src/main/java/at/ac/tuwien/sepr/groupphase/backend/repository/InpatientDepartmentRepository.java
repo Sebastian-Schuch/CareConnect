@@ -16,4 +16,12 @@ public interface InpatientDepartmentRepository extends JpaRepository<InpatientDe
      * @return all inpatient departments.
      */
     Page<InpatientDepartment> findAll(Specification<InpatientDepartment> specification, Pageable pageable);
+
+    /**
+     * Returns the inpatient department with the given id only if the inpatient department is active.
+     *
+     * @param id the id of the inpatient department.
+     * @return the inpatient department with the given id.
+     */
+    InpatientDepartment findByIdAndActiveTrue(Long id);
 }

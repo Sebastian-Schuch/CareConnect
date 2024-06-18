@@ -72,7 +72,7 @@ public class MedicationEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenValidData_whenCreateNewMedication_thenReturn200OkStatusAndCreatedMedication() throws Exception {
-        String json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra"));
+        String json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra3"));
         byte[] body = mockMvc
             .perform(MockMvcRequestBuilders
                 .post(BASE_PATH).contentType(MediaType.APPLICATION_JSON).content(json)
@@ -87,7 +87,7 @@ public class MedicationEndpointTest extends TestBase {
             .isNotNull()
             .hasSize(1)
             .extracting(MedicationDto::name)
-            .containsExactly("WieAgra");
+            .containsExactly("WieAgra3");
     }
 
     @Test
@@ -116,7 +116,7 @@ public class MedicationEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenNewlyCreatedMedication_whenGetMedication_thenReturnMedication() throws Exception {
-        String json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra"));
+        String json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra2"));
         byte[] bodyCreate =
             mockMvc
                 .perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -133,7 +133,7 @@ public class MedicationEndpointTest extends TestBase {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
         List<MedicationDto> medicationGet = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyGet).readAll();
-        assertThat(medicationGet).hasSize(1).extracting(MedicationDto::name).containsExactly("WieAgra");
+        assertThat(medicationGet).hasSize(1).extracting(MedicationDto::name).containsExactly("WieAgra2");
     }
 
     @Test

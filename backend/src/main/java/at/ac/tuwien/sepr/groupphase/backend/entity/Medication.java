@@ -15,7 +15,7 @@ public class Medication {
     private Long id;
 
     @Convert(converter = EncryptorConverter.class)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
