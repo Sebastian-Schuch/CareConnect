@@ -330,17 +330,18 @@ public class DataGenerator {
     }
 
     private void generateDataForInpatientDepartments() {
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25, true));
     }
 
-    private InpatientDepartment setInpatientDepartment(String name, int capacity) {
+    private InpatientDepartment setInpatientDepartment(String name, int capacity, boolean active) {
         InpatientDepartment inpatientDepartment = new InpatientDepartment();
         inpatientDepartment.setName(name);
         inpatientDepartment.setCapacity(capacity);
+        inpatientDepartment.setActive(active);
         return inpatientDepartment;
     }
 
