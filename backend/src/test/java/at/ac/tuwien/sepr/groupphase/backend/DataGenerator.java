@@ -302,17 +302,18 @@ public class DataGenerator {
     }
 
     private void generateDataForOutpatientDepartments() {
-        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00")));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00")));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00")));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00"), true));
     }
 
-    private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours) {
+    private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours, boolean active) {
         OutpatientDepartment outpatientDepartment = new OutpatientDepartment();
         outpatientDepartment.setName(name);
         outpatientDepartment.setDescription(description);
         outpatientDepartment.setCapacity(capacity);
         outpatientDepartment.setOpeningHours(openingHours);
+        outpatientDepartment.setActive(active);
         return outpatientDepartment;
     }
 
@@ -329,17 +330,18 @@ public class DataGenerator {
     }
 
     private void generateDataForInpatientDepartments() {
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25, true));
     }
 
-    private InpatientDepartment setInpatientDepartment(String name, int capacity) {
+    private InpatientDepartment setInpatientDepartment(String name, int capacity, boolean active) {
         InpatientDepartment inpatientDepartment = new InpatientDepartment();
         inpatientDepartment.setName(name);
         inpatientDepartment.setCapacity(capacity);
+        inpatientDepartment.setActive(active);
         return inpatientDepartment;
     }
 

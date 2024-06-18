@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
@@ -25,13 +26,20 @@ public class AllergyServiceImpl implements AllergyService {
 
     @Override
     public Allergy createAllergy(AllergyDtoCreate toCreate) {
+        LOG.trace("create({})", toCreate);
+        Allergy existingAllergy = findByName(toCreate.name());
+        if (existingAllergy != null) {
+            throw new ConflictException("Allergy already exists");
+        }
         Allergy allergy = new Allergy();
         allergy.setName(toCreate.name());
+        allergy.setActive(true);
         return allergyRepository.save(allergy);
     }
 
     @Override
     public Allergy findById(Long id) {
+        LOG.trace("findById({})", id);
         if (id == null) {
             throw new NotFoundException("Id is null");
         }
@@ -45,26 +53,20 @@ public class AllergyServiceImpl implements AllergyService {
     }
 
     @Override
-    public int countAllergies() {
-        return (int) allergyRepository.count();
-    }
-
-    @Override
     public Allergy findByName(String name) {
+        LOG.trace("findByName({})", name);
         return allergyRepository.findByName(name);
     }
 
     @Override
     public List<Allergy> findAll() throws NotFoundException {
-        List<Allergy> allergies = allergyRepository.findAll();
-        if (allergies.isEmpty()) {
-            throw new NotFoundException("No allergies found");
-        }
-        return allergies;
+        LOG.trace("findAll()");
+        return allergyRepository.findAll();
     }
 
     @Override
     public Allergy updateAllergy(AllergyDto allergy) {
+        LOG.trace("updateAllergy({})", allergy);
         Allergy existingAllergy = findById(allergy.id());
         existingAllergy.setName(allergy.name());
         return allergyRepository.save(existingAllergy);

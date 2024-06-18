@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,8 @@ public class OutpatientDepartment {
     private String description;
 
     private int capacity;
+    @Column(nullable = false)
+    private boolean active;
 
     @NotNull
     @OneToOne(cascade = CascadeType.ALL)
@@ -70,5 +73,14 @@ public class OutpatientDepartment {
 
     public OpeningHours getOpeningHours() {
         return openingHours;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public OutpatientDepartment setActive(boolean active) {
+        this.active = active;
+        return this;
     }
 }

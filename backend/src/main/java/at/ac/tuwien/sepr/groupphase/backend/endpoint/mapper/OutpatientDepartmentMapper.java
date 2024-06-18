@@ -29,7 +29,8 @@ public class OutpatientDepartmentMapper {
             .setName(dto.name())
             .setDescription(dto.description())
             .setCapacity(dto.capacity())
-            .setOpeningHours(openingHours);
+            .setOpeningHours(openingHours)
+            .setActive(dto.active());
     }
 
     /**
@@ -45,7 +46,8 @@ public class OutpatientDepartmentMapper {
             .setName(dto.name())
             .setDescription(dto.description())
             .setCapacity(dto.capacity())
-            .setOpeningHours(openingHours);
+            .setOpeningHours(openingHours)
+            .setActive(true);
     }
 
     /**
@@ -62,6 +64,7 @@ public class OutpatientDepartmentMapper {
             entity.getName(),
             entity.getDescription(),
             entity.getCapacity(),
-            openingHoursDto);
+            openingHoursDto,
+            entity.isActive());
     }
 }

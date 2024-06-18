@@ -6,9 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MedicationRepository extends JpaRepository<Medication, Long> {
+    /**
+     * Find a medication by its name.
+     *
+     * @param name the name of the medication to find
+     * @return the medication with the given name
+     */
+    Medication findByName(String name);
+
     @Transactional
-    @Query(value = "SELECT * FROM Medication WHERE id= ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Medication WHERE ID= ?1 AND ACTIVE = TRUE", nativeQuery = true)
     Medication findMedicationById(Long id);
+
+    List<Medication> findByActiveTrue();
 }

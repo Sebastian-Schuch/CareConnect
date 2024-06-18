@@ -45,7 +45,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public SecretaryDtoSparse getById(Long id) {
         LOG.trace("getById({})", id);
-        Secretary secretary = secretaryRepository.findById(id).orElse(null);
+        Secretary secretary = secretaryRepository.findBySecretaryIdAndCredential_ActiveTrue(id);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
@@ -56,7 +56,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public Secretary getEntityById(Long id) {
         LOG.trace("getEntityById({})", id);
-        Secretary secretary = secretaryRepository.findById(id).orElse(null);
+        Secretary secretary = secretaryRepository.findBySecretaryIdAndCredential_ActiveTrue(id);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
@@ -74,7 +74,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public SecretaryDtoSparse updateSecretary(Long id, SecretaryDtoUpdate toUpdate) {
         LOG.trace("updateSecretary({}, {})", id, toUpdate);
-        Secretary secretary = secretaryRepository.findById(id).orElse(null);
+        Secretary secretary = secretaryRepository.findBySecretaryIdAndCredential_ActiveTrue(id);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
@@ -85,7 +85,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public List<SecretaryDtoSparse> getAllSecretaries() {
         LOG.trace("getAllSecretaries()");
-        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoSparse(secretaryRepository.findAll());
+        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoSparse(secretaryRepository.findByCredential_ActiveTrue());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class SecretaryServiceImpl implements SecretaryService {
     @Override
     public SecretaryDto findSecretaryByCredential(Credential credential) {
         LOG.debug("Find application user by email");
-        Secretary secretary = secretaryRepository.findByCredential(credential);
+        Secretary secretary = secretaryRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (secretary != null) {
             return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
         }

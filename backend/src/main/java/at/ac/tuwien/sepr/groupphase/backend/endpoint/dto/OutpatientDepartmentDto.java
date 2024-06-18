@@ -5,6 +5,7 @@ public record OutpatientDepartmentDto(
     String name,
     String description,
     int capacity,
-    OpeningHoursDto openingHours
+    OpeningHoursDto openingHours,
+    boolean active
 ) {
 }
