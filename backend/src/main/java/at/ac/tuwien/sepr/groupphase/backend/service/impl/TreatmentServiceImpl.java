@@ -2,23 +2,21 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.TreatmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
-import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentMedicineRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -82,13 +80,22 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public List<TreatmentDto> getAllTreatmentsFromPatient(Long patientId) {
+        log.trace("getAllTreatmentsFromPatient({})", patientId);
         List<Treatment> treatments = treatmentRepository.findByPatient_PatientId(patientId);
         return treatmentMapper.entityListToDtoList(treatments);
     }
 
     @Override
     public List<TreatmentDto> getAllTreatmentsFromDoctor(Long doctorId) {
+        log.trace("getAllTreatmentsFromDoctor({})", doctorId);
         List<Treatment> treatments = treatmentRepository.findByDoctors_DoctorId(doctorId);
         return treatmentMapper.entityListToDtoList(treatments);
+    }
+
+    @Override
+    public TreatmentPageDto searchTreatments(Specification<Treatment> spec, Pageable pageable) {
+        log.trace("searchTreatments({},{})", spec, pageable);
+        Page<Treatment> treatments = treatmentRepository.findAll(spec, pageable);
+        return treatmentMapper.toTreatmentPageDto(treatments);
     }
 }
