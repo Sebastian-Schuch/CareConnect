@@ -21,8 +21,11 @@ public class Allergy {
     }
 
     @Convert(converter = EncryptorConverter.class)
-    @Column(nullable = false, name = "name")
+    @Column(nullable = false, name = "name", unique = true)
     private String name;
+
+    @Column(nullable = false)
+    boolean active;
 
     public Long getId() {
         return id;
@@ -34,6 +37,14 @@ public class Allergy {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     @Override
@@ -63,6 +74,7 @@ public class Allergy {
     public static final class AllergieBuilder {
         private Long uid;
         private String name;
+        private boolean active;
 
         private AllergieBuilder() {
         }
@@ -81,10 +93,16 @@ public class Allergy {
             return this;
         }
 
+        public AllergieBuilder withActive(boolean active) {
+            this.active = active;
+            return this;
+        }
+
         public Allergy build() {
             Allergy allergies = new Allergy();
             allergies.setId(uid);
             allergies.setName(name);
+            allergies.setActive(active);
             return allergies;
         }
     }

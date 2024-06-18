@@ -46,7 +46,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorDtoSparse getDoctorById(Long id) {
         LOG.trace("getDoctorById({})", id);
-        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        Doctor doctor = doctorRepository.findByDoctorIdAndCredential_ActiveTrue(id);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
@@ -57,7 +57,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public Doctor getDoctorEntityById(Long id) {
         LOG.trace("getDoctorEntityById({})", id);
-        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        Doctor doctor = doctorRepository.findByDoctorIdAndCredential_ActiveTrue(id);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
@@ -68,7 +68,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorDtoSparse updateDoctor(Long id, DoctorDtoUpdate toUpdate) {
         LOG.trace("updateDoctor({}, {})", id, toUpdate);
-        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        Doctor doctor = doctorRepository.findByDoctorIdAndCredential_ActiveTrue(id);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
@@ -79,7 +79,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorDto findDoctorByCredential(Credential credential) {
         LOG.debug("Find application user by email");
-        Doctor doctor = doctorRepository.findByCredential(credential);
+        Doctor doctor = doctorRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (doctor != null) {
             return doctorMapper.doctorToDoctorDto(doctor);
         }
@@ -95,12 +95,12 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorDtoSparse> getAllDoctors() {
-        return doctorMapper.doctorsToDoctorDtosSparse(doctorRepository.findAll());
+        return doctorMapper.doctorsToDoctorDtosSparse(doctorRepository.findByCredential_ActiveTrue());
     }
 
     @Override
     public DoctorDto getDoctorByEmail(String email) {
-        return doctorMapper.doctorToDoctorDto(doctorRepository.findByCredential_Email(email));
+        return doctorMapper.doctorToDoctorDto(doctorRepository.findByCredential_EmailAndCredential_ActiveTrue(email));
     }
 
     @Override

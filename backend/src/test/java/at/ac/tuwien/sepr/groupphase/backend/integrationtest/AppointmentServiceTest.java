@@ -261,7 +261,7 @@ public class AppointmentServiceTest extends TestBase {
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
-            allergies.add(new AllergyDto(allergy.getId(), allergy.getName()));
+            allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
         return new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
             patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
@@ -272,7 +272,7 @@ public class AppointmentServiceTest extends TestBase {
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
         OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
-        return new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto);
+        return new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
     }
 
     private AppointmentDto createAppointmentDto(PatientDto patientDto, OutpatientDepartmentDto outpatientDepartmentDto, Appointment appointment) {

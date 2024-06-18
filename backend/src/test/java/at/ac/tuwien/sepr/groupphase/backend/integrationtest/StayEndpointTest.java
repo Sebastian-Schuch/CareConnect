@@ -182,7 +182,7 @@ public class StayEndpointTest extends TestBase {
     @Test
     @DisplayName("createNewStay: Secretary checks in a patient, 404 is expected")
     void testCheckInPatient_givenInvalidInpatientDepartmentInStayDto_thenStatus404() throws Exception {
-        InpatientDepartmentDto inpatientDepartmentDto = new InpatientDepartmentDto(-1L, "invalid", 0);
+        InpatientDepartmentDto inpatientDepartmentDto = new InpatientDepartmentDto(-1L, "invalid", 0, true);
         StayDtoCreate stayDtoCreate = new StayDtoCreate(inpatientDepartmentDto, PATIENT1.getPatientId());
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -382,7 +382,7 @@ public class StayEndpointTest extends TestBase {
     void testCreateNewStay_givenInvalidInpatientDepartment_thenStatus200() throws Exception {
         stayRepository.save(newStay);
         // Create a StayDtoCreate object where the arrival time is null
-        InpatientDepartmentDto inpatientDepartmentDto = new InpatientDepartmentDto(-1L, "invalid", 0);
+        InpatientDepartmentDto inpatientDepartmentDto = new InpatientDepartmentDto(-1L, "invalid", 0, true);
         StayDto stayDto = new StayDto(newStay.getId(), inpatientDepartmentDto, new Date(), new Date());
 
         ObjectMapper objectMapper = new ObjectMapper();

@@ -25,14 +25,6 @@ public interface AllergyService {
     Allergy findById(Long id);
 
     /**
-     * This function counts the number of allergies in the db.
-     *
-     * @return the number of allergies in the db
-     */
-    int countAllergies();
-
-
-    /**
      * This function finds an allergy by its name.
      *
      * @param name the name of the allergy to find
