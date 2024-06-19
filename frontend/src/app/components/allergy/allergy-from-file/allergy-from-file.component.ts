@@ -1,10 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
-import {ErrorFormatterService} from "../../../services/error-formatter.service";
-import {Router} from "@angular/router";
 import {CsvConverterService} from "../../../services/csv-converter.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AllergyDto} from "../../../dtos/allergy";
 
 @Component({

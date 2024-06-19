@@ -1,0 +1,37 @@
+<div class="medication-from-csv container mt-3">
+  <div class="mb-3">
+    <label for="csvFileInput" class="form-label">Upload CSV file</label>
+    <input
+      type="file"
+      class="form-control"
+      id="csvFileInput"
+      (change)="onFileChange($event)"
+    />
+  </div>
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    Error: {{ error }}
+  </div>
+  <mat-tab-group
+    *ngIf="jsonData"
+    dynamicHeight="true"
+  >
+    <mat-tab label="extracted medications">
+      <app-medication-list
+        [medication]="jsonData"
+        [itemsPerPage]="10"></app-medication-list>
+    </mat-tab>
+
+    <mat-tab label="raw json">
+      <div *ngIf="jsonData">
+        <div class="card card-body">
+          <pre class="bg-light p-3 border">{{ jsonData | json }}</pre>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+  <button *ngIf="jsonData" type="button" class="btn btn-primary"
+  (click)="addAll()"
+  >Add all</button>
+
+</div>

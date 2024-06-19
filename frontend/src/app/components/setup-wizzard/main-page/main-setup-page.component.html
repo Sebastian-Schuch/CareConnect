@@ -48,9 +48,19 @@
                   ></app-medication-list>
                 </div>
                 <div class="col-md-8">
-                  <app-medication-create
-                    (creationSuccess)="onMedicationCreated()"
-                  ></app-medication-create>
+                  <mat-tab-group dynamicHeight="true">
+                  <mat-tab label="add manual">
+                    <app-medication-create
+                      (creationSuccess)="onMedicationCreated()"
+                    ></app-medication-create>
+                  </mat-tab>
+                    <mat-tab label="upload file">
+                      <app-medication-from-file>
+
+                      </app-medication-from-file>
+                    </mat-tab>
+                  </mat-tab-group>
+
                 </div>
               </div>
               <!-- Medication component or content goes here -->

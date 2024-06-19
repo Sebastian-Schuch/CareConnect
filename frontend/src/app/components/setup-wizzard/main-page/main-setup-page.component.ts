@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
-import {NgForOf, NgIf} from "@angular/common";
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
-import {ErrorFormatterService} from "../../../services/error-formatter.service";
-import {Router} from "@angular/router";
-import {CsvConverterService} from "../../../services/csv-converter.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AllergyDto} from "../../../dtos/allergy";
 import {MedicationService} from "../../../services/medication.service";
 import {MedicationDto} from "../../../dtos/medication";

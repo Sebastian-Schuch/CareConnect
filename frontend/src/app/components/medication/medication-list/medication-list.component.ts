@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {MedicationDto} from "../../../dtos/medication";
 
 @Component({
@@ -50,6 +50,7 @@ export class MedicationListComponent {
   }
 
   filterMedications() {
+    this.medication = this.medication.filter(med => med.name !== '' || med.name !== undefined);
     if (this.searchQuery) {
       this.filteredMedications = this.medication.filter(medication =>
         medication.name.toLowerCase().includes(this.searchQuery.toLowerCase())
