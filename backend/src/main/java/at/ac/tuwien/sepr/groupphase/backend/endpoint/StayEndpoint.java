@@ -62,8 +62,8 @@ public class StayEndpoint {
 
     @Secured({"SECRETARY"})
     @PutMapping("/discharge")
-    public StayDto endCurrentStay(@RequestParam(name = "id") Long stayId) {
-        return stayService.endCurrentStay(stayId);
+    public StayDto endCurrentStay(@RequestBody StayDto stayDto) {
+        return stayService.endCurrentStay(stayDto.id());
     }
 
     @Secured({"SECRETARY"})
