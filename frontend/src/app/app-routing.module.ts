@@ -37,7 +37,10 @@ import {StaysListComponent} from "./components/stays/stays-list/stays-list.compo
 import {
   InpatientDepartmentListComponent
 } from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
-import {TreatmentListComponent} from "./components/treatment/treatment-list/treatment-list.component";
+import {
+  TreatmentListComponent,
+  TreatmentListMode
+} from "./components/treatment/treatment-list/treatment-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -57,7 +60,12 @@ const routes: Routes = [
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: 'treatment', children: [
-              {path: '', component: TreatmentListComponent, data: {role: Role.patient}},
+              {path: '', component: TreatmentListComponent, data: {role: Role.patient, mode: TreatmentListMode.view}},
+              {
+                path: 'search',
+                component: TreatmentListComponent,
+                data: {role: Role.patient, mode: TreatmentListMode.search}
+              },
               {path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}}
             ]
           },
@@ -185,7 +193,7 @@ const routes: Routes = [
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: 'treatment', children: [
-              {path: '', component: TreatmentListComponent, data: {role: Role.doctor}},
+              {path: '', component: TreatmentListComponent, data: {role: Role.doctor, mode: TreatmentListMode.search}},
               {path: 'log', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.log}},
               {
                 path: ':id', children: [
@@ -218,7 +226,11 @@ const routes: Routes = [
           },
           {
             path: 'treatment', children: [
-              {path: '', component: TreatmentListComponent, data: {role: Role.secretary}},
+              {
+                path: '',
+                component: TreatmentListComponent,
+                data: {role: Role.secretary, mode: TreatmentListMode.search}
+              },
               {
                 path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}
               }

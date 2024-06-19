@@ -45,3 +45,18 @@ h3 {
 .matFormFieldFullWidth {
   width: 100%;
 }
+
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -3vh;
+}
+
+.input-row .form-group {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.input-row .form-group:last-child {
+  margin-right: 0;
+}

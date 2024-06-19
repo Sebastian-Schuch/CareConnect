@@ -148,15 +148,21 @@ public class TreatmentEndpoint {
                     Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.doctorName().toLowerCase() + "%");
                     predicates.add(cb.or(firstName, lastName));
                 }
-                if (searchParams.patientName() != null) {
-                    Join<Treatment, Patient> patientJoin = root.join("patient");
-                    Join<Patient, Credential> credentialsJoin = patientJoin.join("credential");
-                    Predicate firstName = cb.like(cb.lower(credentialsJoin.get("firstName")), "%" + searchParams.patientName().toLowerCase() + "%");
-                    Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.patientName().toLowerCase() + "%");
-                    predicates.add(cb.or(firstName, lastName));
-                }
+
                 if (searchParams.patientId() != null && searchParams.patientId() != -1) {
                     predicates.add(cb.equal(root.get("patient").get("id"), searchParams.patientId()));
+                } else {
+                    if (searchParams.patientName() != null) {
+                        Join<Treatment, Patient> patientJoin = root.join("patient");
+                        Join<Patient, Credential> credentialsJoin = patientJoin.join("credential");
+                        Predicate firstName = cb.like(cb.lower(credentialsJoin.get("firstName")), "%" + searchParams.patientName().toLowerCase() + "%");
+                        Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.patientName().toLowerCase() + "%");
+                        predicates.add(cb.or(firstName, lastName));
+                    }
+                    if (searchParams.svnr() != null && searchParams.svnr().length() == 10) {
+                        Join<Treatment, Patient> patientJoin = root.join("patient");
+                        predicates.add(cb.equal(patientJoin.get("svnr"), searchParams.svnr()));
+                    }
                 }
                 if (searchParams.treatmentTitle() != null) {
                     predicates.add(cb.like(cb.lower(root.get("treatmentTitle")), "%" + searchParams.treatmentTitle().toLowerCase() + "%"));

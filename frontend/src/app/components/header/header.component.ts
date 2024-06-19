@@ -163,6 +163,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/patient/treatment']);
   }
 
+  public patientNavigateToTreatmentSearch() {
+    this.router.navigate(['/home/patient/treatment/search']);
+  }
+
   public secretaryNavigateToAppointmentBook() {
     this.router.navigate(['/home/secretary/appointments/book']);
   }

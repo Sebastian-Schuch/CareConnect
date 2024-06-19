@@ -35,6 +35,7 @@ export interface TreatmentDtoSearch {
   medicationName: string,
   doctorName: string,
   patientName: string,
+  svnr: string,
   departmentName: string
 }
 

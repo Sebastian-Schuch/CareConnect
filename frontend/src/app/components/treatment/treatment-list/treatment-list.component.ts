@@ -14,6 +14,11 @@ import {UserDto} from "../../../dtos/user";
 import {TreatmentMedicineSelection} from "../../../dtos/treatmentMedicine";
 import {getDate, getHours, getMinutes, getMonth, getYear} from "date-fns";
 
+export enum TreatmentListMode {
+  view,
+  search
+}
+
 @Component({
   selector: 'app-treatment-list',
   standalone: true,
@@ -42,6 +47,8 @@ export class TreatmentListComponent implements OnInit {
 
   role: Role = null;
 
+  mode: TreatmentListMode = null;
+
   treatments: TreatmentDto[] = [];
 
   totalItems: number = 0;
@@ -56,12 +63,14 @@ export class TreatmentListComponent implements OnInit {
     medicationName: "",
     doctorName: "",
     patientName: "",
+    svnr: "",
     departmentName: ""
   };
 
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.role = data.role;
+      this.mode = data.mode;
       if (this.role == Role.patient) {
         this.userService.getPatientCredentials().subscribe({
           next: data => {
@@ -145,4 +154,5 @@ export class TreatmentListComponent implements OnInit {
   }
 
   protected readonly Role = Role;
+  protected readonly TreatmentListMode = TreatmentListMode;
 }

@@ -56,10 +56,8 @@
         <div class="dropdown-card">
           <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatment()">Treatment History
           </button>
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatmentSearch()">Search for Treatment
           </button>
-          -->
         </div>
       </mat-menu>
     </ng-container>
@@ -305,6 +303,8 @@
             Inpatient Department
           </button>
           <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatment()">Treatment History
+          </button>
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatmentSearch()">Search for Treatment
           </button>
         </div>
         <!-- secretary -->

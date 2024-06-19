@@ -10,6 +10,7 @@ public record TreatmentDtoSearch(
     String medicationName,
     String doctorName,
     String patientName,
+    String svnr,
     String departmentName
 ) {
 }
