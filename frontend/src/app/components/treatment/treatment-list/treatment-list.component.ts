@@ -120,11 +120,20 @@ export class TreatmentListComponent implements OnInit {
         this.stays = data.content;
         this.totalStayItems = data.totalElements;
         let offset = 0;
+        let lastStay = -1;
         for (let i = 0; i < this.treatments.length; i++) {
-          if (this.isTreatmentInStay(this.treatments[i])) {
+          let currentStay = this.isTreatmentInStay(this.treatments[i]);
+          if (currentStay) {
+            if (lastStay == currentStay) {
+              offset += 1;
+              lastStay = currentStay;
+            } else {
+              lastStay = currentStay;
+            }
             this.colors.push((i - offset) % 2 == 0 ? 'table-primary' : 'table-info');
-            offset += 1;
           } else {
+            lastStay = -1;
+            offset += 1;
             this.colors.push(' ');
           }
         }
@@ -170,16 +179,16 @@ export class TreatmentListComponent implements OnInit {
     this.router.navigate(['home/doctor/treatment/' + id + '/edit']);
   }
 
-  public isTreatmentInStay(treatment: TreatmentDto): boolean {
+  public isTreatmentInStay(treatment: TreatmentDto): number {
     for (let stay of this.stays) {
       if (stay.arrival <= treatment.treatmentStart && stay.discharge >= treatment.treatmentEnd ||
         stay.arrival <= treatment.treatmentStart && stay.discharge >= treatment.treatmentStart ||
         stay.arrival <= treatment.treatmentEnd && stay.discharge >= treatment.treatmentEnd ||
         stay.arrival >= treatment.treatmentStart && stay.discharge <= treatment.treatmentEnd) {
-        return true
+        return stay.id
       }
     }
-    return false;
+    return null;
   }
 
   public navigateToViewTreatment(id: number) {
