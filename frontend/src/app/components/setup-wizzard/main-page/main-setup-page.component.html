@@ -7,31 +7,68 @@
   </div>
 
   <div class="row">
-    <div class="col-md-4">
-      <app-allergy-list
-        [allergies]="allergies"
-        [itemsPerPage]="15">
-      </app-allergy-list>
-    </div>
+    <div class="col-12">
+      <mat-tab-group dynamicHeight="true">
+        <mat-tab label="Allergies">
+          <div class="row">
+            <div class="col-md-4">
+              <app-allergy-list
+                [allergies]="allergies"
+                [itemsPerPage]="15">
+              </app-allergy-list>
+            </div>
 
-    <div class="col-md-8">
-      <mat-tab-group
-        dynamicHeight="true"
-      >
-        <mat-tab label="Add manual">
-          <h3>Add a new Allergy</h3>
-          <p>Insert a the name of an allergy you want to add to the system.</p>
-          <app-add-allergy-manual
-            (creationSuccess)="onAllergyCreated()"
-          ></app-add-allergy-manual>
+            <div class="col-md-8">
+              <mat-tab-group dynamicHeight="true">
+                <mat-tab label="Add manual">
+                  <h3>Add a new Allergy</h3>
+                  <p>Insert the name of an allergy you want to add to the system.</p>
+                  <app-add-allergy-manual (creationSuccess)="onAllergyCreated()"></app-add-allergy-manual>
+                </mat-tab>
+
+                <mat-tab label="Upload file">
+                  <h3>Upload a File</h3>
+                  <app-allergy-from-file (creationSuccess)="onAllergyCreated()"></app-allergy-from-file>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </div>
         </mat-tab>
 
-        <mat-tab label="Upload file">
-          <h3>Upload a File</h3>
-            <app-allergy-from-file
-            ></app-allergy-from-file>
+<!-- Medication shit here -->
+        <mat-tab label="Medication">
+          <div class="row">
+            <div class="col-12">
+              <h3>Medication Section</h3>
+              <div class="row">
+                <div class="col-md-4">
+                  <app-medication-list
+                  [medication]="medication"
+                  [itemsPerPage]="15"
+                  ></app-medication-list>
+                </div>
+                <div class="col-md-8">
+                  <app-medication-create
+                    (creationSuccess)="onMedicationCreated()"
+                  ></app-medication-create>
+                </div>
+              </div>
+              <!-- Medication component or content goes here -->
+              <p>Content for medication setup.</p>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Out-Patient Department">
+          <div class="row">
+            <div class="col-12">
+              <h3>Out-Patient Department Section</h3>
+              <!-- Out-Patient Department component or content goes here -->
+              <p>Content for out-patient department setup.</p>
+            </div>
+          </div>
         </mat-tab>
       </mat-tab-group>
+    </div>
   </div>
-</div>
 </div>

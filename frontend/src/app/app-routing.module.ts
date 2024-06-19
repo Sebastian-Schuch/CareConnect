@@ -25,7 +25,7 @@ import {
   OutpatientDepartmentComponent
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
 import {InpatientDepartmentCreateEditMode, StationComponent} from "./components/station/station.component";
-import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
+import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";

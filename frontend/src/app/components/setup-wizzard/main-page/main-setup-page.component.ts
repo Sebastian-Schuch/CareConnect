@@ -7,6 +7,8 @@ import {Router} from "@angular/router";
 import {CsvConverterService} from "../../../services/csv-converter.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AllergyDto} from "../../../dtos/allergy";
+import {MedicationService} from "../../../services/medication.service";
+import {MedicationDto} from "../../../dtos/medication";
 
 @Component({
   selector: 'app-main-page',
@@ -17,20 +19,35 @@ export class MainSetupPage {
 
   showFileUpload = false;
   public allergies: AllergyDto[] = [];
+  public medication: MedicationDto[] = [];
   public error: string | null = null;
 
   constructor(
     private allergyService: AllergyService,
     private notification: ToastrService,
+    private medService: MedicationService,
   ) {
   }
 
   ngOnInit(): void {
     this.loadAllergies();
+    this.loadMedication();
   }
 
   toggleView() {
     this.showFileUpload = !this.showFileUpload;
+  }
+
+  loadMedication(){
+    this.medService.getMedicationsAll().subscribe({
+      next: data => {
+        this.medication = data;
+        console.log("medicationdata",data);
+      },
+      error: error => {
+        this.notification.error('Error loading medications: ' + error.message);
+      }
+    });
   }
 
   loadAllergies(): void {
@@ -53,5 +70,9 @@ export class MainSetupPage {
 
   checkExists(name: string): boolean {
     return this.allergies.find(allergy => allergy.name === name) !== undefined;
+  }
+
+  onMedicationCreated() {
+    this.loadMedication();
   }
 }

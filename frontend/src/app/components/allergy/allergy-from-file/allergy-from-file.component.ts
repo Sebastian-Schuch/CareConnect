@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
@@ -13,6 +13,7 @@ import {AllergyDto} from "../../../dtos/allergy";
   styleUrl: './allergy-from-file.component.scss'
 })
 export class AllergyFromFileComponent {
+  @Output() creationSuccess = new EventEmitter<void>();
 
   public jsonData: any;
   public error: string | null = null;
@@ -21,6 +22,9 @@ export class AllergyFromFileComponent {
 
   constructor(
     private csvService: CsvConverterService,
+    private allergyService: AllergyService,
+    private notification: ToastrService,
+
   ) {
   }
 
@@ -46,6 +50,23 @@ export class AllergyFromFileComponent {
     }
   }
 
+  addAll() {
+    console.log('Adding all allergies');
+    this.jsonData.forEach((item: any) => {
+      this.allergyService.createAllergy(item).subscribe({
+        next: () => {
+          this.notification.success('Allergy ' + item.name + ' was successfully created.');
+          this.onSuccessfulCreation();
+        },
+        error: error => {
+          this.notification.error('Error creating allergy: ' + error.message);
+        }
+      });
+    });
+  }
 
+  private onSuccessfulCreation(): void {
+    this.creationSuccess.emit();
+  }
 
 }

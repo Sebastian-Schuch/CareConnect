@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {MedicationDtoCreate} from "../../dtos/medication";
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {MedicationDtoCreate} from "../../../dtos/medication";
 import {Router} from "@angular/router";
-import {MedicationService} from "../../services/medication.service";
+import {MedicationService} from "../../../services/medication.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
-import {ErrorFormatterService} from "../../services/error-formatter.service";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
 
 @Component({
   selector: 'app-medication-create',
@@ -13,6 +13,7 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
   styleUrl: './medication-create.component.scss'
 })
 export class MedicationCreateComponent implements OnInit {
+  @Output() creationSuccess = new EventEmitter<void>();
 
   medication: MedicationDtoCreate = {
     name: ''
@@ -42,6 +43,7 @@ export class MedicationCreateComponent implements OnInit {
       observable.subscribe({
         next: () => {
           this.notification.success('Successfully created ' + this.medication.name + ' Medication');
+          this.onSuccessfulCreation();
         },
         error: async error => {
           switch (error.status) {
@@ -62,5 +64,9 @@ export class MedicationCreateComponent implements OnInit {
         }
       });
     }
+  }
+
+  private onSuccessfulCreation(): void {
+    this.creationSuccess.emit();
   }
 }

@@ -33,7 +33,7 @@ import {MatAnchor, MatButton, MatIconButton} from "@angular/material/button";
 import {StationComponent} from "./components/station/station.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {LoginComponent} from "./components/login/login.component";
-import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
+import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
 import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import {CalenderComponent} from "./components/appointments/calender/calendar/calender.component";
@@ -62,6 +62,7 @@ import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-li
 import {AddAllergyManualComponent} from "./components/allergy/add-allergy-manual/add-allergy-manual.component";
 import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/allergy-from-file.component";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
     MainSetupPage,
     AllergyListComponent,
     AddAllergyManualComponent,
-    AllergyFromFileComponent
+    AllergyFromFileComponent,
+    MedicationListComponent
   ],
   imports: [
     BrowserModule,
