@@ -4,6 +4,21 @@
       <span>{{ mode === TreatmentListMode.search ? "Search for Treatments" : "View Treatment History" }} </span><br>
     </h1>
   </div>
+
+  <div *ngIf="role===Role.patient">
+    <h3 *ngIf="mode===TreatmentListMode.view">Here you can view your last treatments or click <a
+      (click)="switchToSearch()"
+      style="color:blue;text-decoration-line: underline; cursor: pointer">here</a>
+      to
+      search a specific
+      treatment</h3>
+    <h3 *ngIf="mode===TreatmentListMode.search">
+      Here you can search for your treatments using the input fields below
+    </h3>
+    <p class="subheadline">
+      The colors in the table represent your stays in the hospital
+    </p>
+  </div>
 </div>
 <form *ngIf="mode===TreatmentListMode.search" class="" (submit)="reloadTreatments()">
   <button type="submit" hidden="hidden">submit</button>
@@ -121,7 +136,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let treatment of treatments; let i = index" class="center-td">
+    <tr *ngFor="let treatment of treatments; let i = index" class="center-td" [ngClass]="colors[i]">
       <td aria-label="treatment title" [tabindex]="i+'28'">{{ treatment.treatmentTitle }}</td>
       <td aria-label="treatment department" [tabindex]="i+'29'">{{ treatment.outpatientDepartment.name }}</td>
       <td *ngIf="role===Role.doctor || role===Role.secretary" aria-label="treatment patient"

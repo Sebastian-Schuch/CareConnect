@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {Role} from "../../../dtos/Role";
 import {TreatmentDto, TreatmentDtoSearch} from "../../../dtos/treatment";
 import {TreatmentService} from "../../../services/treatment.service";
@@ -13,6 +13,9 @@ import {UserService} from "../../../services/user.service";
 import {UserDto} from "../../../dtos/user";
 import {TreatmentMedicineSelection} from "../../../dtos/treatmentMedicine";
 import {getDate, getHours, getMinutes, getMonth, getYear} from "date-fns";
+import {StaysService} from "../../../services/stays.service";
+import {StayDto} from "../../../dtos/stays";
+import {MatButton} from "@angular/material/button";
 
 export enum TreatmentListMode {
   view,
@@ -28,10 +31,12 @@ export enum TreatmentListMode {
     MatPaginator,
     NgForOf,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatButton,
+    NgClass
   ],
   templateUrl: './treatment-list.component.html',
-  styleUrl: './treatment-list.component.scss'
+  styleUrls: ['./treatment-list.component.scss', '../../../../styles.scss']
 })
 export class TreatmentListComponent implements OnInit {
 
@@ -41,6 +46,7 @@ export class TreatmentListComponent implements OnInit {
     private errorFormatterService: ErrorFormatterService,
     private route: ActivatedRoute,
     private userService: UserService,
+    private stayService: StaysService,
     private router: Router
   ) {
   }
@@ -52,6 +58,12 @@ export class TreatmentListComponent implements OnInit {
   treatments: TreatmentDto[] = [];
 
   totalItems: number = 0;
+
+  stays: StayDto[] = []
+
+  totalStayItems: number = 0;
+
+  colors: string[] = [];
 
   search: TreatmentDtoSearch = {
     page: 0,
@@ -92,9 +104,30 @@ export class TreatmentListComponent implements OnInit {
       next: data => {
         this.treatments = data.treatments;
         this.totalItems = data.totalItems;
+        if (this.role === Role.patient) {
+          this.loadStays();
+        }
       },
       error: async error => {
         await this.errorFormatterService.printErrorToNotification(error, "Couldn't load treatments", this.notificationService, "Please try again later.");
+      }
+    })
+  }
+
+  private loadStays() {
+    this.stayService.getAllStays(this.search.patientId, 0, 100).subscribe({
+      next: data => {
+        this.stays = data.content;
+        this.totalStayItems = data.totalElements;
+        let offset = 0;
+        for (let i = 0; i < this.treatments.length; i++) {
+          if (this.isTreatmentInStay(this.treatments[i])) {
+            this.colors.push((i - offset) % 2 == 0 ? 'table-primary' : 'table-info');
+            offset += 1;
+          } else {
+            this.colors.push(' ');
+          }
+        }
       }
     })
   }
@@ -137,6 +170,18 @@ export class TreatmentListComponent implements OnInit {
     this.router.navigate(['home/doctor/treatment/' + id + '/edit']);
   }
 
+  public isTreatmentInStay(treatment: TreatmentDto): boolean {
+    for (let stay of this.stays) {
+      if (stay.arrival <= treatment.treatmentStart && stay.discharge >= treatment.treatmentEnd ||
+        stay.arrival <= treatment.treatmentStart && stay.discharge >= treatment.treatmentStart ||
+        stay.arrival <= treatment.treatmentEnd && stay.discharge >= treatment.treatmentEnd ||
+        stay.arrival >= treatment.treatmentStart && stay.discharge <= treatment.treatmentEnd) {
+        return true
+      }
+    }
+    return false;
+  }
+
   public navigateToViewTreatment(id: number) {
     switch (this.role) {
       case Role.doctor:
@@ -151,6 +196,10 @@ export class TreatmentListComponent implements OnInit {
       default:
         console.error("Role not supported: " + this.role);
     }
+  }
+
+  public switchToSearch() {
+    this.router.navigate(['search'], {relativeTo: this.route});
   }
 
   protected readonly Role = Role;
