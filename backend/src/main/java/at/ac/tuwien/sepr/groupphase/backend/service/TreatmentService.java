@@ -2,11 +2,10 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -71,10 +70,9 @@ public interface TreatmentService {
     /**
      * Searches for treatments.
      *
-     * @param spec     the search criteria
-     * @param pageable the page information
+     * @param searchParams the search parameters
      * @return the treatments as a list of DTOs
      */
-    TreatmentPageDto searchTreatments(Specification<Treatment> spec, Pageable pageable);
+    TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams);
 
 }

@@ -70,8 +70,8 @@ export class TreatmentService {
     if (searchTerm.patientName != null && searchTerm.patientName != "") {
       params = params.set('patientName', searchTerm.patientName);
     }
-    if (searchTerm.svnr != null && searchTerm.svnr != "" && searchTerm.svnr.length === 10) {
-      params = params.set('svnr', searchTerm.svnr);
+    if (searchTerm.svnr != null && searchTerm.svnr != "" && searchTerm.svnr.trim().length === 10) {
+      params = params.set('svnr', searchTerm.svnr.trim());
     }
     return this.httpClient.get<TreatmentPageDto>(this.treatmentBaseUri + '/search', {params: params});
   }
