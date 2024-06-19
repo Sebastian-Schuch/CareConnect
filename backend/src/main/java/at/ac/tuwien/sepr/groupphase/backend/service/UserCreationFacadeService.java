@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
@@ -35,4 +37,13 @@ public interface UserCreationFacadeService {
      * @return the created patient
      */
     PatientDto createUser(PatientDtoCreate toCreate, Credential credential);
+
+    /**
+     * Creates an administrator with the data given.
+     *
+     * @param toCreate   the data to create the administrator with
+     * @param credential the credential to create the administrator with
+     * @return the created administrator
+     */
+    AdministratorDto createUser(AdministratorDtoCreate toCreate, Credential credential);
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Administrator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -12,6 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AdministratorRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
@@ -52,6 +54,10 @@ public class DataGenerator {
     private final AllergyRepository allergyRepository;
 
     @Autowired
+    private final AdministratorRepository administratorRepository;
+
+
+    @Autowired
     private final AppointmentRepository appointmentRepository;
 
     @Autowired
@@ -90,13 +96,14 @@ public class DataGenerator {
     /**
      * Executed once when the component is instantiated. Inserts some dummy data.
      */
-    public DataGenerator(AllergyRepository allergyRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
+    public DataGenerator(AllergyRepository allergyRepository, AdministratorRepository administratorRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
                          DoctorRepository doctorRepository,
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                          SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
                          TreatmentRepository treatmentRepository) {
         this.allergyRepository = allergyRepository;
+        this.administratorRepository = administratorRepository;
         this.appointmentRepository = appointmentRepository;
         this.credentialRepository = credentialRepository;
         this.doctorRepository = doctorRepository;
@@ -117,16 +124,17 @@ public class DataGenerator {
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, true, true, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false);
-            case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true);
+            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false);
+            case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
+            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(true, false, false, false, true, true, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, false, true, false, false, false);
+            case "appointment" -> generateDataInDb(true, false, false, false, true, true, true, false, true, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false);
+            case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true);
         }
         LOGGER.info("Finished generating data without error.");
     }
@@ -155,7 +163,8 @@ public class DataGenerator {
         openingHoursRepository.deleteAll();
     }
 
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication,
+                                  boolean generateForOutpatientDepartments,
                                   boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
         if (generateForAllergies) {
             generateDataForAllergies();
@@ -168,6 +177,9 @@ public class DataGenerator {
         }
         if (generateForSecretary) {
             generateDataForSecretary();
+        }
+        if (generateForAdministrator) {
+            generateDataForAdministrators();
         }
         if (generateForPatients) {
             generateDataForPatients();
@@ -254,6 +266,30 @@ public class DataGenerator {
         patient.setAllergies(allergies);
         patient.setMedicines(medications);
         return patient;
+    }
+
+    private void generateDataForAdministrators() {
+        //Normal Administrators
+        administratorRepository.save(setAdministrator("administrator1@email.com", "Administrator", "One", "OnePassword", true, Role.ADMIN, false));
+        administratorRepository.save(setAdministrator("administrator2@email.com", "Administrator", "Two", "TwoPassword", true, Role.ADMIN, false));
+        administratorRepository.save(setAdministrator("administrator3@email.com", "Administrator", "Three", "ThreePassword", true, Role.ADMIN, false));
+        //Special Patients (Inactive + Initial Password)
+        administratorRepository.save(setAdministrator("administrator.inactive@email.com", "Administrator", "Inactive", "404NotFound", false, Role.ADMIN, false));
+        administratorRepository.save(setAdministrator("administrator.initial@email.com", "Administrator", "Initial", "InitialPassword", true, Role.ADMIN, true));
+    }
+
+    private Administrator setAdministrator(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+        Administrator administrator = new Administrator();
+        Credential credential = new Credential();
+        credential.setEmail(email);
+        credential.setFirstName(firstName);
+        credential.setLastName(lastName);
+        credential.setPassword(password);
+        credential.setActive(active);
+        credential.setRole(role);
+        credential.setInitialPassword(initialPassword);
+        administrator.setCredential(credential);
+        return administrator;
     }
 
     private void generateDataForSecretary() {
