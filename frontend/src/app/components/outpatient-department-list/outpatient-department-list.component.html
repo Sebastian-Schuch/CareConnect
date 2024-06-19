@@ -27,7 +27,7 @@
       <th>Name</th>
       <th class="w-25">Capacity</th>
       <th class="w-25">Description</th>
-      <th class="w-25" *ngIf="role === Role.admin">Actions</th>
+      <th class="w-25">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -35,7 +35,7 @@
       <td aria-label="departmentName" [tabindex]="i+'23'">{{ outpatientDepartment.name }}</td>
       <td aria-label="departmentCapacity" [tabindex]="i+'24'">{{ outpatientDepartment.capacity }}</td>
       <td aria-label="departmentDescription" [tabIndex]="i+'25'">{{outpatientDepartment.description}}</td>
-      <td *ngIf="role === Role.admin">
+      <td>
         <div class="btn-group">
           <label hidden [for]="i+'details'">Outpatient-departments details</label>
           <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
@@ -45,19 +45,21 @@
           >
             <mat-icon>visibility</mat-icon>
           </button>
-          <label hidden [for]="i+'edit'">Edit outpatient department</label>
+          <label hidden [for]="i+'edit'" *ngIf="role === Role.admin">Edit outpatient department</label>
           <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
                   aria-label="Edit outpatientDepartment"
                   [routerLink]="[outpatientDepartment.id, 'edit']"
                   [tabindex]="i+'28'"
+                  *ngIf="role === Role.admin"
           >
             <mat-icon>mode_edit</mat-icon>
           </button>
-          <label hidden [for]="i+'delete'">Delete outpatient Department</label>
+          <label hidden [for]="i+'delete'" *ngIf="role === Role.admin">Delete outpatient Department</label>
           <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
                   aria-label="Delete outpatientDepartment"
                   [tabindex]="i+'29'"
                   (click)="openDeleteDialog(outpatientDepartment)"
+                  *ngIf="role === Role.admin"
           >
             <mat-icon>delete</mat-icon>
           </button>
