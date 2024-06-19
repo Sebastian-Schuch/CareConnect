@@ -40,6 +40,9 @@ import {
 import {
   OutpatientDepartmentListComponent
 } from "./components/outpatient-department-list/outpatient-department-list.component";
+import {
+  OutpatientDepartmentDetailComponent
+} from "./components/outpatient-department-detail/outpatient-department-detail.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -170,6 +173,7 @@ const routes: Routes = [
               {path: '', component: OutpatientDepartmentListComponent},
               {path: ':id', children: [
                   {path: 'edit', component: OutpatientDepartmentComponent, data: {mode: OutpatientDepartmentCreateEditMode.edit}},
+                  {path: '', component: OutpatientDepartmentDetailComponent}
                 ]}
             ]},
           {

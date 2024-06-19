@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-outpatient-department-detail',
@@ -8,9 +9,10 @@ import {OutpatientDepartmentService} from "../../services/outpatient-department.
   styleUrl: './outpatient-department-detail.component.scss'
 })
 export class OutpatientDepartmentDetailComponent implements OnInit {
-  @Input() id: number;
 
-  constructor(private outpatientDepartmentService: OutpatientDepartmentService) {
+  constructor(private outpatientDepartmentService: OutpatientDepartmentService,
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
 
@@ -55,8 +57,13 @@ export class OutpatientDepartmentDetailComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.outpatientDepartmentService.getOutpatientDepartmentById(this.id).subscribe((outpatientDepartment: OutpatientDepartmentDto) => {
-      this.outpatientDepartment = outpatientDepartment;
+    this.route.params.subscribe(params => {
+      if (isNaN(params['id'])) {
+        this.router.navigate(['/home/admin/outpatient-department']);
+      }
+      this.outpatientDepartmentService.getOutpatientDepartmentById(params['id']).subscribe((outpatientDepartment: OutpatientDepartmentDto) => {
+        this.outpatientDepartment = outpatientDepartment;
+      });
     });
   }
 }

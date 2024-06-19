@@ -37,6 +37,14 @@
       <td aria-label="departmentDescription" [tabIndex]="i+'25'">{{outpatientDepartment.description}}</td>
       <td *ngIf="role === Role.admin">
         <div class="btn-group">
+          <label hidden [for]="i+'details'">Outpatient-departments details</label>
+          <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
+                  [routerLink]="[outpatientDepartment.id]"
+                  aria-label="Show Outpatient-department details"
+                  [tabindex]="i+'27'"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
           <label hidden [for]="i+'edit'">Edit outpatient department</label>
           <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
                   aria-label="Edit outpatientDepartment"
