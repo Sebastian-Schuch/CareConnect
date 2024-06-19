@@ -207,12 +207,15 @@ public class StayEndpointTest extends TestBase {
         // Save the new Stay entity into the repository
         Stay savedStay = stayRepository.save(newStay);
 
+        StayDto stayDto = new StayDto(savedStay.getId(), INPATIENT_DEPARTMENT_DTO1, new Date(), null);
+
         // Assert that the saved Stay entity is not null and has an ID
         Assertions.assertNotNull(savedStay);
         Assertions.assertNotNull(savedStay.getId());
 
-        mockMvc.perform(put(BASE_PATH + "/discharge?id=" + savedStay.getId())
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put(BASE_PATH + "/discharge")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(stayDto)))
             .andExpect(status().isOk());
     }
 
@@ -221,8 +224,11 @@ public class StayEndpointTest extends TestBase {
     @DisplayName("endCurrentStay: Secretary tries to discharge a non-existent stay, 404 is expected")
     void testEndNonExistentStay_thenStatus404() throws Exception {
         // Try to end a non-existent stay
-        mockMvc.perform(put(BASE_PATH + "/discharge?id=" + -1L)
-                .accept(MediaType.APPLICATION_JSON))
+        StayDto stayDto = new StayDto(-1L, INPATIENT_DEPARTMENT_DTO1, new Date(), null);
+
+        mockMvc.perform(put(BASE_PATH + "/discharge")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(stayDto)))
             .andExpect(status().isNotFound());
     }
 
