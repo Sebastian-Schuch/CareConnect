@@ -64,6 +64,9 @@ import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/a
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
 import {MedicationFromFileComponent} from "./components/medication/medication-from-file/medication-from-file.component";
+import {
+  OutpatientDepartmentFromFileComponent
+} from "./components/outpatient-department-from-file/outpatient-department-from-file.component";
 
 @NgModule({
   declarations: [
@@ -90,7 +93,8 @@ import {MedicationFromFileComponent} from "./components/medication/medication-fr
     AddAllergyManualComponent,
     AllergyFromFileComponent,
     MedicationListComponent,
-    MedicationFromFileComponent
+    MedicationFromFileComponent,
+    OutpatientDepartmentFromFileComponent
   ],
   imports: [
     BrowserModule,
