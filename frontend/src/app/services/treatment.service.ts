@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
-import {TreatmentDto, TreatmentDtoCreate} from "../dtos/treatment";
+import {TreatmentDto, TreatmentDtoCreate, TreatmentDtoSearch, TreatmentPageDto} from "../dtos/treatment";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,38 @@ export class TreatmentService {
    */
   getTreatmentById(id: number): Observable<TreatmentDto> {
     return this.httpClient.get<TreatmentDto>(this.treatmentBaseUri + '/' + id);
+  }
+
+  /**
+   * get all treatments from patient matching the search terms
+   *
+   * @param searchTerm the search terms for the treatments
+   */
+  searchTreatments(searchTerm: TreatmentDtoSearch) {
+    let params = new HttpParams();
+    params = params.set('page', searchTerm.page);
+    params = params.set('size', searchTerm.size);
+    params = params.set('patientId', searchTerm.patientId);
+    if (searchTerm.startDate != null && searchTerm.endDate != null) {
+      params = params.set('startDate', new Date(searchTerm.startDate).toISOString());
+      params = params.set('endDate', new Date(searchTerm.endDate).toISOString());
+    }
+    if (searchTerm.treatmentTitle != null && searchTerm.treatmentTitle != "") {
+      params = params.set('treatmentTitle', searchTerm.treatmentTitle);
+    }
+    if (searchTerm.medicationName != null && searchTerm.medicationName != "") {
+      params = params.set('medicationName', searchTerm.medicationName);
+    }
+    if (searchTerm.doctorName != null && searchTerm.doctorName != "") {
+      params = params.set('doctorName', searchTerm.doctorName);
+    }
+    if (searchTerm.departmentName != null && searchTerm.departmentName != "") {
+      params = params.set('departmentName', searchTerm.departmentName);
+    }
+    if (searchTerm.patientName != null && searchTerm.patientName != "") {
+      params = params.set('patientName', searchTerm.patientName);
+    }
+    return this.httpClient.get<TreatmentPageDto>(this.treatmentBaseUri + '/search', {params: params});
   }
 
 }

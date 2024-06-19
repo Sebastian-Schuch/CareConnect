@@ -24,3 +24,21 @@ export interface TreatmentDto {
   doctors: UserDto[];
   medicines?: TreatmentMedicineSelection[];
 }
+
+export interface TreatmentDtoSearch {
+  page: number,
+  size: number,
+  patientId: number,
+  startDate: Date,
+  endDate: Date,
+  treatmentTitle: string,
+  medicationName: string,
+  doctorName: string,
+  patientName: string,
+  departmentName: string
+}
+
+export interface TreatmentPageDto {
+  treatments: TreatmentDto[];
+  totalItems: number;
+}

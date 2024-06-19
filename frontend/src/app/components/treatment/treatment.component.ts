@@ -90,8 +90,10 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
       this.route.data.subscribe(data => {
         this.mode = data.mode;
         this.generateForm();
-        this.loadAllOptionsForSelectFields();
-        if (this.mode === TreatmentCreateEditMode.edit) {
+        if (this.mode !== TreatmentCreateEditMode.detail) {
+          this.loadAllOptionsForSelectFields();
+        }
+        if (this.mode === TreatmentCreateEditMode.edit || this.mode === TreatmentCreateEditMode.detail) {
           const treatmentId = params['id'];
           if (treatmentId) {
             this.loadExistingTreatment(treatmentId);
@@ -417,6 +419,9 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
       treatmentMedicine: [''],
       deleteButton: ['']
     });
+    if (this.mode === TreatmentCreateEditMode.detail) {
+      this.treatmentForm.disable();
+    }
   }
 
   /**

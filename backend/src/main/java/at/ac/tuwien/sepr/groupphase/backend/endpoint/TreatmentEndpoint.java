@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentService;
@@ -128,37 +129,51 @@ public class TreatmentEndpoint {
         if (userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR) || patientServiceImpl.isOwnRequest(searchParams.patientId())) {
             Pageable pageable = PageRequest.of(searchParams.page(), searchParams.size(), Sort.Direction.fromString("DESC"), "treatmentStart");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date start = sdf.parse(searchParams.startDate().split("T")[0]);
-                Date end = sdf.parse(searchParams.endDate().split("T")[0]);
-                Specification<Treatment> spec = (root, query, cb) -> {
-                    List<Predicate> predicates = new ArrayList<>();
-                    predicates.add(cb.between(root.get("treatmentStart"), start, end));
-                    if (searchParams.doctorName() != null) {
-                        Join<Treatment, Doctor> doctorJoin = root.join("doctors");
-                        Join<Doctor, Credential> credentialsJoin = doctorJoin.join("credential");
-                        Predicate firstName = cb.like(cb.lower(credentialsJoin.get("firstName")), "%" + searchParams.doctorName().toLowerCase() + "%");
-                        Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.doctorName().toLowerCase() + "%");
-                        predicates.add(cb.or(firstName, lastName));
+
+            Specification<Treatment> spec = (root, query, cb) -> {
+                List<Predicate> predicates = new ArrayList<>();
+                if (searchParams.startDate() != null && searchParams.endDate() != null) {
+                    try {
+                        Date start = sdf.parse(searchParams.startDate().split("T")[0]);
+                        Date end = sdf.parse(searchParams.endDate().split("T")[0]);
+                        predicates.add(cb.between(root.get("treatmentStart"), start, end));
+                    } catch (ParseException e) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
                     }
-                    if (searchParams.treatmentTitle() != null) {
-                        predicates.add(cb.like(cb.lower(root.get("treatmentTitle")), "%" + searchParams.treatmentTitle().toLowerCase() + "%"));
-                    }
-                    if (searchParams.departmentName() != null) {
-                        Join<Treatment, OutpatientDepartment> outpatientJoin = root.join("outpatientDepartment");
-                        predicates.add(cb.like(cb.lower(outpatientJoin.get("name")), "%" + searchParams.departmentName().toLowerCase() + "%"));
-                    }
-                    if (searchParams.medicationName() != null) {
-                        Join<Treatment, TreatmentMedicine> treatmentMedicineJoin = root.join("medicines");
-                        Join<TreatmentMedicine, Medication> medicineJoin = treatmentMedicineJoin.join("medicine");
-                        predicates.add(cb.like(cb.lower(medicineJoin.get("name")), "%" + searchParams.medicationName().toLowerCase() + "%"));
-                    }
-                    return cb.and(predicates.toArray(new Predicate[0]));
-                };
-                return treatmentService.searchTreatments(spec, pageable);
-            } catch (ParseException e) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
-            }
+                }
+                if (searchParams.doctorName() != null) {
+                    Join<Treatment, Doctor> doctorJoin = root.join("doctors");
+                    Join<Doctor, Credential> credentialsJoin = doctorJoin.join("credential");
+                    Predicate firstName = cb.like(cb.lower(credentialsJoin.get("firstName")), "%" + searchParams.doctorName().toLowerCase() + "%");
+                    Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.doctorName().toLowerCase() + "%");
+                    predicates.add(cb.or(firstName, lastName));
+                }
+                if (searchParams.patientName() != null) {
+                    Join<Treatment, Patient> patientJoin = root.join("patient");
+                    Join<Patient, Credential> credentialsJoin = patientJoin.join("credential");
+                    Predicate firstName = cb.like(cb.lower(credentialsJoin.get("firstName")), "%" + searchParams.patientName().toLowerCase() + "%");
+                    Predicate lastName = cb.like(cb.lower(credentialsJoin.get("lastName")), "%" + searchParams.patientName().toLowerCase() + "%");
+                    predicates.add(cb.or(firstName, lastName));
+                }
+                if (searchParams.patientId() != null && searchParams.patientId() != -1) {
+                    predicates.add(cb.equal(root.get("patient").get("id"), searchParams.patientId()));
+                }
+                if (searchParams.treatmentTitle() != null) {
+                    predicates.add(cb.like(cb.lower(root.get("treatmentTitle")), "%" + searchParams.treatmentTitle().toLowerCase() + "%"));
+                }
+                if (searchParams.departmentName() != null) {
+                    Join<Treatment, OutpatientDepartment> outpatientJoin = root.join("outpatientDepartment");
+                    predicates.add(cb.like(cb.lower(outpatientJoin.get("name")), "%" + searchParams.departmentName().toLowerCase() + "%"));
+                }
+                if (searchParams.medicationName() != null) {
+                    Join<Treatment, TreatmentMedicine> treatmentMedicineJoin = root.join("medicines");
+                    Join<TreatmentMedicine, Medication> medicineJoin = treatmentMedicineJoin.join("medicine");
+                    predicates.add(cb.like(cb.lower(medicineJoin.get("name")), "%" + searchParams.medicationName().toLowerCase() + "%"));
+                }
+                return cb.and(predicates.toArray(new Predicate[0]));
+            };
+            return treatmentService.searchTreatments(spec, pageable);
+
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }

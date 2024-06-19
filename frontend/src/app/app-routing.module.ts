@@ -37,6 +37,7 @@ import {StaysListComponent} from "./components/stays/stays-list/stays-list.compo
 import {
   InpatientDepartmentListComponent
 } from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
+import {TreatmentListComponent} from "./components/treatment/treatment-list/treatment-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -54,6 +55,12 @@ const routes: Routes = [
           },
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
+          {
+            path: 'treatment', children: [
+              {path: '', component: TreatmentListComponent, data: {role: Role.patient}},
+              {path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}}
+            ]
+          },
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
@@ -178,12 +185,15 @@ const routes: Routes = [
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: 'treatment', children: [
+              {path: '', component: TreatmentListComponent, data: {role: Role.doctor}},
               {path: 'log', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.log}},
               {
                 path: ':id', children: [
+                  {path: '', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}},
                   {
                     path: 'edit', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.edit}
-                  }]
+                  }
+                ]
               }]
           },
           {
@@ -204,6 +214,14 @@ const routes: Routes = [
             path: 'appointments', children: [
               {path: '', component: AppointmentsSecretaryComponent},
               {path: 'book', component: CalendarWrapperComponent},
+            ]
+          },
+          {
+            path: 'treatment', children: [
+              {path: '', component: TreatmentListComponent, data: {role: Role.secretary}},
+              {
+                path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}
+              }
             ]
           },
           {

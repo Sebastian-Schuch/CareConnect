@@ -37,11 +37,11 @@ export class ErrorFormatterService {
         break;
       case 401:
         this.router.navigate(['/']).then(async r => {
-          toastrService.error(await error.error, title);
+          toastrService.error(messageBody || title, title);
         });
         break;
       default:
-        toastrService.error(await error.error, title);
+        toastrService.error(messageBody || title, title);
         break;
     }
   }
