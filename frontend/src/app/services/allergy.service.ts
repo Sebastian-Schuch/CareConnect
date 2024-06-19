@@ -31,8 +31,17 @@ export class AllergyService {
    *
    * @return an Observable of the allergies
    */
-  getAllergiesAll() {
+  public getAllergiesAll() {
     return this.http.get<AllergyDto[]>(`${this.allergyUri}`);
+  }
+
+  /**
+   * Get all allergies from the backend.
+   *
+   * @return an Observable of the allergies
+   */
+  public countAllergies() {
+    return this.http.get<number>(`${this.allergyUri}/count`);
   }
 
 }

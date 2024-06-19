@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {CsvConverterService} from "../../services/csv-converter.service";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 import {ToastrService} from "ngx-toastr";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";

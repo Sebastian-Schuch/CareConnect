@@ -49,4 +49,11 @@ export class MedicationService {
       medication
     );
   }
+
+  /**
+   * Update the medication with the given ID.
+   */
+  getMedicationCount(): Observable<number> {
+    return this.http.get<number>(`${this.medicationBaseUri}/count`);
+  }
 }

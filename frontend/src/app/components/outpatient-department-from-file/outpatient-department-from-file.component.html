@@ -14,6 +14,8 @@
   <mat-tab-group
     *ngIf="jsonData"
     dynamicHeight="true"
+    [backgroundColor]="'primary'"
+    [color]="'warn'"
   >
     <mat-tab label="extracted departments">
       <app-medication-list

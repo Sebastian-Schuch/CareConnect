@@ -25,4 +25,8 @@ export class OutpatientDepartmentService {
   createOutpatientDepartment(outpatientDepartment: OutpatientDepartmentDtoCreate): Observable<OutpatientDepartmentDto> {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri, outpatientDepartment);
   }
+
+  getOutpatientDepartmentCount(): Observable<number> {
+    return this.httpClient.get<number>(this.outpatientDepartmentBaseUri + '/count');
+  }
 }
