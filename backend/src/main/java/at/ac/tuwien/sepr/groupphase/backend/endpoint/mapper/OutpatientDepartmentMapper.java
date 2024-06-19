@@ -96,42 +96,4 @@ public class OutpatientDepartmentMapper {
     public OutpatientDepartmentPageDto toOutpatientDepartmentPageDto(Page<OutpatientDepartment> outpatientDepartmentPage) {
         return new OutpatientDepartmentPageDto(entitiesToDtos(outpatientDepartmentPage.getContent()), (int) outpatientDepartmentPage.getTotalElements());
     }
-
-    /**
-     * Maps a list of OutpatientDepartment entities to a list of OutpatientDepartmentDto.
-     *
-     * @param entities the list of entities
-     * @return the list of DTOs
-     */
-    public List<OutpatientDepartmentDto> entitiesToDtos(List<OutpatientDepartment> entities) {
-        LOGGER.trace("entitiesToDtos()");
-        return entities.stream()
-            .map(entity -> {
-                return entityToDto(entity, openingHoursMapper.entityToDto(entity.getOpeningHours()));
-            })
-            .collect(Collectors.toList());
-    }
-
-    public OutpatientDepartmentPageDto toOutpatientDepartmentPageDto(Page<OutpatientDepartment> outpatientDepartmentPage) {
-        return new OutpatientDepartmentPageDto(entitiesToDtos(outpatientDepartmentPage.getContent()), (int) outpatientDepartmentPage.getTotalElements());
-    }
-
-    /**
-     * Maps a list of OutpatientDepartment entities to a list of OutpatientDepartmentDto.
-     *
-     * @param entities the list of entities
-     * @return the list of DTOs
-     */
-    public List<OutpatientDepartmentDto> entitiesToDtos(List<OutpatientDepartment> entities) {
-        LOGGER.trace("entitiesToDtos()");
-        return entities.stream()
-            .map(entity -> {
-                return entityToDto(entity, openingHoursMapper.entityToDto(entity.getOpeningHours()));
-            })
-            .collect(Collectors.toList());
-    }
-
-    public OutpatientDepartmentPageDto toOutpatientDepartmentPageDto(Page<OutpatientDepartment> outpatientDepartmentPage) {
-        return new OutpatientDepartmentPageDto(entitiesToDtos(outpatientDepartmentPage.getContent()), (int) outpatientDepartmentPage.getTotalElements());
-    }
 }

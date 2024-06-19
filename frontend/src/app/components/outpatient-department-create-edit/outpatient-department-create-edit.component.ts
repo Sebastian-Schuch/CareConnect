@@ -5,6 +5,11 @@ import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
 
+export enum OutpatientDepartmentCreateEditMode {
+  create,
+  edit
+}
+
 @Component({
   selector: 'app-outpatient-department-create-edit',
   templateUrl: './outpatient-department.component-create-edit.html',

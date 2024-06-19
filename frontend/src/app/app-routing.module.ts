@@ -22,7 +22,7 @@ import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-cr
 import {Role} from "./dtos/Role";
 import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatment/treatment.component";
 import {
-  OutpatientDepartmentComponent
+  OutpatientDepartmentComponent, OutpatientDepartmentCreateEditMode
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
 import {
   InpatientDepartmentComponent,
@@ -81,13 +81,7 @@ const routes: Routes = [
                 component: UserCreateComponent,
                 data: {role: Role.secretary, mode: UserCreateEditMode.create}
               },
-              {path: 'outpatient-department', children: [
-                  {path: '', component: OutpatientDepartmentListComponent},
-                  {path: 'create', component: OutpatientDepartmentComponent},
-                  {path: ':id', children: [
-                      {path: 'edit', component: OutpatientDepartmentComponent},
-                    ]}
-                ]},
+              {path: 'outpatient-department', component: OutpatientDepartmentComponent, data: {mode: OutpatientDepartmentCreateEditMode.create}},
               {
                 path: 'inpatient-department',
                 component: InpatientDepartmentComponent,
@@ -172,6 +166,12 @@ const routes: Routes = [
               }
             ]
           },
+          {path: 'outpatient-department', children: [
+              {path: '', component: OutpatientDepartmentListComponent},
+              {path: ':id', children: [
+                  {path: 'edit', component: OutpatientDepartmentComponent},
+                ]}
+            ]},
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.admin, mode: UserCreateEditMode.view}},

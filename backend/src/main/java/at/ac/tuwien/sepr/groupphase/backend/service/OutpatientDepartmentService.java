@@ -52,4 +52,12 @@ public interface OutpatientDepartmentService {
      * @return a page of outpatient departments
      */
     OutpatientDepartmentPageDto getOutpatientDepartmentsPage(Specification<OutpatientDepartment> spec, Pageable pageable);
+
+    /**
+     * Sets an outpatient department to inactive.
+     *
+     * @param id the id of the outpatient department
+     * @return the updated outpatient department
+     */
+    OutpatientDepartmentDto setOutpatientDepartmentInactive(Long id);
 }

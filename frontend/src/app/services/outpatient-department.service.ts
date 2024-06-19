@@ -38,4 +38,8 @@ export class OutpatientDepartmentService {
   createOutpatientDepartment(outpatientDepartment: OutpatientDepartmentDtoCreate): Observable<OutpatientDepartmentDto> {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri, outpatientDepartment);
   }
+
+  deleteInpatientDepartment(id: number) {
+    return this.httpClient.delete<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + id);
+  }
 }
