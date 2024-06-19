@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -105,6 +106,24 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.getOutpatientDepartmentsPage(spec, pageable);
     }
 
+    @Secured({"ADMIN"})
+    @PostMapping({"/{id}"})
+    public OutpatientDepartmentDto updateOutpatientDepartment(@PathVariable("id") Long id,
+                                                              @Valid @RequestBody OutpatientDepartmentDto toUpdate)
+        throws MethodArgumentNotValidException {
+        LOGGER.info("updateOutpatientDepartment(" + id + ", " + toUpdate.toString() + ")");
+        if (!id.equals(toUpdate.id())) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");
+        }
+        return outpatientDepartmentService.updateOutpatientDepartment(id, toUpdate);
+    }
+
+    /**
+     * Set an outpatient department inactive by its id.
+     *
+     * @param id the id of the outpatient department
+     * @return the inactive outpatient department
+     */
     @Secured({"ADMIN"})
     @DeleteMapping({"/{id}"})
     public OutpatientDepartmentDto setOutpatientDepartmentInactiveById(@PathVariable("id") Long id) {

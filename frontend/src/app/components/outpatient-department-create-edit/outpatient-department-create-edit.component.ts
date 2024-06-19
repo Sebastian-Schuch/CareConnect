@@ -1,9 +1,15 @@
-import {Component} from '@angular/core';
-import {OutpatientDepartmentDtoCreate} from "../../dtos/outpatient-department";
+import {Component, OnInit} from '@angular/core';
+import {OutpatientDepartmentDto, OutpatientDepartmentDtoCreate} from "../../dtos/outpatient-department";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
+import {
+  OutpatientDepartmentDeleteComponent
+} from "../outpatient-department-delete/outpatient-department-delete.component";
+import {InpatientDepartmentCreateEditMode} from "../inpatient-department/inpatient-department.component";
+import {OpeningHoursDayDto, OpeningHoursDto, OpeningHoursDtoCreate} from "../../dtos/opening-hours";
+import {observable, Observable} from "rxjs";
 
 export enum OutpatientDepartmentCreateEditMode {
   create,
@@ -15,16 +21,19 @@ export enum OutpatientDepartmentCreateEditMode {
   templateUrl: './outpatient-department.component-create-edit.html',
   styleUrls: ['./outpatient-department.component-create-edit.scss', '../../../styles.scss']
 })
-export class OutpatientDepartmentComponent {
+export class OutpatientDepartmentComponent implements OnInit {
 
   constructor(
     private outpatientDepartmentService: OutpatientDepartmentService,
     private notification: ToastrService,
     private errorFormatterService: ErrorFormatterService,
+    private route: ActivatedRoute,
     private router: Router
   ) {
   }
 
+  mode: OutpatientDepartmentCreateEditMode = OutpatientDepartmentCreateEditMode.create;
+  id: number;
   days: string[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
   outpatientDepartment: OutpatientDepartmentDtoCreate = {
     name: '',
@@ -62,6 +71,78 @@ export class OutpatientDepartmentComponent {
     }
   };
 
+  ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.route.params.subscribe(params => {
+        this.mode = data.mode;
+        //mode is not edit
+        if (this.mode != OutpatientDepartmentCreateEditMode.edit) {
+          return;
+        }
+        //id to edit is not valid
+        if (isNaN(params['id'])) {
+          this.router.navigate(['/home/admin/outpatient-department']);
+        }
+        this.outpatientDepartmentService.getOutpatientDepartmentById(params['id']).subscribe({
+          next: data => {
+            this.outpatientDepartment = this.mapExitingOutpatientDepartment(data);
+            this.id = data.id;
+            console.log(this.id);
+            console.log(this.outpatientDepartment);
+          },
+          error: error => console.error(error)
+        })
+      })
+    });
+  }
+
+  mapExitingOutpatientDepartment(existingOutpatientDepartment: OutpatientDepartmentDto): OutpatientDepartmentDtoCreate {
+    return {
+      name: existingOutpatientDepartment.name,
+      description: existingOutpatientDepartment.description,
+      capacity: existingOutpatientDepartment.capacity,
+      openingHours: {
+        monday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.monday),
+        tuesday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.tuesday),
+        wednesday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.wednesday),
+        thursday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.thursday),
+        friday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.friday),
+        saturday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.saturday),
+        sunday: this.mapExistingOpeningHour(existingOutpatientDepartment.openingHours.sunday),
+      }
+    }
+  }
+
+  mapExistingOpeningHour(existingOpeningHour: OpeningHoursDayDto): OpeningHoursDayDto {
+    return {isClosed: existingOpeningHour === null ? true : existingOpeningHour.isClosed,
+      open: existingOpeningHour === null ? undefined : existingOpeningHour.open,
+      close: existingOpeningHour === null ? undefined : existingOpeningHour.close}
+  }
+
+  mapIdAndCreateDtoToDto(id: number, outpatientDtoCreate: OutpatientDepartmentDtoCreate): OutpatientDepartmentDto {
+    return {
+      id: id,
+      name: outpatientDtoCreate.name,
+      description: outpatientDtoCreate.description,
+      capacity: outpatientDtoCreate.capacity,
+      active: true,
+      openingHours: this.mapIdAndOpeningHoursDtoCreate(id, outpatientDtoCreate.openingHours),
+    }
+  }
+
+  mapIdAndOpeningHoursDtoCreate(id: number, openingHoursDtoCreate: OpeningHoursDtoCreate): OpeningHoursDto{
+    return {
+      id: id,
+      monday: openingHoursDtoCreate.monday,
+      tuesday: openingHoursDtoCreate.tuesday,
+      wednesday: openingHoursDtoCreate.wednesday,
+      thursday: openingHoursDtoCreate.thursday,
+      friday: openingHoursDtoCreate.friday,
+      saturday: openingHoursDtoCreate.saturday,
+      sunday: openingHoursDtoCreate.sunday
+    }
+  }
+
   isFormValid(): boolean {
     if (!this.outpatientDepartment.name || this.outpatientDepartment.name.length > 255 || this.outpatientDepartment.name.length < 1) {
       return false;
@@ -75,7 +156,7 @@ export class OutpatientDepartmentComponent {
 
     for (let day of this.days) {
       let hours = this.outpatientDepartment.openingHours[day];
-      if (!hours.closed && (!hours.open || !hours.close)) {
+      if (!hours.isClosed && (!hours.open || !hours.close)) {
         return false;
       }
     }
@@ -98,14 +179,22 @@ export class OutpatientDepartmentComponent {
         };
       }
     }
-    this.outpatientDepartmentService.createOutpatientDepartment(this.outpatientDepartment).subscribe({
+    let observable: Observable<OutpatientDepartmentDto>;
+    if(this.mode === OutpatientDepartmentCreateEditMode.create) {
+      observable = this.outpatientDepartmentService.createOutpatientDepartment(this.outpatientDepartment);
+    } else if(this.mode === OutpatientDepartmentCreateEditMode.edit) {
+      observable = this.outpatientDepartmentService.editOutpatientDepartment(this.mapIdAndCreateDtoToDto(this.id, this.outpatientDepartment));
+    }
+    observable.subscribe({
       next: data => {
-        this.notification.success('Outpatient Department ' + data.name + ' created');
+        this.notification.success('Outpatient Department ' + data.name + (this.mode === OutpatientDepartmentCreateEditMode.create ? " registered" : " edited"));
+        this.router.navigate(['/home/admin/outpatient-department']);
       },
       error: async error => {
-        await this.errorFormatterService.printErrorToNotification(error, `Could not create Outpatient Department`, this.notification);
+        await this.errorFormatterService.printErrorToNotification(error, `Could not ${this.mode === OutpatientDepartmentCreateEditMode.create ? " registered" : " edited"} Outpatient Department`, this.notification);
       }
     })
   }
 
+  protected readonly OutpatientDepartmentCreateEditMode = OutpatientDepartmentCreateEditMode;
 }

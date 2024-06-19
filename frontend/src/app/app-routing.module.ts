@@ -169,7 +169,7 @@ const routes: Routes = [
           {path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentListComponent},
               {path: ':id', children: [
-                  {path: 'edit', component: OutpatientDepartmentComponent},
+                  {path: 'edit', component: OutpatientDepartmentComponent, data: {mode: OutpatientDepartmentCreateEditMode.edit}},
                 ]}
             ]},
           {

@@ -20,6 +20,7 @@ export class OutpatientDepartmentDetailComponent implements OnInit {
     name: '',
     description: '',
     capacity: 0,
+    active: true,
     openingHours: {
       id: 0,
       monday: {

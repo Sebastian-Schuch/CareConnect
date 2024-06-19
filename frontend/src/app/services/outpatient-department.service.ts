@@ -42,4 +42,8 @@ export class OutpatientDepartmentService {
   deleteInpatientDepartment(id: number) {
     return this.httpClient.delete<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + id);
   }
+
+  editOutpatientDepartment(update: OutpatientDepartmentDto) {
+    return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + update.id, update);
+  }
 }

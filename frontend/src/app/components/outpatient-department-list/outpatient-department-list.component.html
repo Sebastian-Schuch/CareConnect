@@ -40,6 +40,7 @@
           <label hidden [for]="i+'edit'">Edit outpatient department</label>
           <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
                   aria-label="Edit outpatientDepartment"
+                  [routerLink]="[outpatientDepartment.id, 'edit']"
                   [tabindex]="i+'28'"
           >
             <mat-icon>mode_edit</mat-icon>

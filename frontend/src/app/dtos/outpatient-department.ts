@@ -14,6 +14,7 @@ export class OutpatientDepartmentDto {
   description: string;
   capacity: number;
   openingHours: OpeningHoursDto;
+  active: boolean;
 }
 
 export interface OutpatientDepartmentPageDto {

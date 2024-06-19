@@ -19,17 +19,19 @@ import {
   OutpatientDepartmentDeleteComponent
 } from "../outpatient-department-delete/outpatient-department-delete.component";
 import {ToastrService} from "ngx-toastr";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-outpatient-department-list',
   standalone: true,
-    imports: [
-        FormsModule,
-        MatIcon,
-        MatPaginator,
-        NgForOf,
-        NgIf
-    ],
+  imports: [
+    FormsModule,
+    MatIcon,
+    MatPaginator,
+    NgForOf,
+    NgIf,
+    RouterLink
+  ],
   templateUrl: './outpatient-department-list.component.html',
   styleUrl: './outpatient-department-list.component.scss'
 })

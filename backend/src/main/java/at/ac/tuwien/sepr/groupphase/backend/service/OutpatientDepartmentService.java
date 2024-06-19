@@ -60,4 +60,13 @@ public interface OutpatientDepartmentService {
      * @return the updated outpatient department
      */
     OutpatientDepartmentDto setOutpatientDepartmentInactive(Long id);
+
+    /**
+     * Updates an outpatient department.
+     *
+     * @param id       the id of the outpatient department
+     * @param toUpdate the data to update
+     * @return the updated outpatient department
+     */
+    OutpatientDepartmentDto updateOutpatientDepartment(Long id, OutpatientDepartmentDto toUpdate);
 }

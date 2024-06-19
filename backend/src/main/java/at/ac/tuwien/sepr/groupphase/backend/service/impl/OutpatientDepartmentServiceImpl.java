@@ -106,4 +106,17 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
         outpatientDepartmentRepository.save(outpatientDepartment);
         return outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
     }
+
+    @Override
+    public OutpatientDepartmentDto updateOutpatientDepartment(Long id, OutpatientDepartmentDto toUpdate) {
+        LOGGER.trace("updateOutpatientDepartment({}, {})", id, toUpdate);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
+        if (outpatientDepartment == null) {
+            LOGGER.warn("Active outpatient department with id {} not found", id);
+            throw new NotFoundException("Active outpatient department with id " + id + " not found");
+        }
+        return outpatientDepartmentMapper.entityToDto(
+            outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(toUpdate, outpatientDepartment.getOpeningHours())),
+            openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
+    }
 }
