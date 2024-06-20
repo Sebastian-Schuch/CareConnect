@@ -192,8 +192,8 @@
       </button>
       <mat-menu #userListMenu="matMenu">
         <div class="dropdown-card">
-          <!--<button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/admins']">Administrators
-          </button>-->
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToUsersAdmins()">Administrators
+          </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToUsersDoctors()">Doctors
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToUsersSecretaries()">Secretaries
@@ -206,10 +206,9 @@
       </button>
       <mat-menu #userMenu="matMenu">
         <div class="dropdown-card">
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/admin/register/admin']">Register Administrator
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterAdmin()">Register
+            Administrator
           </button>
-          -->
           <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterDoctor()">Register Doctor
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterSecretary()">Register
@@ -352,17 +351,15 @@
         </div>
         <!-- admin -->
         <div *ngIf="isRoleAdmin()">
-          <!--<button mat-menu-item class="clean-button" [routerLink]="['/home/admin/users/admins']">Search Administrators
-          </button>-->
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToUsersAdmins()">Search Administrators
+          </button>
 
           <button mat-menu-item class="clean-button" (click)="adminNavigateToUsersDoctors()">Search Doctors
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToUsersSecretaries()">Search Secretaries
           </button>
-          <!--
-            <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterAdmin()">Register Administrator
-            </button>
-            -->
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterAdmin()">Register Administrator
+          </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterDoctor()">Register Doctor
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterSecretary()">Register
