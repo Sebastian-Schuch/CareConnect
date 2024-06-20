@@ -75,18 +75,6 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.getAllOutpatientDepartments();
     }
 
-    /**
-     * Get capacity information for all outpatient departments.
-     *
-     * @return list of outpatient department capacities
-     */
-    @Secured({"SECRETARY", "PATIENT"})
-    @GetMapping("/capacities")
-    public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacities() {
-        LOGGER.info("getOutpatientDepartmentCapacities()");
-        return outpatientDepartmentService.getOutpatientDepartmentCapacities();
-    }
-
     @Secured({"SECRETARY", "PATIENT"})
     @GetMapping("/capacities/day")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForDay(
