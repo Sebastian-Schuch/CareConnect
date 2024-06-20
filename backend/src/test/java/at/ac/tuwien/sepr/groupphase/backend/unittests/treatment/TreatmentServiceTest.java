@@ -111,6 +111,17 @@ public class TreatmentServiceTest {
     }
 
     @Test
+    @DisplayName("getTreatmentById: invalid id - expect NotFoundException")
+    void shouldThrowNotFoundException_whenGivenInvalidId() {
+        Long id = 999L;
+        when(treatmentRepository.findById(id)).thenReturn(Optional.empty());
+
+        // call getTreatmentById() method and expect NotFoundException
+        assertThrows(NotFoundException.class, () -> treatmentService.getTreatmentById(id));
+        verify(treatmentRepository, times(1)).findById(id);
+    }
+
+    @Test
     @DisplayName("searchTreatments: valid searchParams - expect success")
     void shouldReturnTreatments_whenGivenValidSearchParams() {
         Long patientId = 1L;
@@ -151,17 +162,6 @@ public class TreatmentServiceTest {
         assertNotNull(foundTreatments);
         verify(treatmentRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
         verify(treatmentMapper, times(1)).toTreatmentPageDto(any(Page.class));
-    }
-
-    @Test
-    @DisplayName("getTreatmentById: invalid id - expect NotFoundException")
-    void shouldThrowNotFoundException_whenGivenInvalidId() {
-        Long id = 999L;
-        when(treatmentRepository.findById(id)).thenReturn(Optional.empty());
-
-        // call getTreatmentById() method and expect NotFoundException
-        assertThrows(NotFoundException.class, () -> treatmentService.getTreatmentById(id));
-        verify(treatmentRepository, times(1)).findById(id);
     }
 
     @Test
