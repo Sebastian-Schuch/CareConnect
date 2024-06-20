@@ -182,8 +182,13 @@ public class AppointmentServiceTest extends TestBase {
     @Transactional
     @Test
     public void givenAppointmentSearchDto_whenGetAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId_thenReturnAllAppointments() {
+        Calendar c = Calendar.getInstance();
+        c.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
+        Date startDate = c.getTime();
+        c.set(2022, Calendar.JANUARY, 2, 0, 0, 0);
+        Date endDate = c.getTime();
         List<AppointmentCalendarDto> appointments =
-            appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentRepository.findAll().get(0).getId(), "2022-01-01T00:00:00.000Z", "2022-01-02T00:00:00.000Z");
+            appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentRepository.findAll().get(0).getId(), startDate, endDate);
         assertThat(appointments).isNotNull().hasSize(5).extracting(AppointmentCalendarDto::getOutpatientDepartmentId, AppointmentCalendarDto::getStartDate, AppointmentCalendarDto::getEndDate, AppointmentCalendarDto::getCount)
             .contains(tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), 1),
@@ -261,7 +266,7 @@ public class AppointmentServiceTest extends TestBase {
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
-            allergies.add(new AllergyDto(allergy.getId(), allergy.getName()));
+            allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
         return new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
             patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
@@ -272,7 +277,7 @@ public class AppointmentServiceTest extends TestBase {
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
         OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
-        return new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto);
+        return new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
     }
 
     private AppointmentDto createAppointmentDto(PatientDto patientDto, OutpatientDepartmentDto outpatientDepartmentDto, Appointment appointment) {

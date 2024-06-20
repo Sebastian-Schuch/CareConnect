@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 export class ErrorFormatterService {
 
   validationErrors: string;
+
   constructor(
     private domSanitizer: DomSanitizer, private router: Router
   ) {
@@ -36,11 +37,11 @@ export class ErrorFormatterService {
         break;
       case 401:
         this.router.navigate(['/']).then(async r => {
-          toastrService.error(await error.error.text(), title);
+          toastrService.error(messageBody || title, title);
         });
         break;
       default:
-        toastrService.error(await error.error.text(), title);
+        toastrService.error(messageBody || title, title);
         break;
     }
   }

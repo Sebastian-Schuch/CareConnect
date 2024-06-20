@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +13,7 @@ public class Medication {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Convert(converter = EncryptorConverter.class)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)

@@ -89,7 +89,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public Credential findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
-        Credential applicationUser = credentialRepository.findByEmail(email);
+        Credential applicationUser = credentialRepository.findByEmailAndActiveTrue(email);
         if (applicationUser != null) {
             return applicationUser;
         }

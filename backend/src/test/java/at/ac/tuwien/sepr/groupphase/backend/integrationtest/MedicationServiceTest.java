@@ -35,7 +35,7 @@ public class MedicationServiceTest extends TestBase {
 
     @Test
     public void givenNewlyCreatedMedication_whenGettingMedicationWithId_thenReturnMedication() {
-        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");
+        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra2");
         MedicationDto createdMedication = medicationService.create(createMedication);
         MedicationDto foundMedication = medicationService.getById(createdMedication.id());
         assertAll("Grouped Assertions of Medication",
@@ -53,7 +53,7 @@ public class MedicationServiceTest extends TestBase {
 
     @Test
     public void givenMedicationCreateDto_whenCreatingNewMedication_thenReturnNewlyCreated() {
-        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");
+        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra2");
         MedicationDto createdMedication = medicationService.create(createMedication);
         assertAll("Grouped Assertions of Medication",
             () -> assertEquals(createdMedication.name(), createMedication.name(), "Name should be equal"));

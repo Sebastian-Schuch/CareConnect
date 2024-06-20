@@ -3,13 +3,13 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoPage;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.InpatientDepartmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.StayMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.InpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Stay;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.StayRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.InpatientDepartmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.StayService;
 import org.springframework.data.domain.Page;
@@ -26,23 +26,20 @@ public class StayServiceImpl implements StayService {
     private final StayRepository stayRepository;
     private final StayMapper stayMapper;
 
-    private final CustomUserDetailService customUserDetailService;
 
     private final PatientService patientService;
 
-    private final InpatientDepartmentMapper inpatientDepartmentMapper;
+    private final InpatientDepartmentService inpatientDepartmentService;
 
 
     public StayServiceImpl(StayRepository stayRepository,
                            StayMapper stayMapper,
-                           CustomUserDetailService customUserDetailService,
                            PatientService patientService,
-                           InpatientDepartmentMapper inpatientDepartmentMapper) {
+                           InpatientDepartmentService inpatientDepartmentService) {
         this.stayRepository = stayRepository;
         this.stayMapper = stayMapper;
-        this.customUserDetailService = customUserDetailService;
         this.patientService = patientService;
-        this.inpatientDepartmentMapper = inpatientDepartmentMapper;
+        this.inpatientDepartmentService = inpatientDepartmentService;
     }
 
     @Override
@@ -55,16 +52,16 @@ public class StayServiceImpl implements StayService {
     }
 
     @Override
-    public StayDto createNewStay(StayDtoCreate stayDtoCreate) {
+    public StayDto createNewStay(StayDtoCreate stayDtoCreate) throws NotFoundException {
         Patient patient = patientService.getPatientEntityById(stayDtoCreate.patientId());
-        InpatientDepartment inpatientDepartment = inpatientDepartmentMapper.dtoToInpatientDepartment(stayDtoCreate.inpatientDepartment());
+        InpatientDepartment inpatientDepartment = this.inpatientDepartmentService.findById(stayDtoCreate.inpatientDepartment().id());
         Stay stay = new Stay().setArrival(new Date()).setInpatientDepartment(inpatientDepartment).setPatient(patient);
         return stayMapper.stayEntityToStayDto(stayRepository.save(stay));
     }
 
     @Override
-    public StayDto endCurrentStay(StayDto stayDto) throws NotFoundException {
-        Stay stay = stayRepository.findById(stayDto.id()).orElseThrow(() -> new NotFoundException("Stay not found"));
+    public StayDto endCurrentStay(Long stayId) throws NotFoundException {
+        Stay stay = stayRepository.findById(stayId).orElseThrow(() -> new NotFoundException("Stay not found"));
         stay.setDeparture(new Date());
         return stayMapper.stayEntityToStayDto(stayRepository.save(stay));
     }

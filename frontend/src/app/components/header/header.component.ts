@@ -157,6 +157,14 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/patient/telemedicine']);
   }
 
+  public patientNavigateToTreatment() {
+    this.router.navigate(['/home/patient/treatment']);
+  }
+
+  public patientNavigateToTreatmentSearch() {
+    this.router.navigate(['/home/patient/treatment/search']);
+  }
+
   public secretaryNavigateToAppointmentBook() {
     this.router.navigate(['/home/secretary/appointments/book']);
   }
@@ -181,6 +189,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/secretary/inpatient-department']);
   }
 
+  public secretaryNavigateToTreatment() {
+    this.router.navigate(['/home/secretary/treatment']);
+  }
+
   public doctorNavigateToTreatmentLog() {
     this.router.navigate(['/home/doctor/treatment/log']);
   }
@@ -195,6 +207,10 @@ export class HeaderComponent implements OnInit {
 
   public doctorNavigateToInpatientDepartment() {
     this.router.navigate(['/home/doctor/inpatient-department']);
+  }
+
+  public doctorNavigateToTreatment() {
+    this.router.navigate(['/home/doctor/treatment']);
   }
 
   public adminNavigateToUsersAdmins() {

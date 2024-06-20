@@ -124,17 +124,18 @@ public class DataGenerator {
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false);
+            case "allergy" -> generateDataInDb(true, false, false,false, false, false, false, false, false, false, false);
             case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, false, true, true, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, false, true, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, false, true, true, true, false, true, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false);
-            case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true);
+            case "doctor" -> generateDataInDb(false, true, false,false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, false,true, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(true, false, false,false, true, true, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false,false, false, true, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false,false, false, false, true, false, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false,false, false, false, false, true, false, false, false);
+            case "appointment" -> generateDataInDb(true, false, false,false, true, true, true, false, true, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false,false, false, true, false, false, false, true, false);
+            case "treatment" -> generateDataInDb(true, true, false,false, true, true, true, false, false, true, true);
+            case "stay" -> generateDataInDb(false, false, false,true, true, false, false, true, false, false, false);
         }
         LOGGER.info("Finished generating data without error.");
     }
@@ -337,17 +338,18 @@ public class DataGenerator {
     }
 
     private void generateDataForOutpatientDepartments() {
-        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00")));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00")));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00")));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00"), true));
     }
 
-    private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours) {
+    private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours, boolean active) {
         OutpatientDepartment outpatientDepartment = new OutpatientDepartment();
         outpatientDepartment.setName(name);
         outpatientDepartment.setDescription(description);
         outpatientDepartment.setCapacity(capacity);
         outpatientDepartment.setOpeningHours(openingHours);
+        outpatientDepartment.setActive(active);
         return outpatientDepartment;
     }
 
@@ -364,17 +366,18 @@ public class DataGenerator {
     }
 
     private void generateDataForInpatientDepartments() {
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20));
-        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment1", 5, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment2", 10, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment3", 15, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment4", 20, true));
+        inpatientDepartmentRepository.save(setInpatientDepartment("InpatientDepartment5", 25, true));
     }
 
-    private InpatientDepartment setInpatientDepartment(String name, int capacity) {
+    private InpatientDepartment setInpatientDepartment(String name, int capacity, boolean active) {
         InpatientDepartment inpatientDepartment = new InpatientDepartment();
         inpatientDepartment.setName(name);
         inpatientDepartment.setCapacity(capacity);
+        inpatientDepartment.setActive(active);
         return inpatientDepartment;
     }
 
@@ -448,12 +451,14 @@ public class DataGenerator {
             setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
         treatmentRepository.save(
             setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
-        doctors.add(doctorRepository.findAll().get(1));
+        List<Doctor> doctors2 = new ArrayList<>();
+        doctors2.add(doctorRepository.findAll().get(0));
+        doctors2.add(doctorRepository.findAll().get(1));
         medicine = new ArrayList<>();
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
-            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors, medicine));
+            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
     }
 
     private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment, String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {

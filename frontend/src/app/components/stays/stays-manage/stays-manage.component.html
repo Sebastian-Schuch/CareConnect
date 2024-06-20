@@ -3,7 +3,8 @@
   <mat-card-title *ngIf="isCheckedIn">Discharge Patient</mat-card-title>
   <mat-card-content>
     <mat-form-field *ngIf="!isCheckedIn">
-      <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+      <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto"
+             aria-label="Search for Inpatient Department" tabindex="20">
       <mat-autocomplete #auto="matAutocomplete" [autoActiveFirstOption]="true" [displayWith]="displayFn">
         <mat-option *ngFor="let inpatientDepartment of filteredInpatientDepartments" [value]="inpatientDepartment">
           {{ inpatientDepartment.name }}
