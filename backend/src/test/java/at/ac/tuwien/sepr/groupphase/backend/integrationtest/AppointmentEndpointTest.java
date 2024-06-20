@@ -37,16 +37,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -460,17 +457,10 @@ public class AppointmentEndpointTest extends TestBase {
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     void givenAppointmentSearchDto_whenGetAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId_thenReturnAllAppointmentsForThatOutpatientDepartment() throws Exception {
-        Calendar c = Calendar.getInstance();
-        c.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
-        Date startDate = c.getTime();
-        c.set(2022, Calendar.JANUARY, 2, 0, 0, 0);
-        Date endDate = c.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)");
-        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .queryParam("outpatientDepartmentId", "" + outpatientDepartmentRepository.findAll().get(0).getId())
-                .queryParam("startDate", sdf.format(startDate))
-                .queryParam("endDate", sdf.format(endDate))
+                .queryParam("startDate", "Sat Jan 01 2022 00:00:00 GMT+0100 (Central European Summer Time)")
+                .queryParam("endDate", "Sun Jan 02 2022 00:00:00 GMT+0100 (Central European Summer Time)")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
