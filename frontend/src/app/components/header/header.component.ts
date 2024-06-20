@@ -41,20 +41,18 @@ export class HeaderComponent implements OnInit {
   }
 
   private loadUser() {
-    if (this.authService.getUserRole() != Role.admin) {
-      let observable = this.getCorrectObservable();
-      observable.subscribe({
-        next: (user: UserDto) => {
-          this.user = user;
-          this.formatName(user);
-          this.initialPassword();
-        },
-        error: error => {
-          this.notification.error('Error', 'Error loading user credentials', error);
-          console.error(error);
-        }
-      });
-    }
+    let observable = this.getCorrectObservable();
+    observable.subscribe({
+      next: (user: UserDto) => {
+        this.user = user;
+        this.formatName(user);
+        this.initialPassword();
+      },
+      error: error => {
+        this.notification.error('Error', 'Error loading user credentials', error);
+        console.error(error);
+      }
+    });
   }
 
   private initialPassword() {
@@ -216,7 +214,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public adminNavigateToUsersAdmins() {
-    //this.router.navigate(['/home/admin/users/admins']);
+    this.router.navigate(['/home/admin/users/admins']);
   }
 
   public adminNavigateToUsersDoctors() {
@@ -228,7 +226,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public adminNavigateToRegisterAdmin() {
-    //this.router.navigate(['/home/admin/register/admin']);
+    this.router.navigate(['/home/admin/register/admin']);
   }
 
   public adminNavigateToRegisterDoctor() {
