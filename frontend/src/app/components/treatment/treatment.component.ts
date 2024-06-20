@@ -14,7 +14,7 @@ import {TreatmentService} from "../../services/treatment.service";
 import {ToastrService} from "ngx-toastr";
 import {MatDialog} from "@angular/material/dialog";
 import {MedicationFormModalComponent} from "./medication-form-modal/medication-form-modal.component";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {TreatmentMedicineService} from "../../services/treatment-medicine.service";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
 import {MatAutocomplete} from "@angular/material/autocomplete";
@@ -80,7 +80,8 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     private notification: ToastrService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private errorFormater: ErrorFormatterService
+    private errorFormater: ErrorFormatterService,
+    private router: Router
   ) {
     this.dataSource = new MatTableDataSource<any>();
   }
@@ -90,8 +91,10 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
       this.route.data.subscribe(data => {
         this.mode = data.mode;
         this.generateForm();
-        this.loadAllOptionsForSelectFields();
-        if (this.mode === TreatmentCreateEditMode.edit) {
+        if (this.mode !== TreatmentCreateEditMode.detail) {
+          this.loadAllOptionsForSelectFields();
+        }
+        if (this.mode === TreatmentCreateEditMode.edit || this.mode === TreatmentCreateEditMode.detail) {
           const treatmentId = params['id'];
           if (treatmentId) {
             this.loadExistingTreatment(treatmentId);
@@ -149,6 +152,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
             this.deleteMedicationFromPersistence(this.treatmentMedicineToDeleteIds);
             this.notification.success('Successfully updated treatment ' + data.treatmentTitle);
             this.resetForm();
+            this.router.navigate(['home/doctor/treatment']);
           },
           error: error => {
             this.errorFormater.printErrorToNotification(error, "Error updating treatment", this.notification);
@@ -162,6 +166,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
         next: data => {
           this.notification.success('Successfully created treatment ' + data.treatmentTitle);
           this.resetForm();
+          this.router.navigate(['home/doctor/treatment']);
         },
         error: error => {
           this.errorFormater.printErrorToNotification(error, "Error creating treatment!", this.notification);
@@ -417,6 +422,9 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
       treatmentMedicine: [''],
       deleteButton: ['']
     });
+    if (this.mode === TreatmentCreateEditMode.detail) {
+      this.treatmentForm.disable();
+    }
   }
 
   /**
