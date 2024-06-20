@@ -6,13 +6,13 @@
   </div>
 
   <div *ngIf="role===Role.patient">
-    <h3 *ngIf="mode===TreatmentListMode.view">Here you can view your last treatments or click <a
+    <h3 *ngIf="mode===TreatmentListMode.view" tabindex="20">Here you can view your last treatments or click <a
       (click)="switchToSearch()"
-      style="color:blue;text-decoration-line: underline; cursor: pointer">here</a>
+      style="color:blue;text-decoration-line: underline; cursor: pointer" tabindex="20" aria-label="Switch to search">here</a>
       to
       search a specific
       treatment</h3>
-    <h3 *ngIf="mode===TreatmentListMode.search">
+    <h3 *ngIf="mode===TreatmentListMode.search" tabindex="20">
       Here you can search for your treatments using the input fields below
     </h3>
     <p class="subheadline">
@@ -33,6 +33,7 @@
              tabindex="20"
              [(ngModel)]="search.patientName"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search for patient name"
       >
     </div>
     <div class="form-group">
@@ -45,6 +46,7 @@
              tabindex="21"
              [(ngModel)]="search.svnr"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search for social security number"
       >
     </div>
   </div>
@@ -58,6 +60,7 @@
              tabindex="22"
              [(ngModel)]="search.treatmentTitle"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search for treatment name"
       >
     </div>
     <div class="form-group">
@@ -69,6 +72,7 @@
              tabindex="23"
              [(ngModel)]="search.doctorName"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search for doctor name"
       >
     </div>
   </div>
@@ -82,6 +86,7 @@
              tabindex="24"
              [(ngModel)]="search.medicationName"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search for medication name"
       >
     </div>
     <div class="form-group">
@@ -93,6 +98,7 @@
              tabindex="25"
              [(ngModel)]="search.departmentName"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search for department name"
       >
     </div>
   </div>
@@ -106,6 +112,7 @@
              tabindex="26"
              [(ngModel)]="search.startDate"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search in time period from start date"
       >
     </div>
     <div class="form-group">
@@ -117,6 +124,7 @@
              tabindex="27"
              [(ngModel)]="search.endDate"
              (ngModelChange)="reloadTreatments()"
+             aria-label="Search in time period from end date"
       ></div>
   </div>
   <div class="ms-4"></div>
@@ -155,7 +163,7 @@
           <label hidden [for]="i+'view'">View Treatment</label>
           <button [id]="i+'view'"
                   class="btn btn-sm responsive-info-button"
-                  aria-label="View treatment"
+                  [attr.aria-label]="'View treatment '+treatment.treatmentTitle+' (visibility)'"
                   [tabindex]="i+'35'"
                   (click)="navigateToViewTreatment(treatment.id)"
           >
@@ -163,7 +171,7 @@
           </button>
           <label *ngIf="role===Role.doctor" hidden [for]="i+'edit'">Edit Treatment</label>
           <button *ngIf="role===Role.doctor" [id]="i+'edit'" class="btn btn-sm responsive-info-button"
-                  aria-label="Edit treatment"
+                  [attr.aria-label]="'Edit treatment '+treatment.treatmentTitle+' (mode_edit)'"
                   [tabindex]="i+'36'"
                   (click)="navigateToEditTreatment(treatment.id)"
           >
