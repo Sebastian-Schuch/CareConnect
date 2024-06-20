@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
@@ -136,11 +136,11 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public PDDocument createAdministrator(AdministratorDtoCreate toCreate) {
+    public PDDocument createAdministrator(AdminDtoCreate toCreate) {
         UserLoginDto userLogin = createCredentials(mapper.administratorCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.administratorCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.ADMIN);
-        AdministratorDto administratorDto = userCreationFacadeService.createUser(toCreate, credential);
-        userLogin.setId(administratorDto.id());
+        AdminDto adminDto = userCreationFacadeService.createUser(toCreate, credential);
+        userLogin.setId(adminDto.id());
         return pdfService.getAccountDataSheet(userLogin);
     }
 

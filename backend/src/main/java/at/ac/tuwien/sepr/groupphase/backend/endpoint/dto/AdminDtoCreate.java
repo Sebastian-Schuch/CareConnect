@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record AdministratorDtoCreate(
+public record AdminDtoCreate(
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not a valid email address")
     String email,

@@ -67,7 +67,11 @@ const routes: Routes = [
           {path: '', component: LandingAdminComponent},
           {
             path: 'register', children: [
-              //{path: 'admin', component: UserCreateComponent, data: {roleString: Role.admin, mode: UserCreateEditMode.create}},
+              {
+                path: 'admin',
+                component: UserCreateComponent,
+                data: {role: Role.admin, mode: UserCreateEditMode.create}
+              },
               {
                 path: 'doctor',
                 component: UserCreateComponent,

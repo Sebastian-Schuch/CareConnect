@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CredentialDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
@@ -37,8 +37,8 @@ public interface CredentialsMapper {
     /**
      * Converts the administratorDtoCreate to the credentialCreateDto.
      *
-     * @param administratorDtoCreate the administratorDtoCreate to convert
+     * @param adminDtoCreate the administratorDtoCreate to convert
      * @return the credentialCreateDto
      */
-    CredentialDtoCreate administratorCreateDtoToCredentialCreateDto(AdministratorDtoCreate administratorDtoCreate);
+    CredentialDtoCreate administratorCreateDtoToCredentialCreateDto(AdminDtoCreate adminDtoCreate);
 }

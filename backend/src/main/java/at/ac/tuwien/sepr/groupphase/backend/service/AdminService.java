@@ -1,16 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoSparse;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Administrator;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 
 import java.util.List;
 
-public interface AdministratorService {
+public interface AdminService {
     /**
      * Creates an administrator with the data given.
      *
@@ -18,7 +18,7 @@ public interface AdministratorService {
      * @param credentials the credentials of the administrator
      * @return the created administrator
      */
-    AdministratorDto createAdministrator(AdministratorDtoCreate toCreate, Credential credentials);
+    AdminDto createAdministrator(AdminDtoCreate toCreate, Credential credentials);
 
     /**
      * Get the specified administrator.
@@ -26,7 +26,7 @@ public interface AdministratorService {
      * @param id the id of the administrator requested
      * @return the administrator with the id given
      */
-    AdministratorDtoSparse getAdministratorById(Long id);
+    AdminDtoSparse getAdministratorById(Long id);
 
     /**
      * Get the specified administrator.
@@ -34,7 +34,7 @@ public interface AdministratorService {
      * @param id the id of the administrator Entity requested
      * @return the administrator with the id given
      */
-    Administrator getAdministratorEntityById(Long id);
+    Admin getAdministratorEntityById(Long id);
 
     /**
      * Update the administrator with the given id.
@@ -43,7 +43,7 @@ public interface AdministratorService {
      * @param toUpdate the data to update the administrator with
      * @return the updated administrator
      */
-    AdministratorDtoSparse updateAdministrator(Long id, AdministratorDtoUpdate toUpdate);
+    AdminDtoSparse updateAdministrator(Long id, AdminDtoUpdate toUpdate);
 
 
     /**
@@ -51,7 +51,7 @@ public interface AdministratorService {
      *
      * @return a list of all administrators
      */
-    List<AdministratorDtoSparse> getAllAdministrators();
+    List<AdminDtoSparse> getAllAdministrators();
 
     /**
      * Get the administrator by email.
@@ -59,7 +59,7 @@ public interface AdministratorService {
      * @param email the email of the administrator
      * @return the administrator with the email given
      */
-    AdministratorDto getAdministratorByEmail(String email);
+    AdminDto getAdministratorByEmail(String email);
 
     /**
      * Find an administrator by the given credential.
@@ -67,7 +67,7 @@ public interface AdministratorService {
      * @param credential the credential to search for
      * @return the administrator with the given credential
      */
-    AdministratorDto findAdministratorByCredential(Credential credential);
+    AdminDto findAdministratorByCredential(Credential credential);
 
     /**
      * Search for administrators based on the search criteria.
@@ -75,7 +75,7 @@ public interface AdministratorService {
      * @param search the search criteria
      * @return a list of administrators
      */
-    List<AdministratorDtoSparse> searchAdministrators(UserDtoSearch search);
+    List<AdminDtoSparse> searchAdministrators(UserDtoSearch search);
 
     /**
      * Check if the used id matches the token given.

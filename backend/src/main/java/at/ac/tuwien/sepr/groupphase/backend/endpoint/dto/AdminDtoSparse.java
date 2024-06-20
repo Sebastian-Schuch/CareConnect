@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public record AdministratorDtoSparse(
+public record AdminDtoSparse(
     long id,
     String firstname,
     String lastname,

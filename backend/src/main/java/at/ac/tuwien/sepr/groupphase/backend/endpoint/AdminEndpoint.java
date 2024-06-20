@@ -1,13 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoSparse;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdministratorDtoUpdate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
-import at.ac.tuwien.sepr.groupphase.backend.service.AdministratorService;
+import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
@@ -38,16 +38,16 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = AdministratorEndpoint.BASE_PATH)
-public class AdministratorEndpoint {
+@RequestMapping(value = AdminEndpoint.BASE_PATH)
+public class AdminEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    static final String BASE_PATH = "/api/v1/administrators";
+    static final String BASE_PATH = "/api/v1/admins";
 
-    private final AdministratorService administratorService;
+    private final AdminService adminService;
     private final UserService userService;
 
-    public AdministratorEndpoint(AdministratorService administratorService, UserService userService) {
-        this.administratorService = administratorService;
+    public AdminEndpoint(AdminService adminService, UserService userService) {
+        this.adminService = adminService;
         this.userService = userService;
     }
 
@@ -60,7 +60,7 @@ public class AdministratorEndpoint {
     @Secured({"ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody AdministratorDtoCreate toCreate) {
+    public ResponseEntity<InputStreamResource> create(@Valid @RequestBody AdminDtoCreate toCreate) {
         LOG.info("POST " + BASE_PATH);
         LOG.debug("Body of request:\n{}", toCreate);
         try {
@@ -107,9 +107,9 @@ public class AdministratorEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping({"/{id}"})
-    public AdministratorDtoSparse get(@PathVariable("id") long id) {
+    public AdminDtoSparse get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
-        return this.administratorService.getAdministratorById(id);
+        return this.adminService.getAdministratorById(id);
     }
 
     /**
@@ -119,9 +119,9 @@ public class AdministratorEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping
-    public List<AdministratorDtoSparse> getAll() {
+    public List<AdminDtoSparse> getAll() {
         LOG.info("GET " + BASE_PATH);
-        return this.administratorService.getAllAdministrators();
+        return this.adminService.getAllAdministrators();
     }
 
     /**
@@ -133,10 +133,10 @@ public class AdministratorEndpoint {
      */
     @Secured({"ADMIN"})
     @PutMapping({"/{id}"})
-    public AdministratorDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody AdministratorDtoUpdate toUpdate) {
+    public AdminDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody AdminDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
-        if (administratorService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
-            return this.administratorService.updateAdministrator(id, toUpdate);
+        if (adminService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
+            return this.adminService.updateAdministrator(id, toUpdate);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }
@@ -151,8 +151,8 @@ public class AdministratorEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping({"/search"})
-    public List<AdministratorDtoSparse> search(UserDtoSearch toSearch) {
+    public List<AdminDtoSparse> search(UserDtoSearch toSearch) {
         LOG.info("GET " + BASE_PATH + "/search");
-        return this.administratorService.searchAdministrators(toSearch);
+        return this.adminService.searchAdministrators(toSearch);
     }
 }

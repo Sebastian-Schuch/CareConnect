@@ -11,22 +11,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Administrator {
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "administrator_id")
-    private long administratorId;
+    @Column(name = "admin_id")
+    private long adminId;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id")
     private Credential credential;
 
-    public long getAdministratorId() {
-        return administratorId;
+    public long getAdminId() {
+        return adminId;
     }
 
-    public void setAdministratorId(long doctorId) {
-        this.administratorId = doctorId;
+    public void setAdminId(long doctorId) {
+        this.adminId = doctorId;
     }
 
     public Credential getCredential() {

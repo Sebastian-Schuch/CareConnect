@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.Administrator;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -13,7 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AdministratorRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AdminRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
@@ -54,7 +54,7 @@ public class DataGenerator {
     private final AllergyRepository allergyRepository;
 
     @Autowired
-    private final AdministratorRepository administratorRepository;
+    private final AdminRepository adminRepository;
 
 
     @Autowired
@@ -96,14 +96,14 @@ public class DataGenerator {
     /**
      * Executed once when the component is instantiated. Inserts some dummy data.
      */
-    public DataGenerator(AllergyRepository allergyRepository, AdministratorRepository administratorRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
+    public DataGenerator(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
                          DoctorRepository doctorRepository,
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                          SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
                          TreatmentRepository treatmentRepository) {
         this.allergyRepository = allergyRepository;
-        this.administratorRepository = administratorRepository;
+        this.adminRepository = adminRepository;
         this.appointmentRepository = appointmentRepository;
         this.credentialRepository = credentialRepository;
         this.doctorRepository = doctorRepository;
@@ -270,16 +270,16 @@ public class DataGenerator {
 
     private void generateDataForAdministrators() {
         //Normal Administrators
-        administratorRepository.save(setAdministrator("administrator1@email.com", "Administrator", "One", "OnePassword", true, Role.ADMIN, false));
-        administratorRepository.save(setAdministrator("administrator2@email.com", "Administrator", "Two", "TwoPassword", true, Role.ADMIN, false));
-        administratorRepository.save(setAdministrator("administrator3@email.com", "Administrator", "Three", "ThreePassword", true, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator1@email.com", "Administrator", "One", "OnePassword", true, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator2@email.com", "Administrator", "Two", "TwoPassword", true, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator3@email.com", "Administrator", "Three", "ThreePassword", true, Role.ADMIN, false));
         //Special Patients (Inactive + Initial Password)
-        administratorRepository.save(setAdministrator("administrator.inactive@email.com", "Administrator", "Inactive", "404NotFound", false, Role.ADMIN, false));
-        administratorRepository.save(setAdministrator("administrator.initial@email.com", "Administrator", "Initial", "InitialPassword", true, Role.ADMIN, true));
+        adminRepository.save(setAdministrator("administrator.inactive@email.com", "Administrator", "Inactive", "404NotFound", false, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator.initial@email.com", "Administrator", "Initial", "InitialPassword", true, Role.ADMIN, true));
     }
 
-    private Administrator setAdministrator(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
-        Administrator administrator = new Administrator();
+    private Admin setAdministrator(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+        Admin admin = new Admin();
         Credential credential = new Credential();
         credential.setEmail(email);
         credential.setFirstName(firstName);
@@ -288,8 +288,8 @@ public class DataGenerator {
         credential.setActive(active);
         credential.setRole(role);
         credential.setInitialPassword(initialPassword);
-        administrator.setCredential(credential);
-        return administrator;
+        admin.setCredential(credential);
+        return admin;
     }
 
     private void generateDataForSecretary() {
