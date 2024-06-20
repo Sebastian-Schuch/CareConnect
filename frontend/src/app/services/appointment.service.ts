@@ -65,8 +65,8 @@ export class AppointmentService {
 
     let params = new HttpParams();
     params = params.append('outpatientDepartmentId', outpatientDepartmentId);
-    params = params.append('startDate', startDate.toISOString());
-    params = params.append('endDate', endDate.toISOString());
+    params = params.append('startDate', new Date(startDate).toString());
+    params = params.append('endDate', new Date(endDate).toString());
     return this.http.get<AppointmentDtoCalendar[]>(
       this.appointmentBaseUri,
       {params}

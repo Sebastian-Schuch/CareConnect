@@ -13,14 +13,10 @@ import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,18 +86,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, String startDate, String endDate) {
+    public List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, Date startDate, Date endDate) {
         LOG.trace("getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId({},{},{})", outpatientDepartmentId, startDate, endDate);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date start = sdf.parse(startDate.split("T")[0]);
-            Date end = sdf.parse(endDate.split("T")[0]);
-            List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, start, end);
-            return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, outpatientDepartmentId);
-        } catch (ParseException e) {
-            LOG.warn("Invalid date format {}, {}", startDate, endDate);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
-        }
+        List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);
+        return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, outpatientDepartmentId);
     }
 
     @Override
