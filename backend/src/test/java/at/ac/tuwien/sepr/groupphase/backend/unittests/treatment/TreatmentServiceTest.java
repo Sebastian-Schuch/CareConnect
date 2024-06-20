@@ -21,6 +21,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -127,8 +129,11 @@ public class TreatmentServiceTest {
         Long patientId = 1L;
         int size = 10;
         int page = 0;
-        String startDate = "2021-01-01T";
-        String endDate = "2021-12-31T";
+        Calendar c = Calendar.getInstance();
+        c.set(2021, Calendar.JANUARY, 1);
+        Date startDate = c.getTime();
+        c.set(2021, Calendar.DECEMBER, 31);
+        Date endDate = c.getTime();
         String treatmentTitle = "title";
         String medicationName = "medication";
         String doctorName = "doctor";
