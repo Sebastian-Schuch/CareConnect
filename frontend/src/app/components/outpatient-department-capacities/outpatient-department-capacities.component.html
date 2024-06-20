@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="select-container" role="group" aria-labelledby="view-selection">
+    <label id="view-selection" class="sr-only">View Selection</label>
+    <mat-button-toggle-group [formControl]="view" (change)="resetDate()">
+      <mat-button-toggle value="day" attr.aria-label="Day view">Day</mat-button-toggle>
+      <mat-button-toggle value="week" attr.aria-label="Week view">Week</mat-button-toggle>
+      <mat-button-toggle value="month" attr.aria-label="Month view">Month</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div class="navigation" role="navigation">
+    <button mat-button (click)="previous()" attr.aria-label="Previous period">Previous</button>
+    <span tabindex="0" attr.aria-live="polite">{{ currentDate | date: dateFormat }}</span>
+    <button mat-button (click)="next()" attr.aria-label="Next period">Next</button>
+  </div>
+
+  <div class="grid-container">
+    <div *ngFor="let department of departments" class="grid-item">
+      <mat-card role="article" aria-labelledby="department-title-{{ department.outpatientDepartment.name }}">
+        <mat-card-header>
+          <mat-card-title id="department-title-{{ department.outpatientDepartment.name }}" tabindex="0">
+            {{ department.outpatientDepartment.name }}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-card-subtitle tabindex="0">
+            <span *ngIf="!department.expanded">
+              {{ department.outpatientDepartment.description | slice:0:100 }} ...
+              <a class="link-read-more" href="javascript:void(0)" (click)="department.expanded = true" attr.aria-label="Read more about {{ department.outpatientDepartment.name }}" tabindex="0">Read more</a>
+            </span>
+            <span *ngIf="department.expanded">
+              {{ department.outpatientDepartment.description }}
+              <a class="link-read-more" href="javascript:void(0)" (click)="department.expanded = false" attr.aria-label="Read less about {{ department.outpatientDepartment.name }}" tabindex="0">Read less</a>
+            </span>
+          </mat-card-subtitle>
+          <app-half-donut-chart
+            [occupied]="department.capacityDto?.occupied || 0"
+            [capacity]="department.capacityDto?.capacity || 0"
+            attr.aria-label="Capacity chart for {{ department.outpatientDepartment.name }}"
+            role="img">
+          </app-half-donut-chart>
+          <div *ngIf="department.capacityDto?.capacity===0" aria-live="polite" tabindex="0">Closed</div>
+          <div *ngIf="department.capacityDto?.capacity>0" aria-live="polite" tabindex="0">
+            Capacity: {{ department.capacityDto?.occupied || 0 }}/{{ department.capacityDto?.capacity || 0 }}
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
