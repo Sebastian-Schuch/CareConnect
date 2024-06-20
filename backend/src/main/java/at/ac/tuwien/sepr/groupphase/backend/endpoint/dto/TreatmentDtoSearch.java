@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import java.util.Date;
+
 public record TreatmentDtoSearch(
     int page,
     int size,
     Long patientId,
-    String startDate,
-    String endDate,
+    Date startDate,
+    Date endDate,
     String treatmentTitle,
     String medicationName,
     String doctorName,

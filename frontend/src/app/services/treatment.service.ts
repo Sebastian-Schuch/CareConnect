@@ -3,6 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {TreatmentDto, TreatmentDtoCreate, TreatmentDtoSearch, TreatmentPageDto} from "../dtos/treatment";
+import {setHours, setMinutes} from "date-fns";
 
 @Injectable({
   providedIn: 'root'
@@ -51,9 +52,13 @@ export class TreatmentService {
     params = params.set('page', searchTerm.page);
     params = params.set('size', searchTerm.size);
     params = params.set('patientId', searchTerm.patientId);
-    if (searchTerm.startDate != null && searchTerm.endDate != null) {
-      params = params.set('startDate', new Date(searchTerm.startDate).toISOString());
-      params = params.set('endDate', new Date(searchTerm.endDate).toISOString());
+    if (searchTerm.startDate != null && searchTerm.endDate != null && searchTerm.startDate.toString() != "" && searchTerm.endDate.toString() != "") {
+      let start = new Date(searchTerm.startDate);
+      let end = new Date(searchTerm.endDate);
+      start = setMinutes(setHours(start, 0), 0);
+      end = setMinutes(setHours(end, 23), 59);
+      params = params.set('startDate', start.toString());
+      params = params.set('endDate', end.toString());
     }
     if (searchTerm.treatmentTitle != null && searchTerm.treatmentTitle != "") {
       params = params.set('treatmentTitle', searchTerm.treatmentTitle);

@@ -24,14 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -109,18 +104,16 @@ public class TreatmentServiceImpl implements TreatmentService {
     public TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams) {
         log.trace("searchTreatments({})", searchParams);
         Pageable pageable = PageRequest.of(searchParams.page(), searchParams.size(), Sort.Direction.fromString("DESC"), "treatmentStart");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         Specification<Treatment> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (searchParams.startDate() != null && searchParams.endDate() != null) {
-                try {
-                    Date start = sdf.parse(searchParams.startDate().split("T")[0]);
-                    Date end = sdf.parse(searchParams.endDate().split("T")[0]);
-                    predicates.add(cb.between(root.get("treatmentStart"), start, end));
-                } catch (ParseException e) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
-                }
+                predicates.add(cb.or(
+                    cb.and(cb.lessThanOrEqualTo(root.get("treatmentStart"), searchParams.startDate()), cb.greaterThanOrEqualTo(root.get("treatmentEnd"), searchParams.endDate())),
+                    cb.and(cb.greaterThanOrEqualTo(root.get("treatmentStart"), searchParams.startDate()), cb.lessThanOrEqualTo(root.get("treatmentEnd"), searchParams.endDate())),
+                    cb.and(cb.greaterThanOrEqualTo(root.get("treatmentStart"), searchParams.startDate()), cb.lessThanOrEqualTo(root.get("treatmentStart"), searchParams.endDate())),
+                    cb.and(cb.lessThanOrEqualTo(root.get("treatmentEnd"), searchParams.endDate()), cb.greaterThanOrEqualTo(root.get("treatmentEnd"), searchParams.startDate()))
+                ));
             }
             if (searchParams.doctorName() != null) {
                 Join<Treatment, Doctor> doctorJoin = root.join("doctors");

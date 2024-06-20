@@ -168,7 +168,7 @@ export class TreatmentListComponent implements OnInit {
   }
 
   public getDayTimeString(day: any): string {
-    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day) + " " + getHours(day) + ":" + getMinutes(day);
+    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day) + " " + ((getHours(day) < 10) ? '0' : '') + getHours(day) + ":" + ((getMinutes(day) < 10) ? '0' : '') + getMinutes(day);
   }
 
   public showDate(start: Date, end: Date): string {
