@@ -459,8 +459,8 @@ public class AppointmentEndpointTest extends TestBase {
     void givenAppointmentSearchDto_whenGetAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId_thenReturnAllAppointmentsForThatOutpatientDepartment() throws Exception {
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .queryParam("outpatientDepartmentId", "" + outpatientDepartmentRepository.findAll().get(0).getId())
-                .queryParam("startDate", "2022-01-01T00:00:00.000Z")
-                .queryParam("endDate", "2022-01-02T00:00:00.000Z")
+                .queryParam("startDate", "Sat Jan 01 2022 00:00:00 GMT+0100 (Central European Summer Time)")
+                .queryParam("endDate", "Sun Jan 02 2022 00:00:00 GMT+0100 (Central European Summer Time)")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();

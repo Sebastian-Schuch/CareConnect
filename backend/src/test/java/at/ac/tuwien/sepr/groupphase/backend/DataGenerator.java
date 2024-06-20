@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -12,6 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AdminRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
@@ -52,6 +54,10 @@ public class DataGenerator {
     private final AllergyRepository allergyRepository;
 
     @Autowired
+    private final AdminRepository adminRepository;
+
+
+    @Autowired
     private final AppointmentRepository appointmentRepository;
 
     @Autowired
@@ -90,13 +96,14 @@ public class DataGenerator {
     /**
      * Executed once when the component is instantiated. Inserts some dummy data.
      */
-    public DataGenerator(AllergyRepository allergyRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
+    public DataGenerator(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
                          DoctorRepository doctorRepository,
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                          SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
                          TreatmentRepository treatmentRepository) {
         this.allergyRepository = allergyRepository;
+        this.adminRepository = adminRepository;
         this.appointmentRepository = appointmentRepository;
         this.credentialRepository = credentialRepository;
         this.doctorRepository = doctorRepository;
@@ -117,17 +124,18 @@ public class DataGenerator {
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, true, true, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false);
-            case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true);
-            case "stay" -> generateDataInDb(false, false, true, true, false, false, true, false, false, false);
+            case "allergy" -> generateDataInDb(true, false, false,false, false, false, false, false, false, false, false);
+            case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
+            case "doctor" -> generateDataInDb(false, true, false,false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, false,true, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(true, false, false,false, true, true, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false,false, false, true, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false,false, false, false, true, false, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false,false, false, false, false, true, false, false, false);
+            case "appointment" -> generateDataInDb(true, false, false,false, true, true, true, false, true, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false,false, false, true, false, false, false, true, false);
+            case "treatment" -> generateDataInDb(true, true, false,false, true, true, true, false, false, true, true);
+            case "stay" -> generateDataInDb(false, false, false,true, true, false, false, true, false, false, false);
         }
         LOGGER.info("Finished generating data without error.");
     }
@@ -156,7 +164,8 @@ public class DataGenerator {
         openingHoursRepository.deleteAll();
     }
 
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication,
+                                  boolean generateForOutpatientDepartments,
                                   boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
         if (generateForAllergies) {
             generateDataForAllergies();
@@ -169,6 +178,9 @@ public class DataGenerator {
         }
         if (generateForSecretary) {
             generateDataForSecretary();
+        }
+        if (generateForAdministrator) {
+            generateDataForAdministrators();
         }
         if (generateForPatients) {
             generateDataForPatients();
@@ -255,6 +267,30 @@ public class DataGenerator {
         patient.setAllergies(allergies);
         patient.setMedicines(medications);
         return patient;
+    }
+
+    private void generateDataForAdministrators() {
+        //Normal Administrators
+        adminRepository.save(setAdministrator("administrator1@email.com", "Administrator", "One", "OnePassword", true, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator2@email.com", "Administrator", "Two", "TwoPassword", true, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator3@email.com", "Administrator", "Three", "ThreePassword", true, Role.ADMIN, false));
+        //Special Patients (Inactive + Initial Password)
+        adminRepository.save(setAdministrator("administrator.inactive@email.com", "Administrator", "Inactive", "404NotFound", false, Role.ADMIN, false));
+        adminRepository.save(setAdministrator("administrator.initial@email.com", "Administrator", "Initial", "InitialPassword", true, Role.ADMIN, true));
+    }
+
+    private Admin setAdministrator(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+        Admin admin = new Admin();
+        Credential credential = new Credential();
+        credential.setEmail(email);
+        credential.setFirstName(firstName);
+        credential.setLastName(lastName);
+        credential.setPassword(password);
+        credential.setActive(active);
+        credential.setRole(role);
+        credential.setInitialPassword(initialPassword);
+        admin.setCredential(credential);
+        return admin;
     }
 
     private void generateDataForSecretary() {
@@ -415,12 +451,14 @@ public class DataGenerator {
             setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
         treatmentRepository.save(
             setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
-        doctors.add(doctorRepository.findAll().get(1));
+        List<Doctor> doctors2 = new ArrayList<>();
+        doctors2.add(doctorRepository.findAll().get(0));
+        doctors2.add(doctorRepository.findAll().get(1));
         medicine = new ArrayList<>();
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
-            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors, medicine));
+            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
     }
 
     private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment, String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {

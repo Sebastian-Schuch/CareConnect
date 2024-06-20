@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
@@ -16,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -135,4 +137,10 @@ public class TreatmentMapper {
         return treatmentDtos;
     }
 
+    public TreatmentPageDto toTreatmentPageDto(Page<Treatment> treatmentPage) {
+        return new TreatmentPageDto(
+            entityListToDtoList(treatmentPage.getContent()),
+            (int) treatmentPage.getTotalElements()
+        );
+    }
 }

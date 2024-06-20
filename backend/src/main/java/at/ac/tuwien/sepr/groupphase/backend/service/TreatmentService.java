@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoSearch;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
@@ -64,5 +66,13 @@ public interface TreatmentService {
      * @return the treatments as a DTO
      */
     List<TreatmentDto> getAllTreatmentsFromDoctor(Long doctorId);
+
+    /**
+     * Searches for treatments.
+     *
+     * @param searchParams the search parameters
+     * @return the treatments as a list of DTOs
+     */
+    TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams);
 
 }

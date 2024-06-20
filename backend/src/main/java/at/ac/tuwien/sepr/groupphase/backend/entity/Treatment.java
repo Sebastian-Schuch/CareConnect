@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +20,6 @@ public class Treatment {
     @GeneratedValue
     private Long id;
 
-    @Convert(converter = EncryptorConverter.class)
     private String treatmentTitle;
 
     private Date treatmentStart;
