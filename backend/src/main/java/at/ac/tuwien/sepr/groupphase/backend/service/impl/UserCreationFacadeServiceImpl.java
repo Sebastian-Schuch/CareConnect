@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
@@ -7,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
@@ -19,10 +22,13 @@ public class UserCreationFacadeServiceImpl implements UserCreationFacadeService 
     private final SecretaryService secretaryService;
     private final PatientService patientService;
 
-    public UserCreationFacadeServiceImpl(DoctorService doctorService, SecretaryService secretaryService, PatientService patientService) {
+    private final AdminService adminService;
+
+    public UserCreationFacadeServiceImpl(DoctorService doctorService, SecretaryService secretaryService, PatientService patientService, AdminService adminService) {
         this.doctorService = doctorService;
         this.secretaryService = secretaryService;
         this.patientService = patientService;
+        this.adminService = adminService;
     }
 
     @Override
@@ -38,5 +44,10 @@ public class UserCreationFacadeServiceImpl implements UserCreationFacadeService 
     @Override
     public PatientDto createUser(PatientDtoCreate toCreate, Credential credential) {
         return patientService.createPatient(toCreate, credential);
+    }
+
+    @Override
+    public AdminDto createUser(AdminDtoCreate toCreate, Credential credential) {
+        return adminService.createAdministrator(toCreate, credential);
     }
 }

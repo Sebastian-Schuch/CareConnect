@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
@@ -7,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
+import at.ac.tuwien.sepr.groupphase.backend.service.AdminService;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
@@ -46,12 +48,15 @@ public class CredentialEndpoint {
     private final PatientService patientService;
     private final DoctorService doctorService;
     private final SecretaryService secretaryService;
+
+    private final AdminService adminService;
     private final CustomUserDetailService customUserDetailService;
 
-    public CredentialEndpoint(PatientService patientService, DoctorService doctorService, SecretaryService secretaryService, CustomUserDetailService customUserDetailService) {
+    public CredentialEndpoint(PatientService patientService, DoctorService doctorService, SecretaryService secretaryService, AdminService adminService, CustomUserDetailService customUserDetailService) {
         this.patientService = patientService;
         this.doctorService = doctorService;
         this.secretaryService = secretaryService;
+        this.adminService = adminService;
         this.customUserDetailService = customUserDetailService;
     }
 
@@ -60,7 +65,7 @@ public class CredentialEndpoint {
      *
      * @return the patientDto
      */
-    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @Secured({"PATIENT"})
     @GetMapping({"/patients"})
     public PatientDto getPatientByToken() {
         LOG.trace("getPatientByToken()");
@@ -72,9 +77,9 @@ public class CredentialEndpoint {
     /**
      * Get the doctor by the email of the currently logged-in user.
      *
-     * @return the patientDto
+     * @return the doctorDto
      */
-    @Secured({"ADMIN", "DOCTOR", "SECRETARY"})
+    @Secured({"DOCTOR"})
     @GetMapping({"/doctors"})
     public DoctorDto getDoctorByToken() {
         LOG.trace("getDoctorByToken()");
@@ -86,15 +91,29 @@ public class CredentialEndpoint {
     /**
      * Get the secretary by the email of the currently logged-in user.
      *
-     * @return the patientDto
+     * @return the secretaryDto
      */
-    @Secured({"ADMIN", "DOCTOR", "SECRETARY"})
+    @Secured({"SECRETARY"})
     @GetMapping({"/secretaries"})
     public SecretaryDto getSecretaryByToken() {
         LOG.trace("getSecretaryByToken()");
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Credential credential = customUserDetailService.findApplicationUserByEmail(email);
         return secretaryService.findSecretaryByCredential(credential);
+    }
+
+    /**
+     * Get the admin by the email of the currently logged-in user.
+     *
+     * @return the adminDto
+     */
+    @Secured({"ADMIN"})
+    @GetMapping({"/admins"})
+    public AdminDto getAdminByToken() {
+        LOG.trace("getAdminByToken()");
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Credential credential = customUserDetailService.findApplicationUserByEmail(email);
+        return adminService.findAdministratorByCredential(credential);
     }
 
     /**
