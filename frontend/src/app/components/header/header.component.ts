@@ -148,7 +148,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public patientNavigateToOutpatientDepartment() {
-    //this.router.navigate(['/home/patient/outpatient-department']);
+    this.router.navigate(['/home/patient/outpatient-department']);
   }
 
   public patientNavigateToInpatientDepartment() {
@@ -176,7 +176,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public secretaryNavigateToOutpatientDepartment() {
-    //this.router.navigate(['/home/secretary/outpatient-department']);
+    this.router.navigate(['/home/secretary/outpatient-department']);
   }
 
   public secretaryNavigateToInpatientDepartment() {
@@ -192,7 +192,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public doctorNavigateToOutpatientDepartment() {
-    //this.router.navigate(['/home/doctor/outpatient-department']);
+    this.router.navigate(['/home/doctor/outpatient-department']);
   }
 
   public doctorNavigateToInpatientDepartment() {

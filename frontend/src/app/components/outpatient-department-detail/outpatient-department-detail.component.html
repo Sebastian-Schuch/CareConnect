@@ -58,7 +58,7 @@
 
 <div class="mt-4 d-flex flex-row">
   <span class="flex-grow-1"></span>
-  <button type="submit" mat-button class="sepr-btn-submit" tabindex="25" *ngIf="role === Role.admin">Edit
+  <button type="submit" mat-button class="sepr-btn-submit" tabindex="25" *ngIf="role === Role.admin" [routerLink]="['edit']">Edit
     Outpatient
     Department
   </button>
