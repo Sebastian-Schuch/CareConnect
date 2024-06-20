@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Transactional
     @Query(value = "SELECT COUNT(*) FROM Appointment WHERE PATIENT_PATIENT_ID = ?1 AND OUTPATIENT_DEPARTMENT_ID = ?2 AND START_DATE = ?3 AND END_DATE = ?4", nativeQuery = true)
     int getAllAppointmentsMatchingPatientIdOutpatientDepartmentStartDateAndEndDate(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate);
+
+    @Transactional
+    List<Appointment> findByOutpatientDepartmentAndStartDateBetween(OutpatientDepartment department, Date startDate, Date endDate);
 }

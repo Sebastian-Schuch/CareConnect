@@ -37,6 +37,9 @@ import {StaysListComponent} from "./components/stays/stays-list/stays-list.compo
 import {
   InpatientDepartmentListComponent
 } from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -240,6 +243,11 @@ const routes: Routes = [
               //]},
             ]
           },
+          {path: 'outpatient-department', children: [
+              {path: '', component: OutpatientDepartmentCapacitiesComponent},
+              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
+            ]},
+
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
             path: ':id', children: [

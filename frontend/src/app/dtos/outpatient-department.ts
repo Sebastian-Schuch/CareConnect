@@ -15,3 +15,20 @@ export class OutpatientDepartmentDto {
   openingHours: OpeningHoursDto;
 }
 
+export interface CapacityDto {
+  occupied: number;
+  capacity: number;
+}
+
+export interface OutpatientDepartmentCapacityDto {
+  outpatientDepartment: OutpatientDepartmentDto;
+  capacityNowDto: CapacityDto;
+  capacityDayDto: CapacityDto;
+  capacityWeekDto: CapacityDto;
+  capacityMonthDto: CapacityDto;
+}
+
+
+
+
+

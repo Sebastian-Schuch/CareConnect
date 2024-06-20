@@ -61,6 +61,11 @@ import {
 } from "./components/treatment/medication-form-modal/medication-form-modal.component";
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
+import { HalfDonutChartComponent } from './components/half-donut-chart/half-donut-chart.component';
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
+import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -81,7 +86,8 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/
     AppointmentsPatientComponent,
     AppointmentsSecretaryComponent,
     LandingPatientComponent,
-    MedicationFormModalComponent
+    MedicationFormModalComponent,
+    OutpatientDepartmentCapacitiesComponent
   ],
   imports: [
     BrowserModule,
@@ -129,7 +135,10 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/
     MatCardHeader,
     MatCardContent,
     MatFabButton,
-    MatCardSubtitle
+    MatCardSubtitle,
+    HalfDonutChartComponent,
+    MatButtonToggleGroup,
+    MatButtonToggle
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()
