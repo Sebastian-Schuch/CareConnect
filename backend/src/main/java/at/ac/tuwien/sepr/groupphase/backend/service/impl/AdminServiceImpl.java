@@ -45,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminDtoSparse getAdministratorById(Long id) {
         LOG.trace("getAdministratorById({})", id);
-        Admin admin = adminRepository.findById(id).orElse(null);
+        Admin admin = adminRepository.findByAdminIdAndCredential_ActiveTrue(id);
         if (admin == null) {
             LOG.warn("administrator with id {} not found", id);
             throw new NotFoundException("Administrator not found");
@@ -56,7 +56,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin getAdministratorEntityById(Long id) {
         LOG.trace("getAdministratorEntityById({})", id);
-        Admin admin = adminRepository.findById(id).orElse(null);
+        Admin admin = adminRepository.findByAdminIdAndCredential_ActiveTrue(id);
         if (admin == null) {
             LOG.warn("administrator with id {} not found", id);
             throw new NotFoundException("Administrator not found");
@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminDtoSparse updateAdministrator(Long id, AdminDtoUpdate toUpdate) {
         LOG.trace("updateAdministrator({}, {})", id, toUpdate);
-        Admin admin = adminRepository.findById(id).orElse(null);
+        Admin admin = adminRepository.findByAdminIdAndCredential_ActiveTrue(id);
         if (admin == null) {
             LOG.warn("administrator with id {} not found", id);
             throw new NotFoundException("Administrator not found");
@@ -77,18 +77,18 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<AdminDtoSparse> getAllAdministrators() {
-        return adminMapper.administratorsToAdministratorDtosSparse(adminRepository.findAll());
+        return adminMapper.administratorsToAdministratorDtosSparse(adminRepository.findByCredential_ActiveTrue());
     }
 
     @Override
     public AdminDto getAdministratorByEmail(String email) {
-        return adminMapper.administratorToAdministratorDto(adminRepository.findByCredential_Email(email));
+        return adminMapper.administratorToAdministratorDto(adminRepository.findByCredential_EmailAndCredential_ActiveTrue(email));
     }
 
     @Override
     public AdminDto findAdministratorByCredential(Credential credential) {
         LOG.debug("Find application user by email");
-        Admin admin = adminRepository.findByCredential(credential);
+        Admin admin = adminRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (admin != null) {
             return adminMapper.administratorToAdministratorDto(admin);
         }
