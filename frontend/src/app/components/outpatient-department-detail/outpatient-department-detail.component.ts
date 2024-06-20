@@ -68,7 +68,6 @@ export class OutpatientDepartmentDetailComponent implements OnInit {
       }
       this.outpatientDepartmentService.getOutpatientDepartmentById(params['id']).subscribe((outpatientDepartment: OutpatientDepartmentDto) => {
         this.outpatientDepartment = this.mapOutpatientDepartment(outpatientDepartment);
-        console.log(this.outpatientDepartment);
       });
     });
   }

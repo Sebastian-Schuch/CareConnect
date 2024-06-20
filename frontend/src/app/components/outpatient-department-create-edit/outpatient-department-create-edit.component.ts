@@ -87,8 +87,6 @@ export class OutpatientDepartmentComponent implements OnInit {
           next: data => {
             this.outpatientDepartment = this.mapExitingOutpatientDepartment(data);
             this.id = data.id;
-            console.log(this.id);
-            console.log(this.outpatientDepartment);
           },
           error: error => console.error(error)
         })

@@ -68,7 +68,6 @@ export class OutpatientDepartmentListComponent implements OnInit{
   protected readonly Role = Role;
 
   openDeleteDialog(outpatientDepartment: OutpatientDepartmentDto) {
-    console.log("warum");
     const dialogRef = this.dialog.open(OutpatientDepartmentDeleteComponent,
       {data: {name: outpatientDepartment.name}});
 
