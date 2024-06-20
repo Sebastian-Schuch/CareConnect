@@ -182,8 +182,13 @@ public class AppointmentServiceTest extends TestBase {
     @Transactional
     @Test
     public void givenAppointmentSearchDto_whenGetAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId_thenReturnAllAppointments() {
+        Calendar c = Calendar.getInstance();
+        c.set(2022, Calendar.JANUARY, 1, 0, 0, 0);
+        Date startDate = c.getTime();
+        c.set(2022, Calendar.JANUARY, 2, 0, 0, 0);
+        Date endDate = c.getTime();
         List<AppointmentCalendarDto> appointments =
-            appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentRepository.findAll().get(0).getId(), "2022-01-01T00:00:00.000Z", "2022-01-02T00:00:00.000Z");
+            appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentRepository.findAll().get(0).getId(), startDate, endDate);
         assertThat(appointments).isNotNull().hasSize(5).extracting(AppointmentCalendarDto::getOutpatientDepartmentId, AppointmentCalendarDto::getStartDate, AppointmentCalendarDto::getEndDate, AppointmentCalendarDto::getCount)
             .contains(tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), 1),

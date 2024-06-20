@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AppointmentService {
@@ -33,7 +34,7 @@ public interface AppointmentService {
      * @param endDate                the end date of the appointments
      * @return the booked appointments
      */
-    List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, String startDate, String endDate);
+    List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, Date startDate, Date endDate);
 
     /**
      * Get the specified appointment.

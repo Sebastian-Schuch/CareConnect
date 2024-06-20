@@ -48,6 +48,18 @@
         My Treatments
       </button>
       -->
+      <button mat-button [matMenuTriggerFor]="treatmentPatientMenu" tabindex="8">
+        <mat-icon>medical_services</mat-icon>
+        Treatments
+      </button>
+      <mat-menu #treatmentPatientMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatment()">Treatment History
+          </button>
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatmentSearch()">Search for Treatment
+          </button>
+        </div>
+      </mat-menu>
     </ng-container>
 
     <!-- Logged in as secretary -->
@@ -100,6 +112,20 @@
           </button>
         </div>
       </mat-menu>
+      <button mat-button [matMenuTriggerFor]="treatmentSecretaryMenu" tabindex="8">
+        <mat-icon>medical_services</mat-icon>
+        Treatments
+      </button>
+      <mat-menu #treatmentSecretaryMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" (click)="secretaryNavigateToTreatment()">Treatment History
+          </button>
+          <!--
+          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
+          </button>
+          -->
+        </div>
+      </mat-menu>
 
       <!--
           <button mat-button [matMenuTriggerFor]="stayMenu" tabindex="7">
@@ -126,6 +152,8 @@
       <mat-menu #treatmentMenu="matMenu">
         <div class="dropdown-card">
           <button mat-menu-item class="clean-button" (click)="doctorNavigateToTreatmentLog()">Log Treatment
+          </button>
+          <button mat-menu-item class="clean-button" (click)="doctorNavigateToTreatment()">View Treatments
           </button>
           <!--
           <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
@@ -274,6 +302,10 @@
           <button mat-menu-item class="clean-button" (click)="patientNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatment()">Treatment History
+          </button>
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToTreatmentSearch()">Search for Treatment
+          </button>
         </div>
         <!-- secretary -->
         <div *ngIf="isRoleSecretary()">
@@ -299,15 +331,15 @@
           </button>
           <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/edit']">Edit stay
           </button>-->
+          <button mat-menu-item class="clean-button" (click)="secretaryNavigateToTreatment()">Treatment History
+          </button>
         </div>
         <!-- doctor -->
         <div *ngIf="isRoleDoctor()">
           <button mat-menu-item class="clean-button" (click)="doctorNavigateToTreatmentLog()">Log Treatment
           </button>
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
+          <button mat-menu-item class="clean-button" (click)="doctorNavigateToTreatment()">View Treatments
           </button>
-          -->
           <button mat-menu-item class="clean-button" (click)="doctorNavigateToTelemedicine()">
             Telemedicine
           </button>
