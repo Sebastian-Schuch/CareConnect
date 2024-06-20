@@ -38,14 +38,14 @@
           <label hidden [for]="i+'edit'">Edit inpatient department</label>
           <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
                   [routerLink]="[inpatientDepartment.id, 'edit']"
-                  aria-label="Edit inpatientDepartment"
+                  [attr.aria-label]="'Edit inpatientDepartment '+inpatientDepartment.name+' (mode_edit)'"
                   [tabindex]="i+'28'"
           >
             <mat-icon>mode_edit</mat-icon>
           </button>
           <label hidden [for]="i+'delete'">Delete inpatient Department</label>
           <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
-                  aria-label="Delete inpatientDepartment"
+                  [attr.aria-label]="'Delete inpatientDepartment' + inpatientDepartment.name + ' (delete)'"
                   [tabindex]="i+'29'"
                   (click)="openDeleteDialog(inpatientDepartment)"
           >
