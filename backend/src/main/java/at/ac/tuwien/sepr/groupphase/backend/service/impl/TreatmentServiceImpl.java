@@ -31,13 +31,11 @@ public class TreatmentServiceImpl implements TreatmentService {
     private static final Logger log = LoggerFactory.getLogger(TreatmentServiceImpl.class);
     private final TreatmentRepository treatmentRepository;
     private final TreatmentMapper treatmentMapper;
-    private final TreatmentMedicineServiceImpl treatmentMedicineServiceImpl;
 
     @Autowired
     public TreatmentServiceImpl(TreatmentRepository treatmentRepository, TreatmentMapper treatmentMapper, TreatmentMedicineService treatmentMedicineService, TreatmentMedicineServiceImpl treatmentMedicineServiceImpl) {
         this.treatmentRepository = treatmentRepository;
         this.treatmentMapper = treatmentMapper;
-        this.treatmentMedicineServiceImpl = treatmentMedicineServiceImpl;
     }
 
     @Override

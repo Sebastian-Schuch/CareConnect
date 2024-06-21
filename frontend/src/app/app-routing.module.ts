@@ -58,6 +58,12 @@ const routes: Routes = [
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
+            path: 'outpatient-department', children: [
+              {path: '', component: OutpatientDepartmentCapacitiesComponent},
+              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
+            ]
+          },
+          {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
               {path: 'edit', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.edit}}
@@ -243,10 +249,12 @@ const routes: Routes = [
               //]},
             ]
           },
-          {path: 'outpatient-department', children: [
+          {
+            path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentCapacitiesComponent},
               {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
-            ]},
+            ]
+          },
 
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {
