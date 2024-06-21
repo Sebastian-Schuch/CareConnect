@@ -22,7 +22,7 @@ import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-cr
 import {Role} from "./dtos/Role";
 import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatment/treatment.component";
 import {
-  OutpatientDepartmentComponent
+  OutpatientDepartmentComponent, OutpatientDepartmentCreateEditMode
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
 import {
   InpatientDepartmentComponent,

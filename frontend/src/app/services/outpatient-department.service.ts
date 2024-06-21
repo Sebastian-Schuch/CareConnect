@@ -3,6 +3,7 @@ import {Globals} from '../global/globals';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {
+  OutpatientDepartmentCapacityDto,
   OutpatientDepartmentDto,
   OutpatientDepartmentDtoCreate,
   OutpatientDepartmentPageDto

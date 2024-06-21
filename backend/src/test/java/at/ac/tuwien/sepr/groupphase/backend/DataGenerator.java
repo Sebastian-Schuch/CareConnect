@@ -130,7 +130,7 @@ public class DataGenerator {
             case "secretary" -> generateDataInDb(false, false, false,true, false, false, false, false, false, false, false);
             case "patient" -> generateDataInDb(true, false, false,false, true, true, false, false, false, false, false);
             case "medication" -> generateDataInDb(false, false, false,false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false,true, false, false, true, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false,false, true, false, true, false, false, false, false);
             case "inpatientDepartment" -> generateDataInDb(false, false, false,false, false, false, false, true, false, false, false);
             case "appointment" -> generateDataInDb(true, false, false,false, true, true, true, false, true, false, false);
             case "treatmentMedicine" -> generateDataInDb(false, false, false,false, false, true, false, false, false, true, false);

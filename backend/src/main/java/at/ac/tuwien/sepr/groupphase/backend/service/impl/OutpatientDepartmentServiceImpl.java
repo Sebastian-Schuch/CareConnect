@@ -119,11 +119,6 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     @Override
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForWeek(Date startDate) throws NotFoundException {
         LOGGER.trace("getOutpatientDepartmentCapacitiesForWeek({})", startDate);
-        List<OutpatientDepartment> departments = outpatientDepartmentRepository.findAll();
-        List<OutpatientDepartmentCapacityDto> capacities = new ArrayList<>();
-
-
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -134,6 +129,8 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
         calendar.add(Calendar.DATE, 6);
         Date endDate = calendar.getTime();
 
+        List<OutpatientDepartment> departments = outpatientDepartmentRepository.findAll();
+        List<OutpatientDepartmentCapacityDto> capacities = new ArrayList<>();
         for (OutpatientDepartment department : departments) {
             int totalSlots = OpeningHoursUtil.calculateTotalSlotsForWeek(department.getOpeningHours(), startDate, endDate, department.getCapacity());
             CapacityDto capacity = capacityCalculator.calculateCapacity(department, startDate, endDate, totalSlots);
