@@ -305,7 +305,7 @@ public class PatientEndpointTest extends TestBase {
     @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"SECRETARY"})
-    public void givenSecretaryDtoUpdate_whenUpdateSecretary_thenDSecretaryGetsUpdatedAndNowHasUpdatedData() throws Exception {
+    public void givenSecretaryDtoUpdate_whenUpdateSecretary_thenSecretaryGetsUpdatedAndNowHasUpdatedData() throws Exception {
         long id = patientRepository.findAll().get(0).getPatientId();
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + id)
                 .accept(MediaType.APPLICATION_JSON))
@@ -317,7 +317,7 @@ public class PatientEndpointTest extends TestBase {
 
         List<MedicationDto> medications = new ArrayList<>();
         List<AllergyDto> allergies = new ArrayList<>();
-        PatientDtoUpdate patientToUpdate = new PatientDtoUpdate("0000000000", medications, allergies, "x", "y", "a@a.a", false, false);
+        PatientDtoUpdate patientToUpdate = new PatientDtoUpdate("0000000005", medications, allergies, "x", "y", "a@a.a", false, false);
         String json = ow.writeValueAsString(patientToUpdate);
         byte[] bodyUpdate = mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -327,7 +327,7 @@ public class PatientEndpointTest extends TestBase {
             .andReturn().getResponse().getContentAsByteArray();
         patientsGet = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyUpdate).readAll();
         assertThat(patientsGet).extracting(PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
-            tuple("0000000000", "a@a.a", "x", "y"));
+            tuple("0000000005", "a@a.a", "x", "y"));
 
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + id)
                 .accept(MediaType.APPLICATION_JSON))
@@ -335,7 +335,7 @@ public class PatientEndpointTest extends TestBase {
             .andReturn().getResponse().getContentAsByteArray();
         patientsGet = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
         assertThat(patientsGet).extracting(PatientDto::svnr, PatientDto::email, PatientDto::firstname, PatientDto::lastname).contains(
-            tuple("0000000000", "a@a.a", "x", "y"));
+            tuple("0000000005", "a@a.a", "x", "y"));
     }
 
     @Transactional

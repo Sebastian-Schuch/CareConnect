@@ -17,8 +17,10 @@ public class OutpatientDepartment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 510)
     private String name;
 
+    @Column(length = 2000)
     private String description;
 
     private int capacity;
