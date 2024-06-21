@@ -116,8 +116,15 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
         List<OutpatientDepartment> departments = outpatientDepartmentRepository.findAll();
         List<OutpatientDepartmentCapacityDto> capacities = new ArrayList<>();
 
+
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        startDate = calendar.getTime();
         calendar.add(Calendar.DATE, 6);
         Date endDate = calendar.getTime();
 
