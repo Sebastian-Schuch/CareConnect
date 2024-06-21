@@ -43,6 +43,10 @@ import {
 import {
   OutpatientDepartmentDetailComponent
 } from "./components/outpatient-department-detail/outpatient-department-detail.component";
+import {
+  TreatmentListComponent,
+  TreatmentListMode
+} from "./components/treatment/treatment-list/treatment-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -65,6 +69,17 @@ const routes: Routes = [
               {path: ':id', component: OutpatientDepartmentDetailComponent}
             ]},
           {
+            path: 'treatment', children: [
+              {path: '', component: TreatmentListComponent, data: {role: Role.patient, mode: TreatmentListMode.view}},
+              {
+                path: 'search',
+                component: TreatmentListComponent,
+                data: {role: Role.patient, mode: TreatmentListMode.search}
+              },
+              {path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}}
+            ]
+          },
+          {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
               {path: 'edit', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.edit}}
@@ -77,7 +92,11 @@ const routes: Routes = [
           {path: '', component: LandingAdminComponent},
           {
             path: 'register', children: [
-              //{path: 'admin', component: UserCreateComponent, data: {roleString: Role.admin, mode: UserCreateEditMode.create}},
+              {
+                path: 'admin',
+                component: UserCreateComponent,
+                data: {role: Role.admin, mode: UserCreateEditMode.create}
+              },
               {
                 path: 'doctor',
                 component: UserCreateComponent,
@@ -199,12 +218,15 @@ const routes: Routes = [
             ]},
           {
             path: 'treatment', children: [
+              {path: '', component: TreatmentListComponent, data: {role: Role.doctor, mode: TreatmentListMode.search}},
               {path: 'log', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.log}},
               {
                 path: ':id', children: [
+                  {path: '', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}},
                   {
                     path: 'edit', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.edit}
-                  }]
+                  }
+                ]
               }]
           },
           {
@@ -225,6 +247,18 @@ const routes: Routes = [
             path: 'appointments', children: [
               {path: '', component: AppointmentsSecretaryComponent},
               {path: 'book', component: CalendarWrapperComponent},
+            ]
+          },
+          {
+            path: 'treatment', children: [
+              {
+                path: '',
+                component: TreatmentListComponent,
+                data: {role: Role.secretary, mode: TreatmentListMode.search}
+              },
+              {
+                path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}
+              }
             ]
           },
           {

@@ -40,7 +40,6 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = new Doctor();
         doctor.setCredential(credentials);
         return doctorMapper.doctorToDoctorDto(doctorRepository.save(doctor));
-
     }
 
     @Override

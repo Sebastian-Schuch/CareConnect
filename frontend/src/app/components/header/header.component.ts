@@ -41,20 +41,18 @@ export class HeaderComponent implements OnInit {
   }
 
   private loadUser() {
-    if (this.authService.getUserRole() != Role.admin) {
-      let observable = this.getCorrectObservable();
-      observable.subscribe({
-        next: (user: UserDto) => {
-          this.user = user;
-          this.formatName(user);
-          this.initialPassword();
-        },
-        error: error => {
-          this.notification.error('Error', 'Error loading user credentials', error);
-          console.error(error);
-        }
-      });
-    }
+    let observable = this.getCorrectObservable();
+    observable.subscribe({
+      next: (user: UserDto) => {
+        this.user = user;
+        this.formatName(user);
+        this.initialPassword();
+      },
+      error: error => {
+        this.notification.error('Error', 'Error loading user credentials', error);
+        console.error(error);
+      }
+    });
   }
 
   private initialPassword() {
@@ -159,6 +157,14 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/patient/telemedicine']);
   }
 
+  public patientNavigateToTreatment() {
+    this.router.navigate(['/home/patient/treatment']);
+  }
+
+  public patientNavigateToTreatmentSearch() {
+    this.router.navigate(['/home/patient/treatment/search']);
+  }
+
   public secretaryNavigateToAppointmentBook() {
     this.router.navigate(['/home/secretary/appointments/book']);
   }
@@ -183,6 +189,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/secretary/inpatient-department']);
   }
 
+  public secretaryNavigateToTreatment() {
+    this.router.navigate(['/home/secretary/treatment']);
+  }
+
   public doctorNavigateToTreatmentLog() {
     this.router.navigate(['/home/doctor/treatment/log']);
   }
@@ -199,8 +209,12 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/doctor/inpatient-department']);
   }
 
+  public doctorNavigateToTreatment() {
+    this.router.navigate(['/home/doctor/treatment']);
+  }
+
   public adminNavigateToUsersAdmins() {
-    //this.router.navigate(['/home/admin/users/admins']);
+    this.router.navigate(['/home/admin/users/admins']);
   }
 
   public adminNavigateToUsersDoctors() {
@@ -212,7 +226,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public adminNavigateToRegisterAdmin() {
-    //this.router.navigate(['/home/admin/register/admin']);
+    this.router.navigate(['/home/admin/register/admin']);
   }
 
   public adminNavigateToRegisterDoctor() {

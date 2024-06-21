@@ -4,8 +4,12 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StayDtoPage;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.StayService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
+import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -23,8 +28,14 @@ public class StayEndpoint {
 
     private final StayService stayService;
 
-    public StayEndpoint(StayService stayService) {
+    private final CustomUserDetailService customUserDetailService;
+
+    private final PatientService patientService;
+
+    public StayEndpoint(StayService stayService, CustomUserDetailService customUserDetailService, PatientService patientService) {
         this.stayService = stayService;
+        this.customUserDetailService = customUserDetailService;
+        this.patientService = patientService;
     }
 
     @Secured({"SECRETARY"})
@@ -33,10 +44,14 @@ public class StayEndpoint {
         return stayService.getCurrentStay(patientId);
     }
 
-    @Secured({"SECRETARY"})
+    @Secured({"SECRETARY", "PATIENT"})
     @GetMapping("/all")
     public StayDtoPage getAllStays(@RequestParam(name = "id") Long patientId, @RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
-        return stayService.getAllStays(patientId, page, size);
+        if (this.customUserDetailService.isValidRequestOfRole(Role.SECRETARY) || this.patientService.isOwnRequest(patientId)) {
+            return stayService.getAllStays(patientId, page, size);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource.");
+        }
     }
 
     @Secured({"SECRETARY"})
@@ -47,8 +62,8 @@ public class StayEndpoint {
 
     @Secured({"SECRETARY"})
     @PutMapping("/discharge")
-    public StayDto endCurrentStay(@RequestParam(name = "id") Long stayId) {
-        return stayService.endCurrentStay(stayId);
+    public StayDto endCurrentStay(@RequestBody StayDto stayDto) {
+        return stayService.endCurrentStay(stayDto.id());
     }
 
     @Secured({"SECRETARY"})
