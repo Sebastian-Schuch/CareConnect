@@ -12,7 +12,7 @@ import {
   startOfMonth,
   subMonths,
 } from 'date-fns';
-import {forkJoin, Subject} from 'rxjs';
+import {debounceTime, forkJoin, fromEvent, Subject} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarDateFormatter,
@@ -89,6 +89,8 @@ export class CalenderComponent implements OnInit {
   dayStartHour: number = 0;
   dayEndHour: number = 24;
 
+  isHandset: boolean = false;
+
   constructor(
     private modal: NgbModal,
     private service: CalenderService,
@@ -100,10 +102,22 @@ export class CalenderComponent implements OnInit {
 
   ngOnInit(): void {
     this.setStartAndEndHour(this.outpatientDepartment.openingHours);
+    fromEvent(window, 'resize').pipe(debounceTime(20)).subscribe(() => this.isScreenWideEnough());
+    this.isScreenWideEnough();
     // Since the ngOnChanges Method also calls, when the component is initialized, we don't need to call loadSlotsAndBookedAppointmentsOfMonth here
   }
 
   ngOnChanges(): void {
+    this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
+  }
+
+  public isScreenWideEnough() {
+    this.isHandset = window.innerWidth < 800;
+    if (this.isHandset) {
+      this.view = CalendarView.Day;
+    } else {
+      this.view = CalendarView.Month;
+    }
     this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
   }
 
