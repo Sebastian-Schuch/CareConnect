@@ -21,7 +21,7 @@ public class Allergy {
     }
 
     @Convert(converter = EncryptorConverter.class)
-    @Column(nullable = false, name = "name", unique = true)
+    @Column(nullable = false, name = "name", unique = true, length = 510)
     private String name;
 
     @Column(nullable = false)
