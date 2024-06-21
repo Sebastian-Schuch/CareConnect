@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OpeningHoursMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.OutpatientDepartmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
@@ -13,6 +14,9 @@ import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -45,7 +49,8 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
         LOGGER.trace("createOutpatientDepartment()");
         OpeningHours openingHours = openingHoursService.getOpeningHoursEntityFromDtoCreate(outpatientDepartmentDto.openingHours());
-        OutpatientDepartment savedOutpatientDepartment = outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(outpatientDepartmentDto, openingHours));
+        OutpatientDepartment savedOutpatientDepartment =
+            outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(outpatientDepartmentDto, openingHours));
 
         return outpatientDepartmentMapper.entityToDto(savedOutpatientDepartment, openingHoursMapper.entityToDto(savedOutpatientDepartment.getOpeningHours()));
     }
@@ -55,7 +60,8 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
         LOGGER.trace("getAllOutpatientDepartments()");
         List<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAllByActiveTrue();
         return outpatientDepartments.stream()
-            .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours())))
+            .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment,
+                openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours())))
             .collect(Collectors.toList());
     }
 
@@ -79,5 +85,38 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
             throw new NotFoundException("Outpatient department with id " + id + " not found");
         }
         return outpatientDepartment;
+    }
+
+    @Override
+    public OutpatientDepartmentPageDto getOutpatientDepartmentsPage(Specification<OutpatientDepartment> spec, Pageable pageable) {
+        LOGGER.trace("getOutpatientDepartmentsPage({}, {})", spec, pageable);
+        Page<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAll(spec, pageable);
+        return outpatientDepartmentMapper.toOutpatientDepartmentPageDto(outpatientDepartments);
+    }
+
+    @Override
+    public OutpatientDepartmentDto setOutpatientDepartmentInactive(Long id) {
+        LOGGER.trace("setOutpatientDepartmentInactive({})", id);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
+        if (outpatientDepartment == null) {
+            LOGGER.warn("Outpatient department with id {} not found", id);
+            throw new NotFoundException("Outpatient department with id " + id + " not found");
+        }
+        outpatientDepartment.setActive(false);
+        outpatientDepartmentRepository.save(outpatientDepartment);
+        return outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
+    }
+
+    @Override
+    public OutpatientDepartmentDto updateOutpatientDepartment(Long id, OutpatientDepartmentDto toUpdate) {
+        LOGGER.trace("updateOutpatientDepartment({}, {})", id, toUpdate);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
+        if (outpatientDepartment == null) {
+            LOGGER.warn("Active outpatient department with id {} not found", id);
+            throw new NotFoundException("Active outpatient department with id " + id + " not found");
+        }
+        return outpatientDepartmentMapper.entityToDto(
+            outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(toUpdate, openingHoursMapper.dtoToEntity(toUpdate.openingHours()))),
+            openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
     }
 }

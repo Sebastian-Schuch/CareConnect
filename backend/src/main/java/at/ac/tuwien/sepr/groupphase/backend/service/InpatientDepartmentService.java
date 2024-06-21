@@ -18,9 +18,11 @@ public interface InpatientDepartmentService {
     InpatientDepartment findById(Long id);
 
     /**
-     * Find all inpatient departments in the db.
+     * Gets a page of inpatient departments from the db.
      *
-     * @return all inpatient departments in the db
+     * @param spec     the specification to filter the inpatient departments
+     * @param pageable the page to get
+     * @return a page of inpatient departments
      */
     InpatientDepartmentPageDto findAll(Specification<InpatientDepartment> spec, Pageable pageable);
 
