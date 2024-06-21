@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Delete {{ data.name }}</h1>
+<mat-dialog-content>
+  <p tabindex="1" [attr.aria-label]="'Are you sure you want to delete the outpatient Department '+data.name+'?'">Are you
+    sure you want to delete the outpatient Department {{ data.name }}?</p>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'">
+  <button tabindex="2" mat-button mat-dialog-close class="sepr-btn-cancel">Cancel</button>
+  <button tabindex="3" mat-button class="sepr-btn-delete" [mat-dialog-close]="true">Delete outpatient Department</button>
+</mat-dialog-actions>
