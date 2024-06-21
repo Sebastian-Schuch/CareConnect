@@ -13,6 +13,7 @@ public record PatientDtoCreate(
 
     @NotBlank(message = "Email cannot be empty")
     @Email(message = "Email is not a valid email address")
+    @Size(max = 255, message = "Email cannot be longer than 255 characters")
     String email,
 
     @NotBlank(message = "Firstname cannot be empty")

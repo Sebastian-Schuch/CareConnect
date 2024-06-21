@@ -13,7 +13,7 @@ public class Medication {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 510)
     private String name;
 
     @Column(nullable = false)

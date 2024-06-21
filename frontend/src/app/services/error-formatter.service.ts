@@ -24,9 +24,13 @@ export class ErrorFormatterService {
         toastrService.error(messageBody || title, title);
         break;
       case 422:
+        let errors = error?.error?.ValidationErrors;
+        if (!error?.error?.ValidationErrors) {
+          errors = JSON.parse(await error.error.text()).ValidationErrors;
+        }
         this.validationErrors = "<ul>";
-        for (const key in error?.error?.ValidationErrors) {
-          this.validationErrors += `<li>${error?.error?.ValidationErrors[key]}</li>`;
+        for (const key in errors) {
+          this.validationErrors += `<li>${errors[key]}</li>`;
         }
         this.validationErrors += "</ul>";
 
@@ -37,11 +41,23 @@ export class ErrorFormatterService {
         break;
       case 401:
         this.router.navigate(['/']).then(async r => {
-          toastrService.error(messageBody || title, title);
+          if (typeof error.error === 'string') {
+            toastrService.error(error.error, title);
+          } else if (error.error && typeof error.error.text === 'function') {
+            toastrService.error(await error.error.text(), title);
+          } else {
+            toastrService.error('Unknown error', title);
+          }
         });
         break;
       default:
-        toastrService.error(messageBody || title, title);
+        if (typeof error.error === 'string') {
+          toastrService.error(error.error, title);
+        } else if (error.error && typeof error.error.text === 'function') {
+          toastrService.error(await error.error.text(), title);
+        } else {
+          toastrService.error('Unknown error', title);
+        }
         break;
     }
   }
