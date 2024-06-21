@@ -1,16 +1,60 @@
-<div class="card" role="region" aria-label="Outpatient Department Details">
-  <div class="card-body">
-    <h5 class="card-title" id="outpatientDepartmentName">{{ outpatientDepartment.name }}</h5>
-    <p class="card-text" id="outpatientDepartmentDescription">{{ outpatientDepartment.description }}</p>
-    <p class="card-text" id="outpatientDepartmentCapacity">Capacity: {{ outpatientDepartment.capacity }}</p>
-    <div *ngFor="let day of days" role="region">
-      <h6 class="card-subtitle text-muted">{{ day.charAt(0).toUpperCase() + day.slice(1) }}</h6>
-      <p class="card-text mb-3" *ngIf="outpatientDepartment.openingHours[day]">
-        {{ outpatientDepartment.openingHours[day].open }} - {{ outpatientDepartment.openingHours[day].close }}
-      </p>
-      <p class="card-text mb-3" *ngIf="!outpatientDepartment.openingHours[day]">
-        closed
-      </p>
+<div class="start-page-container">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>View Outpatient Department</span><br>
+    </h1>
+  </div>
+</div>
+<fieldset aria-label="Inputs for basic information of outpatient departments">
+  <div class="mb-3">
+    <label class="form-label" for="name">Name:</label>
+    <input type="text" [(ngModel)]="outpatientDepartment.name" name="name" class="form-control" required id="name"
+           tabindex="21"
+           [disabled]="true">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="description">Description:</label>
+    <input type="text" [(ngModel)]="outpatientDepartment.description" name="description" class="form-control"
+           required
+           id="description"
+           tabindex="22"
+           [disabled]="true">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="capacity">Capacity:</label>
+    <input type="number" [(ngModel)]="outpatientDepartment.capacity" name="capacity" class="form-control" required
+           id="capacity" tabindex="23" [disabled]="true">
+  </div>
+</fieldset>
+<div *ngFor="let day of days" class="row mb-3">
+  <div class="col">
+    <label class="form-label" for="{{day}}Open">{{ day.charAt(0).toUpperCase() + day.slice(1) }} Open:</label>
+    <input type="time" [(ngModel)]="outpatientDepartment.openingHours[day].open" name="{{day}}Open"
+           class="form-control" [disabled]="true" id="{{day}}Open"
+           tabindex="24">
+  </div>
+  <div class="col">
+    <label class="form-label" for="{{day}}Close">{{ day.charAt(0).toUpperCase() + day.slice(1) }} Close:</label>
+    <input type="time" [(ngModel)]="outpatientDepartment.openingHours[day].close" name="{{day}}Close"
+           class="form-control" [disabled]="true" id="{{day}}Close"
+           tabindex="24">
+  </div>
+  <div class="col-auto">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" [(ngModel)]="outpatientDepartment.openingHours[day].isClosed"
+             name="{{day}}Closed" id="{{day}}Closed" tabindex="24" [disabled]="true">
+      <label class="form-check-label" for="{{day}}Closed">{{ day.charAt(0).toUpperCase() + day.slice(1) }}
+        Closed</label>
     </div>
   </div>
+</div>
+
+<div class="mt-4 d-flex flex-row">
+  <span class="flex-grow-1"></span>
+  <button type="submit" mat-button class="sepr-btn-submit" tabindex="25" *ngIf="role === Role.admin" [routerLink]="['edit']">Edit
+    Outpatient
+    Department
+  </button>
 </div>

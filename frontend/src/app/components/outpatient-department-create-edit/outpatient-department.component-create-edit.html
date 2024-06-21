@@ -1,7 +1,7 @@
 <div class="start-page-container">
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>Register Outpatient Department</span><br>
+      <span>{{ mode === OutpatientDepartmentCreateEditMode.create ? "Register" : "Edit" }} Outpatient Department</span><br>
     </h1>
   </div>
 </div>
@@ -36,18 +36,18 @@
     <div class="col">
       <label class="form-label" for="{{day}}Open">{{ day.charAt(0).toUpperCase() + day.slice(1) }} Open:</label>
       <input type="time" [(ngModel)]="outpatientDepartment.openingHours[day].open" name="{{day}}Open"
-             class="form-control" [disabled]="outpatientDepartment.openingHours[day].closed" id="{{day}}Open"
+             class="form-control" [disabled]="outpatientDepartment.openingHours[day].isClosed" id="{{day}}Open"
              tabindex="24">
     </div>
     <div class="col">
       <label class="form-label" for="{{day}}Close">{{ day.charAt(0).toUpperCase() + day.slice(1) }} Close:</label>
       <input type="time" [(ngModel)]="outpatientDepartment.openingHours[day].close" name="{{day}}Close"
-             class="form-control" [disabled]="outpatientDepartment.openingHours[day].closed" id="{{day}}Close"
+             class="form-control" [disabled]="outpatientDepartment.openingHours[day].isClosed" id="{{day}}Close"
              tabindex="24">
     </div>
     <div class="col-auto">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" [(ngModel)]="outpatientDepartment.openingHours[day].closed"
+        <input class="form-check-input" type="checkbox" [(ngModel)]="outpatientDepartment.openingHours[day].isClosed"
                name="{{day}}Closed" id="{{day}}Closed" tabindex="24">
         <label class="form-check-label" for="{{day}}Closed">{{ day.charAt(0).toUpperCase() + day.slice(1) }}
           Closed</label>
@@ -57,9 +57,7 @@
 
   <div class="mt-4 d-flex flex-row">
     <span class="flex-grow-1"></span>
-    <button type="submit" mat-button class="sepr-btn-submit" [disabled]="!isFormValid()" tabindex="25">Register
-      Outpatient
-      Department
+    <button type="submit" mat-button class="sepr-btn-submit" [disabled]="!isFormValid()" tabindex="25">{{ mode === OutpatientDepartmentCreateEditMode.create ? "Create Outpatient Department" : "Save changes" }}
     </button>
   </div>
 </form>
