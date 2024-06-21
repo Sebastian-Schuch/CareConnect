@@ -20,16 +20,16 @@ public class Credential implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 510)
     private String email;
 
-    @Column(nullable = false, name = "first_name")
+    @Column(nullable = false, name = "first_name", length = 510)
     private String firstName;
 
-    @Column(nullable = false, name = "last_name")
+    @Column(nullable = false, name = "last_name", length = 510)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 510)
     private String password;
 
     @Column(nullable = false)

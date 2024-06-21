@@ -32,7 +32,7 @@ public class Appointment {
     @Column(nullable = false)
     private Date endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2048)
     private String notes;
 
 

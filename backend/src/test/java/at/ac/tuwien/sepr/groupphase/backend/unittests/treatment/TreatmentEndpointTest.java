@@ -1,10 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.treatment;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.TreatmentEndpoint;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoSearch;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -20,9 +21,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class TreatmentEndpointTest {
 
@@ -137,6 +144,87 @@ public class TreatmentEndpointTest {
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> treatmentEndpoint.getTreatmentById(id));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
         verify(treatmentService, times(1)).getTreatmentById(id);
+        verify(patientServiceImpl, times(1)).isOwnRequest(patientId);
+    }
+
+    @Test
+    @DisplayName("searchTreatments: valid searchParams and doctor request - expect success")
+    @WithMockUser(roles = "DOCTOR")
+    void shouldReturnTreatments_whenGivenValidSearchParamsAndRoleDoctor() {
+        TreatmentDtoSearch searchParams = mock(TreatmentDtoSearch.class);
+        Long patientId = 1L;
+        TreatmentPageDto treatmentPageDto = mock(TreatmentPageDto.class);
+
+        when(treatmentService.searchTreatments(searchParams)).thenReturn(treatmentPageDto);
+
+        when(searchParams.patientId()).thenReturn(patientId);
+        // mock isOwnRequest() method in PatientServiceImpl simulate that the patient is not the owner of the request
+        when(userService.isValidRequestOfRole(Role.DOCTOR)).thenReturn(true);
+
+        // call getTreatmentById() method in Endpoint expect forbidden
+        TreatmentPageDto treatments = treatmentEndpoint.searchTreatments(searchParams);
+        assertNotNull(treatments);
+        verify(treatmentService, times(1)).searchTreatments(searchParams);
+        verify(userService, times(1)).isValidRequestOfRole(Role.DOCTOR);
+    }
+
+    @Test
+    @DisplayName("searchTreatments: valid searchParams and secretary request - expect success")
+    @WithMockUser(roles = "SECRETARY")
+    void shouldReturnTreatments_whenGivenValidSearchParamsAndRoleSecretary() {
+        TreatmentDtoSearch searchParams = mock(TreatmentDtoSearch.class);
+        Long patientId = 1L;
+        TreatmentPageDto treatmentPageDto = mock(TreatmentPageDto.class);
+
+        when(treatmentService.searchTreatments(searchParams)).thenReturn(treatmentPageDto);
+
+        when(searchParams.patientId()).thenReturn(patientId);
+        // mock isOwnRequest() method in PatientServiceImpl simulate that the patient is not the owner of the request
+        when(userService.isValidRequestOfRole(Role.SECRETARY)).thenReturn(true);
+
+        // call getTreatmentById() method in Endpoint expect forbidden
+        TreatmentPageDto treatments = treatmentEndpoint.searchTreatments(searchParams);
+        assertNotNull(treatments);
+        verify(treatmentService, times(1)).searchTreatments(searchParams);
+        verify(userService, times(1)).isValidRequestOfRole(Role.SECRETARY);
+    }
+
+    @Test
+    @DisplayName("searchTreatments: valid searchParams and own patient request - expect success")
+    @WithMockUser(roles = "PATIENT")
+    void shouldReturnTreatments_whenGivenValidSearchParamsAndOwnPatientRequest() {
+        TreatmentDtoSearch searchParams = mock(TreatmentDtoSearch.class);
+        Long patientId = 1L;
+        TreatmentPageDto treatmentPageDto = mock(TreatmentPageDto.class);
+
+        when(treatmentService.searchTreatments(searchParams)).thenReturn(treatmentPageDto);
+
+        when(searchParams.patientId()).thenReturn(patientId);
+        // mock isOwnRequest() method in PatientServiceImpl simulate that the patient is not the owner of the request
+        when(patientServiceImpl.isOwnRequest(patientId)).thenReturn(true);
+
+        // call getTreatmentById() method in Endpoint expect forbidden
+        TreatmentPageDto treatments = treatmentEndpoint.searchTreatments(searchParams);
+        assertNotNull(treatments);
+        verify(treatmentService, times(1)).searchTreatments(searchParams);
+        verify(patientServiceImpl, times(1)).isOwnRequest(patientId);
+    }
+
+    @Test
+    @DisplayName("searchTreatments: valid searchParams but unauthorized role - expect forbidden")
+    @WithMockUser(roles = "PATIENT")
+    void shouldThrowForbidden_whenGivenValidSearchParamsButUnauthorizedRole() {
+        TreatmentDtoSearch searchParams = mock(TreatmentDtoSearch.class);
+        Long patientId = 1L;
+
+        when(searchParams.patientId()).thenReturn(patientId);
+        // mock isOwnRequest() method in PatientServiceImpl simulate that the patient is not the owner of the request
+        when(patientServiceImpl.isOwnRequest(patientId)).thenReturn(false);
+
+        // call getTreatmentById() method in Endpoint expect forbidden
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> treatmentEndpoint.searchTreatments(searchParams));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        verify(treatmentService, times(0)).searchTreatments(searchParams);
         verify(patientServiceImpl, times(1)).isOwnRequest(patientId);
     }
 

@@ -14,7 +14,7 @@ public class UserLoginDto {
     private String email;
 
     @NotNull(message = "Password must not be null")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Size(min = 8, max = 255, message = "Password must be at least 8 characters long or is too long")
     private String password;
 
     public String getEmail() {

@@ -13,6 +13,7 @@ public record TreatmentMedicineDtoCreate(
     MedicationDto medication,
 
     @NotNull(message = "Units of measurement must not be null")
+    @Size(min = 1, max = 255, message = "Units of measurement must be between 1 and 255 characters long")
     String unitOfMeasurement,
 
     @Min(value = 0, message = "Amount must be greater than or equal to 0")
