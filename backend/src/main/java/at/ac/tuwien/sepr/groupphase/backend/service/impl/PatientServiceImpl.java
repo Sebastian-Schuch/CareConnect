@@ -7,12 +7,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
+import at.ac.tuwien.sepr.groupphase.backend.specification.DoctorSpecification;
+import at.ac.tuwien.sepr.groupphase.backend.specification.PatientSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -131,6 +137,14 @@ public class PatientServiceImpl implements PatientService {
             }
         }
         return false;
+    }
+
+    @Override
+    public Page<PatientDto> getPatients(String searchTerm, Pageable pageable) {
+        Specification<Patient> spec = Specification.where(PatientSpecification.containsTextInAnyField(searchTerm))
+            .and(PatientSpecification.isActive());
+        return patientRepository.findAll(spec, pageable)
+            .map(patientMapper::patientToPatientDto);
     }
 
     /**

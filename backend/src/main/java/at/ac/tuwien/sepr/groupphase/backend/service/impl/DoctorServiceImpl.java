@@ -11,8 +11,12 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
+import at.ac.tuwien.sepr.groupphase.backend.specification.DoctorSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -121,6 +125,14 @@ public class DoctorServiceImpl implements DoctorService {
         return false;
     }
 
+    @Override
+    public Page<DoctorDto> getDoctors(String searchTerm, Pageable pageable) {
+        Specification<Doctor> spec = Specification.where(DoctorSpecification.containsTextInAnyField(searchTerm))
+            .and(DoctorSpecification.isActive());
+        return doctorRepository.findAll(spec, pageable)
+            .map(doctorMapper::doctorToDoctorDto);
+    }
+
     /**
      * Make a string searchable by converting it to upper case.
      *
@@ -134,4 +146,6 @@ public class DoctorServiceImpl implements DoctorService {
         }
         return search;
     }
+
+
 }

@@ -238,7 +238,6 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
         assertEquals(9000, capacities.get(3).capacityDto().capacity());
-        List<Appointment> appointments = appointmentRepository.findAll();
         assertEquals(10, capacities.get(3).capacityDto().occupied());
     }
 }

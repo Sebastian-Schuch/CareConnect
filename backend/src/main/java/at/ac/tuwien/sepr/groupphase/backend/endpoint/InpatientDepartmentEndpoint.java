@@ -83,7 +83,7 @@ public class InpatientDepartmentEndpoint {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
         Specification<InpatientDepartment> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.like(root.get("name"), "%" + searchTerm + "%"));
+            predicates.add(cb.like(cb.lower(root.get("name")), "%" + searchTerm.toLowerCase() + "%"));
             predicates.add(cb.equal(root.get("active"), true));  // Check for active field
             return cb.and(predicates.toArray(new Predicate[0]));
         };

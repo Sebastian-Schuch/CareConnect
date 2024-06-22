@@ -3,13 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface MedicationRepository extends JpaRepository<Medication, Long> {
+public interface MedicationRepository extends JpaRepository<Medication, Long>, JpaSpecificationExecutor<Medication> {
     /**
      * Find a medication by its name.
      *

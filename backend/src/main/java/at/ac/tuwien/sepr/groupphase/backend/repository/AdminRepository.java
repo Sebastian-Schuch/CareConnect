@@ -3,13 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface AdminRepository extends JpaRepository<Admin, Long> {
+public interface AdminRepository extends JpaRepository<Admin, Long>, JpaSpecificationExecutor<Admin> {
 
     Admin findByCredential_EmailAndCredential_ActiveTrue(String email);
 

@@ -49,4 +49,20 @@ export class MedicationService {
       medication
     );
   }
+
+  /**
+   * Search for medications by name.
+   * @param name the name to search for
+   * @param page the page number
+   * @param size the size of the page
+   */
+  searchMedicationsByName(name: string, page: number = 0, size: number = 10): Observable<MedicationDto[]> {
+    return this.http.get<MedicationDto[]>(`${this.medicationBaseUri}/page`, {
+      params: {
+        searchTerm: name,
+        page: page.toString(),
+        size: size.toString()
+      }
+    });
+  }
 }

@@ -229,64 +229,6 @@ public class PatientEndpointTest extends TestBase {
             .andExpect(status().isForbidden());
     }
 
-    @Test
-    @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
-    public void givenThreeCreatedPatients_whenGetAllPatients_thenReturnsThreePatients() throws Exception {
-        patientRepository.deleteAll();
-        List<MedicationDto> medications = new ArrayList<>();
-        List<AllergyDto> allergies = new ArrayList<>();
-        String json1 = ow.writeValueAsString(new PatientDtoCreate("1234123456", "a@a.a", "a", "b", medications, allergies));
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json1)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated());
-
-        String json2 = ow.writeValueAsString(new PatientDtoCreate("6543214321", "b@b.b", "a", "b", medications, allergies));
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json2)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated());
-
-        String json3 = ow.writeValueAsString(new PatientDtoCreate("6543123456", "c@c.c", "a", "b", medications, allergies));
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json3)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated());
-
-        List<Credential> credentials = patientRepository.findAllPatientCredentials();
-
-        Credential patient1 = credentials.get(0);
-        Credential patient2 = credentials.get(1);
-        Credential patient3 = credentials.get(2);
-
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsByteArray();
-        List<UserLoginDto> patients = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyGet).readAll();
-        assertThat(patients).hasSize(3)
-            .extracting(UserLoginDto::getEmail)
-            .containsExactlyInAnyOrder(
-                patient1.getEmail(),
-                patient2.getEmail(),
-                patient3.getEmail());
-    }
-
-    @Test
-    @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
-    public void givenNoPatientsInDatabase_whenGetAllPatients_thenReturnsEmptyList() throws Exception {
-        patientRepository.deleteAll();
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsByteArray();
-        List<PatientDto> patients = objectMapper.readerFor(PatientDto.class).<PatientDto>readValues(bodyGet).readAll();
-        assertThat(patients).isEmpty();
-    }
-
     @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"SECRETARY"})

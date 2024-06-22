@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.MedicationMapper;
+import at.ac.tuwien.sepr.groupphase.backend.specification.MedicationSpecification;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -10,7 +11,10 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.MedicationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -64,5 +68,12 @@ public class MedicationServiceImpl implements MedicationService {
     public List<MedicationDto> getAllMedications() {
         LOG.trace("getAllMedications()");
         return medicationMapper.medicationEntitiesToListOfMedicationDto(medicationRepository.findByActiveTrue());
+    }
+
+    @Override
+    public List<MedicationDto> getMedicationsPage(String searchTerm, Pageable pageable) {
+        Specification<Medication> spec = Specification.where(MedicationSpecification.nameContains(searchTerm))
+            .and(MedicationSpecification.isActive());
+        return medicationMapper.medicationEntitiesToListOfMedicationDto(medicationRepository.findAll(spec, pageable).getContent());
     }
 }

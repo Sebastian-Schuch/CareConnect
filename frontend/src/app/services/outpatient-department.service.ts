@@ -9,6 +9,8 @@ import {
   OutpatientDepartmentPageDto
 } from "../dtos/outpatient-department";
 import {InpatientDepartmentPageDto} from "../dtos/inpatient-department";
+import {Page} from "../dtos/page";
+import {UserDto} from "../dtos/user";
 
 @Injectable({
   providedIn: 'root'
@@ -46,10 +48,6 @@ export class OutpatientDepartmentService {
 
   editOutpatientDepartment(update: OutpatientDepartmentDto) {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + update.id, update);
-  }
-
-  getOutpatientDepartmentCapacities(): Observable<OutpatientDepartmentCapacityDto[]> {
-    return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(this.outpatientDepartmentBaseUri + '/capacities');
   }
 
   getOutpatientDepartmentCapacitiesForDay(date: string): Observable<OutpatientDepartmentCapacityDto[]> {

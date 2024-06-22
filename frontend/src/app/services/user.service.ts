@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {Globals} from "../global/globals";
 import {AuthRequest} from "../dtos/auth-request";
 import {Password} from "../dtos/password";
+import {Page} from "../dtos/page";
 
 
 @Injectable({
@@ -151,6 +152,23 @@ export class UserService {
     );
   }
 
+
+  getDoctors(searchTerm: string, page: number = 0, size: number = 10): Observable<Page<UserDto>> {
+    let params = new HttpParams();
+    params = params.set('searchTerm', searchTerm);
+    params = params.set('page', page.toString());
+    params = params.set('size', size.toString());
+    return this.http.get<Page<UserDto>>(`${this.doctorBaseUri}`, { params });
+  }
+
+  getPatients(searchTerm: string, page: number = 0, size: number = 10): Observable<Page<UserDto>> {
+    let params = new HttpParams();
+    params = params.set('searchTerm', searchTerm);
+    params = params.set('page', page.toString());
+    params = params.set('size', size.toString());
+    return this.http.get<Page<UserDto>>(`${this.patientBaseUri}`, { params });
+  }
+
   /**
    * Create a new doctors in the system.
    *
@@ -184,15 +202,6 @@ export class UserService {
     return this.http.get<UserDto>(
       this.credentialDoctorBaseUri
     );
-  }
-
-  /**
-   * Get all doctors from the backend.
-   *
-   * @return an Observable of the doctors
-   */
-  getAllDoctors(): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>(`${this.doctorBaseUri}`);
   }
 
   /**
@@ -258,14 +267,6 @@ export class UserService {
     );
   }
 
-  /**
-   * Get all secretaries from the backend.
-   *
-   * @return an Observable of the secretaries
-   */
-  getAllSecretaries(): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>(`${this.secretaryBaseUri}`);
-  }
 
   /**
    * Update the secretary with the given data.
@@ -316,14 +317,6 @@ export class UserService {
     );
   }
 
-  /**
-   * Get all patients from the backend.
-   *
-   * @return an Observable of the patients
-   */
-  getAllPatients(): Observable<UserDto[]> {
-    return this.http.get<UserDto[]>(`${this.patientBaseUri}`);
-  }
 
   /**
    * Create a new patient in the system.
