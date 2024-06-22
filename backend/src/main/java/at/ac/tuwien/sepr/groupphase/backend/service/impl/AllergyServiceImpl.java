@@ -39,7 +39,12 @@ public class AllergyServiceImpl implements AllergyService {
         LOG.trace("create({})", toCreate);
         Allergy existingAllergy = findByName(toCreate.name());
         if (existingAllergy != null) {
-            throw new ConflictException("Allergy already exists");
+            if (existingAllergy.isActive()) {
+                throw new ConflictException("Allergy already exists");
+            } else {
+                existingAllergy.setActive(true);
+                return allergyRepository.save(existingAllergy);
+            }
         }
         Allergy allergy = new Allergy();
         allergy.setName(toCreate.name());
