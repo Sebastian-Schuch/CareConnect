@@ -149,7 +149,6 @@ public class MedicationEndpointTest extends TestBase {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    //TODO: adjust and refactor tests (Issue #60)
 
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
