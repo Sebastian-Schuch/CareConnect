@@ -19,7 +19,7 @@ public interface OutpatientDepartmentRepository extends JpaRepository<Outpatient
      * @return all outpatient departments of the page.
      */
     Page<OutpatientDepartment> findAll(Specification<OutpatientDepartment> spec, Pageable pageable);
-    
+
     List<OutpatientDepartment> findAllByActiveTrue();
 
     OutpatientDepartment findByIdAndActiveTrue(Long id);
