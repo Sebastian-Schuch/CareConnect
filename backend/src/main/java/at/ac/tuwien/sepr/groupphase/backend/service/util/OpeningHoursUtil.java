@@ -118,7 +118,7 @@ public class OpeningHoursUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
 
-        while (calendar.getTime().before(endDate) || calendar.getTime().equals(endDate)) {
+        while (calendar.getTime().before(endDate)) {
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             String hours = getOpeningHoursForDay(openingHours, dayOfWeek);
             totalSlots += calculateSlotsForDay(hours, capacity);

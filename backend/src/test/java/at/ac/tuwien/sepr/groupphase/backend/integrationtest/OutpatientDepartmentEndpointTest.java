@@ -127,13 +127,16 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.add(Calendar.YEAR, 100);
         futureDate = cal.getTime();
 
+
         for (int i = 0; i < 10; i++) {
             Appointment ap = new Appointment();
-            ap.setStartDate(new Date(futureDate.getTime() + (24 * 60 * 60 * 1000L) * i));
-            ap.setEndDate(new Date(futureDate.getTime() + ((24 * 60 * 60 * 1000L)*i + 30 * 60 * 1000L)));
+            ap.setStartDate(new Date(futureDate.getTime() + (60 * 60 * 1000L) + (24 * 60 * 60 * 1000L) * i));
+            ap.setEndDate(new Date(futureDate.getTime() + (60 * 60 * 1000L)+  ((24 * 60 * 60 * 1000L)*i + 30 * 60 * 1000L)));
             ap.setPatient(patientRepository.findAll().getFirst());
             ap.setOutpatientDepartment(outpatientDepartmentRepository.getReferenceById(testObjectId));
             ap.setNotes("Test");
@@ -235,6 +238,7 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
         assertEquals(9000, capacities.get(3).capacityDto().capacity());
+        List<Appointment> appointments = appointmentRepository.findAll();
         assertEquals(10, capacities.get(3).capacityDto().occupied());
     }
 }
