@@ -38,16 +38,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        try {
-            UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
-            if (authToken != null) {
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        String header = request.getHeader("Authorization");
+        if (header != null && !header.startsWith("Basic ")) {
+            try {
+                UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
+                if (authToken != null) {
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            } catch (IllegalArgumentException | JwtException e) {
+                LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid authorization header or token");
+                return;
             }
-        } catch (IllegalArgumentException | JwtException e) {
-            LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid authorization header or token");
-            return;
         }
         chain.doFilter(request, response);
     }

@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApiKeyDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApiKeyDtoFirst;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApiKeyPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.ApiKeyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiKeyEndpoint.BASE_PATH)
 public class ApiKeyEndpoint {
 
+    private static final Logger logger = LoggerFactory.getLogger(ApiKeyEndpoint.class);
+
     public static final String BASE_PATH = "/api/v1/api-keys";
 
     private final ApiKeyService apiKeyService;
@@ -32,6 +36,7 @@ public class ApiKeyEndpoint {
     @Secured({"ADMIN"})
     @GetMapping
     public ApiKeyPageDto getApiKeys(@RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
+        logger.info("getApiKeys method called with page: {} and size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "created");
         return this.apiKeyService.getApiKeys(pageable);
     }
@@ -39,12 +44,14 @@ public class ApiKeyEndpoint {
     @Secured({"ADMIN"})
     @PostMapping
     public ApiKeyDtoFirst createApiKey(@RequestBody ApiKeyDtoCreate createApiKeyDto) {
+        logger.info("createApiKey method called with createApiKeyDto: {}", createApiKeyDto);
         return this.apiKeyService.createApiKey(createApiKeyDto);
     }
 
     @Secured({"ADMIN"})
     @DeleteMapping("/{id}")
     public void deleteApiKey(@PathVariable("id") long id) {
+        logger.info("deleteApiKey method called with id: {}", id);
         this.apiKeyService.deleteApiKey(id);
     }
 

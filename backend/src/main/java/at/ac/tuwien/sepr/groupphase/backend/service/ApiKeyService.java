@@ -28,4 +28,13 @@ public interface ApiKeyService {
      * @param id the API key id to delete
      */
     void deleteApiKey(long id);
+
+    /**
+     * Check if an API key is valid.
+     *
+     * @param apiKey the API key to check
+     * @return true if the API key is valid, false otherwise
+     */
+    boolean checkApiKey(String apiKey);
+
 }

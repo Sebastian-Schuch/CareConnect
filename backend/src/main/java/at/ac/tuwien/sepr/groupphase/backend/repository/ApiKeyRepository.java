@@ -9,4 +9,6 @@ public interface ApiKeyRepository extends JpaRepository<ApiKey, Long> {
 
     @Override
     Page<ApiKey> findAll(Pageable pageable);
+
+    boolean existsByApikey(String apikey);
 }

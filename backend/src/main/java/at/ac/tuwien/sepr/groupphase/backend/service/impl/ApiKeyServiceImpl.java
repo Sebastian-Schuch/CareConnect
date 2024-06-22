@@ -48,6 +48,11 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         apiKeyRepository.deleteById(id);
     }
 
+    @Override
+    public boolean checkApiKey(String apiKey) {
+        return this.apiKeyRepository.existsByApikey(apiKey);
+    }
+
     private String generateKey() {
         byte[] randomBytes = new byte[24];
         secureRandom.nextBytes(randomBytes);
