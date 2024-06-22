@@ -49,6 +49,14 @@
           >
             <mat-icon>mode_edit</mat-icon>
           </button>
+          <label hidden [for]="i+'delete'">Delete Allergy</label>
+          <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
+                  [attr.aria-label]='"Delete allergy" + allergy.name + " (delete)"'
+                  [tabindex]="i+'29'"
+                  (click)="openDeleteDialog(allergy)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
       </td>
     </tr>

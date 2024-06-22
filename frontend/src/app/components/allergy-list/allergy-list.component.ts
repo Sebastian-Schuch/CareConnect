@@ -8,6 +8,9 @@ import {Router} from "@angular/router";
 import {AllergyService} from "../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
+import {Role} from "../../dtos/Role";
+import {MatDialog} from "@angular/material/dialog";
+import {AllergyDeleteComponent} from "../allergy-delete/allergy-delete.component";
 
 @Component({
   selector: 'app-allergy-list',
@@ -25,7 +28,7 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
 })
 export class AllergyListComponent implements OnInit {
 
-  constructor(private router: Router, private allergyService: AllergyService, private errorFormatterService: ErrorFormatterService, private notificationService: ToastrService) {
+  constructor(private router: Router, private allergyService: AllergyService, private errorFormatterService: ErrorFormatterService, private notificationService: ToastrService, public dialog: MatDialog) {
   }
 
   totalItems: number = 0;
@@ -39,7 +42,6 @@ export class AllergyListComponent implements OnInit {
       next: allergyPage => {
         this.allergies = allergyPage.allergies;
         this.totalItems = allergyPage.totalItems;
-        console.log(allergyPage);
       },
       error: async error => {
         await this.errorFormatterService.printErrorToNotification(error, "Error loading Allergies", this.notificationService);
@@ -60,4 +62,36 @@ export class AllergyListComponent implements OnInit {
   ngOnInit(): void {
     this.reloadAllergies();
   }
+
+  openDeleteDialog(allergy: AllergyDto) {
+    const dialogRef = this.dialog.open(AllergyDeleteComponent,
+      {data: {allergy: allergy}});
+
+    dialogRef.afterClosed().subscribe({
+      next: value => {
+        if (value) {
+          this.deleteAllergy(allergy.id);
+          if (this.allergies.length === 1) {
+            this.page = this.page - 1;
+            this.reloadAllergies();
+          }
+        }
+      },
+      error: err => console.error(err)
+    })
+  }
+
+  private deleteAllergy(id: number) {
+    this.allergyService.deleteAllergy(id).subscribe({
+      next: () => {
+        this.reloadAllergies();
+        this.notificationService.success("Allergy deleted successfully");
+      },
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, "Error deleting Allergy", this.notificationService);
+      }
+    });
+  }
+
+  protected readonly Role = Role;
 }

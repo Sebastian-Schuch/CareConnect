@@ -65,7 +65,7 @@ public class AllergyServiceImpl implements AllergyService {
     @Override
     public Allergy findByName(String name) {
         LOG.trace("findByName({})", name);
-        return allergyRepository.findByName(name);
+        return allergyRepository.findByNameAndActiveTrue(name);
     }
 
     @Override
@@ -77,6 +77,10 @@ public class AllergyServiceImpl implements AllergyService {
     @Override
     public Allergy updateAllergy(AllergyDto allergy) {
         LOG.trace("updateAllergy({})", allergy);
+        Allergy sameName = allergyRepository.findByName(allergy.name());
+        if (sameName != null) {
+            throw new ConflictException("Allergy with this name already exists");
+        }
         Allergy existingAllergy = findById(allergy.id());
         existingAllergy.setName(allergy.name());
         return allergyRepository.save(existingAllergy);
@@ -98,11 +102,24 @@ public class AllergyServiceImpl implements AllergyService {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
         Specification<Allergy> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.isTrue(root.get("active")));
             if (name != null) {
                 predicates.add(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
         return allergyMapper.toAllergyPageDto(allergyRepository.findAll(spec, pageable));
+    }
+
+    @Override
+    public AllergyDto setAllergyInactive(Long id) {
+        LOG.trace("setAllergyInactive({})", id);
+        Allergy allergy = allergyRepository.findAllergyById(id);
+        if (allergy == null) {
+            LOG.warn("Allergy with id {} not found", id);
+            throw new NotFoundException("Allergy not found");
+        }
+        allergy.setActive(false);
+        return allergyMapper.allergyToDto(allergyRepository.save(allergy));
     }
 }

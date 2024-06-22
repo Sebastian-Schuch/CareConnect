@@ -73,4 +73,12 @@ export class AllergyService {
     return this.http.get<AllergyPageDto>(`${this.allergyUri}/search`, {params: params});
   }
 
+  /**
+   * Deletes an allergy by its id.
+   *
+   * @param id the id of the allergy to delete
+   */
+  deleteAllergy(id: number) {
+    return this.http.delete(`${this.allergyUri}/${id}`);
+  }
 }

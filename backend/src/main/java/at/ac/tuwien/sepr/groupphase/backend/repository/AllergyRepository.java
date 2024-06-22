@@ -17,11 +17,20 @@ public interface AllergyRepository extends CrudRepository<Allergy, Long> {
      * @param name the name of the allergy to find
      * @return the allergy with the given name
      */
+    Allergy findByNameAndActiveTrue(String name);
+
+    /**
+     * Find an allergy by its name.
+     *
+     * @param name the name of the allergy to find
+     * @return the allergy with the given name
+     */
     Allergy findByName(String name);
 
     @Transactional
-    @Query(value = "SELECT * FROM Allergy WHERE ID= ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Allergy WHERE ID= ?1 AND ACTIVE", nativeQuery = true)
     Allergy findAllergyById(Long id);
+
 
     /**
      * Find all allergies by the specification.

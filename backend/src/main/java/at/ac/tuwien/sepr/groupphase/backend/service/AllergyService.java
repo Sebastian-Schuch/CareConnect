@@ -66,4 +66,12 @@ public interface AllergyService {
      * @return the allergies with the given name
      */
     AllergyPageDto searchAllergies(String name, Integer page, Integer size);
+
+    /**
+     * This function sets an allergy to inactive.
+     *
+     * @param id the id of the allergy to set inactive
+     * @return the allergy set to inactive
+     */
+    AllergyDto setAllergyInactive(Long id);
 }
