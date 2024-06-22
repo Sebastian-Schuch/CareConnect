@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentCapacityDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentPageDto;
@@ -9,6 +10,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -80,6 +83,27 @@ public class OutpatientDepartmentEndpoint {
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
         LOGGER.info("getAllOutpatientDepartments()");
         return outpatientDepartmentService.getAllOutpatientDepartments();
+    }
+
+    @Secured({"SECRETARY", "PATIENT"})
+    @GetMapping("/capacities/day")
+    public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForDay(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForDay(date);
+    }
+
+    @Secured({"SECRETARY", "PATIENT"})
+    @GetMapping("/capacities/week")
+    public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForWeek(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate) {
+        return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForWeek(startDate);
+    }
+
+    @Secured({"SECRETARY", "PATIENT"})
+    @GetMapping("/capacities/month")
+    public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForMonth(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForMonth(date);
     }
 
     /**
