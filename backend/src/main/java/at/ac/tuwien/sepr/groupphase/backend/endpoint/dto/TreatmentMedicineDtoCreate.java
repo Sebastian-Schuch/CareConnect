@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 
@@ -11,9 +10,6 @@ public record TreatmentMedicineDtoCreate(
 
     @NotNull(message = "Medication must not be null")
     MedicationDto medication,
-
-    @NotNull(message = "Units of measurement must not be null")
-    String unitOfMeasurement,
 
     @Min(value = 0, message = "Amount must be greater than or equal to 0")
     @NotNull(message = "Amount must not be null")

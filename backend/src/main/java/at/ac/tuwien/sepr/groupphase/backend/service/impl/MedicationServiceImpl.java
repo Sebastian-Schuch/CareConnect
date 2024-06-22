@@ -34,9 +34,7 @@ public class MedicationServiceImpl implements MedicationService {
         if (existingMedication != null) {
             throw new ConflictException("Medication already exists");
         }
-        Medication medication = new Medication();
-        medication.setName(toCreate.name());
-        medication.setActive(true);
+        Medication medication = medicationMapper.medicationDtoCreateToMedicationEntity(toCreate);
         return medicationMapper.medicationEntityToMedicationDto(medicationRepository.save(medication));
     }
 
