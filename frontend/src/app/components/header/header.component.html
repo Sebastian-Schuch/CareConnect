@@ -228,9 +228,9 @@
         Register Allergy
       </button>
 
-      <button mat-button (click)="adminNavigateToApiKeys()" tabindex="13">
+      <button mat-button (click)="adminNavigateToApiKeys()" tabindex="15">
         <mat-icon>key</mat-icon>
-        Manage ApiKeys
+        Manage API keys
       </button>
     </ng-container>
   </div>
@@ -360,6 +360,9 @@
             View
             Inpatient
             Departments
+          </button>
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToApiKeys()">
+            Manage API keys
           </button>
           <!--<button mat-menu-item class="clean-button" (click)="adminNavigateToOutpatientDepartment()">
             View
