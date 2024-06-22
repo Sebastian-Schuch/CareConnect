@@ -47,6 +47,9 @@ import {
   TreatmentListComponent,
   TreatmentListMode
 } from "./components/treatment/treatment-list/treatment-list.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -66,6 +69,7 @@ const routes: Routes = [
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentListComponent},
+              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
               {path: ':id', component: OutpatientDepartmentDetailComponent}
             ]},
           {
@@ -298,6 +302,7 @@ const routes: Routes = [
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
           {path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentListComponent},
+              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
               {path: ':id', component: OutpatientDepartmentDetailComponent}
             ]},
           {
