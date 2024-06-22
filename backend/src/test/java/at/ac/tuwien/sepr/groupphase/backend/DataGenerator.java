@@ -43,7 +43,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This component is only created, if the profile {@code generateData} is active
+ * This component is only created, if the profile {@code datagen} is active
  */
 @Component
 @Profile("datagen")
