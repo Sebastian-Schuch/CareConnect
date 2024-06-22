@@ -86,7 +86,7 @@ export class AuthService {
     this.isLogged.next(true);
   }
 
-  public setToken(authResponse: string) {
+  private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
 
