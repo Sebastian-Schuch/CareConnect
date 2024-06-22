@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgForOf} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {
   MatCell,
@@ -36,10 +36,11 @@ import {ApiKeyDeleteComponent} from "./api-key-delete/api-key-delete.component";
     MatRowDef,
     MatTable,
     MatHeaderCellDef,
-    MatPaginator
+    MatPaginator,
+    NgForOf
   ],
   templateUrl: './api-key.component.html',
-  styleUrl: './api-key.component.scss'
+  styleUrls:  ['./api-key.component.scss', "../../../styles.scss"]
 })
 export class ApiKeyComponent implements OnInit {
     dataSource: any;
