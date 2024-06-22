@@ -8,9 +8,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
 
 export enum AllergyCreatEditMode {
-  create,
-  edit
-
+  CREATE,
+  EDIT
 }
 
 @Component({
@@ -34,7 +33,7 @@ export class AllergyComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
-      if (this.mode === AllergyCreatEditMode.edit) {
+      if (this.mode === AllergyCreatEditMode.EDIT) {
         this.route.params.subscribe(params => {
           this.allergyService.getAllergyById(params.id).subscribe(allergy => {
             this.allergy = allergy;
@@ -51,18 +50,19 @@ export class AllergyComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
-      if (this.mode === AllergyCreatEditMode.create) {
+      if (this.mode === AllergyCreatEditMode.CREATE) {
         let observable: Observable<AllergyDtoCreate> = this.allergyService.createAllergy(this.allergy);
 
         observable.subscribe({
           next: data => {
             this.notification.success('Successfully created ' + data.name + ' Allergy');
+            this.router.navigate(['/home/admin/allergies'])
           },
           error: async error => {
             await this.errorFormatterService.printErrorToNotification(error, `Could not create Allergy`, this.notification);
           }
         });
-      } else if (this.mode === AllergyCreatEditMode.edit) {
+      } else if (this.mode === AllergyCreatEditMode.EDIT) {
         let observable: Observable<AllergyDtoCreate> = this.allergyService.updateAllergy(this.allergy);
 
         observable.subscribe({

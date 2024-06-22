@@ -1,7 +1,7 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>{{ this.mode === AllergyCreatEditMode.create ? 'Register' : 'Edit' }} Allergy</span><br>
+      <span>{{ this.mode === AllergyCreatEditMode.CREATE ? 'Register' : 'Edit' }} Allergy</span><br>
     </h1>
   </div>
 </div>
@@ -46,7 +46,7 @@
             [disabled]="!form.valid"
             tabindex="22"
     >
-      {{ this.mode === AllergyCreatEditMode.create ? 'Register' : 'Edit' }} Allergy
+      {{ this.mode === AllergyCreatEditMode.CREATE ? 'Register' : 'Edit' }} Allergy
     </button>
   </div>
 </form>

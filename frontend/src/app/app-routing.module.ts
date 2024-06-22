@@ -29,7 +29,10 @@ import {
   InpatientDepartmentComponent,
   InpatientDepartmentCreateEditMode
 } from "./components/inpatient-department/inpatient-department.component";
-import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
+import {
+  MedicationCreateComponent,
+  MedicationCreateEditMode
+} from "./components/medication-create/medication-create.component";
 import {AllergyComponent, AllergyCreatEditMode} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
@@ -49,6 +52,7 @@ import {
   TreatmentListMode
 } from "./components/treatment/treatment-list/treatment-list.component";
 import {AllergyListComponent} from "./components/allergy-list/allergy-list.component";
+import {MedicationListComponent} from "./components/medication-list/medication-list.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -121,8 +125,8 @@ const routes: Routes = [
                 component: InpatientDepartmentComponent,
                 data: {mode: InpatientDepartmentCreateEditMode.create}
               },
-              {path: 'medicine', component: MedicationCreateComponent},
-              {path: 'allergy', component: AllergyComponent, data: {mode: AllergyCreatEditMode.create}}
+              {path: 'medication', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.CREATE}},
+              {path: 'allergy', component: AllergyComponent, data: {mode: AllergyCreatEditMode.CREATE}}
             ]
           },
           {
@@ -191,7 +195,17 @@ const routes: Routes = [
               {path: '', component: AllergyListComponent},
               {
                 path: ':id', children: [
-                  {path: 'edit', component: AllergyComponent, data: {mode: AllergyCreatEditMode.edit}},
+                  {path: 'edit', component: AllergyComponent, data: {mode: AllergyCreatEditMode.EDIT}},
+                ]
+              }
+            ]
+          },
+          {
+            path: 'medications', children: [
+              {path: '', component: MedicationListComponent},
+              {
+                path: ':id', children: [
+                  {path: 'edit', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.EDIT}}
                 ]
               }
             ]
@@ -319,7 +333,7 @@ const routes: Routes = [
               //{path: 'register', component: null},
               //{path: ':id', children: [
               //{path: '', component: stayViewComponent},
-              //{path: 'edit', component: stayEditComponent}
+              //{path: 'EDIT', component: stayEditComponent}
               //]},
             ]
           },

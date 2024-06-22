@@ -1,7 +1,7 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>Register Medication</span><br>
+      <span>{{ this.mode === MedicationCreateEditMode.CREATE ? 'Register' : 'Edit' }} Medication</span><br>
     </h1>
   </div>
 </div>
@@ -45,7 +45,7 @@
             [disabled]="!form.valid"
             tabindex="22"
     >
-      Register Medication
+      {{ this.mode === MedicationCreateEditMode.CREATE ? 'Register' : 'Edit' }} Medication
     </button>
   </div>
 </form>
