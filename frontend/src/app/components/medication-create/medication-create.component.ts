@@ -15,7 +15,8 @@ import {ErrorFormatterService} from "../../services/error-formatter.service";
 export class MedicationCreateComponent implements OnInit {
 
   medication: MedicationDtoCreate = {
-    name: ''
+    name: '',
+    unitOfMeasurement: ''
   };
 
   constructor(

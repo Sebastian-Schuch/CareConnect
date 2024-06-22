@@ -3,8 +3,8 @@
   <form [formGroup]="medicationAdministeredForm" (ngSubmit)="onSubmit()" class="form-container">
     <mat-form-field class="full-width">
       <mat-label>Medication</mat-label>
-      <input matInput formControlName="medication" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayMedication" autoActiveFirstOption="true">
+      <input matInput formControlName="medication" [matAutocomplete]="auto" [value]="selectedMedication">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayMedication" autoActiveFirstOption="true" (selectionchange)="console.log($event)">
         <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication">
           {{ displayMedication(medication) }}
         </mat-option>
@@ -21,8 +21,7 @@
 
     <mat-form-field class="half-width">
       <mat-label>Unit</mat-label>
-      <input matInput formControlName="unitOfMeasurement">
-      <mat-error *ngIf="unitOfMeasurementControl.hasError('required')">Unit is required</mat-error>
+      <input matInput formControlName="unitOfMeasurement" [value]="selectedUnitOfMeasurement">
     </mat-form-field>
 
     <mat-form-field class="half-width">

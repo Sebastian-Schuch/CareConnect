@@ -94,7 +94,8 @@ public class DataGenerator {
                          DoctorRepository doctorRepository,
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
-                         SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
+                         SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository,
+                         TreatmentMedicineRepository treatmentMedicineRepository,
                          TreatmentRepository treatmentRepository) {
         this.allergyRepository = allergyRepository;
         this.appointmentRepository = appointmentRepository;
@@ -156,8 +157,10 @@ public class DataGenerator {
         openingHoursRepository.deleteAll();
     }
 
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
-                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients,
+                                  boolean generateForMedication, boolean generateForOutpatientDepartments,
+                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines,
+                                  boolean generateForTreatments) {
         if (generateForAllergies) {
             generateDataForAllergies();
         }
@@ -229,18 +232,28 @@ public class DataGenerator {
         List<Medication> medications = new ArrayList<>();
         List<Allergy> allergies = new ArrayList<>();
 
-        patientRepository.save(setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, Role.PATIENT, false, "6912120520", allergies, medications));
-        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, Role.PATIENT, false, "6912225164", allergies, medications));
-        patientRepository.save(setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, Role.PATIENT, false, "6912225111", allergies, medications));
-        patientRepository.save(setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, Role.PATIENT, false, "6912034156", allergies, medications));
-        patientRepository.save(setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, Role.PATIENT, false, "6912222173", allergies, medications));
-        patientRepository.save(setPatient("sebastian.schuch@email.com", "Sebastian", "Schuch", "scHuchWirHabenSchonWiederEinenFehlerBeimEncrypten", true, Role.PATIENT, false, "6912222156", allergies, medications));
+        patientRepository.save(
+            setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, Role.PATIENT, false, "6912120520", allergies, medications));
+        patientRepository.save(
+            setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, Role.PATIENT, false, "6912225164", allergies, medications));
+        patientRepository.save(
+            setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, Role.PATIENT, false, "6912225111", allergies, medications));
+        patientRepository.save(
+            setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, Role.PATIENT, false, "6912034156", allergies, medications));
+        patientRepository.save(
+            setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, Role.PATIENT, false, "6912222173", allergies, medications));
+        patientRepository.save(
+            setPatient("sebastian.schuch@email.com", "Sebastian", "Schuch", "scHuchWirHabenSchonWiederEinenFehlerBeimEncrypten", true, Role.PATIENT, false,
+                "6912222156", allergies, medications));
         //Special Patients (Inactive + Initial Password)
-        patientRepository.save(setPatient("patient.inactive@email.com", "Patient", "Inactive", "404NotFound", false, Role.PATIENT, false, "0000000000", allergies, medications));
-        patientRepository.save(setPatient("patient.intial@email.com", "Patient", "Initial", "InitialPassword", true, Role.PATIENT, true, "1111111111", allergies, medications));
+        patientRepository.save(
+            setPatient("patient.inactive@email.com", "Patient", "Inactive", "404NotFound", false, Role.PATIENT, false, "0000000000", allergies, medications));
+        patientRepository.save(
+            setPatient("patient.intial@email.com", "Patient", "Initial", "InitialPassword", true, Role.PATIENT, true, "1111111111", allergies, medications));
     }
 
-    private Patient setPatient(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword, String svnr, List<Allergy> allergies, List<Medication> medications) {
+    private Patient setPatient(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword,
+                               String svnr, List<Allergy> allergies, List<Medication> medications) {
         Patient patient = new Patient();
         Credential credential = new Credential();
         credential.setEmail(email);
@@ -284,27 +297,31 @@ public class DataGenerator {
     }
 
     private void generateDataForMedication() {
-        medicationRepository.save(setMedication("Medication1", true));
-        medicationRepository.save(setMedication("Medication2", true));
-        medicationRepository.save(setMedication("Medication3", true));
-        medicationRepository.save(setMedication("Medication4", true));
-        medicationRepository.save(setMedication("Medication5", true));
-        medicationRepository.save(setMedication("WieAgra", true));
+        medicationRepository.save(setMedication("Medication1", true, "mg"));
+        medicationRepository.save(setMedication("Medication2", true, "ml"));
+        medicationRepository.save(setMedication("Medication3", true, "mg"));
+        medicationRepository.save(setMedication("Medication4", true, "ml"));
+        medicationRepository.save(setMedication("Medication5", true, "mg"));
+        medicationRepository.save(setMedication("WieAgra", true, "ml"));
 
-        medicationRepository.save(setMedication("InactiveMedication", false));
+        medicationRepository.save(setMedication("InactiveMedication", false, "mg"));
     }
 
-    private Medication setMedication(String name, Boolean active) {
+    private Medication setMedication(String name, Boolean active, String unitOfMeasurement) {
         Medication medication = new Medication();
         medication.setName(name);
         medication.setActive(active);
+        medication.setUnitOfMeasurement(unitOfMeasurement);
         return medication;
     }
 
     private void generateDataForOutpatientDepartments() {
-        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00"), true));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00"), true));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3,
+            setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5,
+            setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10,
+            setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00"), true));
     }
 
     private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours, boolean active) {
@@ -347,26 +364,34 @@ public class DataGenerator {
 
     private void generateDataForAppointments() {
         //Three appointments for the same outpatient department at the same time to fill up the capacity
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0),
+            dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
             dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30)), "Notes1"));
 
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0),
+            dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
             dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30)), "Notes1"));
 
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0),
+            dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
             dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30)), "Notes1"));
 
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0),
+            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"));
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0),
+            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes2"));
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0),
+            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes3"));
 
         //Two appointments for the same outpatient department at the same time - one spot left
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(3), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(3), outpatientDepartmentRepository.findAll().get(0),
+            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes4"));
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(4), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(4), outpatientDepartmentRepository.findAll().get(0),
+            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes5"));
     }
 
@@ -392,16 +417,15 @@ public class DataGenerator {
     }
 
     private void generateDataForTreatmentMedicines() {
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, createDate(2022, Calendar.JANUARY, 1, 8, 0)));
     }
 
-    private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, String unitOfMeasurement, Date timeOfAdministration) {
+    private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, Date timeOfAdministration) {
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
         treatmentMedicine.setMedicine(medication);
         treatmentMedicine.setAmount(amount);
-        treatmentMedicine.setUnitOfMeasurement(unitOfMeasurement);
         treatmentMedicine.setTimeOfAdministration(timeOfAdministration);
         return treatmentMedicine;
     }
@@ -412,18 +436,22 @@ public class DataGenerator {
         List<Doctor> doctors = new ArrayList<>();
         doctors.add(doctorRepository.findAll().get(0));
         treatmentRepository.save(
-            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
+            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0),
+                outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
         treatmentRepository.save(
-            setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
+            setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1),
+                outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
         doctors.add(doctorRepository.findAll().get(1));
         medicine = new ArrayList<>();
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
-            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors, medicine));
+            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2),
+                outpatientDepartmentRepository.findAll().get(0), "Text3", doctors, medicine));
     }
 
-    private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment, String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {
+    private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment,
+                                   String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {
         Treatment treatment = new Treatment();
         treatment.setTreatmentTitle(treatmentTitle);
         treatment.setTreatmentStart(treatmentStart);

@@ -195,8 +195,7 @@ public class TreatmentMapperIntegrationTest extends TestBase {
             assertAll("Verify treatment medicine properties",
                 () -> assertEquals(expectedMedicine.medication().id(), actualMedicine.getMedicine().getId()),
                 () -> assertEquals(expectedMedicine.medicineAdministrationDate(), actualMedicine.getTimeOfAdministration()),
-                () -> assertEquals(expectedMedicine.amount(), actualMedicine.getAmount()),
-                () -> assertEquals(expectedMedicine.unitOfMeasurement(), actualMedicine.getUnitOfMeasurement())
+                () -> assertEquals(expectedMedicine.amount(), actualMedicine.getAmount())
             );
         }
     }
@@ -208,8 +207,7 @@ public class TreatmentMapperIntegrationTest extends TestBase {
             assertAll("Verify treatment medicine properties",
                 () -> assertEquals(expectedMedicine.medication().id(), actualMedicine.getMedicine().getId()),
                 () -> assertEquals(expectedMedicine.medicineAdministrationDate(), actualMedicine.getTimeOfAdministration()),
-                () -> assertEquals(expectedMedicine.amount(), actualMedicine.getAmount()),
-                () -> assertEquals(expectedMedicine.unitOfMeasurement(), actualMedicine.getUnitOfMeasurement())
+                () -> assertEquals(expectedMedicine.amount(), actualMedicine.getAmount())
             );
         }
     }
