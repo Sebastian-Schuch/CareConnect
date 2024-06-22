@@ -27,7 +27,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentMedicineRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +121,6 @@ public class DataGenerator {
     /**
      * Generates dummy data in the database. This method is executed once when the component is instantiated.
      */
-    @PostConstruct
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {

@@ -40,10 +40,7 @@ public class DataGeneratorForDevelopment {
 
     private final AdminRepository adminRepository;
 
-
     private final AppointmentRepository appointmentRepository;
-
-    private final CredentialRepository credentialRepository;
 
     private final DoctorRepository doctorRepository;
 
@@ -67,14 +64,13 @@ public class DataGeneratorForDevelopment {
     @Value("${PASSWORD_PEPPER}")
     private String passwordPepper;
 
-    public DataGeneratorForDevelopment(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository, DoctorRepository doctorRepository,
+    public DataGeneratorForDevelopment(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
                                        MedicationRepository medicationRepository, OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                                        SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository, TreatmentRepository treatmentRepository,
                                        PasswordEncoder passwordEncoder) {
         this.allergyRepository = allergyRepository;
         this.adminRepository = adminRepository;
         this.appointmentRepository = appointmentRepository;
-        this.credentialRepository = credentialRepository;
         this.doctorRepository = doctorRepository;
         this.medicationRepository = medicationRepository;
         this.outpatientDepartmentRepository = outpatientDepartmentRepository;
