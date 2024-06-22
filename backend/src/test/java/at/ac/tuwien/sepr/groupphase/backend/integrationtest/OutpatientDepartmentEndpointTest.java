@@ -2,13 +2,14 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.OutpatientDepartmentEndpoint;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,10 +48,18 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
     private OutpatientDepartmentRepository outpatientDepartmentRepository;
 
     @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    private Date futureDate;
 
     private final OpeningHours openingHours = new OpeningHours()
         .setId(null)
@@ -56,7 +69,7 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         .setThursday("08:00-14:00")
         .setFriday("08:00-14:00")
         .setSaturday("08:00-14:00")
-        .setSunday(null);
+        .setSunday("08:00-14:00");
 
     private final OpeningHoursDtoCreate openingHoursDtoCreate = new OpeningHoursDtoCreate(
         new OpeningHoursDayDto(LocalTime.of(8, 0),
@@ -107,6 +120,28 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
     @BeforeEach
     public void setUp() {
         testObjectId = outpatientDepartmentRepository.save(outpatientDepartment).getId();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.YEAR, 100);
+        futureDate = cal.getTime();
+
+
+        for (int i = 0; i < 10; i++) {
+            Appointment ap = new Appointment();
+            ap.setStartDate(new Date(futureDate.getTime() + (60 * 60 * 1000L) + (24 * 60 * 60 * 1000L) * i));
+            ap.setEndDate(new Date(futureDate.getTime() + (60 * 60 * 1000L)+  ((24 * 60 * 60 * 1000L)*i + 30 * 60 * 1000L)));
+            ap.setPatient(patientRepository.findAll().getFirst());
+            ap.setOutpatientDepartment(outpatientDepartmentRepository.getReferenceById(testObjectId));
+            ap.setNotes("Test");
+            appointmentRepository.save(ap);
+        }
     }
 
     @Test
@@ -149,5 +184,61 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
             assertEquals(outpatientDepartmentDto.openingHours().monday().toString(),
                 outpatientDepartmentDtoCreate.openingHours().monday().toString());
         });
+    }
+
+    @Test
+    @WithMockUser(authorities = {"SECRETARY"})
+    public void givenValidDate_whenGetOutpatientDepartmentCapacitiesForDay_thenReturnCapacities() throws Exception {
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(futureDate);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/outpatient-departments/capacities/day")
+                .param("date", date)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+            objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
+        assertEquals(4, capacities.size());
+        // 12 = 6h open x 2 slots/h
+        assertEquals(outpatientDepartment.getCapacity()*12, capacities.get(3).capacityDto().capacity());
+        assertEquals(1, capacities.get(3).capacityDto().occupied());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"SECRETARY"})
+    public void givenValidStartDate_whenGetOutpatientDepartmentCapacitiesForWeek_thenReturnCapacities() throws Exception {
+        String startDate = new SimpleDateFormat("yyyy-MM-dd").format(futureDate);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/outpatient-departments/capacities/week")
+                .param("startDate", startDate)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+            objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
+        assertEquals(4, capacities.size());
+        assertEquals(outpatientDepartment.getCapacity()*12*7, capacities.get(3).capacityDto().capacity());
+        assertEquals(7, capacities.get(3).capacityDto().occupied());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"SECRETARY"})
+    public void givenValidDate_whenGetOutpatientDepartmentCapacitiesForMonth_thenReturnCapacities() throws Exception {
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(futureDate);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/outpatient-departments/capacities/month")
+                .param("date", date)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+            objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
+        assertEquals(4, capacities.size());
+        assertEquals(9000, capacities.get(3).capacityDto().capacity());
+        List<Appointment> appointments = appointmentRepository.findAll();
+        assertEquals(10, capacities.get(3).capacityDto().occupied());
     }
 }
