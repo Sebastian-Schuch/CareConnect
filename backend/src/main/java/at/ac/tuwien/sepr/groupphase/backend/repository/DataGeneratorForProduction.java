@@ -27,21 +27,22 @@ public class DataGeneratorForProduction {
     @PostConstruct
     public void generateData() {
         LOGGER.info("Generating admin account…");
-        if (adminRepository.count() > 0) {
-            LOGGER.info("Admin account already exists. Skipping generation.");
+        if (adminRepository.findByCredential_EmailAndCredential_ActiveTrue("admin@email.com") == null) {
+            adminRepository.deleteAll();
+            Credential credential = new Credential();
+            credential.setPassword("$2a$10$ejhIzlph6XfLojO/RonFy.JHJOv6ejsKo9lxibZp.iAipC0v5y/yy");
+            credential.setEmail("admin@email.com");
+            credential.setLastName("admin");
+            credential.setFirstName("admin");
+            credential.setInitialPassword(true);
+            credential.setActive(true);
+            credential.setRole(Role.ADMIN);
+            Admin admin = new Admin();
+            admin.setCredential(credential);
+            adminRepository.save(admin);
+            LOGGER.info("Finished generating account without error.");
             return;
         }
-        Credential credential = new Credential();
-        credential.setPassword("$2a$10$ejhIzlph6XfLojO/RonFy.JHJOv6ejsKo9lxibZp.iAipC0v5y/yy");
-        credential.setEmail("admin@email.com");
-        credential.setLastName("admin");
-        credential.setFirstName("admin");
-        credential.setInitialPassword(true);
-        credential.setActive(true);
-        credential.setRole(Role.ADMIN);
-        Admin admin = new Admin();
-        admin.setCredential(credential);
-        adminRepository.save(admin);
-        LOGGER.info("Finished generating account without error.");
+        LOGGER.info("Admin account already exists. Skipping generation.");
     }
 }
