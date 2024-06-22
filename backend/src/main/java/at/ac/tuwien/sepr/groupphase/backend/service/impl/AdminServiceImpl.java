@@ -25,7 +25,6 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private final AdminRepository adminRepository;
     private final AdminMapper adminMapper;
 
