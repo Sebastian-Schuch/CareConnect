@@ -4,7 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
