@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend;
+package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
@@ -13,24 +13,13 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AdminRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.InpatientDepartmentRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.MedicationRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.OpeningHoursRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.SecretaryRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentMedicineRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.TreatmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -42,141 +31,86 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * This component is only created, if the profile {@code generateData} is active
- */
 @Component
-@Profile("datagen")
-public class DataGenerator {
+@Profile("dev")
+public class DataGeneratorForDevelopment {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
     private final AllergyRepository allergyRepository;
 
-    @Autowired
     private final AdminRepository adminRepository;
 
-
-    @Autowired
     private final AppointmentRepository appointmentRepository;
 
-    @Autowired
-    private final CredentialRepository credentialRepository;
-
-    @Autowired
     private final DoctorRepository doctorRepository;
 
-    @Autowired
     private final MedicationRepository medicationRepository;
 
-    @Autowired
-    private final OpeningHoursRepository openingHoursRepository;
-
-    @Autowired
     private final OutpatientDepartmentRepository outpatientDepartmentRepository;
 
-    @Autowired
     private final PatientRepository patientRepository;
 
-    @Autowired
     private final SecretaryRepository secretaryRepository;
 
-    @Autowired
     private final InpatientDepartmentRepository inpatientDepartmentRepository;
 
-    @Autowired
     private final TreatmentMedicineRepository treatmentMedicineRepository;
 
-    @Autowired
     private final TreatmentRepository treatmentRepository;
 
     private final int numberOfTestData = 10;
 
+    private final PasswordEncoder passwordEncoder;
+    @Value("${PASSWORD_PEPPER}")
+    private String passwordPepper;
 
-    /**
-     * Executed once when the component is instantiated. Inserts some dummy data.
-     */
-    public DataGenerator(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
-                         DoctorRepository doctorRepository,
-                         MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
-                         OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
-                         SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
-                         TreatmentRepository treatmentRepository) {
+    public DataGeneratorForDevelopment(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
+                                       MedicationRepository medicationRepository, OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
+                                       SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository, TreatmentRepository treatmentRepository,
+                                       PasswordEncoder passwordEncoder) {
         this.allergyRepository = allergyRepository;
         this.adminRepository = adminRepository;
         this.appointmentRepository = appointmentRepository;
-        this.credentialRepository = credentialRepository;
         this.doctorRepository = doctorRepository;
         this.medicationRepository = medicationRepository;
-        this.openingHoursRepository = openingHoursRepository;
         this.outpatientDepartmentRepository = outpatientDepartmentRepository;
         this.patientRepository = patientRepository;
         this.secretaryRepository = secretaryRepository;
         this.inpatientDepartmentRepository = inpatientDepartmentRepository;
         this.treatmentMedicineRepository = treatmentMedicineRepository;
         this.treatmentRepository = treatmentRepository;
-
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
      * Generates dummy data in the database. This method is executed once when the component is instantiated.
      */
-    public void generateData(String dataType) {
+    @PostConstruct
+    public void generateData() {
         LOGGER.info("Generating data…");
-        switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false);
-            case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, false, true, true, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, false, true, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, false, true, true, true, false, true, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false);
-            case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true);
-            case "stay" -> generateDataInDb(false, false, false, true, true, false, false, true, false, false, false);
-            default -> generateDataInDb(true, true, true, true, true, true, true, true, true, true, true);
-        }
+        treatmentRepository.deleteAll();
+        treatmentMedicineRepository.deleteAll();
+        appointmentRepository.deleteAll();
+        inpatientDepartmentRepository.deleteAll();
+        outpatientDepartmentRepository.deleteAll();
+        patientRepository.deleteAll();
+        secretaryRepository.deleteAll();
+        doctorRepository.deleteAll();
+        adminRepository.deleteAll();
+        medicationRepository.deleteAll();
+        allergyRepository.deleteAll();
+        generateDataForAllergies();
+        generateDataForMedication();
+        generateDataForDoctors();
+        generateDataForSecretary();
+        generateDataForAdministrators();
+        generateDataForPatients();
+        generateDataForOutpatientDepartments();
+        generateDataForInpatientDepartments();
+        generateDataForAppointments();
+        generateDataForTreatmentMedicines();
+        generateDataForTreatments();
         LOGGER.info("Finished generating data without error.");
-    }
-
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication,
-                                  boolean generateForOutpatientDepartments,
-                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
-        if (generateForAllergies) {
-            generateDataForAllergies();
-        }
-        if (generateForMedication) {
-            generateDataForMedication();
-        }
-        if (generateForDoctors) {
-            generateDataForDoctors();
-        }
-        if (generateForSecretary) {
-            generateDataForSecretary();
-        }
-        if (generateForAdministrator) {
-            generateDataForAdministrators();
-        }
-        if (generateForPatients) {
-            generateDataForPatients();
-        }
-        if (generateForOutpatientDepartments) {
-            generateDataForOutpatientDepartments();
-        }
-        if (generateForInpatientDepartments) {
-            generateDataForInpatientDepartments();
-        }
-        if (generateForAppointments) {
-            generateDataForAppointments();
-        }
-        if (generateForTreatmentMedicines) {
-            generateDataForTreatmentMedicines();
-        }
-        if (generateForTreatments) {
-            generateDataForTreatments();
-        }
     }
 
     private void generateDataForAllergies() {
@@ -200,15 +134,15 @@ public class DataGenerator {
     }
 
     private Doctor setDoctor(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword) {
-        Doctor doctor = new Doctor();
         Credential credential = new Credential();
         credential.setEmail(email);
         credential.setFirstName(firstName);
         credential.setLastName(lastName);
-        credential.setPassword(password);
+        credential.setPassword(passwordEncoder.encode(password + passwordPepper));
         credential.setActive(active);
         credential.setRole(Role.DOCTOR);
         credential.setInitialPassword(initialPassword);
+        Doctor doctor = new Doctor();
         doctor.setCredential(credential);
         return doctor;
     }
@@ -230,15 +164,15 @@ public class DataGenerator {
     }
 
     private Patient setPatient(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword, String svnr, List<Allergy> allergies, List<Medication> medications) {
-        Patient patient = new Patient();
         Credential credential = new Credential();
         credential.setEmail(email);
         credential.setFirstName(firstName);
         credential.setLastName(lastName);
-        credential.setPassword(password);
+        credential.setPassword(passwordEncoder.encode(password + passwordPepper));
         credential.setActive(active);
         credential.setRole(Role.PATIENT);
         credential.setInitialPassword(initialPassword);
+        Patient patient = new Patient();
         patient.setCredential(credential);
         patient.setSvnr(svnr);
         patient.setAllergies(allergies);
@@ -257,15 +191,15 @@ public class DataGenerator {
     }
 
     private Admin setAdministrator(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword) {
-        Admin admin = new Admin();
         Credential credential = new Credential();
         credential.setEmail(email);
         credential.setFirstName(firstName);
         credential.setLastName(lastName);
-        credential.setPassword(password);
+        credential.setPassword(passwordEncoder.encode(password + passwordPepper));
         credential.setActive(active);
         credential.setRole(Role.ADMIN);
         credential.setInitialPassword(initialPassword);
+        Admin admin = new Admin();
         admin.setCredential(credential);
         return admin;
     }
@@ -283,15 +217,15 @@ public class DataGenerator {
     }
 
     private Secretary setSecretary(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword) {
-        Secretary secretary = new Secretary();
         Credential credential = new Credential();
         credential.setEmail(email);
         credential.setFirstName(firstName);
         credential.setLastName(lastName);
-        credential.setPassword(password);
+        credential.setPassword(passwordEncoder.encode(password + passwordPepper));
         credential.setActive(active);
         credential.setRole(Role.SECRETARY);
         credential.setInitialPassword(initialPassword);
+        Secretary secretary = new Secretary();
         secretary.setCredential(credential);
         return secretary;
     }
@@ -423,10 +357,18 @@ public class DataGenerator {
         medicine.add(treatmentMedicineRepository.findAll().get(0));
         List<Doctor> doctors = new ArrayList<>();
         doctors.add(doctorRepository.findAll().get(0));
+        Calendar c = Calendar.getInstance();
+        c.set(2022, Calendar.JANUARY, 1, 8, 0);
+        Calendar d = Calendar.getInstance();
+        d.set(2022, Calendar.JANUARY, 1, 9, 0);
+
+
         treatmentRepository.save(
-            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
+            setTreatment("Treatment1", c.getTime(), d.getTime(), patientRepository.findAll().get(0),
+                outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
         treatmentRepository.save(
-            setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
+            setTreatment("Treatment2", c.getTime(), d.getTime(), patientRepository.findAll().get(1),
+                outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
         List<Doctor> doctors2 = new ArrayList<>();
         doctors2.add(doctorRepository.findAll().get(0));
         doctors2.add(doctorRepository.findAll().get(1));
@@ -434,7 +376,8 @@ public class DataGenerator {
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
-            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
+            setTreatment("Treatment3", c.getTime(), d.getTime(), patientRepository.findAll().get(2),
+                outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
     }
 
     private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment, String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {
@@ -450,4 +393,3 @@ public class DataGenerator {
         return treatment;
     }
 }
-
