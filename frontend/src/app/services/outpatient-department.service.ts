@@ -3,6 +3,7 @@ import {Globals} from '../global/globals';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {
+  OutpatientDepartmentCapacityDto,
   OutpatientDepartmentDto,
   OutpatientDepartmentDtoCreate,
   OutpatientDepartmentPageDto
@@ -44,5 +45,21 @@ export class OutpatientDepartmentService {
 
   editOutpatientDepartment(update: OutpatientDepartmentDto) {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + update.id, update);
+  }
+
+  getOutpatientDepartmentCapacities(): Observable<OutpatientDepartmentCapacityDto[]> {
+    return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(this.outpatientDepartmentBaseUri + '/capacities');
+  }
+
+  getOutpatientDepartmentCapacitiesForDay(date: string): Observable<OutpatientDepartmentCapacityDto[]> {
+    return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(`${this.outpatientDepartmentBaseUri}/capacities/day?date=${date}`);
+  }
+
+  getOutpatientDepartmentCapacitiesForWeek(startDate: string): Observable<OutpatientDepartmentCapacityDto[]> {
+    return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(`${this.outpatientDepartmentBaseUri}/capacities/week?startDate=${startDate}`);
+  }
+
+  getOutpatientDepartmentCapacitiesForMonth(date: string): Observable<OutpatientDepartmentCapacityDto[]> {
+    return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(`${this.outpatientDepartmentBaseUri}/capacities/month?date=${date}`);
   }
 }

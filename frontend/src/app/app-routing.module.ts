@@ -53,6 +53,9 @@ import {
 } from "./components/treatment/treatment-list/treatment-list.component";
 import {AllergyListComponent} from "./components/allergy-list/allergy-list.component";
 import {MedicationListComponent} from "./components/medication-list/medication-list.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -73,6 +76,7 @@ const routes: Routes = [
           {
             path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentListComponent},
+              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
               {path: ':id', component: OutpatientDepartmentDetailComponent}
             ]
           },
@@ -333,7 +337,7 @@ const routes: Routes = [
               //{path: 'register', component: null},
               //{path: ':id', children: [
               //{path: '', component: stayViewComponent},
-              //{path: 'EDIT', component: stayEditComponent}
+              //{path: 'edit', component: stayEditComponent}
               //]},
             ]
           },
@@ -341,6 +345,7 @@ const routes: Routes = [
           {
             path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentListComponent},
+              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
               {path: ':id', component: OutpatientDepartmentDetailComponent}
             ]
           },
