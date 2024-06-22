@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest.treatment.util;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +30,6 @@ public class TreatmentTestUtils {
     public TreatmentMedicineDto createTreatmentMedicineDto(MedicationDto medication, Date date) {
         TreatmentMedicineDtoCreate treatmentMedicineDtoCreate = new TreatmentMedicineDtoCreate(
             medication,
-            "mg",
             1,
             date
         );

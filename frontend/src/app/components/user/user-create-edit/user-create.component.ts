@@ -341,7 +341,7 @@ export class UserCreateComponent implements OnInit {
    * @param value the input value to filter for
    * @returns the filtered allergies
    */
-  private filterAllergies(value: string): MedicationDto[] {
+  private filterAllergies(value: string): AllergyDto[] {
     const filterValue = (value || '').toString().toLowerCase();
     return this.allergyOptions.filter(option =>
       option.name.toLowerCase().includes(filterValue)

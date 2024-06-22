@@ -22,7 +22,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
@@ -53,17 +59,14 @@ public class TreatmentMedicineServiceIntegrationTest extends TestBase {
         Date treatmentMedicationDate1 = treatmentTestUtils.createDate(2022, Calendar.JANUARY, 1, 10, 10);
         Date treatmentMedicationDate2 = treatmentTestUtils.createDate(2022, Calendar.FEBRUARY, 1, 10, 10);
         long amount = 200L;
-        String unitOfMeasurement = "mg";
 
         validTreatmentMedicineDtoCreate = new TreatmentMedicineDtoCreate(
             medication1,
-            unitOfMeasurement,
             amount,
             treatmentMedicationDate1
         );
         validTreatmentMedicineDtoCreate2 = new TreatmentMedicineDtoCreate(
             medication2,
-            unitOfMeasurement,
             amount,
             treatmentMedicationDate2
         );
@@ -80,8 +83,7 @@ public class TreatmentMedicineServiceIntegrationTest extends TestBase {
         assertAll("Verify treatment medicine properties",
             () -> assertEquals(validTreatmentMedicineDtoCreate.medication().id(), createdTreatmentMedicine.medication().id()),
             () -> assertEquals(validTreatmentMedicineDtoCreate.medicineAdministrationDate(), createdTreatmentMedicine.medicineAdministrationDate()),
-            () -> assertEquals(validTreatmentMedicineDtoCreate.amount(), createdTreatmentMedicine.amount()),
-            () -> assertEquals(validTreatmentMedicineDtoCreate.unitOfMeasurement(), createdTreatmentMedicine.unitOfMeasurement())
+            () -> assertEquals(validTreatmentMedicineDtoCreate.amount(), createdTreatmentMedicine.amount())
         );
     }
 
@@ -97,8 +99,7 @@ public class TreatmentMedicineServiceIntegrationTest extends TestBase {
             () -> assertEquals(createdTreatmentMedicine.id(), foundTreatmentMedicine.id()),
             () -> assertEquals(createdTreatmentMedicine.medication().id(), foundTreatmentMedicine.medication().id()),
             () -> assertEquals(createdTreatmentMedicine.medicineAdministrationDate(), foundTreatmentMedicine.medicineAdministrationDate()),
-            () -> assertEquals(createdTreatmentMedicine.amount(), foundTreatmentMedicine.amount()),
-            () -> assertEquals(createdTreatmentMedicine.unitOfMeasurement(), foundTreatmentMedicine.unitOfMeasurement())
+            () -> assertEquals(createdTreatmentMedicine.amount(), foundTreatmentMedicine.amount())
         );
     }
 
@@ -153,8 +154,7 @@ public class TreatmentMedicineServiceIntegrationTest extends TestBase {
             () -> assertEquals(createdTreatmentMedicine.id(), foundTreatmentMedicine.getId()),
             () -> assertEquals(createdTreatmentMedicine.medication().id(), foundTreatmentMedicine.getMedicine().getId()),
             () -> assertEquals(createdTreatmentMedicine.medicineAdministrationDate(), foundTreatmentMedicine.getTimeOfAdministration()),
-            () -> assertEquals(createdTreatmentMedicine.amount(), foundTreatmentMedicine.getAmount()),
-            () -> assertEquals(createdTreatmentMedicine.unitOfMeasurement(), foundTreatmentMedicine.getUnitOfMeasurement())
+            () -> assertEquals(createdTreatmentMedicine.amount(), foundTreatmentMedicine.getAmount())
         );
     }
 
