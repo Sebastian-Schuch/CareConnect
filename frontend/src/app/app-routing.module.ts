@@ -37,6 +37,7 @@ import {StaysListComponent} from "./components/stays/stays-list/stays-list.compo
 import {
   InpatientDepartmentListComponent
 } from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
+import {ApiKeyComponent} from "./components/api-key/api-key.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -162,6 +163,9 @@ const routes: Routes = [
                 ]
               }
             ]
+          },
+          {
+            path: 'api-keys', component: ApiKeyComponent
           },
           {
             path: ':id', children: [

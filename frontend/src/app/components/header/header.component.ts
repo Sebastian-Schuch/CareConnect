@@ -199,6 +199,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/doctor/inpatient-department']);
   }
 
+  public adminNavigateToApiKeys() {
+    this.router.navigate(['/home/admin/api-keys']);
+  }
+
   public adminNavigateToUsersAdmins() {
     //this.router.navigate(['/home/admin/users/admins']);
   }
