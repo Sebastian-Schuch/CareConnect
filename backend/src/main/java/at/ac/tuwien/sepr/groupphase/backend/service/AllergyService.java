@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
@@ -55,4 +56,14 @@ public interface AllergyService {
      * @return the allergy entity with the id given
      */
     Allergy getEntityById(Long id);
+
+    /**
+     * This function searches for allergies by their name.
+     *
+     * @param name the name of the allergy to search for
+     * @param page the page number
+     * @param size the size of the page
+     * @return the allergies with the given name
+     */
+    AllergyPageDto searchAllergies(String name, Integer page, Integer size);
 }

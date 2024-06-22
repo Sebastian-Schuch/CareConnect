@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +19,6 @@ public class Allergy {
         return name;
     }
 
-    @Convert(converter = EncryptorConverter.class)
     @Column(nullable = false, name = "name", unique = true, length = 510)
     private String name;
 

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AllergyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
@@ -14,8 +15,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -91,7 +94,7 @@ public class AllergyEndpoint {
      * @return the updated allergy
      */
     @Secured({"ADMIN"})
-    @PostMapping(value = "/{id}")
+    @PutMapping(value = "/{id}")
     @Operation(summary = "Update a new allergy")
     public AllergyDto update(@PathVariable(name = "id") Long id, @RequestBody AllergyDto toUpdate) {
         LOGGER.info("POST " + BASE_PATH + "/{}", id);
@@ -101,5 +104,24 @@ public class AllergyEndpoint {
             LOGGER.info("Could not find allergy with id {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find allergy");
         }
+    }
+
+    /**
+     * Search for allergies with specified criteria.
+     *
+     * @param page       the page number
+     * @param size       the size of the page
+     * @param searchTerm the name of the allergy to search for
+     * @return a page of all allergies that match the criteria
+     */
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping({"/search"})
+    public AllergyPageDto searchAllergies(
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "20") Integer size,
+        @RequestParam(name = "allergyName", defaultValue = "") String searchTerm
+    ) {
+        LOGGER.info("searchAllergies({}, {}, {})", page, size, searchTerm);
+        return allergyService.searchAllergies(searchTerm, page, size);
     }
 }

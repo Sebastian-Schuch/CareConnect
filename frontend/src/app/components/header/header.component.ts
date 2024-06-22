@@ -257,8 +257,16 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/admin/register/medicine']);
   }
 
+  public adminNavigateToMedicines() {
+    this.router.navigate(['/home/admin/medicines']);
+  }
+
   public adminNavigateToRegisterAllergy() {
     this.router.navigate(['/home/admin/register/allergy']);
+  }
+
+  public adminNavigateToAllergies() {
+    this.router.navigate(['/home/admin/allergies']);
   }
 
   public userNavigateToEditProfile() {

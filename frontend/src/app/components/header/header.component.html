@@ -245,15 +245,35 @@
         </div>
       </mat-menu>
 
-      <button mat-button (click)="adminNavigateToRegisterMedicine()" tabindex="13">
+      <button mat-button [matMenuTriggerFor]="medicationMenu" tabindex="13">
         <mat-icon>medication</mat-icon>
-        Register Medication
+        Manage Medications
       </button>
+      <mat-menu #medicationMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterMedicine()">
+            Register Medication
+          </button>
+          <!--<button mat-menu-item class="clean-button" (click)="adminNavigateToMedicines()">
+            View Medications
+          </button>-->
+        </div>
+      </mat-menu>
 
-      <button mat-button (click)="adminNavigateToRegisterAllergy()" tabindex="14">
+      <button mat-button [matMenuTriggerFor]="allergyMenu" tabindex="13">
         <mat-icon>thermostat</mat-icon>
-        Register Allergy
+        Manage Allergies
       </button>
+      <mat-menu #allergyMenu="matMenu">
+        <div class="dropdown-card">
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterAllergy()">
+            Register Allergy
+          </button>
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToAllergies()">
+            View Allergies
+          </button>
+        </div>
+      </mat-menu>
     </ng-container>
   </div>
 
@@ -369,26 +389,32 @@
             Register Outpatient
             Department
           </button>
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToOutpatientDepartment()">
+            View
+            Outpatient
+            Departments
+          </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterInpatientDepartment()">
             Register
             Inpatient
             Department
-          </button>
-          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterMedicine()">
-            Register Medication
-          </button>
-          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterAllergy()">
-            Register Allergy
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToInpatientDepartment()">
             View
             Inpatient
             Departments
           </button>
-          <button mat-menu-item class="clean-button" (click)="adminNavigateToOutpatientDepartment()">
-            View
-            Outpatient
-            Departments
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterMedicine()">
+            Register Medication
+          </button>
+          <!--<button mat-menu-item class="clean-button" (click)="adminNavigateToMedicines()">
+            View Medications
+          </button>-->
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToRegisterAllergy()">
+            Register Allergy
+          </button>
+          <button mat-menu-item class="clean-button" (click)="adminNavigateToAllergies()">
+            View Allergies
           </button>
         </div>
       </div>

@@ -2,16 +2,24 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyPageDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AllergyMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AllergyService;
+import jakarta.persistence.criteria.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +27,11 @@ import java.util.Optional;
 public class AllergyServiceImpl implements AllergyService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AllergyRepository allergyRepository;
+    private final AllergyMapper allergyMapper;
 
-    public AllergyServiceImpl(AllergyRepository allergyRepository) {
+    public AllergyServiceImpl(AllergyRepository allergyRepository, AllergyMapper allergyMapper) {
         this.allergyRepository = allergyRepository;
+        this.allergyMapper = allergyMapper;
     }
 
     @Override
@@ -61,7 +71,7 @@ public class AllergyServiceImpl implements AllergyService {
     @Override
     public List<Allergy> findAll() throws NotFoundException {
         LOG.trace("findAll()");
-        return allergyRepository.findAll();
+        return (List<Allergy>) allergyRepository.findAll();
     }
 
     @Override
@@ -80,5 +90,19 @@ public class AllergyServiceImpl implements AllergyService {
             throw new NotFoundException("Allergy not found");
         }
         return allergy;
+    }
+
+    @Override
+    public AllergyPageDto searchAllergies(String name, Integer page, Integer size) {
+        LOG.trace("searchAllergies({}, {}, {})", name, page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
+        Specification<Allergy> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (name != null) {
+                predicates.add(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        return allergyMapper.toAllergyPageDto(allergyRepository.findAll(spec, pageable));
     }
 }

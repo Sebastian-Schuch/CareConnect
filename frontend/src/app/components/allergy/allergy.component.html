@@ -1,7 +1,7 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>Register Allergy</span><br>
+      <span>{{ this.mode === AllergyCreatEditMode.create ? 'Register' : 'Edit' }} Allergy</span><br>
     </h1>
   </div>
 </div>
@@ -22,7 +22,7 @@
                  placeholder="Allergy Name"
                  class="form-control"
                  [class]="dynamicCssClassesForInput(AllergyModel)"
-                 [(ngModel)]="allergyname"
+                 [(ngModel)]="allergy.name"
                  #AllergyModel="ngModel"
                  required
                  tabindex="21"
@@ -46,7 +46,7 @@
             [disabled]="!form.valid"
             tabindex="22"
     >
-      Register Allergy
+      {{ this.mode === AllergyCreatEditMode.create ? 'Register' : 'Edit' }} Allergy
     </button>
   </div>
 </form>
