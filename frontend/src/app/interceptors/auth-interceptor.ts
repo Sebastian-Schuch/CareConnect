@@ -23,6 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
       headers: req.headers.set('Authorization', 'Bearer ' + this.authService.getToken())
     });
 
+    // Intercept the request and update the token if the response has an Authorization header
     return next.handle(authReq).pipe(
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
