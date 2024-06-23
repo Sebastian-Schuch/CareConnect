@@ -60,4 +60,10 @@ public class MedicationServiceImpl implements MedicationService {
         LOG.trace("getAllMedications()");
         return medicationMapper.medicationEntitiesToListOfMedicationDto(medicationRepository.findAll());
     }
+
+    @Override
+    public int getMedicationCount() {
+        LOG.trace("getMedicationCount()");
+        return medicationRepository.findAll().size();
+    }
 }

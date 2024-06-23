@@ -8,6 +8,7 @@ import {AllergyService} from "../../../services/allergy.service";
 import {MedicationService} from "../../../services/medication.service";
 import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
 import {forkJoin} from "rxjs";
+import {NgClass, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-landing-admin',
@@ -16,7 +17,9 @@ import {forkJoin} from "rxjs";
     MatCard,
     MatIcon,
     RouterLink,
-    MatButton
+    MatButton,
+    NgClass,
+    NgIf
   ],
   templateUrl: './landing-admin.component.html',
   styleUrls: ['./landing-admin.component.scss', '../landing.scss', './../../../../styles.scss']
@@ -32,13 +35,11 @@ export class LandingAdminComponent implements OnInit {
   }
 
   public setupActive: boolean = true;
-
+  public meds=0;
+  public allergies=0;
+  public stations=0;
 
   ngOnInit() {
-    console
-  let allergiesInitialised: boolean = false;
-  let medicationsInitialised: boolean = false;
-  let departmentsInitialised: boolean = false;
     console.log("initialising landing admin component");
     forkJoin({
       allergiesCount: this.allergieService.countAllergies(),
@@ -46,9 +47,15 @@ export class LandingAdminComponent implements OnInit {
       departmentsCount: this.departmentService.getOutpatientDepartmentCount()
     }).subscribe({
       next: ({ allergiesCount, medicationsCount, departmentsCount }) => {
+        this.allergies = allergiesCount;
+        this.meds = medicationsCount;
+        this.stations = departmentsCount;
+
         if (allergiesCount > 0 && medicationsCount > 0 && departmentsCount > 0) {
           this.setupActive = false;
         }
+
+        console.log("setup is active: ", this.setupActive);
       },
       error: err => {
         console.error('Error fetching counts:', err);

@@ -12,6 +12,7 @@ public interface MedicationService {
      * Creates medication with the given data.
      *
      * @param toCreate the data to create the medication with
+     *
      * @return the created medication
      */
     MedicationDto create(MedicationDtoCreate toCreate);
@@ -20,6 +21,7 @@ public interface MedicationService {
      * Get the specified medication.
      *
      * @param id the id of the medication requested
+     *
      * @return the medication with the id given
      */
     MedicationDto getById(Long id);
@@ -28,6 +30,7 @@ public interface MedicationService {
      * Get the specified medication entity.
      *
      * @param id the id of the medication requested
+     *
      * @return the medication entity with the id given
      */
     Medication getEntityById(Long id);
@@ -39,4 +42,12 @@ public interface MedicationService {
      * @return the list of all medications
      */
     List<MedicationDto> getAllMedications();
+
+    /**
+     * Get the count of all medications.
+     *
+     * @return the count of all medications
+     */
+    int getMedicationCount();
+
 }

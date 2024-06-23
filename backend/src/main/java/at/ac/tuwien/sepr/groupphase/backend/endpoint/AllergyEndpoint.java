@@ -119,4 +119,12 @@ public class AllergyEndpoint {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find allergy");
         }
     }
+
+    @Secured({"ADMIN"})
+    @GetMapping(value = "/count")
+    @Operation(summary = "Get count of all allergies")
+    public int countAllergies() {
+        LOGGER.info("GET " + BASE_PATH + "/count");
+        return allergyService.countAllergies();
+    }
 }

@@ -34,7 +34,9 @@ public class OutpatientDepartmentEndpoint {
      * Create a new outpatient department.
      *
      * @param outpatientDepartmentDto the data for the outpatient department to create
+     *
      * @return the created outpatient department
+     *
      * @throws MethodArgumentNotValidException if the outpatient department is not valid
      */
     @Secured({"ADMIN"})
@@ -50,6 +52,7 @@ public class OutpatientDepartmentEndpoint {
      * Get an outpatient department by its id.
      *
      * @param id the id of the outpatient department
+     *
      * @return the outpatient department
      */
     @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
@@ -69,5 +72,12 @@ public class OutpatientDepartmentEndpoint {
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
         LOGGER.info("getAllOutpatientDepartments()");
         return outpatientDepartmentService.getAllOutpatientDepartments();
+    }
+
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping("/count")
+    public int getOutpatientDepartmentCount() {
+        LOGGER.info("getOutpatientDepartmentCount()");
+        return outpatientDepartmentService.getOutpatientDepartmentCount();
     }
 }

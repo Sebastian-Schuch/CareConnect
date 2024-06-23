@@ -34,6 +34,7 @@ public class MedicationEndpoint {
      * The create endpoint for the medication.
      *
      * @param toCreate the data for the medication to create
+     *
      * @return the created medication
      */
     @Secured("ADMIN")
@@ -49,6 +50,7 @@ public class MedicationEndpoint {
      * The get endpoint for the medication.
      *
      * @param id the id of medication requested
+     *
      * @return the medication requested
      */
 
@@ -69,5 +71,12 @@ public class MedicationEndpoint {
     public List<MedicationDto> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.medicationService.getAllMedications();
+    }
+
+    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @GetMapping("/count")
+    public int getMedicationCount() {
+        LOG.info("GET " + BASE_PATH + "/count");
+        return this.medicationService.getMedicationCount();
     }
 }

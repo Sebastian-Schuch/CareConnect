@@ -45,7 +45,8 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
         LOGGER.trace("createOutpatientDepartment()");
         OpeningHours openingHours = openingHoursService.getOpeningHoursEntityFromDtoCreate(outpatientDepartmentDto.openingHours());
-        OutpatientDepartment savedOutpatientDepartment = outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(outpatientDepartmentDto, openingHours));
+        OutpatientDepartment savedOutpatientDepartment =
+            outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(outpatientDepartmentDto, openingHours));
 
         return outpatientDepartmentMapper.entityToDto(savedOutpatientDepartment, openingHoursMapper.entityToDto(savedOutpatientDepartment.getOpeningHours()));
     }
@@ -55,7 +56,8 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
         LOGGER.trace("getAllOutpatientDepartments()");
         List<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAll();
         return outpatientDepartments.stream()
-            .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours())))
+            .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment,
+                openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours())))
             .collect(Collectors.toList());
     }
 
@@ -79,5 +81,11 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
             throw new NotFoundException("Outpatient department with id " + id + " not found");
         }
         return outpatientDepartment;
+    }
+
+    @Override
+    public int getOutpatientDepartmentCount() {
+        LOGGER.trace("getOutpatientDepartmentCount()");
+        return outpatientDepartmentRepository.findAll().size();
     }
 }

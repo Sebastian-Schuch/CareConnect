@@ -14,6 +14,7 @@ public interface OutpatientDepartmentService {
      * Creates a new outpatient department.
      *
      * @param outpatientDepartmentDto the outpatient department to create
+     *
      * @return the created outpatient department
      */
     OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException;
@@ -29,6 +30,7 @@ public interface OutpatientDepartmentService {
      * Gets an outpatient department by its id.
      *
      * @param id the id of the outpatient department
+     *
      * @return the outpatient department
      */
     OutpatientDepartmentDto getOutpatientDepartmentById(Long id) throws NotFoundException;
@@ -37,7 +39,15 @@ public interface OutpatientDepartmentService {
      * Gets an outpatient department Entity by its id.
      *
      * @param id the id of the outpatient department
+     *
      * @return the outpatient department
      */
     OutpatientDepartment getOutpatientDepartmentEntityById(Long id) throws NotFoundException;
+
+    /**
+     * Gets the count of all outpatient departments.
+     *
+     * @return the count of all outpatient departments
+     */
+    int getOutpatientDepartmentCount();
 }

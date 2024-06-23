@@ -12,6 +12,26 @@
   </a>
 </div>
 
+<mat-card class="floating-window" *ngIf="setupActive">
+  <h2>Complete Setup</h2>
+
+  <div class="info-item" [ngClass]="{'green': meds > 0}">
+    <span class="label">Medications:</span>
+    <span class="value">{{ meds }}</span>
+  </div>
+  <div class="info-item" [ngClass]="{'green': allergies > 0}">
+    <span class="label">Allergies:</span>
+    <span class="value">{{ allergies }}</span>
+  </div>
+  <div class="info-item" [ngClass]="{'green': stations > 0}">
+    <span class="label">Stations:</span>
+    <span class="value">{{ stations }}</span>
+  </div>
+
+  <a [routerLink]="['./setup']" class="setup-link">Finish Setup</a>
+</mat-card>
+
+
 <div aria-labelledby="admin-section-title" class="admin-landing-container" id="admin-button-section" role="navigation">
   <h2 class="visually-hidden" id="admin-section-title">Admin Sections</h2>
 
