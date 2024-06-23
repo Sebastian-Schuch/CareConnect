@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DataInterfaceDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorWorkingHoursDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationAmountDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.ApiKeyService;
 import at.ac.tuwien.sepr.groupphase.backend.service.DataInterfaceService;
 import jakarta.annotation.security.PermitAll;
@@ -35,11 +36,22 @@ public class DataInterfaceEndpoint {
     @PermitAll
     @GetMapping("/doctor-working-hours")
     public List<DoctorWorkingHoursDto> getDoctorWorkingHours(@RequestBody DataInterfaceDtoSearch search) {
-        String authHeader = request.getHeader("Authorization");
-        if (!apiKeyService.checkApiKey(authHeader.substring(6))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid API key");
-        }
+        checkApiKey();
         return dataInterfaceService.getDoctorWorkingHours(search);
+    }
+
+    @PermitAll
+    @GetMapping("/medication-amounts")
+    public List<MedicationAmountDto> getMedicationAmounts(@RequestBody DataInterfaceDtoSearch search) {
+        checkApiKey();
+        return dataInterfaceService.getMedicationAmounts(search);
+    }
+
+    private void checkApiKey() {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !apiKeyService.checkApiKey(authHeader.substring(6))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid or missing API key");
+        }
     }
 
 }
