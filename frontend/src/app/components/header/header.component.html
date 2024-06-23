@@ -40,14 +40,6 @@
           </button>
         </div>
       </mat-menu>
-
-      <!-- Hidden until feature is available-->
-      <!--
-      <button mat-button [routerLink]="['/home/patient/treatments']" tabindex="4">
-        <mat-icon>medical_services</mat-icon>
-        My Treatments
-      </button>
-      -->
       <button mat-button [matMenuTriggerFor]="treatmentPatientMenu" tabindex="8">
         <mat-icon>medical_services</mat-icon>
         Treatments
@@ -117,21 +109,6 @@
           </button>
         </div>
       </mat-menu>
-
-      <!--
-          <button mat-button [matMenuTriggerFor]="stayMenu" tabindex="7">
-            <mat-icon>medical_information</mat-icon>
-            Hospital stay
-          </button>
-          <mat-menu #stayMenu="matMenu">
-            <div class="dropdown-card">
-              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/register']">Register stay
-              </button>
-              <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/edit']">Edit stay
-              </button>
-            </div>
-          </mat-menu>
-          -->
     </ng-container>
 
     <!-- Logged in as doctor -->
@@ -312,11 +289,6 @@
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/register']">Register stay
-          </button>
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/stay/edit']">Edit stay
-          </button>-->
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToTreatment()">Treatment History
           </button>
         </div>
