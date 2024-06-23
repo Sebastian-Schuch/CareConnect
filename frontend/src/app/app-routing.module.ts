@@ -73,13 +73,7 @@ const routes: Routes = [
           },
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
-          {
-            path: 'outpatient-department', children: [
-              {path: '', component: OutpatientDepartmentListComponent},
-              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
-              {path: ':id', component: OutpatientDepartmentDetailComponent}
-            ]
-          },
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: 'treatment', children: [
               {path: '', component: TreatmentListComponent, data: {role: Role.patient, mode: TreatmentListMode.view}},
@@ -256,12 +250,7 @@ const routes: Routes = [
           {path: '', component: LandingDoctorComponent},
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
-          {
-            path: 'outpatient-department', children: [
-              {path: '', component: OutpatientDepartmentListComponent},
-              {path: ':id', component: OutpatientDepartmentDetailComponent}
-            ]
-          },
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: 'treatment', children: [
               {path: '', component: TreatmentListComponent, data: {role: Role.doctor, mode: TreatmentListMode.search}},
@@ -342,13 +331,7 @@ const routes: Routes = [
             ]
           },
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
-          {
-            path: 'outpatient-department', children: [
-              {path: '', component: OutpatientDepartmentListComponent},
-              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
-              {path: ':id', component: OutpatientDepartmentDetailComponent}
-            ]
-          },
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.secretary, mode: UserCreateEditMode.view}},
