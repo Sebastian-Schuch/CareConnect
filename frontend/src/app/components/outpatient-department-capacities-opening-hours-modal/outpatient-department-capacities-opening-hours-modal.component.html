@@ -1,0 +1,55 @@
+<h1 tabindex="40" mat-dialog-title [attr.aria-label]="'Opening hours of ' + data.outpatient.name">Opening hours
+  of {{ data.outpatient.name }}</h1>
+<mat-dialog-content>
+  <table>
+    <tr>
+      <th class="w-50">Day</th>
+      <th class="w-25">Opening Hours</th>
+    </tr>
+    <tr>
+      <td aria-label="Monday">Monday</td>
+      <td tabindex="41" [attr.aria-label]="'Monday: '+showOpeningHours(data.outpatient.openingHours.monday)">
+        {{ showOpeningHours(data.outpatient.openingHours.monday) }}
+      </td>
+    </tr>
+    <tr>
+      <td aria-label="Tuesday">Tuesday</td>
+      <td tabindex="42" [attr.aria-label]="'Tuesday: '+showOpeningHours(data.outpatient.openingHours.tuesday)">
+        {{ showOpeningHours(data.outpatient.openingHours.tuesday) }}
+      </td>
+    </tr>
+    <tr>
+      <td aria-label="Wednesday">Wednesday</td>
+      <td tabindex="43" [attr.aria-label]="'Wednesday: '+showOpeningHours(data.outpatient.openingHours.wednesday)">
+        {{ showOpeningHours(data.outpatient.openingHours.wednesday) }}
+      </td>
+    </tr>
+    <tr>
+      <td aria-label="Thursday">Thursday</td>
+      <td tabindex="44" [attr.aria-label]="'Thursday: '+showOpeningHours(data.outpatient.openingHours.thursday)">
+        {{ showOpeningHours(data.outpatient.openingHours.thursday) }}
+      </td>
+    </tr>
+    <tr>
+      <td aria-label="Friday">Friday</td>
+      <td tabindex="45" [attr.aria-label]="'Friday: '+showOpeningHours(data.outpatient.openingHours.friday)">
+        {{ showOpeningHours(data.outpatient.openingHours.friday) }}
+      </td>
+    </tr>
+    <tr>
+      <td aria-label="Saturday">Saturday</td>
+      <td tabindex="46" [attr.aria-label]="'Saturday: '+showOpeningHours(data.outpatient.openingHours.saturday)">
+        {{ showOpeningHours(data.outpatient.openingHours.saturday) }}
+      </td>
+    </tr>
+    <tr>
+      <td aria-label="Sunday">Sunday</td>
+      <td tabindex="47" [attr.aria-label]="'Sunday: '+showOpeningHours(data.outpatient.openingHours.sunday)">
+        {{ showOpeningHours(data.outpatient.openingHours.sunday) }}
+      </td>
+    </tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'">
+  <button tabindex="48" mat-button mat-dialog-close class="sepr-btn-cancel">Close</button>
+</mat-dialog-actions>

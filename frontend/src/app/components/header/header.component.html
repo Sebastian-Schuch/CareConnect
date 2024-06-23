@@ -38,9 +38,6 @@
           <button mat-menu-item class="clean-button" (click)="patientNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
-          <button mat-menu-item class="clean-button" (click)="patientNavigateToOutpatientDepartmentCapacity()">
-            Capacity
-          </button>
         </div>
       </mat-menu>
 
@@ -93,11 +90,6 @@
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToPatientsRegister()">Register
             Patient
           </button>
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/secretary/patients/edit']">Edit Patient
-            Information
-          </button>
-          -->
         </div>
       </mat-menu>
 
@@ -113,9 +105,6 @@
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
-          <button mat-menu-item class="clean-button" (click)="secretaryNavigateToOutpatientDepartmentCapacity()">
-            Capacity
-          </button>
         </div>
       </mat-menu>
       <button mat-button [matMenuTriggerFor]="treatmentSecretaryMenu" tabindex="8">
@@ -126,10 +115,6 @@
         <div class="dropdown-card">
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToTreatment()">Treatment History
           </button>
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
-          </button>
-          -->
         </div>
       </mat-menu>
 
@@ -161,10 +146,6 @@
           </button>
           <button mat-menu-item class="clean-button" (click)="doctorNavigateToTreatment()">View Treatments
           </button>
-          <!--
-          <button mat-menu-item class="clean-button" [routerLink]="['/home/doctor/treatment/edit']">Edit Treatment
-          </button>
-          -->
         </div>
       </mat-menu>
 
@@ -301,9 +282,9 @@
           <button mat-menu-item class="clean-button" (click)="patientNavigateToTelemedicine()">
             Telemedicine
           </button>
-          <!--<button mat-menu-item class="clean-button" (click)="patientNavigateToOutpatientDepartment()">
+          <button mat-menu-item class="clean-button" (click)="patientNavigateToOutpatientDepartment()">
             Outpatient Department
-          </button>-->
+          </button>
           <button mat-menu-item class="clean-button" (click)="patientNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
@@ -325,9 +306,9 @@
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToPatientsRegister()">Register
             Patient
           </button>
-          <!--<button mat-menu-item class="clean-button" (click)="secretaryNavigateToOutpatientDepartment()">
+          <button mat-menu-item class="clean-button" (click)="secretaryNavigateToOutpatientDepartment()">
             Outpatient Department
-          </button>-->
+          </button>
           <button mat-menu-item class="clean-button" (click)="secretaryNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
@@ -348,9 +329,9 @@
           <button mat-menu-item class="clean-button" (click)="doctorNavigateToTelemedicine()">
             Telemedicine
           </button>
-          <!--<button mat-menu-item class="clean-button" (click)="doctorNavigateToOutpatientDepartment()">
+          <button mat-menu-item class="clean-button" (click)="doctorNavigateToOutpatientDepartment()">
             Outpatient Department
-          </button>-->
+          </button>
           <button mat-menu-item class="clean-button" (click)="doctorNavigateToInpatientDepartment()">
             Inpatient Department
           </button>
