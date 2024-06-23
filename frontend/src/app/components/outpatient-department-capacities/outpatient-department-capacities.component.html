@@ -74,7 +74,8 @@
                [attr.aria-hidden]="disableFocus">Closed
           </div>
           <div *ngIf="department.capacityDto?.capacity>0" aria-live="polite" [tabindex]="i+'31'"
-               [attr.aria-hidden]="disableFocus">
+               [attr.aria-hidden]="disableFocus"
+               [attr.aria-label]="'Capacity: ' + (department.capacityDto?.occupied || 0) +' out of '+ (department.capacityDto?.capacity || 0)">
             Capacity: {{ department.capacityDto?.occupied || 0 }}/{{ department.capacityDto?.capacity || 0 }}
           </div>
           <button [tabindex]="i+'32'" [attr.aria-hidden]="disableFocus" class="sepr-btn-submit center-button" mat-button
