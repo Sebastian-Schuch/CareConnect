@@ -22,7 +22,8 @@ import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-cr
 import {Role} from "./dtos/Role";
 import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatment/treatment.component";
 import {
-  OutpatientDepartmentComponent, OutpatientDepartmentCreateEditMode
+  OutpatientDepartmentComponent,
+  OutpatientDepartmentCreateEditMode
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
 import {
   InpatientDepartmentComponent,
@@ -67,11 +68,7 @@ const routes: Routes = [
           },
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
-          {path: 'outpatient-department', children: [
-              {path: '', component: OutpatientDepartmentListComponent},
-              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
-              {path: ':id', component: OutpatientDepartmentDetailComponent}
-            ]},
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: 'treatment', children: [
               {path: '', component: TreatmentListComponent, data: {role: Role.patient, mode: TreatmentListMode.view}},
@@ -111,7 +108,11 @@ const routes: Routes = [
                 component: UserCreateComponent,
                 data: {role: Role.secretary, mode: UserCreateEditMode.create}
               },
-              {path: 'outpatient-department', component: OutpatientDepartmentComponent, data: {mode: OutpatientDepartmentCreateEditMode.create}},
+              {
+                path: 'outpatient-department',
+                component: OutpatientDepartmentComponent,
+                data: {mode: OutpatientDepartmentCreateEditMode.create}
+              },
               {
                 path: 'inpatient-department',
                 component: InpatientDepartmentComponent,
@@ -196,13 +197,21 @@ const routes: Routes = [
               }
             ]
           },
-          {path: 'outpatient-department', children: [
+          {
+            path: 'outpatient-department', children: [
               {path: '', component: OutpatientDepartmentListComponent},
-              {path: ':id', children: [
-                  {path: 'edit', component: OutpatientDepartmentComponent, data: {mode: OutpatientDepartmentCreateEditMode.edit}},
+              {
+                path: ':id', children: [
+                  {
+                    path: 'edit',
+                    component: OutpatientDepartmentComponent,
+                    data: {mode: OutpatientDepartmentCreateEditMode.edit}
+                  },
                   {path: '', component: OutpatientDepartmentDetailComponent}
-                ]}
-            ]},
+                ]
+              }
+            ]
+          },
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.admin, mode: UserCreateEditMode.view}},
@@ -216,10 +225,7 @@ const routes: Routes = [
           {path: '', component: LandingDoctorComponent},
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
-          {path: 'outpatient-department', children: [
-              {path: '', component: OutpatientDepartmentListComponent},
-              {path: ':id', component: OutpatientDepartmentDetailComponent}
-            ]},
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: 'treatment', children: [
               {path: '', component: TreatmentListComponent, data: {role: Role.doctor, mode: TreatmentListMode.search}},
@@ -300,11 +306,7 @@ const routes: Routes = [
             ]
           },
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
-          {path: 'outpatient-department', children: [
-              {path: '', component: OutpatientDepartmentListComponent},
-              {path: 'capacity', component: OutpatientDepartmentCapacitiesComponent},
-              {path: ':id', component: OutpatientDepartmentDetailComponent}
-            ]},
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.secretary, mode: UserCreateEditMode.view}},
