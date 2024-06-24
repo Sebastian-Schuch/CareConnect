@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {OutpatientDepartmentDto, OutpatientDepartmentPageDto} from "../../../../dtos/outpatient-department";
-import {debounceTime, forkJoin, map, Observable, startWith, switchMap} from "rxjs";
+import {debounceTime, map, Observable, startWith, switchMap} from "rxjs";
 import {OutpatientDepartmentService} from "../../../../services/outpatient-department.service";
 import {ToastrService} from "ngx-toastr";
 import {Role} from "../../../../dtos/Role";
@@ -29,10 +29,12 @@ export class CalendarWrapperComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService) {
   }
+
   @ViewChild('patientInput', {static: false}) patientInput: ElementRef<HTMLInputElement>;
   @ViewChild('outpatientDepartmentInput', {static: false}) outpatientDepartmentInput: ElementRef<HTMLInputElement>;
   @ViewChild('patientTrigger', {static: false}) patientAutoTrigger: MatAutocompleteTrigger;
   @ViewChild('outpatientDepartmentTrigger', {static: false}) outpdepAutoTrigger: MatAutocompleteTrigger;
+
   ngOnInit(): void {
     this.mode = this.authService.getUserRole();
     if (this.mode == Role.secretary) {
@@ -45,6 +47,14 @@ export class CalendarWrapperComponent implements OnInit {
       this.appointmentForm = new FormGroup({
         outpatientDepartment: new FormControl('', Validators.required)
       });
+      this.userService.getPatientCredentials().subscribe(
+        (data) => {
+          this.patient = data;
+        },
+        (error) => {
+          this.notification.error('Error', 'Could not load patient data');
+        }
+      );
     }
     this.resetAllSearchInputs();
   }
@@ -114,19 +124,19 @@ export class CalendarWrapperComponent implements OnInit {
    * @private helper method to reset all search inputs
    */
   private resetAllSearchInputs() {
+    if (this.isRoleSecretary()) {
 
+    }
     this.filteredOutPatDep = this.appointmentForm.get('outpatientDepartment').valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap(value => this.loadFilteredOutPatDep(value))
     );
-    if (this.isRoleSecretary()) {
-      this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
-        startWith(''),
-        debounceTime(300),
-        switchMap(value => this.loadFilteredPatients(value))
-      );
-    }
+    this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap(value => this.loadFilteredPatients(value))
+    );
   }
 
   /**
