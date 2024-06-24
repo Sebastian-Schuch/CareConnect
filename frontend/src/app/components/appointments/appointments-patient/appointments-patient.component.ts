@@ -162,7 +162,8 @@ export class AppointmentsPatientComponent implements OnInit {
   /**
    * Load the past appointments for the patient
    */
-  private loadPastAppointments(departmentId: number | null = null): void {
+  loadPastAppointments(departmentId: number | null = null): void {
+    console.log('loading past appointments');
     this.userService.getPatientCredentials().subscribe({
       next: (patient) => {
         this.appointmentService.getAppointmentsByPatient(patient.id, departmentId, null, new Date(), this.currentPagePast, this.pageSize).subscribe({
