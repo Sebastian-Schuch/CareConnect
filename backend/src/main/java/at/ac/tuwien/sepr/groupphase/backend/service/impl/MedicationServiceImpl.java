@@ -43,6 +43,7 @@ public class MedicationServiceImpl implements MedicationService {
                 throw new ConflictException("Medication already exists");
             } else {
                 existingMedication.setActive(true);
+                existingMedication.setUnitOfMeasurement(toCreate.unitOfMeasurement());
                 return medicationMapper.medicationEntityToMedicationDto(medicationRepository.save(existingMedication));
             }
         }
