@@ -1,14 +1,14 @@
 :host ::ng-deep app-appointments-patient {
 
-  #appointment-section-past {
-    display: none !important;
+  appointment-section-past {
+    display: flex;
   }
   .card-container{
     color: #2d2d2d!important;
     display: flex!important;
     flex-direction: row!important;
     flex-wrap: wrap!important;
-    justify-content: flex-start!important;
+    justify-content: center;
     align-content: center!important;
     align-items: flex-start!important;
     gap: 1rem!important;

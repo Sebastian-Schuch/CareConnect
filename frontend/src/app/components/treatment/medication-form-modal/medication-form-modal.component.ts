@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {debounceTime, Observable, switchMap} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {map, startWith} from 'rxjs/operators';
-import {MedicationDto} from '../../../dtos/medication';
+import {MedicationDto, MedicationPageDto} from '../../../dtos/medication';
 import {MedicationService} from '../../../services/medication.service';
+import {Page} from "../../../dtos/page";
 
 @Component({
   selector: 'app-medication-form-modal',
@@ -39,7 +40,11 @@ export class MedicationFormModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadMedicines();
+    this.filteredMedicationOptions = this.medicationAdministeredForm.get('medication').valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap(value => this._filterMedicine(value))
+    );
     this.medicationControl.valueChanges.pipe(
       startWith(''),
       map(value => value.unitOfMeasurement)
@@ -105,27 +110,13 @@ export class MedicationFormModalComponent implements OnInit {
   }
 
   /**
-   * Load all the medicines from the backend
-   */
-  private loadMedicines(): void {
-    this.medicineService.getMedicationsAll().subscribe((medicines) => {
-      this.medicineOptions = medicines;
-      this.filteredMedicationOptions = this.medicationAdministeredForm.get('medication').valueChanges.pipe(
-        startWith(''),
-        map(value => this._filterMedicine(value))
-      );
-    });
-  }
-
-  /**
    * Filter the medicines based on the input value
    * @param value the value to filter the medicines
    * @return: the filtered medicines
    */
-  private _filterMedicine(value: string): MedicationDto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.medicineOptions.filter(option =>
-      option.name.toLowerCase().includes(filterValue)
+  private _filterMedicine(value: string): Observable<MedicationDto[]> {
+    return this.medicineService.searchMedications(value, 0, 50).pipe(
+      map((page: MedicationPageDto) => page.medications)
     );
   }
 

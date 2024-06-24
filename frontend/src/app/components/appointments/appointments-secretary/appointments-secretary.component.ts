@@ -1,13 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {catchError, forkJoin, Observable, of} from 'rxjs';
-import {map, startWith, tap} from 'rxjs/operators';
-import {AppointmentService} from '../../../services/appointment.service';
-import {OutpatientDepartmentService} from '../../../services/outpatient-department.service';
-import {AppointmentDto} from '../../../dtos/appointment';
-import {OutpatientDepartmentDto} from '../../../dtos/outpatient-department';
-import {ToastrService} from 'ngx-toastr';
-import {getDate, getMonth, getYear} from "date-fns";
+import { Component, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { catchError, debounceTime, Observable, of, switchMap } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { AppointmentService } from '../../../services/appointment.service';
+import { OutpatientDepartmentService } from '../../../services/outpatient-department.service';
+import { AppointmentDto, AppointmentPageDto } from '../../../dtos/appointment';
+import { OutpatientDepartmentDto, OutpatientDepartmentPageDto } from '../../../dtos/outpatient-department';
+import { ToastrService } from 'ngx-toastr';
+import { getDate, getMonth, getYear } from "date-fns";
+import { UserDto } from "../../../dtos/user";
+import { UserService } from "../../../services/user.service";
+import { Page } from "../../../dtos/page";
 
 @Component({
   selector: 'app-appointments-secretary',
@@ -19,23 +22,26 @@ export class AppointmentsSecretaryComponent implements OnInit {
   futureAppointments: AppointmentDto[] = [];
   pastAppointments: AppointmentDto[] = [];
   outpatientDepartments: OutpatientDepartmentDto[] = [];
+  patients: UserDto[] = [];
   filteredDepartments: Observable<OutpatientDepartmentDto[]>;
-  filteredPatients: Observable<string[]>;
-  showPastAppointments: boolean = false;
+  filteredPatients: Observable<UserDto[]>;
+  showPastAppointments: boolean = true;
   appointmentToBeCancelled: AppointmentDto | undefined;
-  patients: string[] = [];
   showFilters: boolean = true;
   appointmentFilterForm: FormGroup;
   pageSize: number = 3;
-  currentPageFuture: number = 1;
-  currentPagePast: number = 1;
+  currentPageFuture: number = 0;
+  currentPagePast: number = 0;
+  totalFutureAppointments: number = 0;
+  totalPastAppointments: number = 0;
+  @Input() customStyle!: boolean;
 
   constructor(
     private appointmentService: AppointmentService,
     private outpatientDepartmentService: OutpatientDepartmentService,
-    private notification: ToastrService
-  ) {
-  }
+    private notification: ToastrService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.appointmentFilterForm = new FormGroup({
@@ -45,123 +51,50 @@ export class AppointmentsSecretaryComponent implements OnInit {
       patientControl: new FormControl(''),
     });
 
-    forkJoin({
-      departments: this.loadOutpatientDepartments(),
-      patients: this.loadPatients()
-    }).subscribe({
-      next: () => {
-        this.initializeFiltering();
-        this.filterAppointments();
-      },
-      error: err => {
-        console.error('Error loading initial data', err);
-      }
-    });
+    this.initializeFiltering();
+    this.filterAppointments();
   }
 
   getVisibleFutureAppointments(): AppointmentDto[] {
-    const startIndex = (this.currentPageFuture - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.futureAppointments.slice(startIndex, endIndex);
+    return this.futureAppointments;
   }
 
   getVisiblePastAppointments(): AppointmentDto[] {
-    const startIndex = (this.currentPagePast - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.pastAppointments.slice(startIndex, endIndex);
+    return this.pastAppointments;
   }
 
   nextFuturePage(): void {
-    if ((this.currentPageFuture * this.pageSize) < this.futureAppointments.length) {
-      this.currentPageFuture++;
-    }
+    this.currentPageFuture++;
+    this.filterAppointments();
   }
 
   previousFuturePage(): void {
-    if (this.currentPageFuture > 1) {
+    if (this.currentPageFuture > 0) {
       this.currentPageFuture--;
+      this.filterAppointments();
+    }
+  }
+
+  nextPastPage(): void {
+    this.currentPagePast++;
+    this.filterAppointments();
+  }
+
+  previousPastPage(): void {
+    if (this.currentPagePast > 0) {
+      this.currentPagePast--;
+      this.filterAppointments();
     }
   }
 
   public getDayString(day: any): string {
-    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day)
+    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day);
   }
 
-  nextPastPage(): void {
-    if ((this.currentPagePast * this.pageSize) < this.pastAppointments.length) {
-      this.currentPagePast++;
-    }
-  }
-
-  previousPastPage(): void {
-    if (this.currentPagePast > 1) {
-      this.currentPagePast--;
-    }
-  }
-
-  /**
-   * toggle if filter inputs are shown
-   */
   toggleFilters(): void {
     this.showFilters = !this.showFilters;
   }
 
-  /**
-   * Filter the appointments based on the filter form
-   */
-  filterAppointments(): void {
-    const selectedDepartment = this.appointmentFilterForm.get('departmentControl').value;
-    const startDate = this.appointmentFilterForm.get('startDateControl').value;
-    const endDate = this.appointmentFilterForm.get('endDateControl').value;
-    const selectedPatient = this.appointmentFilterForm.get('patientControl').value;
-
-    this.appointmentService.getAppointments().subscribe({
-      next: (appointments) => {
-        this.appointments = appointments.map(appointment => {
-          appointment.startDate = new Date(appointment.startDate);
-          appointment.endDate = new Date(appointment.endDate);
-          return appointment;
-        });
-
-        let filteredAppointments = this.appointments;
-
-        if (selectedDepartment) {
-          filteredAppointments = filteredAppointments.filter(appointment =>
-            appointment.outpatientDepartment.name === selectedDepartment
-          );
-        }
-
-        if (startDate) {
-          filteredAppointments = filteredAppointments.filter(appointment =>
-            appointment.startDate >= new Date(startDate)
-          );
-        }
-
-        if (endDate) {
-          filteredAppointments = filteredAppointments.filter(appointment =>
-            appointment.endDate <= new Date(endDate)
-          );
-        }
-
-        if (selectedPatient) {
-          filteredAppointments = filteredAppointments.filter(appointment =>
-            (appointment.patient.firstname + ' ' + appointment.patient.lastname + ', ' + appointment.patient.svnr).includes(selectedPatient)
-          );
-        }
-
-        this.futureAppointments = filteredAppointments.filter(appointment => appointment.startDate > new Date());
-        this.pastAppointments = filteredAppointments.filter(appointment => appointment.startDate <= new Date());
-        this.sortAppointments();
-      },
-      error: (err) => {
-        console.error('Error loading appointments', err);
-      }
-    });
-  }
-
-  /**
-   * Cancel an appointment
-   */
   cancelAppointment(): void {
     if (this.appointmentToBeCancelled?.id != null) {
       this.appointmentService.cancelAppointment(this.appointmentToBeCancelled.id).subscribe({
@@ -177,85 +110,110 @@ export class AppointmentsSecretaryComponent implements OnInit {
     }
   }
 
+   filterAppointments(): void {
+    const selectedDepartment = this.appointmentFilterForm.get('departmentControl').value;
+    const startDate = this.appointmentFilterForm.get('startDateControl').value;
+    const endDate = this.appointmentFilterForm.get('endDateControl').value;
+    const selectedPatient = this.appointmentFilterForm.get('patientControl').value;
+
+    const departmentId = selectedDepartment.id;
+    const patientId = selectedPatient.id;
+
+    this.loadFutureAppointments(departmentId, patientId, startDate, endDate);
+    if (this.showPastAppointments) {
+      this.loadPastAppointments(departmentId, patientId, startDate, endDate);
+    }
+  }
+
+  private loadFutureAppointments(departmentId: number | null = null, patientId: number | null = null, startDate: Date | null = null, endDate: Date | null = null): void {
+    const futureStartDate = new Date();
+    console.log(departmentId);
+    this.appointmentService.getAllFilteredAppointments(patientId, departmentId, futureStartDate, endDate, this.currentPageFuture, this.pageSize).subscribe({
+      next: (response: AppointmentPageDto) => {
+        this.futureAppointments = response.appointments.map(appointment => {
+          appointment.startDate = new Date(appointment.startDate);
+          appointment.endDate = new Date(appointment.endDate);
+          return appointment;
+        });
+        this.totalFutureAppointments = response.totalItems;
+      },
+      error: (err) => {
+        console.error('Error loading appointments', err);
+      }
+    });
+  }
+
+  private loadPastAppointments(departmentId: number | null = null, patientId: number | null = null, startDate: Date | null = null, endDate: Date | null = null): void {
+    const pastEndDate = new Date();
+    this.appointmentService.getAllFilteredAppointments(patientId, departmentId, startDate, pastEndDate, this.currentPagePast, this.pageSize).subscribe({
+      next: (response: AppointmentPageDto) => {
+        this.pastAppointments = response.appointments.map(appointment => {
+          appointment.startDate = new Date(appointment.startDate);
+          appointment.endDate = new Date(appointment.endDate);
+          return appointment;
+        });
+        this.totalPastAppointments = response.totalItems;
+      },
+      error: (err) => {
+        console.error('Error loading appointments', err);
+      }
+    });
+  }
+
+
   /**
-   * toggle if past appointments should be shown
+   * Display the doctor in the select field with correct format
+   * @param outpatientDepartment - the doctor as an object
+   * @return string - the formatted doctor
    */
-  togglePastAppointments(): void {
-    this.showPastAppointments = !this.showPastAppointments;
+  displayOutPD(outpatientDepartment: any): string {
+    return outpatientDepartment ? `${outpatientDepartment.name}` : '';
   }
 
   /**
-   * Initialize the filtering for departments and patients with ''
+   * Display the doctor in the select field with correct format
+   * @param outpatientDepartment - the doctor as an object
+   * @return string - the formatted doctor
    */
+  displayPatient(patient: any): string {
+    return patient ? `${patient.firstname + " " + patient.lastname}` : '';
+  }
+
   private initializeFiltering(): void {
     this.filteredDepartments = this.appointmentFilterForm.get('departmentControl').valueChanges.pipe(
       startWith(''),
-      map(value => this._filterDepartments(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredOutPatDep(value))
     );
 
     this.filteredPatients = this.appointmentFilterForm.get('patientControl').valueChanges.pipe(
       startWith(''),
-      map(value => this._filterPatients(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredPatients(value))
     );
   }
 
-  /**
-   * Load the appointments for the patient
-   * @return observable of the appointments
-   */
-  private loadOutpatientDepartments(): Observable<OutpatientDepartmentDto[]> {
-    return this.outpatientDepartmentService.getOutpatientDepartment().pipe(
-      tap(departments => this.outpatientDepartments = departments),
-      catchError(err => {
-        console.error('Error loading outpatient departments', err);
-        return of([]);
-      })
+  private loadFilteredOutPatDep(value: string | null | undefined): Observable<OutpatientDepartmentDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.outpatientDepartmentService.getOutpatientDepartmentPage(filterValue, 0, 50).pipe(
+      map((page: OutpatientDepartmentPageDto) => page.outpatientDepartments)
     );
   }
 
-  /**
-   * Load the patients for the appointments
-   * @return observable of the patients
-   */
-  private loadPatients(): Observable<string[]> {
-    return this.appointmentService.getAppointments().pipe(
-      map(appointments => {
-        return Array.from(new Set(appointments.map(appointment =>
-          appointment.patient.firstname + ' ' + appointment.patient.lastname + ', ' + appointment.patient.svnr
-        )));
-      }),
-      tap(patients => this.patients = patients),
-      catchError(err => {
-        console.error('Error loading patients', err);
-        return of([]);
-      })
+  private loadFilteredPatients(value: string | null | undefined): Observable<UserDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.userService.getPatients(filterValue, 0, 50).pipe(
+      map((page: Page<UserDto>) => page.content)
     );
   }
 
-  /**
-   * Sort the appointments by start date
-   */
-  private sortAppointments(): void {
-    this.appointments.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
-  }
-
-  /**
-   * Filter appointments by department
-   * @param value the value to filter by
-   * @return the filtered departments
-   */
-  private _filterDepartments(value: string): OutpatientDepartmentDto[] {
-    const filterValue = value.toLowerCase();
-    return this.outpatientDepartments.filter(department => department.name?.toLowerCase().includes(filterValue));
-  }
-
-  /**
-   * Filter appointments by patient
-   * @param value the value to filter by
-   * @return the filtered patients
-   */
-  private _filterPatients(value: string): string[] {
-    const filterValue = value ? value.toLowerCase() : '';
-    return this.patients.filter(patient => patient.toLowerCase().includes(filterValue));
+  private getStringValue(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    } else if (value && value.firstname && value.lastname) {
+      return `${value.firstname} ${value.lastname}`;
+    } else {
+      return '';
+    }
   }
 }

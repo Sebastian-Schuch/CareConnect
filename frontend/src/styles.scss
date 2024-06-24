@@ -13,7 +13,7 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$sepr-group-phase-primary: mat.define-palette(mat.$amber-palette);
+$sepr-group-phase-primary: mat.define-palette(mat.$green-palette);
 $sepr-group-phase-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
@@ -167,4 +167,25 @@ html, body {
 
 .toast-container {
   margin-top: 60px !important;
+}
+
+/* Global styles */
+.custom-mat-tab-group .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #fff !important;
+  font-size: 16px;
+}
+
+.custom-mat-tab-group .mat-mdc-tab .mdc-tab__text-label {
+  color: #fff !important;
+  font-size: 16px;
+}
+
+.custom-mat-tab-group-list .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  font-size: 16px;
+  color: $sepr-group-phase-green !important;
+}
+
+.custom-mat-tab-group-list .mat-mdc-tab .mdc-tab__text-label {
+  font-size: 16px;
+  color: $sepr-group-phase-green !important;
 }

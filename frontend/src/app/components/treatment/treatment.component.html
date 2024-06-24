@@ -21,24 +21,25 @@
                    aria-labelledby="patientLabel"
                    formControlName="patient"
                    matInput type="text"
-            >
+                   (keydown)="onKeydown($event)"
+                   (keydown.enter)="onEnterKey($event)"
+                   #patientInput
+                   #patientTrigger="matAutocompleteTrigger">
             <mat-autocomplete #patientAuto="matAutocomplete" [displayWith]="displayPatient"
                               autoActiveFirstOption="true">
-              @for (patient of filteredPatientOptions | async; track patient) {
-                <mat-option [value]="patient">
-                  {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
-                </mat-option>
-              }
-
+              <mat-option *ngFor="let patient of filteredPatientOptions | async" [value]="patient">
+                {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
+              </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
-
         <div class="form-group">
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-label>Outpatient-Department</mat-label>
             <mat-icon matPrefix>location_on</mat-icon>
-            <input [matAutocomplete]="outpdepAuto" formControlName="outpatientDepartment" matInput type="text">
+            <input [matAutocomplete]="outpdepAuto" formControlName="outpatientDepartment" matInput type="text"
+                   (keydown.enter)="onEnterKey($event)"  (keydown)="onKeydown($event)"  #outpatientDepartmentInput
+                   #outpatientDepartmentTrigger="matAutocompleteTrigger">
             <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD" autoActiveFirstOption="true">
               <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">
                 {{ outpd.name }}
@@ -51,7 +52,7 @@
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-icon matPrefix>medical_services</mat-icon>
             <mat-label>Doctor</mat-label>
-            <input [matAutocomplete]="doctorAuto" formControlName="doctor" matInput type="text">
+            <input [matAutocomplete]="doctorAuto" formControlName="doctor" matInput type="text" (keydown.enter)="onEnterKey($event)" #doctorInput #doctorTrigger="matAutocompleteTrigger">
             <mat-autocomplete #doctorAuto="matAutocomplete" autoActiveFirstOption="true">
               <mat-option (onSelectionChange)="addDoctorToSelection(doctor)"
                           *ngFor="let doctor of filteredDoctorOptions | async"

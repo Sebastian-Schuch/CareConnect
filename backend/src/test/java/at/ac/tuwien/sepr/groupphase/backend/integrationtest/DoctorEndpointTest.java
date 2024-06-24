@@ -225,62 +225,6 @@ public class DoctorEndpointTest extends TestBase {
     @Transactional
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenNoDoctorsInDatabase_whenGetAllDoctors_thenReturnsEmptyList() throws Exception {
-        doctorRepository.deleteAll();
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsByteArray();
-        List<DoctorDto> doctors = objectMapper.readerFor(DoctorDto.class).<DoctorDto>readValues(bodyGet).readAll();
-        assertThat(doctors).isEmpty();
-    }
-
-    @Transactional
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenThreeCreatedDoctors_whenGetAllDoctors_thenReturnsThreeDoctors() throws Exception {
-        doctorRepository.deleteAll();
-        String json1 = ow.writeValueAsString(new DoctorDtoCreate("a@a.a", "a", "b"));
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json1)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated());
-
-        String json2 = ow.writeValueAsString(new DoctorDtoCreate("b@b.b", "a", "b"));
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json2)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated());
-
-        String json3 = ow.writeValueAsString(new DoctorDtoCreate("c@c.c", "a", "b"));
-        mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json3)
-                .accept(MediaType.APPLICATION_PDF))
-            .andExpect(status().isCreated());
-
-        List<Credential> credentials = doctorRepository.findAllDoctorCredentials();
-        Credential doctor1 = credentials.get(0);
-        Credential doctor2 = credentials.get(1);
-        Credential doctor3 = credentials.get(2);
-
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsByteArray();
-        List<UserLoginDto> doctors = objectMapper.readerFor(UserLoginDto.class).<UserLoginDto>readValues(bodyGet).readAll();
-        assertThat(doctors).hasSize(3).extracting(UserLoginDto::getEmail)
-            .containsExactlyInAnyOrder(
-                doctor1.getEmail(),
-                doctor2.getEmail(),
-                doctor3.getEmail());
-    }
-
-    @Transactional
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenNonExistentId_whenUpdateDoctor_thenReturns404NotFound() throws Exception {
         String json = ow.writeValueAsString(new DoctorDtoUpdate("Updated", "Doctor", "updated@email.com", false, true));
         mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + "/-1")
