@@ -36,6 +36,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -203,9 +204,19 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
+
+        OutpatientDepartmentCapacityDto capacity = null;
+        for (OutpatientDepartmentCapacityDto cap : capacities) {
+            if (cap.outpatientDepartment().id() == testObjectId) {
+                capacity = cap;
+                break;
+            }
+        }
+        assertNotNull(capacity);
+
         // 12 = 6h open x 2 slots/h
-        assertEquals(outpatientDepartment.getCapacity() * 12, capacities.get(3).capacityDto().capacity());
-        assertEquals(1, capacities.get(3).capacityDto().occupied());
+        assertEquals(outpatientDepartment.getCapacity() * 12, capacity.capacityDto().capacity());
+        assertEquals(1, capacity.capacityDto().occupied());
     }
 
     @Test
@@ -222,8 +233,18 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
-        assertEquals(outpatientDepartment.getCapacity() * 12 * 7, capacities.get(3).capacityDto().capacity());
-        assertEquals(7, capacities.get(3).capacityDto().occupied());
+
+        OutpatientDepartmentCapacityDto capacity = null;
+        for (OutpatientDepartmentCapacityDto cap : capacities) {
+            if (cap.outpatientDepartment().id() == testObjectId) {
+                capacity = cap;
+                break;
+            }
+        }
+        assertNotNull(capacity);
+
+        assertEquals(outpatientDepartment.getCapacity() * 12 * 7, capacity.capacityDto().capacity());
+        assertEquals(7, capacity.capacityDto().occupied());
     }
 
     @Test
@@ -240,8 +261,17 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
-        assertEquals(9000, capacities.get(3).capacityDto().capacity());
-        List<Appointment> appointments = appointmentRepository.findAll();
-        assertEquals(10, capacities.get(3).capacityDto().occupied());
+
+        OutpatientDepartmentCapacityDto capacity = null;
+        for (OutpatientDepartmentCapacityDto cap : capacities) {
+            if (cap.outpatientDepartment().id() == testObjectId) {
+                capacity = cap;
+                break;
+            }
+        }
+        assertNotNull(capacity);
+
+        assertEquals(9000, capacity.capacityDto().capacity());
+        assertEquals(10, capacity.capacityDto().occupied());
     }
 }
