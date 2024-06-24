@@ -2,7 +2,9 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {Observable} from "rxjs";
-import {AppointmentDto, AppointmentDtoCalendar, AppointmentDtoCreate} from "../dtos/appointment";
+import {AppointmentDto, AppointmentDtoCalendar, AppointmentDtoCreate, AppointmentPageDto} from "../dtos/appointment";
+import {OutpatientDepartmentDto} from "../dtos/outpatient-department";
+import {UserDto} from "../dtos/user";
 
 
 @Injectable({
@@ -81,4 +83,42 @@ export class AppointmentService {
   cancelAppointment(id: number): Observable<void> {
     return this.http.delete<void>(`${this.appointmentBaseUri}/${id}`);
   }
+
+  /**
+   * Get appointments by patient with optional filters for outpatient department, start date, and end date.
+   * @param patientId the patient for whom to get appointments
+   * @param outpatientDepartmentId optional outpatient department filter
+   * @param startDate optional start date filter
+   * @param endDate optional end date filter
+   * @param page page number for pagination
+   * @param size page size for pagination
+   * @return an Observable for the paginated appointments
+   */
+  getAppointmentsByPatient(
+    patientId: number,
+    outpatientDepartmentId: number | null,
+    startDate: Date | null,
+    endDate: Date | null,
+    page: number,
+    size: number
+  ): Observable<AppointmentPageDto> {
+    let params = new HttpParams()
+      .set('patientId', patientId.toString())
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (outpatientDepartmentId !== null) {
+      params = params.set('outpatientDepartmentId', outpatientDepartmentId.toString());
+    }
+
+    if (startDate !== null) {
+      params = params.set('startDate', startDate.toString());
+    }
+
+    if (endDate !== null) {
+      params = params.set('endDate', endDate.toString());
+    }
+    return this.http.get<AppointmentPageDto>(`${this.appointmentBaseUri}/patient`, { params });
+  }
+
 }

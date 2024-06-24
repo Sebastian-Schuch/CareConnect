@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 
 import java.util.Date;
@@ -44,12 +44,28 @@ public interface AppointmentService {
      */
     AppointmentDto getAppointmentById(long id);
 
+
     /**
      * Get all appointments.
      *
      * @return the list of all appointments.
      */
     List<AppointmentDto> getAllAppointments();
+
+    /**
+     * Get all appointments of the patient.
+     *
+     * @return the list of all appointments of the patient.
+     */
+    AppointmentPageDto getAppointmentsByPatient(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size);
+
+
+    /**
+     * Get all appointments.
+     *
+     * @return the list of all appointments.
+     */
+    AppointmentPageDto getAllFilteredAppointments(PatientDto patient, OutpatientDepartmentDto outpatientDepartmentName, Date startDate, Date endDate, int page, int size);
 
     /**
      * delete the specified appointment.

@@ -1,8 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
@@ -11,6 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -113,16 +114,39 @@ public class AppointmentEndpoint {
         return appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);
     }
 
-    /**
-     * Get all appointments.
-     *
-     * @return the list of all appointments.
-     */
-    @Secured({"SECRETARY"})
-    @GetMapping({"/all"})
-    public List<AppointmentDto> getAllAppointments() {
-        LOG.info("GET" + BASE_PATH + "/all");
-        return appointmentService.getAllAppointments();
+//    /**
+//     * Get all appointments.
+//     *
+//     * @return the list of all appointments.
+//     */
+//    @Secured({"SECRETARY"})
+//    @GetMapping({"/all"})
+//    public List<AppointmentDto> getAllAppointments() {
+//        LOG.info("GET" + BASE_PATH + "/all");
+//        return appointmentService.getAllAppointments();
+//    }
+
+    @Secured("PATIENT")
+    @GetMapping("/patient")
+    public AppointmentPageDto getAppointmentsByPatient(
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "20") Integer size,
+        @RequestParam Long patientId,
+        @RequestParam(required = false) Long outpatientDepartmentId,
+        @RequestParam(required = false) Date startDate,
+        @RequestParam(required = false) Date endDate) {
+        return appointmentService.getAppointmentsByPatient(patientId, outpatientDepartmentId, startDate, endDate, page, size);
     }
 
+    @Secured("SECRETARY")
+    @GetMapping("/all")
+    public AppointmentPageDto getAllAppointments(
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "20") Integer size,
+        @RequestParam(required = false) PatientDto patient,
+        @RequestParam(required = false) OutpatientDepartmentDto outpatientDepartment,
+        @RequestParam(required = false) Date startDate,
+        @RequestParam(required = false) Date endDate) {
+        return appointmentService.getAllFilteredAppointments(patient, outpatientDepartment, startDate, endDate, page, size);
+    }
 }

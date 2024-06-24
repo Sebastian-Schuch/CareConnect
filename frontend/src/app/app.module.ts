@@ -66,6 +66,7 @@ import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
@@ -138,7 +139,9 @@ import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-to
     MatCardSubtitle,
     HalfDonutChartComponent,
     MatButtonToggleGroup,
-    MatButtonToggle
+    MatButtonToggle,
+    MatTabGroup,
+    MatTab
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()

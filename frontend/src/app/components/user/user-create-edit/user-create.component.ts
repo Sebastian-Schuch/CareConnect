@@ -244,7 +244,6 @@ export class UserCreateComponent implements OnInit {
     );
   }
 
-
   private loadFilteredAllergy(value: string | null | undefined): Observable<AllergyDto[]> {
     const filterValue = this.getStringValue(value).toLowerCase();
     return this.allergyService.searchAllergies(filterValue, 0, 10).pipe(

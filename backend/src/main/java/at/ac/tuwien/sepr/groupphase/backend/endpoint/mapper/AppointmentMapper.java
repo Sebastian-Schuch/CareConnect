@@ -1,9 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentPageDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -45,6 +51,10 @@ public class AppointmentMapper {
             appointmentsDto.add(appointmentEntityToAppointmentDto(appointment));
         }
         return appointmentsDto;
+    }
+
+    public AppointmentPageDto toAppointmentPageDto(Page<Appointment> appointmentPage) {
+        return new AppointmentPageDto(appointmentEntitiesToListOfAppointmentDto(appointmentPage.getContent()), (int) appointmentPage.getTotalElements());
     }
 
 }

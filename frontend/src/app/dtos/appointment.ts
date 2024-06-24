@@ -30,3 +30,8 @@ export interface AppointmentDtoCalendar {
   endDate: Date;
   count: number;
 }
+
+export interface AppointmentPageDto {
+  appointments: AppointmentDto[];
+  totalItems: number;
+}
