@@ -78,16 +78,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient getPatientEntityByEmail(String email) {
-        Patient patient = patientRepository.findByCredential_EmailAndCredential_ActiveTrue(email);
-        if (patient == null) {
-            LOG.warn("patient with email {} not found", email);
-            throw new NotFoundException("Patient not found");
-        }
-        return patient;
-    }
-
-    @Override
     public PatientDtoSparse updatePatient(Long id, PatientDtoUpdate toUpdate) {
         LOG.trace("updatePatient({}, {})", id, toUpdate);
         Patient patient = patientRepository.findByPatientIdAndCredential_ActiveTrue(id);
@@ -99,11 +89,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto findPatientByCredential(Credential credential) {
+    public PatientDtoSparse findPatientByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Patient patient = patientRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (patient != null) {
-            return patientMapper.patientToPatientDto(patient);
+            return patientMapper.patientToPatientDtoSparse(patient);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }

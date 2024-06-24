@@ -25,4 +25,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long>, JpaSpecif
     List<Doctor> findByCredential_ActiveTrue();
 
     Doctor findByDoctorIdAndCredential_ActiveTrue(Long id);
+
+    @Query(value = "SELECT COUNT(DISTINCT td.doctors_doctor_id) FROM treatment_doctors td", nativeQuery = true)
+    int countDistinctByTreatmentDoctors();
 }

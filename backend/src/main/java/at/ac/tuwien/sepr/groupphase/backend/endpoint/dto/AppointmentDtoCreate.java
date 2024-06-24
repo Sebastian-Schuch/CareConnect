@@ -11,7 +11,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.config.TimeSlotConfig.MIN_APP
 
 public record AppointmentDtoCreate(
     @NotNull(message = "Patient is required")
-    PatientDto patient,
+    PatientDtoSparse patient,
 
     @NotNull(message = "Outpatient Department is required")
     OutpatientDepartmentDto outpatientDepartment,

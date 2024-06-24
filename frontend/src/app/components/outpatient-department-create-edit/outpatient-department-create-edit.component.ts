@@ -4,12 +4,8 @@ import {OutpatientDepartmentService} from "../../services/outpatient-department.
 import {ToastrService} from "ngx-toastr";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
-import {
-  OutpatientDepartmentDeleteComponent
-} from "../outpatient-department-delete/outpatient-department-delete.component";
-import {InpatientDepartmentCreateEditMode} from "../inpatient-department/inpatient-department.component";
 import {OpeningHoursDayDto, OpeningHoursDto, OpeningHoursDtoCreate} from "../../dtos/opening-hours";
-import {observable, Observable} from "rxjs";
+import {Observable} from "rxjs";
 
 export enum OutpatientDepartmentCreateEditMode {
   create,
@@ -75,11 +71,11 @@ export class OutpatientDepartmentComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.route.params.subscribe(params => {
         this.mode = data.mode;
-        //mode is not edit
+        //mode is not EDIT
         if (this.mode != OutpatientDepartmentCreateEditMode.edit) {
           return;
         }
-        //id to edit is not valid
+        //id to EDIT is not valid
         if (isNaN(params['id'])) {
           this.router.navigate(['/home/admin/outpatient-department']);
         }
@@ -112,9 +108,11 @@ export class OutpatientDepartmentComponent implements OnInit {
   }
 
   mapExistingOpeningHour(existingOpeningHour: OpeningHoursDayDto): OpeningHoursDayDto {
-    return {isClosed: existingOpeningHour === null ? true : existingOpeningHour.isClosed,
+    return {
+      isClosed: existingOpeningHour === null ? true : existingOpeningHour.isClosed,
       open: existingOpeningHour === null ? undefined : existingOpeningHour.open,
-      close: existingOpeningHour === null ? undefined : existingOpeningHour.close}
+      close: existingOpeningHour === null ? undefined : existingOpeningHour.close
+    }
   }
 
   mapIdAndCreateDtoToDto(id: number, outpatientDtoCreate: OutpatientDepartmentDtoCreate): OutpatientDepartmentDto {
@@ -128,7 +126,7 @@ export class OutpatientDepartmentComponent implements OnInit {
     }
   }
 
-  mapIdAndOpeningHoursDtoCreate(id: number, openingHoursDtoCreate: OpeningHoursDtoCreate): OpeningHoursDto{
+  mapIdAndOpeningHoursDtoCreate(id: number, openingHoursDtoCreate: OpeningHoursDtoCreate): OpeningHoursDto {
     return {
       id: id,
       monday: openingHoursDtoCreate.monday,
@@ -178,9 +176,9 @@ export class OutpatientDepartmentComponent implements OnInit {
       }
     }
     let observable: Observable<OutpatientDepartmentDto>;
-    if(this.mode === OutpatientDepartmentCreateEditMode.create) {
+    if (this.mode === OutpatientDepartmentCreateEditMode.create) {
       observable = this.outpatientDepartmentService.createOutpatientDepartment(this.outpatientDepartment);
-    } else if(this.mode === OutpatientDepartmentCreateEditMode.edit) {
+    } else if (this.mode === OutpatientDepartmentCreateEditMode.edit) {
       observable = this.outpatientDepartmentService.editOutpatientDepartment(this.mapIdAndCreateDtoToDto(this.id, this.outpatientDepartment));
     }
     observable.subscribe({

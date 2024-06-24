@@ -152,9 +152,6 @@ export class HeaderComponent implements OnInit {
   public patientNavigateToInpatientDepartment() {
     this.router.navigate(['/home/patient/inpatient-department']);
   }
-  public patientNavigateToOutpatientDepartmentCapacity() {
-    this.router.navigate(['/home/patient/outpatient-department/capacity']);
-  }
 
   public patientNavigateToTelemedicine() {
     this.router.navigate(['/home/patient/telemedicine']);
@@ -192,10 +189,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/secretary/inpatient-department']);
   }
 
-  public secretaryNavigateToOutpatientDepartmentCapacity() {
-    this.router.navigate(['/home/secretary/outpatient-department/capacity']);
-  }
-
   public secretaryNavigateToTreatment() {
     this.router.navigate(['/home/secretary/treatment']);
   }
@@ -218,6 +211,10 @@ export class HeaderComponent implements OnInit {
 
   public doctorNavigateToTreatment() {
     this.router.navigate(['/home/doctor/treatment']);
+  }
+
+  public adminNavigateToApiKeys() {
+    this.router.navigate(['/home/admin/api-keys']);
   }
 
   public adminNavigateToUsersAdmins() {
@@ -261,11 +258,19 @@ export class HeaderComponent implements OnInit {
   }
 
   public adminNavigateToRegisterMedicine() {
-    this.router.navigate(['/home/admin/register/medicine']);
+    this.router.navigate(['/home/admin/register/medication']);
+  }
+
+  public adminNavigateToMedicines() {
+    this.router.navigate(['/home/admin/medications']);
   }
 
   public adminNavigateToRegisterAllergy() {
     this.router.navigate(['/home/admin/register/allergy']);
+  }
+
+  public adminNavigateToAllergies() {
+    this.router.navigate(['/home/admin/allergies']);
   }
 
   public userNavigateToEditProfile() {

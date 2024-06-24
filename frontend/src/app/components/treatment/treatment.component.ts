@@ -345,10 +345,12 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
    * adds the medication to the list of medications and the table
    */
   private handleMedicationSubmission(medicationData) {
+    console.log(medicationData.medication);
+    console.log(medicationData.medication.unitOfMeasurement);
     const treatmentMedicineDtoCreate: TreatmentMedicineDtoCreate = {
       medication: medicationData.medication,
       amount: medicationData.amount,
-      unitOfMeasurement: medicationData.unitOfMeasurement,
+      unitOfMeasurement: medicationData.medication.unitOfMeasurement,
       medicineAdministrationDate: this.combineDateAndTime(medicationData.medicineDatePicker, medicationData.medicineTimePicker)
     };
     this.treatmentMedicineService.createTreatmentMedicine(treatmentMedicineDtoCreate).subscribe(

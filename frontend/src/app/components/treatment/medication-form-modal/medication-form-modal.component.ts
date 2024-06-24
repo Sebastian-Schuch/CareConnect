@@ -19,6 +19,8 @@ export class MedicationFormModalComponent implements OnInit {
   medicineOptions: MedicationDto[] = [];
   filteredMedicationOptions: Observable<MedicationDto[]>;
   dateToday: Date = new Date();
+  selectedMedication: MedicationDto;
+  selectedUnitOfMeasurement: Observable<string>;
 
   constructor(
     private fb: FormBuilder,
@@ -33,15 +35,25 @@ export class MedicationFormModalComponent implements OnInit {
       medicineDatePicker: ['', [Validators.required, this.dateValidator.bind(this)]],
       medicineTimePicker: ['', Validators.required]
     });
+    this.medicationAdministeredForm.get("unitOfMeasurement").disable();
   }
 
   ngOnInit(): void {
-
     this.filteredMedicationOptions = this.medicationAdministeredForm.get('medication').valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap(value => this._filterMedicine(value))
     );
+    this.medicationControl.valueChanges.pipe(
+      startWith(''),
+      map(value => value.unitOfMeasurement)
+    ).subscribe({
+      next: value => {
+        this.selectedUnitOfMeasurement = value;
+        this.medicationAdministeredForm.get("unitOfMeasurement").setValue(value);
+      },
+      error: err => console.log(err)
+    });
   }
 
   // Helper methods to access form controls
@@ -67,6 +79,10 @@ export class MedicationFormModalComponent implements OnInit {
 
   displayMedication(medication: any): string {
     return medication ? `${medication.name}` : '';
+  }
+
+  displayUnitOfMeasurement(unitOfMeasurement: any): string {
+    return unitOfMeasurement ? `${unitOfMeasurement.unitOfMeasurement}` : '';
   }
 
   /**
@@ -100,4 +116,6 @@ export class MedicationFormModalComponent implements OnInit {
   private _filterMedicine(value: string): Observable<MedicationDto[]> {
     return this.medicineService.searchMedicationsByName(value);
   }
+
+  protected readonly console = console;
 }

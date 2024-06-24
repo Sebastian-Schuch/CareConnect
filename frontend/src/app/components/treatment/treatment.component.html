@@ -79,7 +79,7 @@
             <h3>Treatment time</h3>
             <div class="treatmentDatePickerElement half-width">
               <mat-form-field appearance="fill" class="matFormFieldFullWidth">
-                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-hint>DD.MM.YYYY</mat-hint>
                 <input [matDatepicker]="startpicker" [max]="dateToday| date:'yyyy-MM-dd'"
                        formControlName="treatmentStartDate"
                        matInput placeholder="start - date*">
@@ -98,7 +98,7 @@
 
             <div class="treatmentDatePickerElement half-width">
               <mat-form-field appearance="fill" class="matFormFieldFullWidth">
-                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-hint>DD.MM.YYYY</mat-hint>
                 <input [matDatepicker]="endpicker" [max]="dateToday| date:'yyyy-MM-dd'"
                        formControlName="treatmentEndDate" matInput
                        placeholder="end - date*">
@@ -164,7 +164,7 @@
                 </ng-container>
                 <ng-container matColumnDef="Unit">
                   <th *matHeaderCellDef mat-header-cell> Unit</th>
-                  <td *matCellDef="let element" mat-cell> {{ element.unitOfMeasurement }}</td>
+                  <td *matCellDef="let element" mat-cell> {{ element.medication.unitOfMeasurement }}</td>
                 </ng-container>
                 <ng-container matColumnDef="Date">
                   <th *matHeaderCellDef mat-header-cell> Date</th>

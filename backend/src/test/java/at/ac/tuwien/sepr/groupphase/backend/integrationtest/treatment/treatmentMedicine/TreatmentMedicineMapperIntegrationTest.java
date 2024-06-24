@@ -61,7 +61,6 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
 
         validTreatmentMedicineDtoCreate = new TreatmentMedicineDtoCreate(
             medicationDto,
-            "mg",
             100,
             treatmentMedicationDate1
         );
@@ -80,7 +79,6 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
             () -> assertNull(treatmentMedicine.getId()),
             () -> assertEquals(validTreatmentMedicineDtoCreate.medication().id(), treatmentMedicine.getMedicine().getId()),
             () -> assertEquals(validTreatmentMedicineDtoCreate.amount(), treatmentMedicine.getAmount()),
-            () -> assertEquals(validTreatmentMedicineDtoCreate.unitOfMeasurement(), treatmentMedicine.getUnitOfMeasurement()),
             () -> assertEquals(validTreatmentMedicineDtoCreate.medicineAdministrationDate(), treatmentMedicine.getTimeOfAdministration())
         );
     }
@@ -95,7 +93,6 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
             () -> assertEquals(validTreatmentMedicineEntity.getId(), treatmentMedicineDto.id()),
             () -> assertEquals(validTreatmentMedicineEntity.getMedicine().getId(), treatmentMedicineDto.medication().id()),
             () -> assertEquals(validTreatmentMedicineEntity.getAmount(), treatmentMedicineDto.amount()),
-            () -> assertEquals(validTreatmentMedicineEntity.getUnitOfMeasurement(), treatmentMedicineDto.unitOfMeasurement()),
             () -> assertEquals(validTreatmentMedicineEntity.getTimeOfAdministration(), treatmentMedicineDto.medicineAdministrationDate())
         );
     }
@@ -112,12 +109,10 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
             () -> assertEquals(validTreatmentMedicineEntity.getId(), treatmentMedicineDtoList.get(0).id()),
             () -> assertEquals(validTreatmentMedicineEntity.getMedicine().getId(), treatmentMedicineDtoList.get(0).medication().id()),
             () -> assertEquals(validTreatmentMedicineEntity.getAmount(), treatmentMedicineDtoList.get(0).amount()),
-            () -> assertEquals(validTreatmentMedicineEntity.getUnitOfMeasurement(), treatmentMedicineDtoList.get(0).unitOfMeasurement()),
             () -> assertEquals(validTreatmentMedicineEntity.getTimeOfAdministration(), treatmentMedicineDtoList.get(0).medicineAdministrationDate()),
             () -> assertEquals(validTreatmentMedicineEntity2.getId(), treatmentMedicineDtoList.get(1).id()),
             () -> assertEquals(validTreatmentMedicineEntity2.getMedicine().getId(), treatmentMedicineDtoList.get(1).medication().id()),
             () -> assertEquals(validTreatmentMedicineEntity2.getAmount(), treatmentMedicineDtoList.get(1).amount()),
-            () -> assertEquals(validTreatmentMedicineEntity2.getUnitOfMeasurement(), treatmentMedicineDtoList.get(1).unitOfMeasurement()),
             () -> assertEquals(validTreatmentMedicineEntity2.getTimeOfAdministration(), treatmentMedicineDtoList.get(1).medicineAdministrationDate())
         );
     }
@@ -126,8 +121,7 @@ public class TreatmentMedicineMapperIntegrationTest extends TestBase {
     @DisplayName("dtoToEntity: invalid Medication ID in TreatmentMedicineDtoCreate - expect exception")
     void testDtoToEntity_givenInvalidMedicationId_ThrowsException() {
         TreatmentMedicineDtoCreate treatmentMedicineDtoCreate = new TreatmentMedicineDtoCreate(
-            new MedicationDto(999L, "Invalid Medication", false),
-            validTreatmentMedicineDtoCreate.unitOfMeasurement(),
+            new MedicationDto(999L, "Invalid Medication", false, "mg"),
             validTreatmentMedicineDtoCreate.amount(),
             validTreatmentMedicineDtoCreate.medicineAdministrationDate()
         );

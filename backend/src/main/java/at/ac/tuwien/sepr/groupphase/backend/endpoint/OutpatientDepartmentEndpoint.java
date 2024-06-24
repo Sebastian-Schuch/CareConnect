@@ -10,11 +10,11 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -85,21 +85,21 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.getAllOutpatientDepartments();
     }
 
-    @Secured({"SECRETARY", "PATIENT"})
+    @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping("/capacities/day")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForDay(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
         return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForDay(date);
     }
 
-    @Secured({"SECRETARY", "PATIENT"})
+    @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping("/capacities/week")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForWeek(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate) {
         return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForWeek(startDate);
     }
 
-    @Secured({"SECRETARY", "PATIENT"})
+    @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping("/capacities/month")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForMonth(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
@@ -132,8 +132,7 @@ public class OutpatientDepartmentEndpoint {
     @Secured({"ADMIN"})
     @PostMapping({"/{id}"})
     public OutpatientDepartmentDto updateOutpatientDepartment(@PathVariable("id") Long id,
-                                                              @Valid @RequestBody OutpatientDepartmentDto toUpdate)
-        throws MethodArgumentNotValidException {
+                                                              @Valid @RequestBody OutpatientDepartmentDto toUpdate) {
         LOGGER.info("updateOutpatientDepartment(" + id + ", " + toUpdate.toString() + ")");
         if (!id.equals(toUpdate.id())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");

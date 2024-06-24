@@ -8,9 +8,6 @@ import {
   OutpatientDepartmentDtoCreate,
   OutpatientDepartmentPageDto
 } from "../dtos/outpatient-department";
-import {InpatientDepartmentPageDto} from "../dtos/inpatient-department";
-import {Page} from "../dtos/page";
-import {UserDto} from "../dtos/user";
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +39,7 @@ export class OutpatientDepartmentService {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri, outpatientDepartment);
   }
 
-  deleteInpatientDepartment(id: number) {
+  deleteOutpatientDepartment(id: number) {
     return this.httpClient.delete<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + id);
   }
 

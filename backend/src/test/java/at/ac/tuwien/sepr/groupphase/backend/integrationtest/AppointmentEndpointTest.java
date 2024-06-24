@@ -9,7 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
@@ -106,24 +106,29 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +140,9 @@ public class AppointmentEndpointTest extends TestBase {
         List<AppointmentDto> appointments = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
 
         assertNotNull(appointments);
-        assertThat(appointments).hasSize(1).extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate, AppointmentDto::notes)
+        assertThat(appointments).hasSize(1)
+            .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
+                AppointmentDto::notes)
             .contains(tuple(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes"));
 
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/all")
@@ -144,7 +151,8 @@ public class AppointmentEndpointTest extends TestBase {
             .andReturn().getResponse().getContentAsByteArray();
 
         appointments = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
-        assertThat(appointments).extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate, AppointmentDto::notes)
+        assertThat(appointments).extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
+                AppointmentDto::notes)
             .contains(tuple(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes"));
     }
 
@@ -155,24 +163,29 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -194,24 +207,29 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -227,24 +245,29 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 7, 0), new Date(2023, 1, 1, 7, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 7, 0), new Date(2023, 1, 1, 7, 30), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -260,24 +283,29 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 29), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 29), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -319,24 +347,29 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -345,8 +378,9 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isCreated());
 
         patient = patientRepository.findAll().get(1);
-        patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
         appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -356,8 +390,9 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isCreated());
 
         patient = patientRepository.findAll().get(2);
-        patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
         appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -367,8 +402,9 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isCreated());
 
         patient = patientRepository.findAll().get(3);
-        patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
         appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -385,22 +421,26 @@ public class AppointmentEndpointTest extends TestBase {
         Patient patient = patientRepository.findAll().get(5);
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
         OutpatientDepartmentDto outpatientDepartmentDto =
-            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+            new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+                outpatientDepartment.getCapacity(), openingHoursDto, true);
 
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/patients/" + patient.getPatientId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -410,7 +450,8 @@ public class AppointmentEndpointTest extends TestBase {
         List<AppointmentDto> appointments = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
         assertThat(appointments).hasSize(0);
 
-        AppointmentDtoCreate appointmentToCreate1 = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate1 =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         String json = ow.writeValueAsString(appointmentToCreate1);
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -421,7 +462,8 @@ public class AppointmentEndpointTest extends TestBase {
 
         List<AppointmentDto> createdAppointment1 = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
 
-        AppointmentDtoCreate appointmentToCreate2 = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 30), new Date(2023, 1, 1, 9, 0), "notes");
+        AppointmentDtoCreate appointmentToCreate2 =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 30), new Date(2023, 1, 1, 9, 0), "notes");
         json = ow.writeValueAsString(appointmentToCreate2);
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -432,7 +474,8 @@ public class AppointmentEndpointTest extends TestBase {
 
         List<AppointmentDto> createdAppointment2 = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
 
-        AppointmentDtoCreate appointmentToCreate3 = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 9, 0), new Date(2023, 1, 1, 9, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate3 =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 9, 0), new Date(2023, 1, 1, 9, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate3);
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -456,7 +499,8 @@ public class AppointmentEndpointTest extends TestBase {
     @Transactional
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
-    void givenAppointmentSearchDto_whenGetAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId_thenReturnAllAppointmentsForThatOutpatientDepartment() throws Exception {
+    void givenAppointmentSearchDto_whenGetAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId_thenReturnAllAppointmentsForThatOutpatientDepartment()
+        throws Exception {
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
                 .queryParam("outpatientDepartmentId", "" + outpatientDepartmentRepository.findAll().get(0).getId())
                 .queryParam("startDate", "Sat Jan 01 2022 00:00:00 GMT+0100 (Central European Summer Time)")
@@ -466,16 +510,23 @@ public class AppointmentEndpointTest extends TestBase {
             .andReturn().getResponse().getContentAsByteArray();
 
         List<AppointmentCalendarDto> appointments = objectMapper.readerFor(AppointmentCalendarDto.class).<AppointmentCalendarDto>readValues(bodyGet).readAll();
-        assertThat(appointments).isNotNull().hasSize(5).extracting(AppointmentCalendarDto::getOutpatientDepartmentId, AppointmentCalendarDto::getStartDate, AppointmentCalendarDto::getEndDate, AppointmentCalendarDto::getCount)
-            .contains(tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        assertThat(appointments).isNotNull().hasSize(5)
+            .extracting(AppointmentCalendarDto::getOutpatientDepartmentId, AppointmentCalendarDto::getStartDate, AppointmentCalendarDto::getEndDate,
+                AppointmentCalendarDto::getCount)
+            .contains(tuple(outpatientDepartmentRepository.findAll().get(0).getId(),
+                    Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), 1),
-                tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 0).atZone(ZoneId.systemDefault()).toInstant()),
+                tuple(outpatientDepartmentRepository.findAll().get(0).getId(),
+                    Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 30).atZone(ZoneId.systemDefault()).toInstant()), 1),
-                tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 0).atZone(ZoneId.systemDefault()).toInstant()),
+                tuple(outpatientDepartmentRepository.findAll().get(0).getId(),
+                    Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 30).atZone(ZoneId.systemDefault()).toInstant()), 1),
-                tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 0).atZone(ZoneId.systemDefault()).toInstant()),
+                tuple(outpatientDepartmentRepository.findAll().get(0).getId(),
+                    Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 30).atZone(ZoneId.systemDefault()).toInstant()), 1),
-                tuple(outpatientDepartmentRepository.findAll().get(0).getId(), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 0).atZone(ZoneId.systemDefault()).toInstant()),
+                tuple(outpatientDepartmentRepository.findAll().get(0).getId(),
+                    Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30).atZone(ZoneId.systemDefault()).toInstant()), 1));
     }
 }

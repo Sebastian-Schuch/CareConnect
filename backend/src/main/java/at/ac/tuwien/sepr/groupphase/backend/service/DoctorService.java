@@ -69,7 +69,7 @@ public interface DoctorService {
      * @param credential the credential to search for
      * @return the doctor with the given credential
      */
-    DoctorDto findDoctorByCredential(Credential credential);
+    DoctorDtoSparse findDoctorByCredential(Credential credential);
 
     /**
      * Search for doctors based on the search criteria.
