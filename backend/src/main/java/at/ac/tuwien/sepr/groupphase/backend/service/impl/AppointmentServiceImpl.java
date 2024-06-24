@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AppointmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
