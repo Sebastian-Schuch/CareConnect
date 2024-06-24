@@ -21,41 +21,43 @@
   <div class="ms-4"></div>
 </form>
 <div class="mt-3">
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th>Name</th>
-      <th class="w-25">Capacity</th>
-      <th class="w-25" *ngIf="role === Role.admin">Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let inpatientDepartment of inpatientDepartments; let i = index" class="center-td">
-      <td aria-label="departmentName" [tabindex]="i+'23'">{{ inpatientDepartment.name }}</td>
-      <td aria-label="departmentCapacity" [tabindex]="i+'24'">{{ inpatientDepartment.capacity }}</td>
-      <td *ngIf="role === Role.admin">
-        <div class="btn-group">
-          <label hidden [for]="i+'edit'">Edit inpatient department</label>
-          <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
-                  [routerLink]="[inpatientDepartment.id, 'edit']"
-                  [attr.aria-label]="'Edit inpatientDepartment '+inpatientDepartment.name+' (mode_edit)'"
-                  [tabindex]="i+'28'"
-          >
-            <mat-icon>mode_edit</mat-icon>
-          </button>
-          <label hidden [for]="i+'delete'">Delete inpatient Department</label>
-          <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
-                  [attr.aria-label]="'Delete inpatientDepartment' + inpatientDepartment.name + ' (delete)'"
-                  [tabindex]="i+'29'"
-                  (click)="openDeleteDialog(inpatientDepartment)"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th class="w-25">Capacity</th>
+        <th class="w-25" *ngIf="role === Role.admin">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let inpatientDepartment of inpatientDepartments; let i = index" class="center-td">
+        <td aria-label="departmentName" [tabindex]="i+'23'">{{ inpatientDepartment.name }}</td>
+        <td aria-label="departmentCapacity" [tabindex]="i+'24'">{{ inpatientDepartment.capacity }}</td>
+        <td *ngIf="role === Role.admin">
+          <div class="btn-group">
+            <label hidden [for]="i+'edit'">Edit inpatient department</label>
+            <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
+                    [routerLink]="[inpatientDepartment.id, 'edit']"
+                    [attr.aria-label]="'Edit inpatientDepartment '+inpatientDepartment.name+' (mode_edit)'"
+                    [tabindex]="i+'28'"
+            >
+              <mat-icon>mode_edit</mat-icon>
+            </button>
+            <label hidden [for]="i+'delete'">Delete inpatient Department</label>
+            <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]="'Delete inpatientDepartment' + inpatientDepartment.name + ' (delete)'"
+                    [tabindex]="i+'29'"
+                    (click)="openDeleteDialog(inpatientDepartment)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
   <mat-paginator [length]=totalItems
                  [pageSize]=pageProperties.pageSize
                  [pageSizeOptions]="[5, 10, 25, 100]"

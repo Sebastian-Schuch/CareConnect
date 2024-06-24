@@ -48,61 +48,63 @@
   </div>
 </form>
 <div class="mt-3">
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th>Firstname</th>
-      <th>Lastname</th>
-      <th>Email</th>
-      <th *ngIf="isPatientList">Social security number</th>
-      <th class="min-width">Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let user of users; let i = index" class="center-td">
-      <td aria-label="Firstname" [tabindex]="i+'23'">{{ user.firstname }}</td>
-      <td aria-label="Lastname" [tabindex]="i+'24'">{{ user.lastname }}</td>
-      <td aria-label="Email" [tabindex]="i+'25'">{{ user.email }}</td>
-      <td aria-label="Social security number" *ngIf="isPatientList" [tabindex]="i+'26'">{{ user.svnr }}</td>
-      <td>
-        <div class="btn-group">
-          <label hidden [for]="i+'details'">User details</label>
-          <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
-                  [routerLink]="[user.id]"
-                  [attr.aria-label]="'show user details of '+user.firstname+' '+user.lastname+' (visibility)'"
-                  [tabindex]="i+'27'"
-          >
-            <mat-icon>visibility</mat-icon>
-          </button>
-          <label hidden [for]="i+'edit'">Edit User</label>
-          <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
-                  [routerLink]="[user.id, 'edit']"
-                  [attr.aria-label]="'edit user '+user.firstname+' '+user.lastname+' (mode_edit)'"
-                  [tabindex]="i+'28'"
-          >
-            <mat-icon>mode_edit</mat-icon>
-          </button>
-          <label hidden [for]="i+'delete'">Delete User</label>
-          <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
-                  (click)="openDeleteModal(user.email)"
-                  [attr.aria-label]="'delete user'+user.firstname+' '+user.lastname+' (delete)'"
-                  [tabindex]="i+'29'"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-          <div *ngIf="isPatientList">
-            <label hidden [for]="i+'stay'">Stay Overview</label>
-            <button [id]="i+'stay'" class="btn btn-sm responsive-info-button"
-                    [routerLink]="[user.id, 'stay']"
-                    [attr.aria-label]="'stay overview of user '+user.firstname+' '+user.lastname+' (bed)'"
-                    [tabindex]="i+'30'"
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        <th *ngIf="isPatientList">Social security number</th>
+        <th class="min-width">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users; let i = index" class="center-td">
+        <td aria-label="Firstname" [tabindex]="i+'23'">{{ user.firstname }}</td>
+        <td aria-label="Lastname" [tabindex]="i+'24'">{{ user.lastname }}</td>
+        <td aria-label="Email" [tabindex]="i+'25'">{{ user.email }}</td>
+        <td aria-label="Social security number" *ngIf="isPatientList" [tabindex]="i+'26'">{{ user.svnr }}</td>
+        <td>
+          <div class="btn-group">
+            <label hidden [for]="i+'details'">User details</label>
+            <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
+                    [routerLink]="[user.id]"
+                    [attr.aria-label]="'show user details of '+user.firstname+' '+user.lastname+' (visibility)'"
+                    [tabindex]="i+'27'"
             >
-              <span class="material-icons">bed</span>
+              <mat-icon>visibility</mat-icon>
             </button>
+            <label hidden [for]="i+'edit'">Edit User</label>
+            <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
+                    [routerLink]="[user.id, 'edit']"
+                    [attr.aria-label]="'edit user '+user.firstname+' '+user.lastname+' (mode_edit)'"
+                    [tabindex]="i+'28'"
+            >
+              <mat-icon>mode_edit</mat-icon>
+            </button>
+            <label hidden [for]="i+'delete'">Delete User</label>
+            <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
+                    (click)="openDeleteModal(user.email)"
+                    [attr.aria-label]="'delete user'+user.firstname+' '+user.lastname+' (delete)'"
+                    [tabindex]="i+'29'"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            <div *ngIf="isPatientList">
+              <label hidden [for]="i+'stay'">Stay Overview</label>
+              <button [id]="i+'stay'" class="btn btn-sm responsive-info-button"
+                      [routerLink]="[user.id, 'stay']"
+                      [attr.aria-label]="'stay overview of user '+user.firstname+' '+user.lastname+' (bed)'"
+                      [tabindex]="i+'30'"
+              >
+                <span class="material-icons">bed</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
