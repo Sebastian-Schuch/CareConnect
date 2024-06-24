@@ -19,10 +19,8 @@ import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 export class CalendarWrapperComponent implements OnInit {
   mode: Role;
   appointmentForm: FormGroup;
-  outpatientDepartments: OutpatientDepartmentDto[] = [];
   filteredOutPatDep: Observable<OutpatientDepartmentDto[]>;
   filteredPatientOptions: Observable<UserDto[]>;
-  patientOptions: UserDto[] = [];
   patient: UserDto;
 
   constructor(
@@ -116,16 +114,17 @@ export class CalendarWrapperComponent implements OnInit {
    * @private helper method to reset all search inputs
    */
   private resetAllSearchInputs() {
-    this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
+
+    this.filteredOutPatDep = this.appointmentForm.get('outpatientDepartment').valueChanges.pipe(
       startWith(''),
       debounceTime(300),
-      switchMap(value => this.loadFilteredPatients(value))
+      switchMap(value => this.loadFilteredOutPatDep(value))
     );
     if (this.isRoleSecretary()) {
-      this.filteredOutPatDep = this.appointmentForm.get('outpatientDepartment').valueChanges.pipe(
+      this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
         startWith(''),
         debounceTime(300),
-        switchMap(value => this.loadFilteredOutPatDep(value))
+        switchMap(value => this.loadFilteredPatients(value))
       );
     }
   }
