@@ -6,9 +6,9 @@ import {FormControl, FormGroup, NgModel, Validators} from "@angular/forms";
 import {debounceTime, forkJoin, map, Observable, startWith, switchMap} from "rxjs";
 import {Role} from "../../../dtos/Role";
 import {ToastrService} from 'ngx-toastr';
-import {MedicationDto} from "../../../dtos/medication";
+import {MedicationDto, MedicationPageDto} from "../../../dtos/medication";
 import {MedicationService} from "../../../services/medication.service";
-import {AllergyDto} from "../../../dtos/allergy";
+import {AllergyDto, AllergyPageDto} from "../../../dtos/allergy";
 import {AllergyService} from "../../../services/allergy.service";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {AuthService} from "../../../services/auth.service";
@@ -229,27 +229,28 @@ export class UserCreateComponent implements OnInit {
       switchMap(value => this.loadFilteredMedication(value))
     );
 
-    /*
+
     this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap(value => this.loadFilteredAllergy(value))
-    );*/
+    );
   }
 
   private loadFilteredMedication(value: string | null | undefined): Observable<MedicationDto[]> {
     const filterValue = this.getStringValue(value).toLowerCase();
-    return this.medicationService.searchMedicationsByName(filterValue).pipe(
+    return this.medicationService.searchMedications(filterValue, 0, 10).pipe(
+      map((page: MedicationPageDto) => page.medications)
     );
   }
 
-  /*
+
   private loadFilteredAllergy(value: string | null | undefined): Observable<AllergyDto[]> {
     const filterValue = this.getStringValue(value).toLowerCase();
-    return this.allergyService.getAllergies(filterValue).pipe(
-      map((page: Page<AllergyDto>) => page.content)
+    return this.allergyService.searchAllergies(filterValue, 0, 10).pipe(
+      map((page: AllergyPageDto) => page.allergies)
     );
-  }*/
+  }
 
   private getStringValue(value: any): string {
     if (typeof value === 'string') {
@@ -278,10 +279,11 @@ export class UserCreateComponent implements OnInit {
     }
     this.userForm.get('medication').setValue('');
     this.userForm.get('medication').reset();
-/*    this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
+    this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterMedications(value))
-    );*/
+      debounceTime(300),
+      switchMap(value => this.loadFilteredMedication(value))
+    );
   }
 
   /**
@@ -295,10 +297,11 @@ export class UserCreateComponent implements OnInit {
     }
     this.userForm.get('allergy').setValue('');
     this.userForm.get('allergy').reset();
- /*   this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
+    this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterAllergies(value))
-    );*/
+      debounceTime(300),
+      switchMap(value => this.loadFilteredAllergy(value))
+    );
   }
 
   /**

@@ -151,7 +151,7 @@ export class CalendarWrapperComponent implements OnInit {
    * Checks if the outpatient department is set
    */
   isOutpatientDepartmentSet(): boolean {
-    return this.appointmentForm.get('outpatientDepartment').value != "";
+    return typeof this.GetActiveOutpatientDepartment() !== 'string';
   }
 
   /**
@@ -166,7 +166,12 @@ export class CalendarWrapperComponent implements OnInit {
    */
   GetActivePatient(): UserDto {
     if (this.isRoleSecretary()) {
-      return this.appointmentForm.get('patient').value;
+      if (typeof this.appointmentForm.get('patient').value === 'string') {
+        return null;
+      } else {
+        return this.appointmentForm.get('patient').value;
+      }
+
     } else {
       return this.patient;
     }
