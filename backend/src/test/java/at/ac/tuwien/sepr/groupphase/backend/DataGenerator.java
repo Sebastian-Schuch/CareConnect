@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApiKey;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
@@ -15,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AdminRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ApiKeyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
@@ -90,6 +92,9 @@ public class DataGenerator {
     @Autowired
     private final TreatmentRepository treatmentRepository;
 
+    @Autowired
+    private final ApiKeyRepository apiKeyRepository;
+
     private final int numberOfTestData = 10;
 
 
@@ -101,7 +106,7 @@ public class DataGenerator {
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                          SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
-                         TreatmentRepository treatmentRepository) {
+                         TreatmentRepository treatmentRepository, ApiKeyRepository apiKeyRepository) {
         this.allergyRepository = allergyRepository;
         this.adminRepository = adminRepository;
         this.appointmentRepository = appointmentRepository;
@@ -115,7 +120,7 @@ public class DataGenerator {
         this.inpatientDepartmentRepository = inpatientDepartmentRepository;
         this.treatmentMedicineRepository = treatmentMedicineRepository;
         this.treatmentRepository = treatmentRepository;
-
+        this.apiKeyRepository = apiKeyRepository;
     }
 
     /**
@@ -124,26 +129,50 @@ public class DataGenerator {
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false);
-            case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, false, true, true, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, true, false, true, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, false, true, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, false, true, true, true, false, true, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false);
-            case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true);
-            case "stay" -> generateDataInDb(false, false, false, true, true, false, false, true, false, false, false);
-            default -> generateDataInDb(true, true, true, true, true, true, true, true, true, true, true);
+            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false, false);
+            case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false, false);
+            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(true, false, false, false, true, true, false, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, true, false, true, false, false, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, false, true, false, false, false, false);
+            case "appointment" -> generateDataInDb(true, false, false, false, true, true, true, false, true, false, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false, false);
+            case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true, false);
+            case "stay" -> generateDataInDb(false, false, false, true, true, false, false, true, false, false, false, false);
+            case "dataInterface" -> generateDataInDb(false, true, false,false, true, true, true, false, false, true, true, true);
+            default -> generateDataInDb(true, true, true, true, true, true, true, true, true, true, true, true);
         }
         LOGGER.info("Finished generating data without error.");
     }
 
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication,
-                                  boolean generateForOutpatientDepartments,
-                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments) {
+    /**
+     * Clears all dummy data from the database.
+     */
+    public void clearData() {
+        LOGGER.info("Clearing data…");
+        clearDb();
+        LOGGER.info("Finished clearing data without error");
+    }
+
+    private void clearDb() {
+        treatmentRepository.deleteAll();
+        treatmentMedicineRepository.deleteAll();
+        appointmentRepository.deleteAll();
+        doctorRepository.deleteAll();
+        outpatientDepartmentRepository.deleteAll();
+        patientRepository.deleteAll();
+        secretaryRepository.deleteAll();
+        medicationRepository.deleteAll();
+        allergyRepository.deleteAll();
+        credentialRepository.deleteAll();
+        inpatientDepartmentRepository.deleteAll();
+        openingHoursRepository.deleteAll();
+    }
+
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
+                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments, boolean generateForApiKeys) {
         if (generateForAllergies) {
             generateDataForAllergies();
         }
@@ -176,6 +205,9 @@ public class DataGenerator {
         }
         if (generateForTreatments) {
             generateDataForTreatments();
+        }
+        if (generateForApiKeys) {
+            generateApiKeys();
         }
     }
 
@@ -297,27 +329,31 @@ public class DataGenerator {
     }
 
     private void generateDataForMedication() {
-        medicationRepository.save(setMedication("Medication1", true));
-        medicationRepository.save(setMedication("Medication2", true));
-        medicationRepository.save(setMedication("Medication3", true));
-        medicationRepository.save(setMedication("Medication4", true));
-        medicationRepository.save(setMedication("Medication5", true));
-        medicationRepository.save(setMedication("WieAgra", true));
+        medicationRepository.save(setMedication("Medication1", true, "mg"));
+        medicationRepository.save(setMedication("Medication2", true, "ml"));
+        medicationRepository.save(setMedication("Medication3", true, "mg"));
+        medicationRepository.save(setMedication("Medication4", true, "ml"));
+        medicationRepository.save(setMedication("Medication5", true, "mg"));
+        medicationRepository.save(setMedication("WieAgra", true, "ml"));
 
-        medicationRepository.save(setMedication("InactiveMedication", false));
+        medicationRepository.save(setMedication("InactiveMedication", false, "mg"));
     }
 
-    private Medication setMedication(String name, Boolean active) {
+    private Medication setMedication(String name, Boolean active, String unitOfMeasurement) {
         Medication medication = new Medication();
         medication.setName(name);
         medication.setActive(active);
+        medication.setUnitOfMeasurement(unitOfMeasurement);
         return medication;
     }
 
     private void generateDataForOutpatientDepartments() {
-        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3, setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00"), true));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5, setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00"), true));
-        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10, setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("X-Ray", "Description1", 3,
+            setOpeningHours("08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00", "08:00-14:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Drug Rehabilitation", "Description2", 5,
+            setOpeningHours("10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00", "10:00-18:00"), true));
+        outpatientDepartmentRepository.save(setOutpatientDepartment("Emergency Room", "Description3", 10,
+            setOpeningHours("01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00", "01:00-22:00"), true));
     }
 
     private OutpatientDepartment setOutpatientDepartment(String name, String description, int capacity, OpeningHours openingHours, boolean active) {
@@ -404,16 +440,15 @@ public class DataGenerator {
     }
 
     private void generateDataForTreatmentMedicines() {
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
-        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, "mg", createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(0), 50L, createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(1), 100L, createDate(2022, Calendar.JANUARY, 1, 8, 0)));
+        treatmentMedicineRepository.save(setTreatmentMedicine(medicationRepository.findAll().get(2), 150L, createDate(2022, Calendar.JANUARY, 1, 8, 0)));
     }
 
-    private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, String unitOfMeasurement, Date timeOfAdministration) {
+    private TreatmentMedicine setTreatmentMedicine(Medication medication, Long amount, Date timeOfAdministration) {
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
         treatmentMedicine.setMedicine(medication);
         treatmentMedicine.setAmount(amount);
-        treatmentMedicine.setUnitOfMeasurement(unitOfMeasurement);
         treatmentMedicine.setTimeOfAdministration(timeOfAdministration);
         return treatmentMedicine;
     }
@@ -435,9 +470,11 @@ public class DataGenerator {
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
             setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
+
     }
 
-    private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment, String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {
+    private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment,
+                                   String treatmentText, List<Doctor> doctors, List<TreatmentMedicine> medicines) {
         Treatment treatment = new Treatment();
         treatment.setTreatmentTitle(treatmentTitle);
         treatment.setTreatmentStart(treatmentStart);
@@ -448,6 +485,20 @@ public class DataGenerator {
         treatment.setDoctors(doctors);
         treatment.setMedicines(medicines);
         return treatment;
+    }
+
+    private void generateApiKeys() {
+        this.apiKeyRepository.save(setApiKey("zeG1C-n129nlQtfVfqJIqr_xdAGxYyz1", new Date(), "description1"));
+        this.apiKeyRepository.save(setApiKey("2IsuPAJDvnCBCFFDMyTTd1_kmJVXNqxy", new Date(), "description2"));
+        this.apiKeyRepository.save(setApiKey("so1ia7v3HBy65kOy-i3Gx-HSIuE2p2RW", new Date(), "description3"));
+    }
+
+    private ApiKey setApiKey(String key, Date created, String description) {
+        ApiKey apiKey = new ApiKey();
+        apiKey.setApiKey(key);
+        apiKey.setCreated(created);
+        apiKey.setDescription(description);
+        return apiKey;
     }
 }
 

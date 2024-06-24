@@ -36,7 +36,6 @@ public class TreatmentMedicineMapper {
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
         treatmentMedicine.setMedicine(med);
         treatmentMedicine.setAmount(treatmentMedicineDtoCreate.amount());
-        treatmentMedicine.setUnitOfMeasurement(treatmentMedicineDtoCreate.unitOfMeasurement());
         treatmentMedicine.setTimeOfAdministration(treatmentMedicineDtoCreate.medicineAdministrationDate());
         return treatmentMedicine;
     }
@@ -50,8 +49,9 @@ public class TreatmentMedicineMapper {
     public TreatmentMedicineDto entityToDto(TreatmentMedicine treatmentMedicine) {
         return new TreatmentMedicineDto(
             treatmentMedicine.getId(),
-            new MedicationDto(treatmentMedicine.getMedicine().getId(), treatmentMedicine.getMedicine().getName(), treatmentMedicine.getMedicine().getActive()),
-            treatmentMedicine.getUnitOfMeasurement(),
+            new MedicationDto(treatmentMedicine.getMedicine().getId(), treatmentMedicine.getMedicine().getName(), treatmentMedicine.getMedicine().getActive(),
+                treatmentMedicine.getMedicine()
+                    .getUnitOfMeasurement()),
             treatmentMedicine.getAmount(),
             treatmentMedicine.getTimeOfAdministration()
         );

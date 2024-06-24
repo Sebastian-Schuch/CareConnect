@@ -24,10 +24,6 @@ public class TreatmentMedicine {
 
     private Long amount;
 
-    @Convert(converter = EncryptorConverter.class)
-    @Column(length = 510)
-    private String unitOfMeasurement;
-
     private java.util.Date timeOfAdministration;
 
     public Long getId() {
@@ -52,14 +48,6 @@ public class TreatmentMedicine {
 
     public void setAmount(Long amount) {
         this.amount = amount;
-    }
-
-    public String getUnitOfMeasurement() {
-        return unitOfMeasurement;
-    }
-
-    public void setUnitOfMeasurement(String unitOfMeasurement) {
-        this.unitOfMeasurement = unitOfMeasurement;
     }
 
     public java.util.Date getTimeOfAdministration() {

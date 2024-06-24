@@ -48,8 +48,7 @@ public class TreatmentMedicineMapperTest {
         medication.setActive(true);
 
         TreatmentMedicineDtoCreate dtoCreate = new TreatmentMedicineDtoCreate(
-            new MedicationDto(1L, "Med1", true),
-            "mg",
+            new MedicationDto(1L, "Med1", true, "mg"),
             100,
             new Date()
         );
@@ -62,7 +61,6 @@ public class TreatmentMedicineMapperTest {
         assertAll("Verify treatment medicine properties",
             () -> assertEquals(medication, treatmentMedicine.getMedicine()),
             () -> assertEquals(dtoCreate.amount(), treatmentMedicine.getAmount()),
-            () -> assertEquals(dtoCreate.unitOfMeasurement(), treatmentMedicine.getUnitOfMeasurement()),
             () -> assertEquals(dtoCreate.medicineAdministrationDate(), treatmentMedicine.getTimeOfAdministration())
         );
 
@@ -81,7 +79,6 @@ public class TreatmentMedicineMapperTest {
         treatmentMedicine.setId(1L);
         treatmentMedicine.setMedicine(medication);
         treatmentMedicine.setAmount(100L);
-        treatmentMedicine.setUnitOfMeasurement("mg");
         treatmentMedicine.setTimeOfAdministration(new Date());
 
         TreatmentMedicineDto treatmentMedicineDto = treatmentMedicineMapper.entityToDto(treatmentMedicine);
@@ -92,8 +89,8 @@ public class TreatmentMedicineMapperTest {
             () -> assertEquals(treatmentMedicine.getMedicine().getId(), treatmentMedicineDto.medication().id()),
             () -> assertEquals(treatmentMedicine.getMedicine().getName(), treatmentMedicineDto.medication().name()),
             () -> assertEquals(treatmentMedicine.getMedicine().getActive(), treatmentMedicineDto.medication().active()),
+            () -> assertEquals(treatmentMedicine.getMedicine().getUnitOfMeasurement(), treatmentMedicineDto.medication().unitOfMeasurement()),
             () -> assertEquals(treatmentMedicine.getAmount(), treatmentMedicineDto.amount()),
-            () -> assertEquals(treatmentMedicine.getUnitOfMeasurement(), treatmentMedicineDto.unitOfMeasurement()),
             () -> assertEquals(treatmentMedicine.getTimeOfAdministration(), treatmentMedicineDto.medicineAdministrationDate())
         );
     }
@@ -116,14 +113,12 @@ public class TreatmentMedicineMapperTest {
         treatmentMedicine1.setId(1L);
         treatmentMedicine1.setMedicine(medication1);
         treatmentMedicine1.setAmount(100L);
-        treatmentMedicine1.setUnitOfMeasurement("mg");
         treatmentMedicine1.setTimeOfAdministration(new Date());
 
         TreatmentMedicine treatmentMedicine2 = new TreatmentMedicine();
         treatmentMedicine2.setId(2L);
         treatmentMedicine2.setMedicine(medication2);
         treatmentMedicine2.setAmount(200L);
-        treatmentMedicine2.setUnitOfMeasurement("ml");
         treatmentMedicine2.setTimeOfAdministration(new Date());
 
         List<TreatmentMedicine> treatmentMedicines = Arrays.asList(treatmentMedicine1, treatmentMedicine2);
@@ -138,8 +133,8 @@ public class TreatmentMedicineMapperTest {
             () -> assertEquals(treatmentMedicine1.getMedicine().getId(), treatmentMedicineDtos.get(0).medication().id()),
             () -> assertEquals(treatmentMedicine1.getMedicine().getName(), treatmentMedicineDtos.get(0).medication().name()),
             () -> assertEquals(treatmentMedicine1.getMedicine().getActive(), treatmentMedicineDtos.get(0).medication().active()),
+            () -> assertEquals(treatmentMedicine1.getMedicine().getUnitOfMeasurement(), treatmentMedicineDtos.get(0).medication().unitOfMeasurement()),
             () -> assertEquals(treatmentMedicine1.getAmount(), treatmentMedicineDtos.get(0).amount()),
-            () -> assertEquals(treatmentMedicine1.getUnitOfMeasurement(), treatmentMedicineDtos.get(0).unitOfMeasurement()),
             () -> assertEquals(treatmentMedicine1.getTimeOfAdministration(), treatmentMedicineDtos.get(0).medicineAdministrationDate())
         );
 
@@ -148,8 +143,8 @@ public class TreatmentMedicineMapperTest {
             () -> assertEquals(treatmentMedicine2.getMedicine().getId(), treatmentMedicineDtos.get(1).medication().id()),
             () -> assertEquals(treatmentMedicine2.getMedicine().getName(), treatmentMedicineDtos.get(1).medication().name()),
             () -> assertEquals(treatmentMedicine2.getMedicine().getActive(), treatmentMedicineDtos.get(1).medication().active()),
+            () -> assertEquals(treatmentMedicine2.getMedicine().getUnitOfMeasurement(), treatmentMedicineDtos.get(1).medication().unitOfMeasurement()),
             () -> assertEquals(treatmentMedicine2.getAmount(), treatmentMedicineDtos.get(1).amount()),
-            () -> assertEquals(treatmentMedicine2.getUnitOfMeasurement(), treatmentMedicineDtos.get(1).unitOfMeasurement()),
             () -> assertEquals(treatmentMedicine2.getTimeOfAdministration(), treatmentMedicineDtos.get(1).medicineAdministrationDate())
         );
     }

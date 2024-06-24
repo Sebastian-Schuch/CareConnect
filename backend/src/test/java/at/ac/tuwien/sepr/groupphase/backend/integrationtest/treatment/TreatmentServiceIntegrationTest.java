@@ -140,7 +140,8 @@ public class TreatmentServiceIntegrationTest extends TestBase {
             OUTPATIENT_DEPARTMENT2,
             "Updated Treatment Text",
             List.of(DOCTOR2, DOCTOR1),
-            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE2),
+            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2),
+                treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE2),
                 treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2))
         );
 
@@ -295,8 +296,7 @@ public class TreatmentServiceIntegrationTest extends TestBase {
             assertAll("Verify treatment medicine properties",
                 () -> assertEquals(expectedMedicine.medication().id(), actualMedicine.medication().id()),
                 () -> assertEquals(expectedMedicine.amount(), actualMedicine.amount()),
-                () -> assertEquals(expectedMedicine.medicineAdministrationDate(), actualMedicine.medicineAdministrationDate()),
-                () -> assertEquals(expectedMedicine.unitOfMeasurement(), actualMedicine.unitOfMeasurement())
+                () -> assertEquals(expectedMedicine.medicineAdministrationDate(), actualMedicine.medicineAdministrationDate())
             );
         }
     }
