@@ -127,7 +127,7 @@ public class DataGeneratorForDevelopment {
         doctorRepository.save(setDoctor("doctor.eggman@email.com", "Doctor", "Eggman", "ChaosEmeralds", true, false));
         doctorRepository.save(setDoctor("doctor.oetker@email.com", "Doctor", "Oetker", "SchokoladenPizza", true, false));
         doctorRepository.save(setDoctor("doctor.johnnySins@email.com", "Doctor", "JohnnySins", "RohreVerleger", true, false));
-        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis", true, false));
+        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis123", true, false));
         doctorRepository.save(setDoctor("doctor.strange@email.com", "Doctor", "Strange", "TimeStone", true, false));
         //Special Doctors (Inactive + Initial Password)
         doctorRepository.save(setDoctor("doctor.inactive@email.com", "Doctor", "Inactive", "404NotFound", false, false));
