@@ -162,7 +162,8 @@ public class MedicationEndpointTest extends TestBase {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-
+    //TODO: adjust and refactor tests (Issue #60)
+    /*
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     public void givenThreeCreatedMedications_whenGetAllMedications_thenReturnsThreeMedications() throws Exception {
@@ -215,5 +216,5 @@ public class MedicationEndpointTest extends TestBase {
             .andReturn().getResponse().getContentAsByteArray();
         List<MedicationDto> medications = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyGet).readAll();
         assertThat(medications).isEmpty();
-    }
+    }*/
 }

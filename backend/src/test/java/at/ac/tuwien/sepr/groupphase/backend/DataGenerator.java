@@ -459,17 +459,18 @@ public class DataGenerator {
         List<Doctor> doctors = new ArrayList<>();
         doctors.add(doctorRepository.findAll().get(0));
         treatmentRepository.save(
-            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0),
-                outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
+            setTreatment("Treatment1", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), "Text1", doctors, List.of()));
         treatmentRepository.save(
-            setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1),
-                outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
-        doctors.add(doctorRepository.findAll().get(1));
+            setTreatment("Treatment2", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), "Text2", doctors, medicine));
+        List<Doctor> doctors2 = new ArrayList<>();
+        doctors2.add(doctorRepository.findAll().get(0));
+        doctors2.add(doctorRepository.findAll().get(1));
         medicine = new ArrayList<>();
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
             setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
+
     }
 
     private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment,
