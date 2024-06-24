@@ -94,5 +94,5 @@ public interface PatientService {
      * @param pageable   the pageable object
      * @return a page of doctors
      */
-    Page<PatientDto> getPatients(String searchTerm, Pageable pageable);
+    Page<PatientDtoSparse> getPatients(String searchTerm, Pageable pageable);
 }

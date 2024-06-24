@@ -126,11 +126,11 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Page<DoctorDto> getDoctors(String searchTerm, Pageable pageable) {
+    public Page<DoctorDtoSparse> getDoctors(String searchTerm, Pageable pageable) {
         Specification<Doctor> spec = Specification.where(DoctorSpecification.containsTextInAnyField(searchTerm))
             .and(DoctorSpecification.isActive());
         return doctorRepository.findAll(spec, pageable)
-            .map(doctorMapper::doctorToDoctorDto);
+            .map(doctorMapper::doctorToDoctorDtoSparse);
     }
 
     /**

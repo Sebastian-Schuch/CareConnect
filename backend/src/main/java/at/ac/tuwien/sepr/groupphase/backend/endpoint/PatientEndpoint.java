@@ -163,7 +163,7 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY", "DOCTOR", "ADMIN"})
     @GetMapping
-    public Page<PatientDto> getPatients(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "50") int size, @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm) {
+    public Page<PatientDtoSparse> getPatients(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "50") int size, @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm) {
         Pageable pageable = PageRequest.of(page, size);
         return patientService.getPatients(searchTerm, pageable);
     }

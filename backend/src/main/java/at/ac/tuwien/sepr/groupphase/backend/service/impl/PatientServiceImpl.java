@@ -130,11 +130,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Page<PatientDto> getPatients(String searchTerm, Pageable pageable) {
+    public Page<PatientDtoSparse> getPatients(String searchTerm, Pageable pageable) {
         Specification<Patient> spec = Specification.where(PatientSpecification.containsTextInAnyField(searchTerm))
             .and(PatientSpecification.isActive());
         return patientRepository.findAll(spec, pageable)
-            .map(patientMapper::patientToPatientDto);
+            .map(patientMapper::patientToPatientDtoSparse);
     }
 
     /**
