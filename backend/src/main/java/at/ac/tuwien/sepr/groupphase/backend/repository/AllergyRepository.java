@@ -5,12 +5,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AllergyRepository extends CrudRepository<Allergy, Long> {
+public interface AllergyRepository extends JpaRepository<Allergy, Long>, JpaSpecificationExecutor<Allergy> {
     /**
      * Find an allergy by its name.
      *
@@ -32,12 +34,5 @@ public interface AllergyRepository extends CrudRepository<Allergy, Long> {
     Allergy findAllergyById(Long id);
 
 
-    /**
-     * Find all allergies by the specification.
-     *
-     * @param specification the specification
-     * @param pageable      the pageable
-     * @return the allergies as a page
-     */
-    Page<Allergy> findAll(Specification<Allergy> specification, Pageable pageable);
+
 }

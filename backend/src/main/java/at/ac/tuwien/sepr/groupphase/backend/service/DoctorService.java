@@ -7,6 +7,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -84,5 +86,14 @@ public interface DoctorService {
      * @return true if the userId is from the doctor that is sending the request, false otherwise
      */
     boolean isOwnRequest(Long userId);
+
+    /**
+     * Get a page of doctors.
+     *
+     * @param searchTerm the search term to search for
+     * @param pageable   the pageable object
+     * @return a page of doctors
+     */
+    Page<DoctorDtoSparse> getDoctors(String searchTerm, Pageable pageable);
 
 }

@@ -4,14 +4,16 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment>, PagingAndSortingRepository<Appointment, Long> {
     @Transactional
     @Query(value = "SELECT COUNT(*) FROM Appointment WHERE (OUTPATIENT_DEPARTMENT_ID = ?1 AND START_DATE = ?2)", nativeQuery = true)
     int getCountFromAllAppointmentsOnOutpatientDepartmentDuringSpecificTime(Long id, Date startDate);

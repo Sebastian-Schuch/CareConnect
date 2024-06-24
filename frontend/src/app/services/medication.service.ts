@@ -3,6 +3,8 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {MedicationDto, MedicationDtoCreate, MedicationPageDto} from "../dtos/medication";
 import {Globals} from "../global/globals";
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import type = _default.defaults.animations.numbers.type;
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +74,7 @@ export class MedicationService {
     let params = new HttpParams();
     params = params.set('page', page);
     params = params.set('size', size);
-    if (medicationName != null && medicationName != "") {
+    if (typeof medicationName === 'string' && medicationName !== "") {
       params = params.set('medicationName', medicationName.trim());
     }
     return this.http.get<MedicationPageDto>(`${this.medicationBaseUri}/search`, {params: params});

@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {forkJoin, Observable, startWith} from "rxjs";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {debounceTime, Observable, startWith, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {TreatmentDto, TreatmentDtoCreate} from "../../dtos/treatment";
 import {TreatmentMedicineDtoCreate, TreatmentMedicineSelection} from "../../dtos/treatmentMedicine";
-import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
+import {OutpatientDepartmentDto, OutpatientDepartmentPageDto} from "../../dtos/outpatient-department";
 import {UserService} from "../../services/user.service";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {UserDto} from "../../dtos/user";
@@ -17,8 +17,9 @@ import {MedicationFormModalComponent} from "./medication-form-modal/medication-f
 import {ActivatedRoute, Router} from "@angular/router";
 import {TreatmentMedicineService} from "../../services/treatment-medicine.service";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
-import {MatAutocomplete} from "@angular/material/autocomplete";
+import {MatAutocomplete, MatAutocompleteTrigger} from "@angular/material/autocomplete";
 import {getDate, getMonth, getYear} from "date-fns";
+import {Page} from "../../dtos/page";
 
 
 export enum TreatmentCreateEditMode {
@@ -39,11 +40,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   mode: TreatmentCreateEditMode = TreatmentCreateEditMode.log;
   existingTreatment: TreatmentDto;
 
-  // Options for the select fields
   treatmentMedicationSelection: TreatmentMedicineSelection[] = [];
-  doctorOptions: UserDto[] = [];
-  patientOptions: UserDto[] = [];
-  outpatientDepartmentOptions: OutpatientDepartmentDto[] = [];
 
   selectedDoctorOptions: UserDto[] = [];
   private treatmentMedicineToDeleteIds: number[] = [];
@@ -57,6 +54,15 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('doctorAuto', {static: false}) doctorAuto: MatAutocomplete;
+  @ViewChild('patientAuto', {static: false}) patientAuto: MatAutocomplete;
+  @ViewChild('outpdepAuto', {static: false}) outpdepAuto: MatAutocomplete;
+  @ViewChild('patientInput', {static: false}) patientInput: ElementRef<HTMLInputElement>;
+  @ViewChild('doctorInput', {static: false}) doctorInput: ElementRef<HTMLInputElement>;
+  @ViewChild('outpatientDepartmentInput', {static: false}) outpatientDepartmentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('patientTrigger', {static: false}) patientAutoTrigger: MatAutocompleteTrigger;
+  @ViewChild('doctorTrigger', {static: false}) doctorAutoTrigger: MatAutocompleteTrigger;
+  @ViewChild('outpatientDepartmentTrigger', {static: false}) outpdepAutoTrigger: MatAutocompleteTrigger;
+
   dateToday: number = Date.now();
   treatmentDtoCreate: TreatmentDtoCreate = {
     treatmentTitle: null,
@@ -91,9 +97,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
       this.route.data.subscribe(data => {
         this.mode = data.mode;
         this.generateForm();
-        if (this.mode !== TreatmentCreateEditMode.detail) {
-          this.loadAllOptionsForSelectFields();
-        }
+        this.resetAllSearchInputs();
         if (this.mode === TreatmentCreateEditMode.edit || this.mode === TreatmentCreateEditMode.detail) {
           const treatmentId = params['id'];
           if (treatmentId) {
@@ -222,10 +226,10 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   private resetAutocomplete(): void {
     this.treatmentForm.get('doctor').setValue('');
     this.treatmentForm.get('doctor').reset();
-
     this.filteredDoctorOptions = this.treatmentForm.get('doctor').valueChanges.pipe(
       startWith(''),
-      map(value => this._filterDoctors(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredDoctors(value))
     );
   }
 
@@ -235,6 +239,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
    * @param element - the medication to remove
    */
   deleteMedicationFromTreatment(element: any): void {
+    console.log("called");
     const index = this.dataSource.data.indexOf(element);
     if (index >= 0) {
       this.dataSource.data.splice(index, 1);
@@ -335,37 +340,11 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Load all options for the select fields (doctors, departments, patients) and clear the inputs
-   */
-  private loadAllOptionsForSelectFields() {
-    forkJoin({
-      doctors: this.loadDoctors(),
-      departments: this.loadOutpatientDepartments(),
-      patients: this.loadPatients()
-    }).subscribe({
-      next: ({doctors, departments, patients}) => {
-        this.doctorOptions = doctors;
-        this.outpatientDepartmentOptions = departments;
-        this.patientOptions = patients;
-        this.resetAllSearchInputs();
-      },
-      error: error => {
-        console.error('Error while getting data from database', error);
-        this.notification.error('Failed to load initial data');
-      }
-    });
-  }
-
-  /**
    * Handle the medication submission from the modal
    * @param medicationData - the data from the medication form modal
    * adds the medication to the list of medications and the table
    */
-
-
   private handleMedicationSubmission(medicationData) {
-    console.log(medicationData.medication);
-    console.log(medicationData.medication.unitOfMeasurement);
     const treatmentMedicineDtoCreate: TreatmentMedicineDtoCreate = {
       medication: medicationData.medication,
       amount: medicationData.amount,
@@ -393,17 +372,20 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   private resetAllSearchInputs() {
     this.filteredDoctorOptions = this.treatmentForm.get('doctor').valueChanges.pipe(
       startWith(''),
-      map(value => this._filterDoctors(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredDoctors(value))
     );
 
     this.filteredPatientOptions = this.treatmentForm.get('patient').valueChanges.pipe(
       startWith(''),
-      map(value => this._filterPatients(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredPatients(value))
     );
 
     this.filteredOutPatDep = this.treatmentForm.get('outpatientDepartment').valueChanges.pipe(
       startWith(''),
-      map(value => this._filterOutPatDep(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredOutPatDep(value))
     );
   }
 
@@ -414,8 +396,8 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     this.treatmentForm = this.fb.group({
       treatmentTitle: ['', Validators.required],
       doctor: [''],
-      patient: ['', Validators.required],
-      outpatientDepartment: ['', Validators.required],
+      patient: ['', [Validators.required, this.typeValidator('object')]],
+      outpatientDepartment: ['', [Validators.required, this.typeValidator('object')]],
       treatmentStartDate: ['', Validators.required],
       treatmentStartTime: ['', Validators.required],
       treatmentEndDate: ['', Validators.required],
@@ -427,6 +409,15 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     if (this.mode === TreatmentCreateEditMode.detail) {
       this.treatmentForm.disable();
     }
+  }
+
+  typeValidator(expectedType: string): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (control.value && typeof control.value !== expectedType) {
+        return { 'invalidType': { value: control.value } };
+      }
+      return null;
+    };
   }
 
   /**
@@ -445,68 +436,62 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     };
   }
 
-  /**
-   * Load all doctors from the database from the service and return them as an observable
-   * @return Observable<UserDetailDto[]> - the list of all doctors
-   */
-  private loadDoctors(): Observable<UserDto[]> {
-    return this.userService.getAllDoctors();
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Backspace') {
+      if (event.target === this.patientInput.nativeElement) {
+        this.treatmentForm.get('patient')?.setValue('');
+        setTimeout(() => {
+          if (this.patientAutoTrigger) {
+            this.patientAutoTrigger.openPanel();
+          }
+        });
+      }
+      if (event.target === this.outpatientDepartmentInput.nativeElement) {
+        this.treatmentForm.get('outpatientDepartment')?.setValue('');
+        setTimeout(() => {
+          if (this.outpdepAutoTrigger) {
+            this.outpdepAutoTrigger.openPanel();
+          }
+        });
+      }
+    }
   }
 
-  /**
-   * Load all patients from the database from the service and return them as an observable
-   * @return Observable<UserDetailDto[]> - the list of all patients
-   */
-  private loadPatients(): Observable<UserDto[]> {
-    return this.userService.getAllPatients();
+  onEnterKey(event: KeyboardEvent): void {
+    event.preventDefault();
   }
 
-  /**
-   * Load all outpatient departments from the database from the service and return them as an observable
-   * @return Observable<OutpatientDepartmentDto[]> - the list of all outpatient departments
-   */
-  private loadOutpatientDepartments(): Observable<OutpatientDepartmentDto[]> {
-    return this.outpatientDepartmentService.getOutpatientDepartment();
-  }
-
-
-  /**
-   * Filter the patients for the search input
-   * @param value - the search input
-   * @return UserDetailDto[] - the filtered list of patients
-   */
-  private _filterPatients(value: string): UserDto[] {
-    const filterValue = (value || '').toString().toLowerCase();
-    return this.patientOptions.filter(option =>
-      option.firstname.toString().toLowerCase().includes(filterValue) ||
-      option.lastname.toString().toLowerCase().includes(filterValue) ||
-      option.svnr.toString().includes(filterValue)
+  private loadFilteredOutPatDep(value: string | null | undefined): Observable<OutpatientDepartmentDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.outpatientDepartmentService.getOutpatientDepartmentPage(filterValue, 0, 50).pipe(
+      map((page: OutpatientDepartmentPageDto) => page.outpatientDepartments)
     );
   }
 
-  /**
-   * Filter the doctors for the search input
-   * @param value - the search input
-   * @return UserDetailDto[] - the filtered list of doctors
-   */
-  private _filterDoctors(value: string): UserDto[] {
-    const filterValue = (value || '').toString().toLowerCase();
-    return this.doctorOptions.filter(option =>
-      option.firstname.toLowerCase().includes(filterValue) ||
-      option.lastname.toLowerCase().includes(filterValue)
+  private loadFilteredDoctors(value: string | null | undefined): Observable<UserDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.userService.getDoctors(filterValue).pipe(
+      map((page: Page<UserDto>) => page.content)
     );
   }
 
-  /**
-   * Filter the outpatient departments for the search input
-   * @param value - the search input
-   * @return OutpatientDepartmentDto[] - the filtered list of outpatient departments
-   */
-  private _filterOutPatDep(value: string): OutpatientDepartmentDto[] {
-    const filterValue = (value || '').toString().toLowerCase();
-    return this.outpatientDepartmentOptions.filter(option =>
-      option.name.toLowerCase().includes(filterValue) ||
-      option.description.toLowerCase().includes(filterValue)
+  private loadFilteredPatients(value: string | null | undefined): Observable<UserDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.userService.getPatients(filterValue).pipe(
+      map((page: Page<UserDto>) => page.content)
     );
   }
+
+  private getStringValue(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    } else if (value && value.firstname && value.lastname) {
+      return `${value.firstname} ${value.lastname}`;
+    } else {
+      return '';
+    }
+  }
+
+
 }

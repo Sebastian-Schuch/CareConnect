@@ -1,13 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
-import {forkJoin, map, Observable, startWith} from "rxjs";
+import {OutpatientDepartmentDto, OutpatientDepartmentPageDto} from "../../../../dtos/outpatient-department";
+import {debounceTime, map, Observable, startWith, switchMap} from "rxjs";
 import {OutpatientDepartmentService} from "../../../../services/outpatient-department.service";
 import {ToastrService} from "ngx-toastr";
 import {Role} from "../../../../dtos/Role";
 import {UserDto} from "../../../../dtos/user";
 import {UserService} from "../../../../services/user.service";
 import {AuthService} from "../../../../services/auth.service";
+import {Page} from "../../../../dtos/page";
+import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-calendar-wrapper',
@@ -17,10 +19,8 @@ import {AuthService} from "../../../../services/auth.service";
 export class CalendarWrapperComponent implements OnInit {
   mode: Role;
   appointmentForm: FormGroup;
-  outpatientDepartments: OutpatientDepartmentDto[] = [];
   filteredOutPatDep: Observable<OutpatientDepartmentDto[]>;
   filteredPatientOptions: Observable<UserDto[]>;
-  patientOptions: UserDto[] = [];
   patient: UserDto;
 
   constructor(
@@ -30,6 +30,11 @@ export class CalendarWrapperComponent implements OnInit {
     private authService: AuthService) {
   }
 
+  @ViewChild('patientInput', {static: false}) patientInput: ElementRef<HTMLInputElement>;
+  @ViewChild('outpatientDepartmentInput', {static: false}) outpatientDepartmentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('patientTrigger', {static: false}) patientAutoTrigger: MatAutocompleteTrigger;
+  @ViewChild('outpatientDepartmentTrigger', {static: false}) outpdepAutoTrigger: MatAutocompleteTrigger;
+
   ngOnInit(): void {
     this.mode = this.authService.getUserRole();
     if (this.mode == Role.secretary) {
@@ -37,27 +42,65 @@ export class CalendarWrapperComponent implements OnInit {
         outpatientDepartment: new FormControl('', Validators.required),
         patient: new FormControl('')
       });
-      forkJoin({
-        outpatientDepartment: this.outpatientDepartmentService.getOutpatientDepartment(),
-        patients: this.userService.getAllPatients(),
-      }).subscribe(({outpatientDepartment, patients}) => {
-        this.patientOptions = patients;
-        this.outpatientDepartments = outpatientDepartment;
-        this.resetAllSearchInputs();
-      });
     }
     if (this.mode == Role.patient) {
       this.appointmentForm = new FormGroup({
         outpatientDepartment: new FormControl('', Validators.required)
       });
-      forkJoin({
-        outpatientDepartment: this.outpatientDepartmentService.getOutpatientDepartment(),
-        patient: this.userService.getPatientCredentials(),
-      }).subscribe(({outpatientDepartment, patient}) => {
-        this.patient = patient;
-        this.outpatientDepartments = outpatientDepartment;
-        this.resetAllSearchInputs();
-      });
+      this.userService.getPatientCredentials().subscribe(
+        (data) => {
+          this.patient = data;
+        },
+        (error) => {
+          this.notification.error('Error', 'Could not load patient data');
+        }
+      );
+    }
+    this.resetAllSearchInputs();
+  }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Backspace') {
+      if (event.target === this.patientInput.nativeElement) {
+        this.appointmentForm.get('patient')?.setValue('');
+        setTimeout(() => {
+          if (this.patientAutoTrigger) {
+            this.patientAutoTrigger.openPanel();
+          }
+        });
+      }
+      if (event.target === this.outpatientDepartmentInput.nativeElement) {
+        this.appointmentForm.get('outpatientDepartment')?.setValue('');
+        setTimeout(() => {
+          if (this.outpdepAutoTrigger) {
+            this.outpdepAutoTrigger.openPanel();
+          }
+        });
+      }
+    }
+  }
+
+  private loadFilteredPatients(value: string | null | undefined): Observable<UserDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.userService.getPatients(filterValue).pipe(
+      map((page: Page<UserDto>) => page.content)
+    );
+  }
+
+  private loadFilteredOutPatDep(value: string | null | undefined): Observable<OutpatientDepartmentDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.outpatientDepartmentService.getOutpatientDepartmentPage(filterValue, 0, 50).pipe(
+      map((page: OutpatientDepartmentPageDto) => page.outpatientDepartments)
+    );
+  }
+
+  private getStringValue(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    } else if (value && value.firstname && value.lastname) {
+      return `${value.firstname} ${value.lastname}`;
+    } else {
+      return '';
     }
   }
 
@@ -81,44 +124,17 @@ export class CalendarWrapperComponent implements OnInit {
    * @private helper method to reset all search inputs
    */
   private resetAllSearchInputs() {
-    this.filteredOutPatDep = this.appointmentForm.get('outpatientDepartment').valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterOutPatDep(value))
-    );
     if (this.isRoleSecretary()) {
       this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
         startWith(''),
-        map(value => this.filterPatients(value))
+        debounceTime(300),
+        switchMap(value => this.loadFilteredPatients(value))
       );
     }
-  }
-
-
-  /**
-   * Filters the outpatient departments based on the input value
-   * @param value the input value to filter for
-   * @returns the filtered outpatient departments
-   */
-
-  private filterOutPatDep(value: string): OutpatientDepartmentDto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.outpatientDepartments.filter(option =>
-      option.name.toLowerCase().includes(filterValue) ||
-      option.description.toLowerCase().includes(filterValue)
-    );
-  }
-
-  /**
-   * Filters the patients based on the input value
-   * @param value the input value to filter for
-   * @returns the filtered patients
-   */
-  private filterPatients(value: string): UserDto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.patientOptions.filter(option =>
-      option.firstname.toString().toLowerCase().includes(filterValue) ||
-      option.lastname.toString().toLowerCase().includes(filterValue) ||
-      option.svnr.toString().includes(filterValue)
+    this.filteredOutPatDep = this.appointmentForm.get('outpatientDepartment').valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap(value => this.loadFilteredOutPatDep(value))
     );
   }
 
@@ -143,7 +159,7 @@ export class CalendarWrapperComponent implements OnInit {
    * Checks if the outpatient department is set
    */
   isOutpatientDepartmentSet(): boolean {
-    return this.appointmentForm.get('outpatientDepartment').value != "";
+    return typeof this.GetActiveOutpatientDepartment() !== 'string';
   }
 
   /**
@@ -158,7 +174,12 @@ export class CalendarWrapperComponent implements OnInit {
    */
   GetActivePatient(): UserDto {
     if (this.isRoleSecretary()) {
-      return this.appointmentForm.get('patient').value;
+      if (typeof this.appointmentForm.get('patient').value === 'string') {
+        return null;
+      } else {
+        return this.appointmentForm.get('patient').value;
+      }
+
     } else {
       return this.patient;
     }

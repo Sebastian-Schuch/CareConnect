@@ -117,6 +117,7 @@ public class DataGeneratorForDevelopment {
         for (long i = 0; i < numberOfTestData; i++) {
             Allergy allergy = new Allergy();
             allergy.setName("Allergy" + i);
+            allergy.setActive(i % 3 != 0);
             allergyRepository.save(allergy);
         }
     }
@@ -126,7 +127,7 @@ public class DataGeneratorForDevelopment {
         doctorRepository.save(setDoctor("doctor.eggman@email.com", "Doctor", "Eggman", "ChaosEmeralds", true, false));
         doctorRepository.save(setDoctor("doctor.oetker@email.com", "Doctor", "Oetker", "SchokoladenPizza", true, false));
         doctorRepository.save(setDoctor("doctor.johnnySins@email.com", "Doctor", "JohnnySins", "RohreVerleger", true, false));
-        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis", true, false));
+        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis123", true, false));
         doctorRepository.save(setDoctor("doctor.strange@email.com", "Doctor", "Strange", "TimeStone", true, false));
         //Special Doctors (Inactive + Initial Password)
         doctorRepository.save(setDoctor("doctor.inactive@email.com", "Doctor", "Inactive", "404NotFound", false, false));
@@ -153,7 +154,7 @@ public class DataGeneratorForDevelopment {
         List<Allergy> allergies = new ArrayList<>();
 
         patientRepository.save(setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, false, "6912120520", allergies, medications));
-        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, false, "6912225164", allergies, medications));
+        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty1", true, false, "6912225164", allergies, medications));
         patientRepository.save(setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, false, "6912225111", allergies, medications));
         patientRepository.save(setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, false, "6912034156", allergies, medications));
         patientRepository.save(setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, false, "6912222173", allergies, medications));

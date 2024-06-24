@@ -3,13 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface SecretaryRepository extends JpaRepository<Secretary, Long> {
+public interface SecretaryRepository extends JpaRepository<Secretary, Long>, JpaSpecificationExecutor<Secretary> {
     @Query("SELECT s.credential FROM Secretary s WHERE s.credential.active = TRUE")
     List<Credential> findAllSecretariesCredentials();
 

@@ -1,15 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
@@ -23,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +95,7 @@ public class AppointmentEndpointTest extends TestBase {
 
     @Test
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
+    @Transactional
     void givenValidCreateRequestAndSecretaryAuthority_whenCreateNewAppointment_thenReturnNewlyCreatedAppointmentAndAppointmentCanNowBeFound() throws Exception {
         Patient patient = patientRepository.findAll().get(0);
         List<MedicationDto> medications = new ArrayList<>();
@@ -146,12 +140,16 @@ public class AppointmentEndpointTest extends TestBase {
             .contains(tuple(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes"));
 
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/all")
+                .param("page", "0")
+                .param("size", "20")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
 
-        appointments = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
-        assertThat(appointments).extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
+        AppointmentPageDto appointmentsPage = objectMapper.readerFor(AppointmentPageDto.class).<AppointmentPageDto>readValue(bodyGet);
+
+        assertThat(appointmentsPage.appointments())
+            .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
                 AppointmentDto::notes)
             .contains(tuple(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes"));
     }
@@ -319,12 +317,14 @@ public class AppointmentEndpointTest extends TestBase {
     @WithMockUser(username = "secretary", authorities = {"SECRETARY"})
     void givenIdForAppointmentToDelete_whenDeleteAppointment_thenAppointmentCannotBeFoundAnymore() throws Exception {
         byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/all")
+                .param("page", "0")
+                .param("size", "20")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
 
-        List<AppointmentDto> appointments = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
-        AppointmentDto appointment = appointments.get(0);
+        AppointmentPageDto appointments = objectMapper.readerFor(AppointmentPageDto.class).<AppointmentPageDto>readValue(bodyGet);
+        AppointmentDto appointment = appointments.appointments().get(0);
         long id = appointment.id();
 
         mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH + "/" + id)
@@ -332,12 +332,14 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isNoContent());
 
         bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/all")
+                .param("page", "0")
+                .param("size", "20")
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
 
-        appointments = objectMapper.readerFor(AppointmentDto.class).<AppointmentDto>readValues(bodyGet).readAll();
-        assertThat(appointments).extracting(AppointmentDto::id).doesNotContain(id);
+        AppointmentPageDto appointmentPage = objectMapper.readerFor(AppointmentPageDto.class).<AppointmentPageDto>readValue(bodyGet);
+        assertThat(appointmentPage.appointments().contains(appointment)).isFalse();
     }
 
     @Transactional
