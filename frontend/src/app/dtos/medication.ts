@@ -8,3 +8,8 @@ export interface MedicationDto {
   name: string;
   unitOfMeasurement: string;
 }
+
+export interface MedicationPageDto {
+  medications: MedicationDto[];
+  totalItems: number;
+}

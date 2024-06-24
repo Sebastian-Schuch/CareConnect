@@ -1,11 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {AllergyDtoCreate} from "../../dtos/allergy";
+import {AllergyDto, AllergyDtoCreate} from "../../dtos/allergy";
 import {AllergyService} from "../../services/allergy.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ErrorFormatterService} from "../../services/error-formatter.service";
+
+export enum AllergyCreatEditMode {
+  CREATE,
+  EDIT
+}
 
 @Component({
   selector: 'app-allergy',
@@ -18,30 +23,57 @@ export class AllergyComponent implements OnInit {
     private allergyService: AllergyService,
     private notification: ToastrService,
     private errorFormatterService: ErrorFormatterService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
   }
 
+  mode: AllergyCreatEditMode = null;
+
   ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.mode = data.mode;
+      if (this.mode === AllergyCreatEditMode.EDIT) {
+        this.route.params.subscribe(params => {
+          this.allergyService.getAllergyById(params.id).subscribe(allergy => {
+            this.allergy = allergy;
+          });
+        });
+      }
+    });
   }
 
-  allergyname: string = '';
+  allergy: AllergyDto = {
+    id: 0,
+    name: ''
+  };
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
-      const allergy: AllergyDtoCreate = {
-        name: this.allergyname
-      };
-      let observable: Observable<AllergyDtoCreate> = this.allergyService.createAllergy(allergy);
+      if (this.mode === AllergyCreatEditMode.CREATE) {
+        let observable: Observable<AllergyDtoCreate> = this.allergyService.createAllergy(this.allergy);
 
-      observable.subscribe({
-        next: data => {
-          this.notification.success('Successfully created ' + data.name + ' Allergy');
-        },
-        error: async error => {
-          await this.errorFormatterService.printErrorToNotification(error, `Could not create Allergy`, this.notification);
-        }
-      });
+        observable.subscribe({
+          next: data => {
+            this.notification.success('Successfully created ' + data.name + ' Allergy');
+            this.router.navigate(['/home/admin/allergies'])
+          },
+          error: async error => {
+            await this.errorFormatterService.printErrorToNotification(error, `Could not create Allergy`, this.notification);
+          }
+        });
+      } else if (this.mode === AllergyCreatEditMode.EDIT) {
+        let observable: Observable<AllergyDtoCreate> = this.allergyService.updateAllergy(this.allergy);
+
+        observable.subscribe({
+          next: data => {
+            this.notification.success('Successfully updated ' + data.name + ' Allergy');
+          },
+          error: async error => {
+            await this.errorFormatterService.printErrorToNotification(error, `Could not update Allergy`, this.notification);
+          }
+        });
+      }
     }
   }
 
@@ -50,4 +82,6 @@ export class AllergyComponent implements OnInit {
       'is-invalid': !input.valid && !input.pristine,
     };
   }
+
+  protected readonly AllergyCreatEditMode = AllergyCreatEditMode;
 }

@@ -2,17 +2,21 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -69,5 +73,51 @@ public class MedicationEndpoint {
     public List<MedicationDto> getAll() {
         LOG.info("GET " + BASE_PATH);
         return this.medicationService.getAllMedications();
+    }
+
+    /**
+     * The delete endpoint for the medication.
+     *
+     * @param id the id of medication to delete
+     * @return the disabled medication
+     */
+    @Secured({"ADMIN"})
+    @DeleteMapping({"/{id}"})
+    public MedicationDto deleteById(@PathVariable("id") long id) {
+        LOG.info("DELETE" + BASE_PATH + "/{}", id);
+        return medicationService.disableById(id);
+    }
+
+    /**
+     * Search for medications with specified criteria.
+     *
+     * @param page       the page number
+     * @param size       the size of the page
+     * @param searchTerm the name of the medication to search for
+     * @return a page of all medications that match the criteria
+     */
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping({"/search"})
+    public MedicationPageDto searchMedications(
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "20") Integer size,
+        @RequestParam(name = "medicationName", defaultValue = "") String searchTerm
+    ) {
+        LOG.info("searchMedications({}, {}, {})", page, size, searchTerm);
+        return medicationService.searchMedications(searchTerm, page, size);
+    }
+
+    /**
+     * The update endpoint for the medication.
+     *
+     * @param id       the id of the medication to update
+     * @param toUpdate the data to update the medication with
+     * @return the updated medication
+     */
+    @Secured({"ADMIN"})
+    @PutMapping(value = "/{id}")
+    public MedicationDto update(@PathVariable(name = "id") Long id, @RequestBody MedicationDto toUpdate) {
+        LOG.info("PUT" + BASE_PATH + "/{}", id);
+        return medicationService.update(new MedicationDto(id, toUpdate.name(), toUpdate.active(), toUpdate.unitOfMeasurement()));
     }
 }

@@ -268,15 +268,13 @@ public class PatientServiceTest extends TestBase {
         List<MedicationDto> medications = new ArrayList<>();
         List<AllergyDto> allergies = new ArrayList<>();
         PatientDto toBeFoundPatient = new PatientDto(id, "6912120520", medications, allergies, "Chris", "Anger", "chris.anger@email.com", "AngerManagement", false, true);
-        PatientDto foundPatient = patientService.findPatientByCredential(patientRepository.findAll().get(0).getCredential());
+        PatientDtoSparse foundPatient = patientService.findPatientByCredential(patientRepository.findAll().get(0).getCredential());
         assertAll("Grouped Assertions of Patient",
             () -> assertEquals(toBeFoundPatient.id(), foundPatient.id(), "ID should be equal"),
             () -> assertEquals(toBeFoundPatient.email(), foundPatient.email(), "Email should be equal"),
             () -> assertEquals(toBeFoundPatient.firstname(), foundPatient.firstname(), "Firstname should be equal"),
             () -> assertEquals(toBeFoundPatient.lastname(), foundPatient.lastname(), "Lastname should be equal"),
             () -> assertEquals(toBeFoundPatient.svnr(), foundPatient.svnr(), "Svnr should be equal"),
-            () -> assertEquals(toBeFoundPatient.password(), foundPatient.password(), "Password should be equal"),
-            () -> assertEquals(toBeFoundPatient.active(), foundPatient.active(), "Active should be equal"),
             () -> assertEquals(toBeFoundPatient.isInitialPassword(), foundPatient.isInitialPassword(), "InitialPassword should be equal"));
     }
 
