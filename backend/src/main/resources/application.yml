@@ -33,7 +33,7 @@ security:
     issuer: secure-backend
     audience: secure-app
     # 15 minutes in milliseconds
-    expiration-time: 900000
+    expiration-time: 3600000
 
 management:
   server:

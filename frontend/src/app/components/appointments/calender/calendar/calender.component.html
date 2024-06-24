@@ -38,6 +38,7 @@
     <div class="col-md-3">
       <div class="btn-group">
         <div
+          *ngIf="!isHandset"
           class="btn btn-primary"
           (click)="setView(CalendarView.Month)"
           [class.active]="view === CalendarView.Month"
@@ -108,7 +109,7 @@
     >
     <span class="cal-day-badge" *ngIf="calcFreeSlots(day.date) <= 0 && !isInPast(day.date)"
           [style]="{ backgroundColor: this.getBadgeColor(day.date), color: this.getBadgeColorText(day.date) }"
-    >Booked out!</span
+    >No Slots</span
     >
   </div>
   <div style="text-align: center" class="cal-cell-row"><span

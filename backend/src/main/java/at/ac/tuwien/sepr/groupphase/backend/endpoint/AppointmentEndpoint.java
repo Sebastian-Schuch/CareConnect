@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -89,10 +89,10 @@ public class AppointmentEndpoint {
      */
     @Secured({"SECRETARY", "PATIENT"})
     @GetMapping({"/patients/{id}"})
-    public ResponseEntity<List<AppointmentDto>> getAllAppointmentsFromPatientWithPatientId(@PathVariable("id") long id) {
+    public List<AppointmentDto> getAllAppointmentsFromPatientWithPatientId(@PathVariable("id") long id) {
         LOG.info("GET" + BASE_PATH + "/patients/{}", id);
         if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(id)) {
-            return ResponseEntity.status(200).body(appointmentService.getAllAppointmentsFromPatientWithPatientId(id));
+            return appointmentService.getAllAppointmentsFromPatientWithPatientId(id);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }
@@ -106,8 +106,8 @@ public class AppointmentEndpoint {
     @Secured({"SECRETARY", "PATIENT"})
     @GetMapping
     public List<AppointmentCalendarDto> getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId(@RequestParam(name = "outpatientDepartmentId") long outpatientDepartmentId,
-                                                                                                             @RequestParam(name = "startDate") String startDate,
-                                                                                                             @RequestParam(name = "endDate") String endDate) {
+                                                                                                             @RequestParam(name = "startDate") Date startDate,
+                                                                                                             @RequestParam(name = "endDate") Date endDate) {
         LOG.info("GET" + BASE_PATH);
         LOG.debug("Params of request:\n{},{},{}", outpatientDepartmentId, startDate, endDate);
         return appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);

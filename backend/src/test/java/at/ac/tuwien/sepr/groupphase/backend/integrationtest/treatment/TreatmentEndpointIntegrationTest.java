@@ -362,6 +362,48 @@ class TreatmentEndpointIntegrationTest extends TestBase {
             .andExpect(jsonPath("$.medicines.length()").value(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED.medicines().size()));
     }
 
+    // **** Tests for searchTreatment ****
+    @WithMockUser(username = "doctor1@email.com", authorities = {"DOCTOR"})
+    @Transactional
+    @DisplayName("searchTreatment: valid get request - expect treatments")
+    @Test
+    void testSearchTreatment_givenValidSearchRequest_expectTreatmentData() throws Exception {
+        // test the search request
+        mockMvc.perform(get(BASE_PATH + "/search")
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .queryParam("patientName", PATIENT1.firstname())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.treatments.size()").value(1))
+            .andExpect(jsonPath("$.treatments[0].patient.firstname").value(PATIENT1.firstname()))
+            .andExpect(jsonPath("$.treatments[0].patient.lastname").value(PATIENT1.lastname()))
+            .andExpect(jsonPath("$.treatments[0].patient.svnr").value(PATIENT1.svnr()))
+            .andExpect(jsonPath("$.treatments[0].patient.email").value(PATIENT1.email()))
+            .andExpect(jsonPath("$.treatments[0].treatmentTitle").value("Treatment1"))
+            .andExpect(jsonPath("$.treatments[0].treatmentText").value("Text1"))
+            .andExpect(jsonPath("$.treatments[0].outpatientDepartment.id").value(OUTPATIENT_DEPARTMENT1.id()))
+            .andExpect(jsonPath("$.treatments[0].outpatientDepartment.name").value(OUTPATIENT_DEPARTMENT1.name()))
+            .andExpect(jsonPath("$.treatments[0].doctors.size()").value(1))
+            .andExpect(jsonPath("$.treatments[0].medicines.size()").value(0));
+    }
+
+    @WithMockUser(username = "doctor1@email.com", authorities = {"DOCTOR"})
+    @Transactional
+    @DisplayName("searchTreatment: valid get request - expect treatments")
+    @Test
+    void testSearchTreatment_givenValidSearchRequestWithNoMatchingTreatments_expectNoTreatments() throws Exception {
+        // test the search request
+        mockMvc.perform(get(BASE_PATH + "/search")
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .queryParam("treatmentTitle", "Somebody once told me...")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.treatments.size()").value(0));
+    }
+
+
     // **** Authorization Tests for getTreatmentById() ****
 
     @WithMockUser(username = "doctor@example.com", authorities = {"DOCTOR"})
@@ -468,10 +510,52 @@ class TreatmentEndpointIntegrationTest extends TestBase {
 
     @WithMockUser(username = "admin@email.com", authorities = {"ADMIN"})
     @Transactional
-    @DisplayName("updateTreatment: unauthorized access (Secretary) - expect 403 Forbidden")
+    @DisplayName("updateTreatment: unauthorized access (Admin) - expect 403 Forbidden")
     @Test
     void testCreateTreatment_givenUnauthorizedAdmin_expectForbidden() throws Exception {
         tryCreateTreatmentExpectGivenStatus(status().isForbidden());
+    }
+
+    // **** Authorization Tests for searchTreatment() ****
+
+    @WithMockUser(username = "doctor1@email.com", authorities = {"DOCTOR"})
+    @Transactional
+    @DisplayName("searchTreatment: valid search request - expect status isOk")
+    @Test
+    void testSearchTreatment_givenAuthorizedDoctor_expectStatusOk() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isOk());
+    }
+
+    @WithMockUser(username = "patient1@email.com", authorities = {"PATIENT"})
+    @Transactional
+    @DisplayName("searchTreatment: unauthorized access - expect 403 Forbidden")
+    @Test
+    void testSearchTreatment_givenUnauthorizedPatient_expectForbidden() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isForbidden());
+    }
+
+    @WithMockUser(username = "chris.anger@email.com", authorities = {"PATIENT"})
+    @Transactional
+    @DisplayName("searchTreatment: authorized access (patient) - expect status isOk")
+    @Test
+    void testSearchTreatment_givenAuthorizedPatient_expectStatusOk() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isOk());
+    }
+
+    @WithMockUser(username = "secretary1@email.com", authorities = {"SECRETARY"})
+    @Transactional
+    @DisplayName("searchTreatment: authorized access (Secretary) - expect status isOk")
+    @Test
+    void testSearchTreatment_givenAuthorizedSecretary_expectStatusOk() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isOk());
+    }
+
+    @WithMockUser(username = "admin@email.com", authorities = {"ADMIN"})
+    @Transactional
+    @DisplayName("searchTreatment: unauthorized access (Admin) - expect 403 Forbidden")
+    @Test
+    void testSearchTreatment_givenUnauthorizedAdmin_expectForbidden() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isForbidden());
     }
 
     /**
@@ -520,6 +604,21 @@ class TreatmentEndpointIntegrationTest extends TestBase {
         mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(expectedStatus);
+    }
+
+    /**
+     * Tries to search for treatments and expects a given status - used to check Authorization
+     *
+     * @param expectedStatus the expected status
+     * @throws Exception if the request fails
+     */
+    private void trySearchTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
+        mockMvc.perform(get(BASE_PATH + "/search")
+                .queryParam("page", "1")
+                .queryParam("size", "10")
+                .queryParam("patientId", String.valueOf(PATIENT1.id()))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(expectedStatus);
     }

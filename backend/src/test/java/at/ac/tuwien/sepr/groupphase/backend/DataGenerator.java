@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Admin;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApiKey;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
@@ -13,6 +14,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AdminRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ApiKeyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
@@ -52,6 +54,10 @@ public class DataGenerator {
 
     @Autowired
     private final AllergyRepository allergyRepository;
+
+    @Autowired
+    private final AdminRepository adminRepository;
+
 
     @Autowired
     private final AppointmentRepository appointmentRepository;
@@ -95,15 +101,14 @@ public class DataGenerator {
     /**
      * Executed once when the component is instantiated. Inserts some dummy data.
      */
-    public DataGenerator(AllergyRepository allergyRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
+    public DataGenerator(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, CredentialRepository credentialRepository,
                          DoctorRepository doctorRepository,
                          MedicationRepository medicationRepository, OpeningHoursRepository openingHoursRepository,
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
-                         SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository,
-                         TreatmentMedicineRepository treatmentMedicineRepository,
-                         TreatmentRepository treatmentRepository,
-                         ApiKeyRepository apiKeyRepository) {
+                         SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository,
+                         TreatmentRepository treatmentRepository, ApiKeyRepository apiKeyRepository) {
         this.allergyRepository = allergyRepository;
+        this.adminRepository = adminRepository;
         this.appointmentRepository = appointmentRepository;
         this.credentialRepository = credentialRepository;
         this.doctorRepository = doctorRepository;
@@ -124,18 +129,20 @@ public class DataGenerator {
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, true, true, false, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false, false);
-            case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true, false);
-            case "stay" -> generateDataInDb(false, false, true, true, false, false, true, false, false, false, false);
-            case "dataInterface" -> generateDataInDb(false, true, false, true, true, true, false, false, true, true, true);
+            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false, false);
+            case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false, false);
+            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, false, true, false, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(true, false, false, false, true, true, false, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, true, false, true, false, false, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, false, true, false, false, false, false);
+            case "appointment" -> generateDataInDb(true, false, false, false, true, true, true, false, true, false, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false, false);
+            case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true, false);
+            case "stay" -> generateDataInDb(false, false, false, true, true, false, false, true, false, false, false, false);
+            case "dataInterface" -> generateDataInDb(false, true, false,false, true, true, true, false, false, true, true, true);
+            default -> generateDataInDb(true, true, true, true, true, true, true, true, true, true, true, true);
         }
         LOGGER.info("Finished generating data without error.");
     }
@@ -162,13 +169,10 @@ public class DataGenerator {
         credentialRepository.deleteAll();
         inpatientDepartmentRepository.deleteAll();
         openingHoursRepository.deleteAll();
-        apiKeyRepository.deleteAll();
     }
 
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients,
-                                  boolean generateForMedication, boolean generateForOutpatientDepartments,
-                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines,
-                                  boolean generateForTreatments, boolean generateForApiKeys) {
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
+                                  boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments, boolean generateForApiKeys) {
         if (generateForAllergies) {
             generateDataForAllergies();
         }
@@ -180,6 +184,9 @@ public class DataGenerator {
         }
         if (generateForSecretary) {
             generateDataForSecretary();
+        }
+        if (generateForAdministrator) {
+            generateDataForAdministrators();
         }
         if (generateForPatients) {
             generateDataForPatients();
@@ -214,17 +221,17 @@ public class DataGenerator {
 
     private void generateDataForDoctors() {
         //Normal Doctors
-        doctorRepository.save(setDoctor("doctor.eggman@email.com", "Doctor", "Eggman", "ChaosEmeralds", true, Role.DOCTOR, false));
-        doctorRepository.save(setDoctor("doctor.oetker@email.com", "Doctor", "Oetker", "SchokoladenPizza", true, Role.DOCTOR, false));
-        doctorRepository.save(setDoctor("doctor.johnnySins@email.com", "Doctor", "JohnnySins", "RohreVerleger", true, Role.DOCTOR, false));
-        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis", true, Role.DOCTOR, false));
-        doctorRepository.save(setDoctor("doctor.strange@email.com", "Doctor", "Strange", "TimeStone", true, Role.DOCTOR, false));
+        doctorRepository.save(setDoctor("doctor.eggman@email.com", "Doctor", "Eggman", "ChaosEmeralds", true, false));
+        doctorRepository.save(setDoctor("doctor.oetker@email.com", "Doctor", "Oetker", "SchokoladenPizza", true, false));
+        doctorRepository.save(setDoctor("doctor.johnnySins@email.com", "Doctor", "JohnnySins", "RohreVerleger", true, false));
+        doctorRepository.save(setDoctor("doctor.who@email.com", "Doctor", "Who", "Tardis", true, false));
+        doctorRepository.save(setDoctor("doctor.strange@email.com", "Doctor", "Strange", "TimeStone", true, false));
         //Special Doctors (Inactive + Initial Password)
-        doctorRepository.save(setDoctor("doctor.inactive@email.com", "Doctor", "Inactive", "404NotFound", false, Role.DOCTOR, false));
-        doctorRepository.save(setDoctor("doctor.initial@email.com", "Doctor", "Initial", "InitialPassword", true, Role.DOCTOR, true));
+        doctorRepository.save(setDoctor("doctor.inactive@email.com", "Doctor", "Inactive", "404NotFound", false, false));
+        doctorRepository.save(setDoctor("doctor.initial@email.com", "Doctor", "Initial", "InitialPassword", true, true));
     }
 
-    private Doctor setDoctor(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+    private Doctor setDoctor(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword) {
         Doctor doctor = new Doctor();
         Credential credential = new Credential();
         credential.setEmail(email);
@@ -232,7 +239,7 @@ public class DataGenerator {
         credential.setLastName(lastName);
         credential.setPassword(password);
         credential.setActive(active);
-        credential.setRole(role);
+        credential.setRole(Role.DOCTOR);
         credential.setInitialPassword(initialPassword);
         doctor.setCredential(credential);
         return doctor;
@@ -243,28 +250,18 @@ public class DataGenerator {
         List<Medication> medications = new ArrayList<>();
         List<Allergy> allergies = new ArrayList<>();
 
-        patientRepository.save(
-            setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, Role.PATIENT, false, "6912120520", allergies, medications));
-        patientRepository.save(
-            setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, Role.PATIENT, false, "6912225164", allergies, medications));
-        patientRepository.save(
-            setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, Role.PATIENT, false, "6912225111", allergies, medications));
-        patientRepository.save(
-            setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, Role.PATIENT, false, "6912034156", allergies, medications));
-        patientRepository.save(
-            setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, Role.PATIENT, false, "6912222173", allergies, medications));
-        patientRepository.save(
-            setPatient("sebastian.schuch@email.com", "Sebastian", "Schuch", "scHuchWirHabenSchonWiederEinenFehlerBeimEncrypten", true, Role.PATIENT, false,
-                "6912222156", allergies, medications));
+        patientRepository.save(setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, false, "6912120520", allergies, medications));
+        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, false, "6912225164", allergies, medications));
+        patientRepository.save(setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, false, "6912225111", allergies, medications));
+        patientRepository.save(setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, false, "6912034156", allergies, medications));
+        patientRepository.save(setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, false, "6912222173", allergies, medications));
+        patientRepository.save(setPatient("sebastian.schuch@email.com", "Sebastian", "Schuch", "scHuchWirHabenSchonWiederEinenFehlerBeimEncrypten", true, false, "6912222156", allergies, medications));
         //Special Patients (Inactive + Initial Password)
-        patientRepository.save(
-            setPatient("patient.inactive@email.com", "Patient", "Inactive", "404NotFound", false, Role.PATIENT, false, "0000000000", allergies, medications));
-        patientRepository.save(
-            setPatient("patient.intial@email.com", "Patient", "Initial", "InitialPassword", true, Role.PATIENT, true, "1111111111", allergies, medications));
+        patientRepository.save(setPatient("patient.inactive@email.com", "Patient", "Inactive", "404NotFound", false, false, "0000000000", allergies, medications));
+        patientRepository.save(setPatient("patient.intial@email.com", "Patient", "Initial", "InitialPassword", true, true, "1111111111", allergies, medications));
     }
 
-    private Patient setPatient(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword,
-                               String svnr, List<Allergy> allergies, List<Medication> medications) {
+    private Patient setPatient(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword, String svnr, List<Allergy> allergies, List<Medication> medications) {
         Patient patient = new Patient();
         Credential credential = new Credential();
         credential.setEmail(email);
@@ -272,7 +269,7 @@ public class DataGenerator {
         credential.setLastName(lastName);
         credential.setPassword(password);
         credential.setActive(active);
-        credential.setRole(role);
+        credential.setRole(Role.PATIENT);
         credential.setInitialPassword(initialPassword);
         patient.setCredential(credential);
         patient.setSvnr(svnr);
@@ -281,19 +278,43 @@ public class DataGenerator {
         return patient;
     }
 
-    private void generateDataForSecretary() {
-        //Normal Secretary
-        secretaryRepository.save(setSecretary("secretary1@email.com", "Secretary", "One", "OnePassword", true, Role.SECRETARY, false));
-        secretaryRepository.save(setSecretary("secretary2@email.com", "Secretary", "Two", "TwoPassword", true, Role.SECRETARY, false));
-        secretaryRepository.save(setSecretary("secretary3@email.com", "Secretary", "Three", "ThreePassword", true, Role.SECRETARY, false));
-        secretaryRepository.save(setSecretary("secretary4@email.com", "Secretary", "Four", "FourPassword", true, Role.SECRETARY, false));
-        secretaryRepository.save(setSecretary("secretary5@email.com", "Secretary", "Five", "FivePassword", true, Role.SECRETARY, false));
-        //Special Secretary (Inactive + Initial Password)
-        secretaryRepository.save(setSecretary("secretary.inactive.email.com", "Secretary", "Inactive", "404NotFound", false, Role.SECRETARY, false));
-        secretaryRepository.save(setSecretary("secretary.initial.email.com", "Secretary", "Initial", "InitialPassword", true, Role.SECRETARY, true));
+    private void generateDataForAdministrators() {
+        //Normal Administrators
+        adminRepository.save(setAdministrator("administrator1@email.com", "Administrator", "One", "OnePassword", true, false));
+        adminRepository.save(setAdministrator("administrator2@email.com", "Administrator", "Two", "TwoPassword", true, false));
+        adminRepository.save(setAdministrator("administrator3@email.com", "Administrator", "Three", "ThreePassword", true, false));
+        //Special Patients (Inactive + Initial Password)
+        adminRepository.save(setAdministrator("administrator.inactive@email.com", "Administrator", "Inactive", "404NotFound", false, false));
+        adminRepository.save(setAdministrator("administrator.initial@email.com", "Administrator", "Initial", "InitialPassword", true, true));
     }
 
-    private Secretary setSecretary(String email, String firstName, String lastName, String password, Boolean active, Role role, Boolean initialPassword) {
+    private Admin setAdministrator(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword) {
+        Admin admin = new Admin();
+        Credential credential = new Credential();
+        credential.setEmail(email);
+        credential.setFirstName(firstName);
+        credential.setLastName(lastName);
+        credential.setPassword(password);
+        credential.setActive(active);
+        credential.setRole(Role.ADMIN);
+        credential.setInitialPassword(initialPassword);
+        admin.setCredential(credential);
+        return admin;
+    }
+
+    private void generateDataForSecretary() {
+        //Normal Secretary
+        secretaryRepository.save(setSecretary("secretary1@email.com", "Secretary", "One", "OnePassword", true, false));
+        secretaryRepository.save(setSecretary("secretary2@email.com", "Secretary", "Two", "TwoPassword", true, false));
+        secretaryRepository.save(setSecretary("secretary3@email.com", "Secretary", "Three", "ThreePassword", true, false));
+        secretaryRepository.save(setSecretary("secretary4@email.com", "Secretary", "Four", "FourPassword", true, false));
+        secretaryRepository.save(setSecretary("secretary5@email.com", "Secretary", "Five", "FivePassword", true, false));
+        //Special Secretary (Inactive + Initial Password)
+        secretaryRepository.save(setSecretary("secretary.inactive.email.com", "Secretary", "Inactive", "404NotFound", false, false));
+        secretaryRepository.save(setSecretary("secretary.initial.email.com", "Secretary", "Initial", "InitialPassword", true, true));
+    }
+
+    private Secretary setSecretary(String email, String firstName, String lastName, String password, Boolean active, Boolean initialPassword) {
         Secretary secretary = new Secretary();
         Credential credential = new Credential();
         credential.setEmail(email);
@@ -301,7 +322,7 @@ public class DataGenerator {
         credential.setLastName(lastName);
         credential.setPassword(password);
         credential.setActive(active);
-        credential.setRole(role);
+        credential.setRole(Role.SECRETARY);
         credential.setInitialPassword(initialPassword);
         secretary.setCredential(credential);
         return secretary;
@@ -375,41 +396,32 @@ public class DataGenerator {
 
     private void generateDataForAppointments() {
         //Three appointments for the same outpatient department at the same time to fill up the capacity
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0),
-            dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
             dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30)), "Notes1"));
 
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0),
-            dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
             dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30)), "Notes1"));
 
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0),
-            dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0)),
             dateFromLocalDateTime(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30)), "Notes1"));
 
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0),
-            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(0), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"));
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0),
-            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(1), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 9, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes2"));
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0),
-            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 10, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes3"));
 
         //Two appointments for the same outpatient department at the same time - one spot left
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(3), outpatientDepartmentRepository.findAll().get(0),
-            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(3), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 11, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes4"));
-        appointmentRepository.save(setAppointment(patientRepository.findAll().get(4), outpatientDepartmentRepository.findAll().get(0),
-            Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        appointmentRepository.save(setAppointment(patientRepository.findAll().get(4), outpatientDepartmentRepository.findAll().get(0), Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes5"));
     }
 
     private Date dateFromLocalDateTime(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-
 
     private Appointment setAppointment(Patient patient, OutpatientDepartment outpatientDepartment, Date startDate, Date endDate, String notes) {
         Appointment appointment = new Appointment();
@@ -457,8 +469,7 @@ public class DataGenerator {
         medicine.add(treatmentMedicineRepository.findAll().get(1));
         medicine.add(treatmentMedicineRepository.findAll().get(2));
         treatmentRepository.save(
-            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2),
-                outpatientDepartmentRepository.findAll().get(0), "Text3", doctors, medicine));
+            setTreatment("Treatment3", new Date(2022, Calendar.JANUARY, 1, 8, 0), new Date(2022, Calendar.JANUARY, 1, 9, 0), patientRepository.findAll().get(2), outpatientDepartmentRepository.findAll().get(0), "Text3", doctors2, medicine));
     }
 
     private Treatment setTreatment(String treatmentTitle, Date treatmentStart, Date treatmentEnd, Patient patient, OutpatientDepartment outpatientDepartment,

@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoSearch;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.PatientServiceImpl;
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -92,6 +93,24 @@ public class TreatmentEndpoint {
             || userService.isValidRequestOfRole(Role.DOCTOR)
             || patientServiceImpl.isOwnRequest(treatmentDto.patient().id())) {
             return treatmentDto;
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
+        }
+    }
+
+    /**
+     * Search for treatments with specified criteria.
+     *
+     * @param searchParams the search criteria
+     * @return a page of all treatments that match the criteria
+     */
+    @Secured({"DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping({"/search"})
+    public TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams) {
+        LOGGER.info("getAllTreatmentsFromTimePeriod()");
+        if (userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR) || patientServiceImpl.isOwnRequest(searchParams.patientId())) {
+            return treatmentService.searchTreatments(searchParams);
+
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }
