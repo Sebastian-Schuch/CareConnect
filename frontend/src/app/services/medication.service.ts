@@ -3,6 +3,8 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {MedicationDto, MedicationDtoCreate, MedicationPageDto} from "../dtos/medication";
 import {Globals} from "../global/globals";
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import type = _default.defaults.animations.numbers.type;
 
 @Injectable({
   providedIn: 'root'
@@ -72,7 +74,7 @@ export class MedicationService {
     let params = new HttpParams();
     params = params.set('page', page);
     params = params.set('size', size);
-    if (medicationName != null && medicationName != "") {
+    if (typeof medicationName === 'string' && medicationName !== "") {
       params = params.set('medicationName', medicationName.trim());
     }
     return this.http.get<MedicationPageDto>(`${this.medicationBaseUri}/search`, {params: params});
@@ -86,21 +88,5 @@ export class MedicationService {
    */
   deleteMedication(id: number): Observable<any> {
     return this.http.delete(`${this.medicationBaseUri}/${id}`);
-  }
-
-  /**
-   * Search for medications by name.
-   * @param name the name to search for
-   * @param page the page number
-   * @param size the size of the page
-   */
-  searchMedicationsByName(name: string, page: number = 0, size: number = 10): Observable<MedicationDto[]> {
-    return this.http.get<MedicationDto[]>(`${this.medicationBaseUri}/page`, {
-      params: {
-        searchTerm: name,
-        page: page.toString(),
-        size: size.toString()
-      }
-    });
   }
 }

@@ -3,8 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {debounceTime, Observable, switchMap} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {map, startWith} from 'rxjs/operators';
-import {MedicationDto} from '../../../dtos/medication';
+import {MedicationDto, MedicationPageDto} from '../../../dtos/medication';
 import {MedicationService} from '../../../services/medication.service';
+import {Page} from "../../../dtos/page";
 
 @Component({
   selector: 'app-medication-form-modal',
@@ -114,7 +115,9 @@ export class MedicationFormModalComponent implements OnInit {
    * @return: the filtered medicines
    */
   private _filterMedicine(value: string): Observable<MedicationDto[]> {
-    return this.medicineService.searchMedicationsByName(value);
+    return this.medicineService.searchMedications(value, 0, 50).pipe(
+      map((page: MedicationPageDto) => page.medications)
+    );
   }
 
   protected readonly console = console;
