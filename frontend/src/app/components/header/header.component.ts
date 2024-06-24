@@ -213,6 +213,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/home/doctor/treatment']);
   }
 
+  public adminNavigateToApiKeys() {
+    this.router.navigate(['/home/admin/api-keys']);
+  }
+
   public adminNavigateToUsersAdmins() {
     this.router.navigate(['/home/admin/users/admins']);
   }

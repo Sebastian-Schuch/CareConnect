@@ -19,6 +19,9 @@ public class Medication {
     @Column(nullable = false)
     private boolean active;
 
+    @Column(nullable = false)
+    private String unitOfMeasurement;
+
     public Long getId() {
         return id;
     }
@@ -41,5 +44,13 @@ public class Medication {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getUnitOfMeasurement() {
+        return unitOfMeasurement;
+    }
+
+    public void setUnitOfMeasurement(String unitOfMeasurement) {
+        this.unitOfMeasurement = unitOfMeasurement;
     }
 }

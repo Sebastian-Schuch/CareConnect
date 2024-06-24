@@ -238,6 +238,10 @@
           </button>
         </div>
       </mat-menu>
+      <button mat-button (click)="adminNavigateToApiKeys()" tabindex="15">
+        <mat-icon>key</mat-icon>
+        Manage API keys
+      </button>
     </ng-container>
   </div>
 
@@ -374,6 +378,10 @@
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToAllergies()">
             View Allergies
+          </button>
+          <button mat-button (click)="adminNavigateToApiKeys()" tabindex="15">
+            <mat-icon>key</mat-icon>
+            Manage API keys
           </button>
         </div>
       </div>

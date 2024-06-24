@@ -46,9 +46,7 @@ public class MedicationServiceImpl implements MedicationService {
                 return medicationMapper.medicationEntityToMedicationDto(medicationRepository.save(existingMedication));
             }
         }
-        Medication medication = new Medication();
-        medication.setName(toCreate.name());
-        medication.setActive(true);
+        Medication medication = medicationMapper.medicationDtoCreateToMedicationEntity(toCreate);
         return medicationMapper.medicationEntityToMedicationDto(medicationRepository.save(medication));
     }
 

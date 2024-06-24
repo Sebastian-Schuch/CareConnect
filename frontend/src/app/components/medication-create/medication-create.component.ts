@@ -13,15 +13,16 @@ export enum MedicationCreateEditMode {
 }
 
 @Component({
-  selector: 'app-medication-CREATE',
+  selector: 'app-medication-create',
   templateUrl: './medication-create.component.html',
   styleUrls: ['./medication-create.component.scss', '../../../styles.scss']
 })
 export class MedicationCreateComponent implements OnInit {
 
   medication: MedicationDto = {
-    id: 0,
-    name: ''
+    id: '',
+    name: '',
+    unitOfMeasurement: ''
   };
 
   mode: MedicationCreateEditMode = null;

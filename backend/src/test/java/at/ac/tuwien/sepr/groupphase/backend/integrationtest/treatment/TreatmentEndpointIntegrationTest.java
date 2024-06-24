@@ -229,8 +229,12 @@ class TreatmentEndpointIntegrationTest extends TestBase {
     void testUpdateExistingTreatment_givenValidDto_expectSuccessfulUpdate() throws Exception {
         TreatmentMedicineDto treatmentMedicineDto = treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2);
         Long id = treatmentRepository.findAll().get(2).getId();
-        TreatmentDtoCreate updateDto = new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text", List.of(DOCTOR2), List.of(treatmentMedicineDto));
-        TreatmentDto updatedTreatment = new TreatmentDto(id, "Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text", List.of(DOCTOR2), List.of(treatmentMedicineDto));
+        TreatmentDtoCreate updateDto =
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text",
+                List.of(DOCTOR2), List.of(treatmentMedicineDto));
+        TreatmentDto updatedTreatment =
+            new TreatmentDto(id, "Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text",
+                List.of(DOCTOR2), List.of(treatmentMedicineDto));
 
         String json = ow.writeValueAsString(updateDto);
         MvcResult result = mockMvc.perform(put(BASE_PATH + "/" + id)
@@ -329,7 +333,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
     void testGetTreatmentById_givenValidId_expectTreatmentData() throws Exception {
         // create a valid treatment to get
         TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED =
-            new TreatmentDtoCreate(TREATMENT_TITLE1, TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+            new TreatmentDtoCreate(TREATMENT_TITLE1, TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1,
+                List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         dtoValidator.validate(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED, "treatmentDtoCreate");
         String json = ow.writeValueAsString(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED);
         MvcResult result = mockMvc.perform(post(BASE_PATH)
@@ -575,7 +580,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
      */
     private void tryUpdateTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
         TreatmentDtoCreate updatedTreatmentDtoCreate =
-            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1,
+                List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         String json = ow.writeValueAsString(updatedTreatmentDtoCreate);
         mockMvc.perform(put(BASE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -591,7 +597,9 @@ class TreatmentEndpointIntegrationTest extends TestBase {
      * @throws Exception if the request fails
      */
     private void tryCreateTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
-        TreatmentDtoCreate treatmentDtoCreate = new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+        TreatmentDtoCreate treatmentDtoCreate =
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1,
+                List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         String json = ow.writeValueAsString(treatmentDtoCreate);
         mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -646,7 +654,6 @@ class TreatmentEndpointIntegrationTest extends TestBase {
 
         for (int i = 0; i < expectedTreatmentDto.medicines().size(); i++) {
             assertEquals(expectedTreatmentDto.medicines().get(i).medication().name(), medicinesNode.get(i).path("medication").path("name").asText());
-            assertEquals(expectedTreatmentDto.medicines().get(i).unitOfMeasurement(), medicinesNode.get(i).path("unitOfMeasurement").asText());
             assertEquals(expectedTreatmentDto.medicines().get(i).amount(), medicinesNode.get(i).path("amount").asLong());
         }
     }
@@ -710,7 +717,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
             OUTPATIENT_DEPARTMENT1,
             TREATMENT_TEXT1,
             List.of(DOCTOR1),
-            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
+            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1),
+                treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
         );
 
         TreatmentDto TREATMENT_DTO_VALID_ONE_DOC_TWO_MED = new TreatmentDto(
@@ -722,7 +730,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
             OUTPATIENT_DEPARTMENT1,
             TREATMENT_TEXT1,
             List.of(DOCTOR1),
-            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
+            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1),
+                treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
         );
 
         // valid treatment dto empty optional fields

@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 public record MedicationDtoCreate(
     @NotBlank(message = "Name cannot be empty")
     @Size(max = 255, message = "Name cannot be longer than 255 characters")
-    String name
+    String name,
+
+    @NotBlank(message = "Name cannot be empty")
+    String unitOfMeasurement
 ) {
 }

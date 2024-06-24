@@ -73,8 +73,8 @@ public class TreatmentMapperTest {
         PatientDtoSparse patientDto = new PatientDtoSparse(1L, "1234567891", List.of(), List.of(), "John", "Doe", "john@email.com", true);
         DoctorDtoSparse doctorDto = new DoctorDtoSparse(2L, "John", "Smith", "john@email.com", false);
         DoctorDtoSparse doctorDto2 = new DoctorDtoSparse(3L, "John", "Smith", "john@email.com", false);
-        TreatmentMedicineDto treatmentMedicineDto = new TreatmentMedicineDto(3L, new MedicationDto(1L, "Med1", true), "mg", 100, new Date());
-        TreatmentMedicineDto treatmentMedicineDto2 = new TreatmentMedicineDto(4L, new MedicationDto(1L, "Med1", true), "mg", 100, new Date());
+        TreatmentMedicineDto treatmentMedicineDto = new TreatmentMedicineDto(3L, new MedicationDto(1L, "Med1", true, "mg"), 100, new Date());
+        TreatmentMedicineDto treatmentMedicineDto2 = new TreatmentMedicineDto(4L, new MedicationDto(1L, "Med1", true, "mg"), 100, new Date());
         OutpatientDepartmentDto outpatientDepartmentDto = new OutpatientDepartmentDto(1L, "Cardiology", "Cardiology Department", 20, null, true);
 
         return new TreatmentDtoCreate(
@@ -89,7 +89,8 @@ public class TreatmentMapperTest {
         );
     }
 
-    private static Treatment createTreatment(long id, Patient patient, Doctor doctor, TreatmentMedicine treatmentMedicine, OutpatientDepartment outpatientDepartment, Date treatmentStart, Date treatmentEnd) {
+    private static Treatment createTreatment(long id, Patient patient, Doctor doctor, TreatmentMedicine treatmentMedicine,
+                                             OutpatientDepartment outpatientDepartment, Date treatmentStart, Date treatmentEnd) {
         Treatment treatment = new Treatment();
         treatment.setId(id);
         treatment.setTreatmentTitle("Treatment Title");
@@ -213,11 +214,11 @@ public class TreatmentMapperTest {
                     1L, null, null, 0, null, true),
                 "Treatment Text",
                 Collections.singletonList(new DoctorDtoSparse(2L, null, null, null, false)),
-                Collections.singletonList(new TreatmentMedicineDto(3L, null, null, 0, null))
+                Collections.singletonList(new TreatmentMedicineDto(3L, null, 0, null))
             );
         when(patientMapper.patientToPatientDtoSparse(patient)).thenReturn(new PatientDtoSparse(1L, null, null, null, null, null, null, true));
         when(doctorMapper.doctorToDoctorDtoSparse(doctor1)).thenReturn(new DoctorDtoSparse(2L, null, null, null, true));
-        when(treatmentMedicineMapper.entityToDto(treatmentMedicine)).thenReturn(new TreatmentMedicineDto(3L, null, null, 0, null));
+        when(treatmentMedicineMapper.entityToDto(treatmentMedicine)).thenReturn(new TreatmentMedicineDto(3L, null, 0, null));
         when(outpatientDepartmentService.getOutpatientDepartmentById(1L)).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null, true));
 
 
@@ -259,7 +260,7 @@ public class TreatmentMapperTest {
 
         when(patientMapper.patientToPatientDto(any(Patient.class))).thenReturn(new PatientDto(1L, null, null, null, null, null, null, null, false, false));
         when(doctorMapper.doctorToDoctorDto(any(Doctor.class))).thenReturn(new DoctorDto(2L, null, null, null, null, false, false));
-        when(treatmentMedicineMapper.entityToDto(any(TreatmentMedicine.class))).thenReturn(new TreatmentMedicineDto(3L, null, null, 0, null));
+        when(treatmentMedicineMapper.entityToDto(any(TreatmentMedicine.class))).thenReturn(new TreatmentMedicineDto(3L, null, 0, null));
         when(outpatientDepartmentService.getOutpatientDepartmentById(any())).thenReturn(new OutpatientDepartmentDto(1L, null, null, 0, null, true));
 
         List<Treatment> treatments = Arrays.asList(treatment1, treatment2);
