@@ -15,9 +15,9 @@
     <mat-form-field appearance="fill">
       <mat-label>Filter by Outpatient Department</mat-label>
       <input tabindex="20" [formControl]="departmentControl" [matAutocomplete]="auto" matInput type="text"
-             role="combobox" aria-expanded="false" aria-owns="auto" aria-haspopup="listbox">
+             role="combobox" aria-expanded="false" aria-owns="auto" aria-haspopup="listbox" (keydown)="onKeydown($event)">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="filterAppointments($event.option.value)"
-                        role="listbox" [displayWith]="displayOutPD">
+                        role="listbox" [displayWith]="displayOutPD" >
         <mat-option *ngFor="let department of filteredDepartments | async" [value]="department" tabindex="0"
                     role="option">
           <a tabindex="20">
@@ -42,8 +42,12 @@
             <div class="appointment-card" aria-label="Appointment">
               <div class="appointment-details" tabindex="22">
                 <div><strong>{{ appointment.outpatientDepartment.name }}</strong></div>
-                <div><strong>Start Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}</div>
-                <div><strong>End Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}</div>
+                <div><strong>Start
+                  Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}
+                </div>
+                <div><strong>End
+                  Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}
+                </div>
               </div>
               <div class="appointment-actions">
                 <button (click)="appointmentToBeCancelled = appointment"
@@ -78,9 +82,15 @@
         <div class="card-container">
           <div *ngFor="let appointment of getVisiblePastAppointments()" class="appointment-card">
             <div class="appointment-details">
-              <div class="flex-start"><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}</div>
-              <div><strong>Start Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}</div>
-              <div class="flex-start"><strong>End Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}</div>
+              <div class="flex-start"><strong>Outpatient
+                Department:</strong> {{ appointment.outpatientDepartment.name }}
+              </div>
+              <div><strong>Start
+                Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}
+              </div>
+              <div class="flex-start"><strong>End
+                Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}
+              </div>
             </div>
           </div>
         </div>

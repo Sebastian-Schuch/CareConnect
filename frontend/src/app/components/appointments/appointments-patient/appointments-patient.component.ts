@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import { AppointmentDto, AppointmentPageDto } from "../../../dtos/appointment";
 import { AppointmentService } from "../../../services/appointment.service";
 import { UserService } from "../../../services/user.service";
@@ -9,6 +9,7 @@ import { map, startWith } from 'rxjs/operators';
 import { getDate, getMonth, getYear } from "date-fns";
 import { OutpatientDepartmentDto, OutpatientDepartmentPageDto } from "../../../dtos/outpatient-department";
 import { OutpatientDepartmentService } from "../../../services/outpatient-department.service";
+import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-appointments-patient',
@@ -29,6 +30,9 @@ export class AppointmentsPatientComponent implements OnInit {
   totalFutureAppointments: number = 0;
   totalPastAppointments: number = 0;
   @Input() customStyle!: boolean;
+
+  @ViewChild('departmentInput', { static: false }) departmentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('outpdepAutoTrigger', { static: false }) outpdepAutoTrigger: MatAutocompleteTrigger;
 
   constructor(
     private appointmentService: AppointmentService,
@@ -194,4 +198,21 @@ export class AppointmentsPatientComponent implements OnInit {
   displayOutPD(outpatientDepartment: any): string {
     return outpatientDepartment ? `${outpatientDepartment.name}` : '';
   }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Backspace' && (event.target as HTMLInputElement).value === '') {
+      this.departmentControl.setValue('');
+      this.loadFutureAppointments();
+      if (this.showPastAppointments) {
+        this.loadPastAppointments();
+      }
+      setTimeout(() => {
+        if (this.outpdepAutoTrigger) {
+          this.outpdepAutoTrigger.openPanel();
+        }
+      });
+    }
+  }
+
+
 }

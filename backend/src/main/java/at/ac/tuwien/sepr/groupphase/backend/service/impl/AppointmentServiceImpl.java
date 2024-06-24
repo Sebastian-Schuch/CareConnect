@@ -112,7 +112,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentPageDto getAppointmentsByPatient(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
         LOG.trace("getAppointmentsByPatient({}, {}, {}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate, page, size);
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size,  Sort.by("startDate"));
 
         Patient patient = patientService.getPatientEntityById(patientId);
         OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
@@ -124,7 +124,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentPageDto getAllFilteredAppointments(PatientDto patientDto, OutpatientDepartmentDto outpatientDepartmentDto, Date startDate, Date endDate, int page, int size) {
         LOG.trace("getAllAppointments({}, {}, {}, {})", patientDto, outpatientDepartmentDto, startDate, endDate);
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size,  Sort.by("startDate"));
 
         Patient patient = patientDto != null ? patientService.getPatientEntityById(patientDto.id()) : null;
         OutpatientDepartment outpatientDepartment = outpatientDepartmentDto != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentDto.id()) : null;
