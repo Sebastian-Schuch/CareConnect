@@ -266,7 +266,7 @@
         </div>
       </button>
     </ng-container>
-    <mat-menu xPosition="before" #userMenu="matMenu">
+    <mat-menu #userMenu="matMenu">
       <button mat-menu-item routerLink="/" (click)="authService.logoutUser()" class="clean-button">Logout</button>
       <button mat-menu-item (click)="userNavigateToEditProfile()" class="clean-button">Profile
       </button>
