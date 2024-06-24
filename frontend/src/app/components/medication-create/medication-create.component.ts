@@ -20,7 +20,7 @@ export enum MedicationCreateEditMode {
 export class MedicationCreateComponent implements OnInit {
 
   medication: MedicationDto = {
-    id: '',
+    id: 0,
     name: '',
     unitOfMeasurement: ''
   };

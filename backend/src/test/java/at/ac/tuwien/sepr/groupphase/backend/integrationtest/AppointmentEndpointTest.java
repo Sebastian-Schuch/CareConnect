@@ -9,7 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
@@ -112,10 +112,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
@@ -170,10 +169,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
@@ -215,10 +213,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
@@ -254,10 +251,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
@@ -293,10 +289,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
@@ -358,10 +353,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
@@ -384,10 +378,9 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isCreated());
 
         patient = patientRepository.findAll().get(1);
-        patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
         appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -397,10 +390,9 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isCreated());
 
         patient = patientRepository.findAll().get(2);
-        patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
         appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -410,10 +402,9 @@ public class AppointmentEndpointTest extends TestBase {
             .andExpect(status().isCreated());
 
         patient = patientRepository.findAll().get(3);
-        patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
         appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
@@ -436,10 +427,9 @@ public class AppointmentEndpointTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        PatientDto patientDto = new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        PatientDtoSparse patientDto = new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
 
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findAll().get(0);
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();

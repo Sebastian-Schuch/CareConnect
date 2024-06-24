@@ -30,7 +30,7 @@ public class AppointmentMapper {
         LOG.trace("appointmentEntityToAppointmentDto({})", appointment);
         return new AppointmentDto(
             appointment.getId(),
-            patientMapper.patientToPatientDto(appointment.getPatient()),
+            patientMapper.patientToPatientDtoSparse(appointment.getPatient()),
             outpatientDepartmentMapper.entityToDto(appointment.getOutpatientDepartment(), openingHoursMapper.entityToDto(appointment.getOutpatientDepartment().getOpeningHours())),
             appointment.getStartDate(),
             appointment.getEndDate(),

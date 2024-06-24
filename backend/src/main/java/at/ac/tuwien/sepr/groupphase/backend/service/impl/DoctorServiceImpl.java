@@ -76,11 +76,11 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDto findDoctorByCredential(Credential credential) {
+    public DoctorDtoSparse findDoctorByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Doctor doctor = doctorRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (doctor != null) {
-            return doctorMapper.doctorToDoctorDto(doctor);
+            return doctorMapper.doctorToDoctorDtoSparse(doctor);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }

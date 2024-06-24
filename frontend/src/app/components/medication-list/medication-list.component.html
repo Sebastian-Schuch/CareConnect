@@ -33,18 +33,20 @@
     <thead>
     <tr>
       <th class="w-75">Name</th>
+      <th class="w-25">Unit of Measurement</th>
       <th class="w-25">Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let medication of medications; let i = index" class="center-td">
       <td aria-label="medication name" [tabindex]="i+'28'">{{ medication.name }}</td>
+      <td aria-label="medication unit of measurement" [tabindex]="i+'29'">{{ medication.unitOfMeasurement }}</td>
       <td>
         <div class="btn-group">
           <label hidden [for]="i+'EDIT'">Edit Medication</label>
           <button [id]="i+'EDIT'" class="btn btn-sm responsive-info-button"
                   [attr.aria-label]="'Edit medication '+medication.name+' (mode_edit)'"
-                  [tabindex]="i+'36'"
+                  [tabindex]="i+'30'"
                   (click)="navigateToEditMedication(medication.id)"
           >
             <mat-icon>mode_edit</mat-icon>
@@ -52,7 +54,7 @@
           <label hidden [for]="i+'delete'">Delete Medication</label>
           <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
                   [attr.aria-label]='"Delete medication" + medication.name + " (delete)"'
-                  [tabindex]="i+'29'"
+                  [tabindex]="i+'31'"
                   (click)="openDeleteDialog(medication)"
           >
             <mat-icon>delete</mat-icon>

@@ -93,11 +93,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto findPatientByCredential(Credential credential) {
+    public PatientDtoSparse findPatientByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Patient patient = patientRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (patient != null) {
-            return patientMapper.patientToPatientDto(patient);
+            return patientMapper.patientToPatientDtoSparse(patient);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }

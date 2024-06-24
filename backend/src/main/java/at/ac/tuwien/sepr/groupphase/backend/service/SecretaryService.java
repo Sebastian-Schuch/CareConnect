@@ -76,5 +76,5 @@ public interface SecretaryService {
      * @param credential the credential to search for
      * @return the secretary with the given credential
      */
-    SecretaryDto findSecretaryByCredential(Credential credential);
+    SecretaryDtoSparse findSecretaryByCredential(Credential credential);
 }

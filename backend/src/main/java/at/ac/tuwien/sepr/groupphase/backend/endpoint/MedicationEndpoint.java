@@ -118,6 +118,6 @@ public class MedicationEndpoint {
     @PutMapping(value = "/{id}")
     public MedicationDto update(@PathVariable(name = "id") Long id, @RequestBody MedicationDto toUpdate) {
         LOG.info("PUT" + BASE_PATH + "/{}", id);
-        return medicationService.update(new MedicationDto(id, toUpdate.name(), toUpdate.active()));
+        return medicationService.update(new MedicationDto(id, toUpdate.name(), toUpdate.active(), toUpdate.unitOfMeasurement()));
     }
 }

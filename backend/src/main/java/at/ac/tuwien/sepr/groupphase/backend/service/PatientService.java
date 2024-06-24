@@ -74,7 +74,7 @@ public interface PatientService {
      * @param credential the credential to find the patient by
      * @return the patient with the credential given
      */
-    PatientDto findPatientByCredential(Credential credential);
+    PatientDtoSparse findPatientByCredential(Credential credential);
 
     /**
      * Search for patients based on the search criteria.

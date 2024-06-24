@@ -133,8 +133,7 @@ public class OutpatientDepartmentEndpoint {
     @Secured({"ADMIN"})
     @PostMapping({"/{id}"})
     public OutpatientDepartmentDto updateOutpatientDepartment(@PathVariable("id") Long id,
-                                                              @Valid @RequestBody OutpatientDepartmentDto toUpdate)
-        throws MethodArgumentNotValidException {
+                                                              @Valid @RequestBody OutpatientDepartmentDto toUpdate) {
         LOGGER.info("updateOutpatientDepartment(" + id + ", " + toUpdate.toString() + ")");
         if (!id.equals(toUpdate.id())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");
