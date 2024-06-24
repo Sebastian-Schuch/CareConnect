@@ -125,17 +125,16 @@ export class CalendarWrapperComponent implements OnInit {
    */
   private resetAllSearchInputs() {
     if (this.isRoleSecretary()) {
-
+      this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
+        startWith(''),
+        debounceTime(300),
+        switchMap(value => this.loadFilteredPatients(value))
+      );
     }
     this.filteredOutPatDep = this.appointmentForm.get('outpatientDepartment').valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap(value => this.loadFilteredOutPatDep(value))
-    );
-    this.filteredPatientOptions = this.appointmentForm.get('patient').valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      switchMap(value => this.loadFilteredPatients(value))
     );
   }
 

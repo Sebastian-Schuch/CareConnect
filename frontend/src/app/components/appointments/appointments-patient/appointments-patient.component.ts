@@ -33,7 +33,7 @@ export class AppointmentsPatientComponent implements OnInit {
 
   @ViewChild('departmentInput', { static: false }) departmentInput: ElementRef<HTMLInputElement>;
   @ViewChild('outpdepAutoTrigger', { static: false }) outpdepAutoTrigger: MatAutocompleteTrigger;
-
+  @Input() isEmbedded: boolean = false;
   constructor(
     private appointmentService: AppointmentService,
     private userService: UserService,

@@ -168,3 +168,24 @@ html, body {
 .toast-container {
   margin-top: 60px !important;
 }
+
+/* Global styles */
+.custom-mat-tab-group .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #fff !important;
+  font-size: 16px;
+}
+
+.custom-mat-tab-group .mat-mdc-tab .mdc-tab__text-label {
+  color: #fff !important;
+  font-size: 16px;
+}
+
+.custom-mat-tab-group-list .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  font-size: 16px;
+  color: $sepr-group-phase-green !important;
+}
+
+.custom-mat-tab-group-list .mat-mdc-tab .mdc-tab__text-label {
+  font-size: 16px;
+  color: $sepr-group-phase-green !important;
+}

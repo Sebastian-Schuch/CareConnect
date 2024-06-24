@@ -26,7 +26,7 @@
 
 <div #patient aria-labelledby="view-appointments-title" class="cta-section" id="appointment-section" role="region">
   <h2 id="view-appointments-title">View your upcoming appointments</h2>
-  <app-appointments-patient></app-appointments-patient>
+  <app-appointments-patient  [isEmbedded]="true"></app-appointments-patient>
   <button aria-label="View all appointments" class="get-access-button-inverted" mat-button
           routerLink="/home/patient/appointments">
     View all appointments

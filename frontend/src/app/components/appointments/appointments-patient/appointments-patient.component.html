@@ -15,7 +15,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Filter by Outpatient Department</mat-label>
       <input tabindex="20" [formControl]="departmentControl" [matAutocomplete]="auto" matInput type="text"
-             role="combobox" aria-expanded="false" aria-owns="auto" aria-haspopup="listbox" (keydown)="onKeydown($event)">
+             role="combobox" aria-expanded="false" aria-haspopup="listbox" (keydown)="onKeydown($event)">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="filterAppointments($event.option.value)"
                         role="listbox" [displayWith]="displayOutPD">
         <mat-option *ngFor="let department of filteredDepartments | async" [value]="department" tabindex="0"
@@ -33,8 +33,8 @@
                            [deleteWhat]="appointmentToBeCancelled?.outpatientDepartment.name"
                            id="confirmDeleteDialog"></app-confirm-delete-dialog>
 
-<mat-tab-group>
-  <mat-tab label="Future Appointments">
+<mat-tab-group  [class.custom-mat-tab-group] = "isEmbedded" [class.custom-mat-tab-group-list]="!isEmbedded" >
+  <mat-tab label="Future Appointments" id="matTabs" >
     <div class="container mt-3">
       <div class="appointments-section">
         <div class="card-container">
