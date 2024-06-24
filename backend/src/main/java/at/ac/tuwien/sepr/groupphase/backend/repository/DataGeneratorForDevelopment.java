@@ -231,20 +231,21 @@ public class DataGeneratorForDevelopment {
     }
 
     private void generateDataForMedication() {
-        medicationRepository.save(setMedication("Medication1", true));
-        medicationRepository.save(setMedication("Medication2", true));
-        medicationRepository.save(setMedication("Medication3", true));
-        medicationRepository.save(setMedication("Medication4", true));
-        medicationRepository.save(setMedication("Medication5", true));
-        medicationRepository.save(setMedication("WieAgra", true));
+        medicationRepository.save(setMedication("Medication1", true, "mg"));
+        medicationRepository.save(setMedication("Medication2", true, "ml"));
+        medicationRepository.save(setMedication("Medication3", true, "mg"));
+        medicationRepository.save(setMedication("Medication4", true, "ml"));
+        medicationRepository.save(setMedication("Medication5", true, "mg"));
+        medicationRepository.save(setMedication("WieAgra", true, "ml"));
 
-        medicationRepository.save(setMedication("InactiveMedication", false));
+        medicationRepository.save(setMedication("InactiveMedication", false, "mg"));
     }
 
-    private Medication setMedication(String name, Boolean active) {
+    private Medication setMedication(String name, Boolean active, String unitOfMeasurement) {
         Medication medication = new Medication();
         medication.setName(name);
         medication.setActive(active);
+        medication.setUnitOfMeasurement(unitOfMeasurement);
         return medication;
     }
 
@@ -347,7 +348,6 @@ public class DataGeneratorForDevelopment {
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
         treatmentMedicine.setMedicine(medication);
         treatmentMedicine.setAmount(amount);
-        treatmentMedicine.setUnitOfMeasurement(unitOfMeasurement);
         treatmentMedicine.setTimeOfAdministration(timeOfAdministration);
         return treatmentMedicine;
     }
