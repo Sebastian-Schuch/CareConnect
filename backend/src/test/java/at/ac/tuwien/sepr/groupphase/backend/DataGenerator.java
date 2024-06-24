@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApiKey;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
@@ -13,6 +14,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Secretary;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergyRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ApiKeyRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CredentialRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
@@ -84,6 +86,9 @@ public class DataGenerator {
     @Autowired
     private final TreatmentRepository treatmentRepository;
 
+    @Autowired
+    private final ApiKeyRepository apiKeyRepository;
+
     private final int numberOfTestData = 10;
 
 
@@ -96,7 +101,8 @@ public class DataGenerator {
                          OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                          SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository,
                          TreatmentMedicineRepository treatmentMedicineRepository,
-                         TreatmentRepository treatmentRepository) {
+                         TreatmentRepository treatmentRepository,
+                         ApiKeyRepository apiKeyRepository) {
         this.allergyRepository = allergyRepository;
         this.appointmentRepository = appointmentRepository;
         this.credentialRepository = credentialRepository;
@@ -109,7 +115,7 @@ public class DataGenerator {
         this.inpatientDepartmentRepository = inpatientDepartmentRepository;
         this.treatmentMedicineRepository = treatmentMedicineRepository;
         this.treatmentRepository = treatmentRepository;
-
+        this.apiKeyRepository = apiKeyRepository;
     }
 
     /**
@@ -118,17 +124,18 @@ public class DataGenerator {
     public void generateData(String dataType) {
         LOGGER.info("Generating data…");
         switch (dataType) {
-            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false);
-            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false);
-            case "secretary" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false);
-            case "patient" -> generateDataInDb(true, false, false, true, true, false, false, false, false, false);
-            case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false);
-            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false);
-            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false);
-            case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false);
-            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false);
-            case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true);
-            case "stay" -> generateDataInDb(false, false, true, true, false, false, true, false, false, false);
+            case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false);
+            case "doctor" -> generateDataInDb(false, true, false, false, false, false, false, false, false, false, false);
+            case "secretary" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false);
+            case "patient" -> generateDataInDb(true, false, false, true, true, false, false, false, false, false, false);
+            case "medication" -> generateDataInDb(false, false, false, false, true, false, false, false, false, false, false);
+            case "outpatientDepartment" -> generateDataInDb(false, false, false, false, false, true, false, false, false, false, false);
+            case "inpatientDepartment" -> generateDataInDb(false, false, false, false, false, false, true, false, false, false, false);
+            case "appointment" -> generateDataInDb(true, false, false, true, true, true, false, true, false, false, false);
+            case "treatmentMedicine" -> generateDataInDb(false, false, false, false, true, false, false, false, true, false, false);
+            case "treatment" -> generateDataInDb(true, true, false, true, true, true, false, false, true, true, false);
+            case "stay" -> generateDataInDb(false, false, true, true, false, false, true, false, false, false, false);
+            case "dataInterface" -> generateDataInDb(false, true, false, true, true, true, false, false, true, true, true);
         }
         LOGGER.info("Finished generating data without error.");
     }
@@ -155,12 +162,13 @@ public class DataGenerator {
         credentialRepository.deleteAll();
         inpatientDepartmentRepository.deleteAll();
         openingHoursRepository.deleteAll();
+        apiKeyRepository.deleteAll();
     }
 
     private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForSecretary, boolean generateForPatients,
                                   boolean generateForMedication, boolean generateForOutpatientDepartments,
                                   boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines,
-                                  boolean generateForTreatments) {
+                                  boolean generateForTreatments, boolean generateForApiKeys) {
         if (generateForAllergies) {
             generateDataForAllergies();
         }
@@ -190,6 +198,9 @@ public class DataGenerator {
         }
         if (generateForTreatments) {
             generateDataForTreatments();
+        }
+        if (generateForApiKeys) {
+            generateApiKeys();
         }
     }
 
@@ -462,6 +473,20 @@ public class DataGenerator {
         treatment.setDoctors(doctors);
         treatment.setMedicines(medicines);
         return treatment;
+    }
+
+    private void generateApiKeys() {
+        this.apiKeyRepository.save(setApiKey("zeG1C-n129nlQtfVfqJIqr_xdAGxYyz1", new Date(), "description1"));
+        this.apiKeyRepository.save(setApiKey("2IsuPAJDvnCBCFFDMyTTd1_kmJVXNqxy", new Date(), "description2"));
+        this.apiKeyRepository.save(setApiKey("so1ia7v3HBy65kOy-i3Gx-HSIuE2p2RW", new Date(), "description3"));
+    }
+
+    private ApiKey setApiKey(String key, Date created, String description) {
+        ApiKey apiKey = new ApiKey();
+        apiKey.setApiKey(key);
+        apiKey.setCreated(created);
+        apiKey.setDescription(description);
+        return apiKey;
     }
 }
 

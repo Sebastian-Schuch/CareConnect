@@ -7,13 +7,15 @@ import at.ac.tuwien.sepr.groupphase.backend.service.ApiKeyService;
 import at.ac.tuwien.sepr.groupphase.backend.service.DataInterfaceService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,15 +37,19 @@ public class DataInterfaceEndpoint {
 
     @PermitAll
     @GetMapping("/doctor-working-hours")
-    public List<DoctorWorkingHoursDto> getDoctorWorkingHours(@RequestBody DataInterfaceDtoSearch search) {
+    public List<DoctorWorkingHoursDto> getDoctorWorkingHours(@RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                             @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
         checkApiKey();
+        DataInterfaceDtoSearch search = new DataInterfaceDtoSearch(startDate, endDate);
         return dataInterfaceService.getDoctorWorkingHours(search);
     }
 
     @PermitAll
     @GetMapping("/medication-amounts")
-    public List<MedicationAmountDto> getMedicationAmounts(@RequestBody DataInterfaceDtoSearch search) {
+    public List<MedicationAmountDto> getMedicationAmounts(@RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                          @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
         checkApiKey();
+        DataInterfaceDtoSearch search = new DataInterfaceDtoSearch(startDate, endDate);
         return dataInterfaceService.getMedicationAmounts(search);
     }
 

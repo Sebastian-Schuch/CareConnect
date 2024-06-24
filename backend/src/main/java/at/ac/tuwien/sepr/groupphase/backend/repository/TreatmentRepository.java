@@ -34,16 +34,6 @@ public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
             + "GROUP BY d.doctor_id ", nativeQuery = true)
     List<Object[]> findTreatmentAndSumHoursGroupedByDoctors(Date startDate, Date endDate);
 
-    /*@Query(value =
-        "SELECT d.doctor_id, c.first_name, c.last_name, c.email, c.is_initial_password, SUM(TIMESTAMPDIFF(MINUTE, t.treatment_start, t.treatment_end)) "
-            + "FROM treatment_medicine AS tm "
-            + "JOIN treatment_medicines AS tms ON tm.id = tms.medicines_id"
-            + "JOIN treatment AS t ON tms.treatment_id = t.id "
-            + "JOIN medication AS m ON tm.mdicine_id = m.id "
-            + "WHERE (tm.TIME_OF_ADMINISTRATION >= ?1 OR ?1 IS NULL) AND (tm.TIME_OF_ADMINISTRATION <= ?2 OR ?2 IS NULL)"
-            + "GROUP BY d.doctor_id ", nativeQuery = true)
-    List<Object[]> findTreatmentAndSumAmountGroupedByMedication(Date startDate, Date endDate);*/
-
     @Query(value =
         "SELECT m.id, m.name, SUM(tm.amount), m.unitOfMeasurement FROM Treatment t JOIN t.medicines tm JOIN tm.medicine m WHERE (tm.timeOfAdministration >= ?1 OR ?1 IS NULL) AND (tm.timeOfAdministration <= ?2 OR ?2 IS NULL) GROUP BY m.id")
     List<Object[]> findTreatmentAndSumAmountGroupedByMedication(Date startDate, Date endDate);
