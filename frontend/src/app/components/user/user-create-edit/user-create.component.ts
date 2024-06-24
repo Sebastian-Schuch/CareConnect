@@ -3,7 +3,7 @@ import {UserDto, UserDtoCreate, UserDtoUpdate} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup, NgModel, Validators} from "@angular/forms";
-import {forkJoin, map, Observable, startWith} from "rxjs";
+import {debounceTime, forkJoin, map, Observable, startWith, switchMap} from "rxjs";
 import {Role} from "../../../dtos/Role";
 import {ToastrService} from 'ngx-toastr';
 import {MedicationDto} from "../../../dtos/medication";
@@ -15,6 +15,7 @@ import {AuthService} from "../../../services/auth.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordFormModalComponent} from "../change-password-form-modal/change-password-form-modal.component";
 import {ResetPasswordDialogComponent} from "../reset-password-dialog/reset-password-dialog.component";
+import {Page} from "../../../dtos/page";
 
 export enum UserCreateEditMode {
   create,
@@ -146,29 +147,16 @@ export class UserCreateComponent implements OnInit {
           this.role = data.role;
           this.mode = data.mode;
           this.generateForm();
-          forkJoin({
-            allergies: this.loadAllergies(),
-            medications: this.loadMedications()
-          }).subscribe({
-            next: ({allergies, medications}) => {
-              this.allergyOptions = allergies;
-              this.medicationOptions = medications;
-              this.resetAllSearchInputs();
+          this.resetAllSearchInputs();
+          console.log(this.filteredAllergyOptions);
+          if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
 
-              if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
-
-                if (isNaN(params['id']) === false) {
-                  this.loadUser(this.userId);
-                } else {
-                  this.router.navigate(['/']);
-                }
-              }
-            },
-            error: error => {
-              this.notification.error('Loading of resources failed', 'Error loading resources');
-              console.error('error while getting data from database', error);
+            if (isNaN(params['id']) === false) {
+              this.loadUser(this.userId);
+            } else {
+              this.router.navigate(['/']);
             }
-          });
+          }
         }
       });
     });
@@ -237,13 +225,40 @@ export class UserCreateComponent implements OnInit {
   private resetAllSearchInputs() {
     this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterMedications(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredMedication(value))
     );
 
+    /*
     this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterAllergies(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredAllergy(value))
+    );*/
+  }
+
+  private loadFilteredMedication(value: string | null | undefined): Observable<MedicationDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.medicationService.searchMedicationsByName(filterValue).pipe(
     );
+  }
+
+  /*
+  private loadFilteredAllergy(value: string | null | undefined): Observable<AllergyDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.allergyService.getAllergies(filterValue).pipe(
+      map((page: Page<AllergyDto>) => page.content)
+    );
+  }*/
+
+  private getStringValue(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    } else if (value && value.firstname && value.lastname) {
+      return `${value.firstname} ${value.lastname}`;
+    } else {
+      return '';
+    }
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -263,10 +278,10 @@ export class UserCreateComponent implements OnInit {
     }
     this.userForm.get('medication').setValue('');
     this.userForm.get('medication').reset();
-    this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
+/*    this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
       startWith(''),
       map(value => this.filterMedications(value))
-    );
+    );*/
   }
 
   /**
@@ -280,26 +295,10 @@ export class UserCreateComponent implements OnInit {
     }
     this.userForm.get('allergy').setValue('');
     this.userForm.get('allergy').reset();
-    this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
+ /*   this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
       map(value => this.filterAllergies(value))
-    );
-  }
-
-  /**
-   * Loads all medications from the backend
-   * @returns an observable with all medications
-   */
-  private loadMedications(): Observable<any> {
-    return this.medicationService.getMedicationsAll();
-  }
-
-  /**
-   * Loads all allergies from the backend
-   * @returns an observable with all allergies
-   */
-  private loadAllergies(): Observable<any> {
-    return this.allergyService.getAllergiesAll();
+    );*/
   }
 
   /**
@@ -322,30 +321,6 @@ export class UserCreateComponent implements OnInit {
     if (index >= 0) {
       this.selectedAllergyOptions.splice(index, 1);
     }
-  }
-
-  /**
-   * Filters the medications based on the input value
-   * @param value the input value to filter for
-   * @returns the filtered medications
-   */
-  private filterMedications(value: string): MedicationDto[] {
-    const filterValue = (value || '').toString().toLowerCase();
-    return this.medicationOptions.filter(option =>
-      option.name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  /**
-   * Filters the allergies based on the input value
-   * @param value the input value to filter for
-   * @returns the filtered allergies
-   */
-  private filterAllergies(value: string): MedicationDto[] {
-    const filterValue = (value || '').toString().toLowerCase();
-    return this.allergyOptions.filter(option =>
-      option.name.toLowerCase().includes(filterValue)
-    );
   }
 
   openPasswordModal() {
