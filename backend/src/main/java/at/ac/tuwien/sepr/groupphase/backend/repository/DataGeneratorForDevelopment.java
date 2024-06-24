@@ -117,6 +117,7 @@ public class DataGeneratorForDevelopment {
         for (long i = 0; i < numberOfTestData; i++) {
             Allergy allergy = new Allergy();
             allergy.setName("Allergy" + i);
+            allergy.setActive(i % 3 != 0);
             allergyRepository.save(allergy);
         }
     }
