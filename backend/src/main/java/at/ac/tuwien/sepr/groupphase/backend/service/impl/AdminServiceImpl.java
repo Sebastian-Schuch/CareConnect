@@ -85,11 +85,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public AdminDto findAdministratorByCredential(Credential credential) {
+    public AdminDtoSparse findAdministratorByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Admin admin = adminRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (admin != null) {
-            return adminMapper.administratorToAdministratorDto(admin);
+            return adminMapper.administratorToAdministratorDtoSparse(admin);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }

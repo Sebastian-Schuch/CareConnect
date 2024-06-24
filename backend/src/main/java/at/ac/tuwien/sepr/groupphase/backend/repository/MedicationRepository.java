@@ -2,6 +2,9 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,4 +26,13 @@ public interface MedicationRepository extends JpaRepository<Medication, Long> {
     Medication findMedicationById(Long id);
 
     List<Medication> findByActiveTrue();
+
+    /**
+     * Find all medications by the specification.
+     *
+     * @param specification the specification
+     * @param pageable      the pageable
+     * @return the medications as a page
+     */
+    Page<Medication> findAll(Specification<Medication> specification, Pageable pageable);
 }

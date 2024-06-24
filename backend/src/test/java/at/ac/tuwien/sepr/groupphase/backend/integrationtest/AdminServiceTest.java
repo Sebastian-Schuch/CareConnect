@@ -239,14 +239,12 @@ public class AdminServiceTest extends TestBase {
         long id = adminRepository.findAll().get(0).getAdminId();
         AdminDto toBeFoundAdministrator = new AdminDto(id, "Administrator",
             "One", "administrator1@email.com", "OnePassword", false, true);
-        AdminDto foundAdministrator = adminService.findAdministratorByCredential(adminRepository.findAll().get(0).getCredential());
+        AdminDtoSparse foundAdministrator = adminService.findAdministratorByCredential(adminRepository.findAll().get(0).getCredential());
         assertAll("Grouped Assertions of Administrator",
             () -> assertEquals(toBeFoundAdministrator.id(), foundAdministrator.id(), "ID should be equal"),
             () -> assertEquals(toBeFoundAdministrator.email(), foundAdministrator.email(), "Email should be equal"),
             () -> assertEquals(toBeFoundAdministrator.firstname(), foundAdministrator.firstname(), "Firstname should be equal"),
             () -> assertEquals(toBeFoundAdministrator.lastname(), foundAdministrator.lastname(), "Lastname should be equal"),
-            () -> assertEquals(toBeFoundAdministrator.password(), foundAdministrator.password(), "Password should be equal"),
-            () -> assertEquals(toBeFoundAdministrator.active(), foundAdministrator.active(), "Active should be equal"),
             () -> assertEquals(toBeFoundAdministrator.isInitialPassword(), foundAdministrator.isInitialPassword(), "InitialPassword should be equal"));
     }
 

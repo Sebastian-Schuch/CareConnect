@@ -34,7 +34,7 @@
     <tr *ngFor="let outpatientDepartment of outpatientDepartments; let i = index" class="center-td">
       <td aria-label="departmentName" [tabindex]="i+'23'">{{ outpatientDepartment.name }}</td>
       <td aria-label="departmentCapacity" [tabindex]="i+'24'">{{ outpatientDepartment.capacity }}</td>
-      <td aria-label="departmentDescription" [tabIndex]="i+'25'">{{outpatientDepartment.description}}</td>
+      <td aria-label="departmentDescription" [tabIndex]="i+'25'">{{ outpatientDepartment.description }}</td>
       <td>
         <div class="btn-group">
           <label hidden [for]="i+'details'">Outpatient-departments details</label>

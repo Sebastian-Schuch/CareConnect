@@ -6,15 +6,8 @@ import {NgForOf, NgIf} from "@angular/common";
 import {AuthService} from "../../services/auth.service";
 import {Role} from "../../dtos/Role";
 import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
-import {OpeningHoursDayDto, OpeningHoursDto} from "../../dtos/opening-hours";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {MatDialog} from "@angular/material/dialog";
-import {
-  InpatientDepartmentDeleteComponent
-} from "../inpatient-department/inpatient-department-delete/inpatient-department-delete.component";
-import {
-  OutpatientDepartmentComponent
-} from "../outpatient-department-create-edit/outpatient-department-create-edit.component";
 import {
   OutpatientDepartmentDeleteComponent
 } from "../outpatient-department-delete/outpatient-department-delete.component";
@@ -35,7 +28,7 @@ import {RouterLink} from "@angular/router";
   templateUrl: './outpatient-department-list.component.html',
   styleUrl: './outpatient-department-list.component.scss'
 })
-export class OutpatientDepartmentListComponent implements OnInit{
+export class OutpatientDepartmentListComponent implements OnInit {
   role: Role;
   searchedName: string = "";
   outpatientDepartments: OutpatientDepartmentDto[];
@@ -74,7 +67,7 @@ export class OutpatientDepartmentListComponent implements OnInit{
     dialogRef.afterClosed().subscribe({
       next: value => {
         if (value) {
-          this.deleteInpatientDepartment(outpatientDepartment.id);
+          this.deleteOutpatientDepartment(outpatientDepartment.id);
           if (this.outpatientDepartments.length === 1) {
             this.pageProperties = {
               pageIndex: this.pageProperties.pageIndex - 1,
@@ -93,10 +86,10 @@ export class OutpatientDepartmentListComponent implements OnInit{
     this.reloadOutpatientDepartments();
   }
 
-  private deleteInpatientDepartment(id: number) {
-    this.outpatientDepartmentService.deleteInpatientDepartment(id).subscribe({
+  private deleteOutpatientDepartment(id: number) {
+    this.outpatientDepartmentService.deleteOutpatientDepartment(id).subscribe({
       next: value => {
-        this.notification.success(`Successfully deleted inpatient department ${value.name}`);
+        this.notification.success(`Successfully deleted outpatient department ${value.name}`);
         this.reloadOutpatientDepartments();
       },
       error: err => console.error(err)

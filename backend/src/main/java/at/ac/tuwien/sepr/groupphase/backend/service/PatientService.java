@@ -52,14 +52,6 @@ public interface PatientService {
     PatientDto getPatientByEmail(String email);
 
     /**
-     * Get the specified patient Entity.
-     *
-     * @param email the email of the patient requested
-     * @return the patient with the email given
-     */
-    Patient getPatientEntityByEmail(String email);
-
-    /**
      * Update the patient with the given id.
      *
      * @param id       the id of the patient to update
@@ -74,7 +66,7 @@ public interface PatientService {
      * @param credential the credential to find the patient by
      * @return the patient with the credential given
      */
-    PatientDto findPatientByCredential(Credential credential);
+    PatientDtoSparse findPatientByCredential(Credential credential);
 
     /**
      * Search for patients based on the search criteria.

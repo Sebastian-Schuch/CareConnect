@@ -29,8 +29,11 @@ import {
   InpatientDepartmentComponent,
   InpatientDepartmentCreateEditMode
 } from "./components/inpatient-department/inpatient-department.component";
-import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
-import {AllergyComponent} from "./components/allergy/allergy.component";
+import {
+  MedicationCreateComponent,
+  MedicationCreateEditMode
+} from "./components/medication-create/medication-create.component";
+import {AllergyComponent, AllergyCreatEditMode} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
@@ -49,6 +52,8 @@ import {
   TreatmentListComponent,
   TreatmentListMode
 } from "./components/treatment/treatment-list/treatment-list.component";
+import {AllergyListComponent} from "./components/allergy-list/allergy-list.component";
+import {MedicationListComponent} from "./components/medication-list/medication-list.component";
 import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
@@ -119,8 +124,8 @@ const routes: Routes = [
                 component: InpatientDepartmentComponent,
                 data: {mode: InpatientDepartmentCreateEditMode.create}
               },
-              {path: 'medicine', component: MedicationCreateComponent},
-              {path: 'allergy', component: AllergyComponent}
+              {path: 'medication', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.CREATE}},
+              {path: 'allergy', component: AllergyComponent, data: {mode: AllergyCreatEditMode.CREATE}}
             ]
           },
           {
@@ -180,6 +185,26 @@ const routes: Routes = [
                       }
                     ]
                   }
+                ]
+              }
+            ]
+          },
+          {
+            path: 'allergies', children: [
+              {path: '', component: AllergyListComponent},
+              {
+                path: ':id', children: [
+                  {path: 'edit', component: AllergyComponent, data: {mode: AllergyCreatEditMode.EDIT}},
+                ]
+              }
+            ]
+          },
+          {
+            path: 'medications', children: [
+              {path: '', component: MedicationListComponent},
+              {
+                path: ':id', children: [
+                  {path: 'edit', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.EDIT}}
                 ]
               }
             ]

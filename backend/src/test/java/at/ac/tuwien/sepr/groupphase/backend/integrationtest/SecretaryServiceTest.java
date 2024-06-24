@@ -222,14 +222,12 @@ public class SecretaryServiceTest extends TestBase {
         long id = secretaryRepository.findAll().get(0).getSecretaryId();
         SecretaryDto toBeFoundSecretary = new SecretaryDto(id, "Secretary",
             "One", "secretary1@email.com", "OnePassword", false, true);
-        SecretaryDto foundSecretary = secretaryService.findSecretaryByCredential(secretaryRepository.findAll().get(0).getCredential());
+        SecretaryDtoSparse foundSecretary = secretaryService.findSecretaryByCredential(secretaryRepository.findAll().get(0).getCredential());
         assertAll("Grouped Assertions of Secretary",
             () -> assertEquals(toBeFoundSecretary.id(), foundSecretary.id(), "ID should be equal"),
             () -> assertEquals(toBeFoundSecretary.email(), foundSecretary.email(), "Email should be equal"),
             () -> assertEquals(toBeFoundSecretary.firstname(), foundSecretary.firstname(), "Firstname should be equal"),
             () -> assertEquals(toBeFoundSecretary.lastname(), foundSecretary.lastname(), "Lastname should be equal"),
-            () -> assertEquals(toBeFoundSecretary.password(), foundSecretary.password(), "Password should be equal"),
-            () -> assertEquals(toBeFoundSecretary.active(), foundSecretary.active(), "Active should be equal"),
             () -> assertEquals(toBeFoundSecretary.isInitialPassword(), foundSecretary.isInitialPassword(), "InitialPassword should be equal"));
     }
 

@@ -67,7 +67,7 @@ public interface AdminService {
      * @param credential the credential to search for
      * @return the administrator with the given credential
      */
-    AdminDto findAdministratorByCredential(Credential credential);
+    AdminDtoSparse findAdministratorByCredential(Credential credential);
 
     /**
      * Search for administrators based on the search criteria.

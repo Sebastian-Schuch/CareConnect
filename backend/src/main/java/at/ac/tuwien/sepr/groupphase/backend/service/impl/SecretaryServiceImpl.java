@@ -108,11 +108,11 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDto findSecretaryByCredential(Credential credential) {
+    public SecretaryDtoSparse findSecretaryByCredential(Credential credential) {
         LOG.debug("Find application user by email");
         Secretary secretary = secretaryRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (secretary != null) {
-            return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
+            return secretaryMapper.secretaryEntityToSecretaryDtoSparse(secretary);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }

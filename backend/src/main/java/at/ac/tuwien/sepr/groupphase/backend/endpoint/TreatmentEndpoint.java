@@ -107,7 +107,7 @@ public class TreatmentEndpoint {
     @Secured({"DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/search"})
     public TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams) {
-        LOGGER.info("getAllTreatmentsFromTimePeriod()");
+        LOGGER.info("searchTreatments({})", searchParams);
         if (userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR) || patientServiceImpl.isOwnRequest(searchParams.patientId())) {
             return treatmentService.searchTreatments(searchParams);
 

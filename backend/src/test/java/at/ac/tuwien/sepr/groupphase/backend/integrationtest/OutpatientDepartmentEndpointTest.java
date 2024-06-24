@@ -2,11 +2,14 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.OutpatientDepartmentEndpoint;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentCapacityDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.OutpatientDepartmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
@@ -33,6 +36,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -129,14 +133,14 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.MONTH, Calendar.JANUARY);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.add(Calendar.YEAR, 100);
+        cal.add(Calendar.YEAR, 10);
         futureDate = cal.getTime();
 
 
         for (int i = 0; i < 10; i++) {
             Appointment ap = new Appointment();
             ap.setStartDate(new Date(futureDate.getTime() + (60 * 60 * 1000L) + (24 * 60 * 60 * 1000L) * i));
-            ap.setEndDate(new Date(futureDate.getTime() + (60 * 60 * 1000L)+  ((24 * 60 * 60 * 1000L)*i + 30 * 60 * 1000L)));
+            ap.setEndDate(new Date(futureDate.getTime() + (60 * 60 * 1000L) + ((24 * 60 * 60 * 1000L) * i + 30 * 60 * 1000L)));
             ap.setPatient(patientRepository.findAll().getFirst());
             ap.setOutpatientDepartment(outpatientDepartmentRepository.getReferenceById(testObjectId));
             ap.setNotes("Test");
@@ -200,9 +204,19 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
+
+        OutpatientDepartmentCapacityDto capacity = null;
+        for (OutpatientDepartmentCapacityDto cap : capacities) {
+            if (cap.outpatientDepartment().id() == testObjectId) {
+                capacity = cap;
+                break;
+            }
+        }
+        assertNotNull(capacity);
+
         // 12 = 6h open x 2 slots/h
-        assertEquals(outpatientDepartment.getCapacity()*12, capacities.get(3).capacityDto().capacity());
-        assertEquals(1, capacities.get(3).capacityDto().occupied());
+        assertEquals(outpatientDepartment.getCapacity() * 12, capacity.capacityDto().capacity());
+        assertEquals(1, capacity.capacityDto().occupied());
     }
 
     @Test
@@ -219,8 +233,18 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
-        assertEquals(outpatientDepartment.getCapacity()*12*7, capacities.get(3).capacityDto().capacity());
-        assertEquals(7, capacities.get(3).capacityDto().occupied());
+
+        OutpatientDepartmentCapacityDto capacity = null;
+        for (OutpatientDepartmentCapacityDto cap : capacities) {
+            if (cap.outpatientDepartment().id() == testObjectId) {
+                capacity = cap;
+                break;
+            }
+        }
+        assertNotNull(capacity);
+
+        assertEquals(outpatientDepartment.getCapacity() * 12 * 7, capacity.capacityDto().capacity());
+        assertEquals(7, capacity.capacityDto().occupied());
     }
 
     @Test
@@ -237,8 +261,17 @@ public class OutpatientDepartmentEndpointTest extends TestBase {
         List<OutpatientDepartmentCapacityDto> capacities = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
             objectMapper.getTypeFactory().constructCollectionType(List.class, OutpatientDepartmentCapacityDto.class));
         assertEquals(4, capacities.size());
-        assertEquals(9000, capacities.get(3).capacityDto().capacity());
-        List<Appointment> appointments = appointmentRepository.findAll();
-        assertEquals(10, capacities.get(3).capacityDto().occupied());
+
+        OutpatientDepartmentCapacityDto capacity = null;
+        for (OutpatientDepartmentCapacityDto cap : capacities) {
+            if (cap.outpatientDepartment().id() == testObjectId) {
+                capacity = cap;
+                break;
+            }
+        }
+        assertNotNull(capacity);
+
+        assertEquals(9000, capacity.capacityDto().capacity());
+        assertEquals(10, capacity.capacityDto().occupied());
     }
 }
