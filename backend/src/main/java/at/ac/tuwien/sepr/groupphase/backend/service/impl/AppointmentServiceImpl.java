@@ -3,16 +3,24 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AppointmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
+import at.ac.tuwien.sepr.groupphase.backend.specification.AppointmentSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,6 +87,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentMapper.appointmentEntitiesToListOfAppointmentDto(appointmentRepository.getAllAppointmentsFromPatientWithPatientId(id));
     }
 
+
     @Override
     public List<AppointmentDto> getAllAppointments() {
         LOG.trace("getAllAppointments");
@@ -100,6 +109,31 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new NotFoundException("Appointment not found");
         }
         return appointmentMapper.appointmentEntityToAppointmentDto(appointment);
+    }
+
+    @Override
+    public AppointmentPageDto getAppointmentsByPatient(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
+        LOG.trace("getAppointmentsByPatient({}, {}, {}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate, page, size);
+
+        Pageable pageable = PageRequest.of(page, size,  Sort.by("startDate"));
+
+        Patient patient = patientService.getPatientEntityById(patientId);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
+
+        Page<Appointment> appointments = appointmentRepository.findAll(AppointmentSpecification.filterByPatientWithOptionalCriteria(patient, outpatientDepartment, startDate, endDate), pageable);
+        return appointmentMapper.toAppointmentPageDto(appointments);
+    }
+
+    @Override
+    public AppointmentPageDto getAllFilteredAppointments(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
+        LOG.trace("getAllAppointments({}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate);
+        Pageable pageable = PageRequest.of(page, size,  Sort.by("startDate"));
+
+        Patient patient = patientId != null ? patientService.getPatientEntityById(patientId) : null;
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
+
+        Page<Appointment> appointments = appointmentRepository.findAll(AppointmentSpecification.filterAllAppointmentsWithOptionalCriteria(patient, outpatientDepartment, startDate, endDate), pageable);
+        return appointmentMapper.toAppointmentPageDto(appointments);
     }
 
     /**
@@ -143,6 +177,5 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return null;
     }
-
 
 }

@@ -47,10 +47,6 @@ export class OutpatientDepartmentService {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + update.id, update);
   }
 
-  getOutpatientDepartmentCapacities(): Observable<OutpatientDepartmentCapacityDto[]> {
-    return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(this.outpatientDepartmentBaseUri + '/capacities');
-  }
-
   getOutpatientDepartmentCapacitiesForDay(date: string): Observable<OutpatientDepartmentCapacityDto[]> {
     return this.httpClient.get<OutpatientDepartmentCapacityDto[]>(`${this.outpatientDepartmentBaseUri}/capacities/day?date=${date}`);
   }
