@@ -121,4 +121,46 @@ export class AppointmentService {
     return this.http.get<AppointmentPageDto>(`${this.appointmentBaseUri}/patient`, { params });
   }
 
+
+  /**
+   * Get appointments by patient with optional filters for outpatient department, start date, and end date.
+   * @param patientId the patient for whom to get appointments
+   * @param outpatientDepartmentId optional outpatient department filter
+   * @param startDate optional start date filter
+   * @param endDate optional end date filter
+   * @param page page number for pagination
+   * @param size page size for pagination
+   * @return an Observable for the paginated appointments
+   */
+  getAllFilteredAppointments(
+    patientId: number,
+    outpatientDepartmentId: number | null,
+    startDate: Date | null,
+    endDate: Date | null,
+    page: number,
+    size: number
+  ): Observable<AppointmentPageDto> {
+    let params = new HttpParams()
+
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    if (outpatientDepartmentId !== null) {
+      params = params.set('outpatientDepartmentId', outpatientDepartmentId.toString());
+    }
+
+    if (patientId !== null) {
+      params = params.set('patientId', patientId.toString());
+    }
+
+    if (startDate !== null) {
+      params = params.set('startDate', startDate.toString());
+    }
+
+    if (endDate !== null) {
+      params = params.set('endDate', endDate.toString());
+    }
+    return this.http.get<AppointmentPageDto>(`${this.appointmentBaseUri}/all`, { params });
+  }
+
 }

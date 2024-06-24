@@ -65,7 +65,7 @@ public interface AppointmentService {
      *
      * @return the list of all appointments.
      */
-    AppointmentPageDto getAllFilteredAppointments(PatientDto patient, OutpatientDepartmentDto outpatientDepartmentName, Date startDate, Date endDate, int page, int size);
+    AppointmentPageDto getAllFilteredAppointments(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size);
 
     /**
      * delete the specified appointment.

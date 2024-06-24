@@ -17,7 +17,7 @@
       <input tabindex="20" [formControl]="departmentControl" [matAutocomplete]="auto" matInput type="text"
              role="combobox" aria-expanded="false" aria-owns="auto" aria-haspopup="listbox" (keydown)="onKeydown($event)">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="filterAppointments($event.option.value)"
-                        role="listbox" [displayWith]="displayOutPD" >
+                        role="listbox" [displayWith]="displayOutPD">
         <mat-option *ngFor="let department of filteredDepartments | async" [value]="department" tabindex="0"
                     role="option">
           <a tabindex="20">

@@ -114,23 +114,11 @@ public class AppointmentEndpoint {
         return appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);
     }
 
-//    /**
-//     * Get all appointments.
-//     *
-//     * @return the list of all appointments.
-//     */
-//    @Secured({"SECRETARY"})
-//    @GetMapping({"/all"})
-//    public List<AppointmentDto> getAllAppointments() {
-//        LOG.info("GET" + BASE_PATH + "/all");
-//        return appointmentService.getAllAppointments();
-//    }
-
     @Secured("PATIENT")
     @GetMapping("/patient")
     public AppointmentPageDto getAppointmentsByPatient(
         @RequestParam(name = "page", defaultValue = "0") Integer page,
-        @RequestParam(name = "size", defaultValue = "20") Integer size,
+        @RequestParam(name = "size", defaultValue = "3") Integer size,
         @RequestParam Long patientId,
         @RequestParam(required = false) Long outpatientDepartmentId,
         @RequestParam(required = false) Date startDate,
@@ -142,11 +130,11 @@ public class AppointmentEndpoint {
     @GetMapping("/all")
     public AppointmentPageDto getAllAppointments(
         @RequestParam(name = "page", defaultValue = "0") Integer page,
-        @RequestParam(name = "size", defaultValue = "20") Integer size,
-        @RequestParam(required = false) PatientDto patient,
-        @RequestParam(required = false) OutpatientDepartmentDto outpatientDepartment,
+        @RequestParam(name = "size", defaultValue = "3") Integer size,
+        @RequestParam(required = false) Long patientId,
+        @RequestParam(required = false) Long outpatientDepartmentId,
         @RequestParam(required = false) Date startDate,
         @RequestParam(required = false) Date endDate) {
-        return appointmentService.getAllFilteredAppointments(patient, outpatientDepartment, startDate, endDate, page, size);
+        return appointmentService.getAllFilteredAppointments(patientId, outpatientDepartmentId, startDate, endDate, page, size);
     }
 }
