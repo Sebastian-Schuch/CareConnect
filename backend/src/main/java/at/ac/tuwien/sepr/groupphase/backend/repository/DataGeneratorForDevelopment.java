@@ -154,7 +154,7 @@ public class DataGeneratorForDevelopment {
         List<Allergy> allergies = new ArrayList<>();
 
         patientRepository.save(setPatient("chris.anger@email.com", "Chris", "Anger", "AngerManagement", true, false, "6912120520", allergies, medications));
-        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty", true, false, "6912225164", allergies, medications));
+        patientRepository.save(setPatient("jonathan.schort@email.com", "Jonathan", "Schort", "Schorty1", true, false, "6912225164", allergies, medications));
         patientRepository.save(setPatient("noah.oguamalam@email.com", "Noah", "Oguamalam", "SepmGroupCarrier", true, false, "6912225111", allergies, medications));
         patientRepository.save(setPatient("philipp.nürnberger@email.com", "Philipp", "Nürnberger", "KintaroOe", true, false, "6912034156", allergies, medications));
         patientRepository.save(setPatient("ryan.foster@email.com", "Ryan", "Foster", "FosterThePeople", true, false, "6912222173", allergies, medications));
