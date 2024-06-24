@@ -246,14 +246,12 @@ public class DoctorServiceTest extends TestBase {
         long id = doctorRepository.findAll().get(0).getDoctorId();
         DoctorDto toBeFoundDoctor = new DoctorDto(id, "Doctor",
             "Eggman", "doctor.eggman@email.com", "ChaosEmeralds", false, true);
-        DoctorDto foundDoctor = doctorService.findDoctorByCredential(doctorRepository.findAll().get(0).getCredential());
+        DoctorDtoSparse foundDoctor = doctorService.findDoctorByCredential(doctorRepository.findAll().get(0).getCredential());
         assertAll("Grouped Assertions of Doctor",
             () -> assertEquals(toBeFoundDoctor.id(), foundDoctor.id(), "ID should be equal"),
             () -> assertEquals(toBeFoundDoctor.email(), foundDoctor.email(), "Email should be equal"),
             () -> assertEquals(toBeFoundDoctor.firstname(), foundDoctor.firstname(), "Firstname should be equal"),
             () -> assertEquals(toBeFoundDoctor.lastname(), foundDoctor.lastname(), "Lastname should be equal"),
-            () -> assertEquals(toBeFoundDoctor.password(), foundDoctor.password(), "Password should be equal"),
-            () -> assertEquals(toBeFoundDoctor.active(), foundDoctor.active(), "Active should be equal"),
             () -> assertEquals(toBeFoundDoctor.isInitialPassword(), foundDoctor.isInitialPassword(), "InitialPassword should be equal"));
     }
 

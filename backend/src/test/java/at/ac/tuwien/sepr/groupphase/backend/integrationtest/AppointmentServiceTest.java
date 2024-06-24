@@ -9,7 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
@@ -70,7 +70,7 @@ public class AppointmentServiceTest extends TestBase {
     @Transactional
     @Test
     public void givenValidAppointmentCreateDto_whenCreateAppointment_thenCreatedAppointmentIsReturnedAndCanNowBeFound() {
-        PatientDto patientDto = createPatientDto(patientRepository.findAll().get(0));
+        PatientDtoSparse patientDto = createPatientDtoSparse(patientRepository.findAll().get(0));
 
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
 
@@ -104,7 +104,7 @@ public class AppointmentServiceTest extends TestBase {
         long id = allAppointments.get(allAppointments.size() - 1).id() + 1;
         assertThat(appointmentRepository.existsById(id)).isFalse();
 
-        PatientDto patientDto = createPatientDto(patientRepository.findAll().get(5));
+        PatientDtoSparse patientDto = createPatientDtoSparse(patientRepository.findAll().get(5));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
         AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto,
             Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
@@ -117,7 +117,7 @@ public class AppointmentServiceTest extends TestBase {
     @Transactional
     @Test
     public void givenTwoValidAppointmentsSamePatient_whenCreateAppointment_thenThrowsConflictExceptionAndSecondAppointmentCannotBeFound() {
-        PatientDto patientDto = createPatientDto(patientRepository.findAll().get(0));
+        PatientDtoSparse patientDto = createPatientDtoSparse(patientRepository.findAll().get(0));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
         AppointmentDtoCreate appointmentToCreate =
             new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, Calendar.JANUARY, 1, 8, 0), new Date(2023, Calendar.JANUARY, 1, 8, 30),
@@ -131,7 +131,7 @@ public class AppointmentServiceTest extends TestBase {
     @Transactional
     @Test
     public void givenIdOfAppointment_whenGetAppointmentById_thenReturnAppointment() {
-        PatientDto patientDto = createPatientDto(patientRepository.findAll().get(0));
+        PatientDtoSparse patientDto = createPatientDtoSparse(patientRepository.findAll().get(0));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
         AppointmentDto appointmentToFind = createAppointmentDto(patientDto, outpatientDepartmentDto, appointmentRepository.findAll().get(0));
 
@@ -155,7 +155,7 @@ public class AppointmentServiceTest extends TestBase {
     @Transactional
     @Test
     public void givenIdOfAppointment_whenDeleteAppointment_thenAppointmentGetsDeletedAndCannotBeFoundAnymore() {
-        PatientDto patientDto = createPatientDto(patientRepository.findAll().get(0));
+        PatientDtoSparse patientDto = createPatientDtoSparse(patientRepository.findAll().get(0));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
         AppointmentDto appointmentToFind =
             new AppointmentDto(appointmentRepository.getAllAppointments().get(0).getId(), patientDto, outpatientDepartmentDto,
@@ -222,11 +222,11 @@ public class AppointmentServiceTest extends TestBase {
             .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
                 AppointmentDto::notes)
             .contains(
-                tuple(createPatientDto(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
+                tuple(createPatientDtoSparse(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"),
 
-                tuple(createPatientDto(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
+                tuple(createPatientDtoSparse(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2022, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"));
     }
@@ -256,21 +256,21 @@ public class AppointmentServiceTest extends TestBase {
             .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
                 AppointmentDto::notes)
             .contains(
-                tuple(createPatientDto(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
+                tuple(createPatientDtoSparse(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"),
 
-                tuple(createPatientDto(patientRepository.findAll().get(1)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
+                tuple(createPatientDtoSparse(patientRepository.findAll().get(1)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"),
 
-                tuple(createPatientDto(patientRepository.findAll().get(2)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
+                tuple(createPatientDtoSparse(patientRepository.findAll().get(2)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1"));
     }
 
 
-    private PatientDto createPatientDto(Patient patient) {
+    private PatientDtoSparse createPatientDtoSparse(Patient patient) {
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
             medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
@@ -279,10 +279,9 @@ public class AppointmentServiceTest extends TestBase {
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        return new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+        return new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
             patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
-            patient.getCredential().getActive());
+            patient.getCredential().getEmail(), patient.getCredential().isInitialPassword());
     }
 
     private OutpatientDepartmentDto createOutpatientDepartmentDto(OutpatientDepartment outpatientDepartment) {
@@ -296,7 +295,7 @@ public class AppointmentServiceTest extends TestBase {
             outpatientDepartment.getCapacity(), openingHoursDto, true);
     }
 
-    private AppointmentDto createAppointmentDto(PatientDto patientDto, OutpatientDepartmentDto outpatientDepartmentDto, Appointment appointment) {
+    private AppointmentDto createAppointmentDto(PatientDtoSparse patientDto, OutpatientDepartmentDto outpatientDepartmentDto, Appointment appointment) {
         return new AppointmentDto(appointment.getId(), patientDto, outpatientDepartmentDto, appointment.getStartDate(), appointment.getEndDate(),
             appointment.getNotes());
     }

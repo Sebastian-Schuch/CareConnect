@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
@@ -67,7 +67,7 @@ public class CredentialEndpoint {
      */
     @Secured({"PATIENT"})
     @GetMapping({"/patients"})
-    public PatientDto getPatientByToken() {
+    public PatientDtoSparse getPatientByToken() {
         LOG.trace("getPatientByToken()");
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Credential credential = customUserDetailService.findApplicationUserByEmail(email);
@@ -81,7 +81,7 @@ public class CredentialEndpoint {
      */
     @Secured({"DOCTOR"})
     @GetMapping({"/doctors"})
-    public DoctorDto getDoctorByToken() {
+    public DoctorDtoSparse getDoctorByToken() {
         LOG.trace("getDoctorByToken()");
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Credential credential = customUserDetailService.findApplicationUserByEmail(email);
@@ -95,7 +95,7 @@ public class CredentialEndpoint {
      */
     @Secured({"SECRETARY"})
     @GetMapping({"/secretaries"})
-    public SecretaryDto getSecretaryByToken() {
+    public SecretaryDtoSparse getSecretaryByToken() {
         LOG.trace("getSecretaryByToken()");
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Credential credential = customUserDetailService.findApplicationUserByEmail(email);
@@ -109,7 +109,7 @@ public class CredentialEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping({"/admins"})
-    public AdminDto getAdminByToken() {
+    public AdminDtoSparse getAdminByToken() {
         LOG.trace("getAdminByToken()");
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Credential credential = customUserDetailService.findApplicationUserByEmail(email);
