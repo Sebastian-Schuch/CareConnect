@@ -45,24 +45,27 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        try {
-            UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
-            if (authToken != null) {
-                UserDetails userDetails = userService.loadUserByUsername(authToken.getName());
+        String header = request.getHeader("Authorization");
+        if (header != null && !header.startsWith("Basic ")) {
+            try {
+                UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
+                if (authToken != null) {
+                    UserDetails userDetails = userService.loadUserByUsername(authToken.getName());
 
-                // Generate a new Bearer Token for the response
-                List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-                String newToken = jwtTokenizer.getAuthToken(authToken.getName(), roles);
-                UsernamePasswordAuthenticationToken newAuthToken = getAuthTokenFromString(newToken);
-                response.setHeader(securityProperties.getAuthHeader(), newToken);
+                    // Generate a new Bearer Token for the response
+                    List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+                    String newToken = jwtTokenizer.getAuthToken(authToken.getName(), roles);
+                    UsernamePasswordAuthenticationToken newAuthToken = getAuthTokenFromString(newToken);
+                    response.setHeader(securityProperties.getAuthHeader(), newToken);
 
-                SecurityContextHolder.getContext().setAuthentication(newAuthToken);
+                    SecurityContextHolder.getContext().setAuthentication(newAuthToken);
+                }
+            } catch (IllegalArgumentException | JwtException e) {
+                LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid authorization header or token");
+                return;
             }
-        } catch (IllegalArgumentException | JwtException e) {
-            LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid authorization header or token");
-            return;
         }
         chain.doFilter(request, response);
     }

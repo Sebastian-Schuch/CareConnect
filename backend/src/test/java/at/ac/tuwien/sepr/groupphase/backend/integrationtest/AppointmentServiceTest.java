@@ -74,12 +74,14 @@ public class AppointmentServiceTest extends TestBase {
 
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
 
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 8, 0), new Date(2023, 1, 1, 8, 30), "notes");
         AppointmentDto createdAppointment = appointmentService.create(appointmentToCreate);
 
         assertAll("Grouped Assertions of Appointment",
             () -> assertEquals(appointmentToCreate.patient().id(), createdAppointment.patient().id(), "Patient ID should be equal"),
-            () -> assertEquals(appointmentToCreate.outpatientDepartment().id(), createdAppointment.outpatientDepartment().id(), "Outpatient Department ID should be equal"),
+            () -> assertEquals(appointmentToCreate.outpatientDepartment().id(), createdAppointment.outpatientDepartment().id(),
+                "Outpatient Department ID should be equal"),
             () -> assertEquals(appointmentToCreate.startDate(), createdAppointment.startDate(), "Start Date should be equal"),
             () -> assertEquals(appointmentToCreate.endDate(), createdAppointment.endDate(), "End Date should be equal"),
             () -> assertEquals(appointmentToCreate.notes(), createdAppointment.notes(), "Notes should be equal"));
@@ -88,7 +90,8 @@ public class AppointmentServiceTest extends TestBase {
         assertAll("Grouped Assertions of Found Appointment",
             () -> assertEquals(createdAppointment.id(), foundAppointment.id(), "ID should be equal"),
             () -> assertEquals(createdAppointment.patient().id(), foundAppointment.patient().id(), "Patient ID should be equal"),
-            () -> assertEquals(createdAppointment.outpatientDepartment().id(), foundAppointment.outpatientDepartment().id(), "Outpatient Department ID should be equal"),
+            () -> assertEquals(createdAppointment.outpatientDepartment().id(), foundAppointment.outpatientDepartment().id(),
+                "Outpatient Department ID should be equal"),
             () -> assertEquals(createdAppointment.startDate(), foundAppointment.startDate(), "Start Date should be equal"),
             () -> assertEquals(createdAppointment.endDate(), foundAppointment.endDate(), "End Date should be equal"),
             () -> assertEquals(createdAppointment.notes(), foundAppointment.notes(), "Notes should be equal"));
@@ -103,7 +106,8 @@ public class AppointmentServiceTest extends TestBase {
 
         PatientDto patientDto = createPatientDto(patientRepository.findAll().get(5));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
+        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto,
+            Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
             Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "notes");
 
         assertThrows(ConflictException.class, () -> appointmentService.create(appointmentToCreate));
@@ -115,7 +119,9 @@ public class AppointmentServiceTest extends TestBase {
     public void givenTwoValidAppointmentsSamePatient_whenCreateAppointment_thenThrowsConflictExceptionAndSecondAppointmentCannotBeFound() {
         PatientDto patientDto = createPatientDto(patientRepository.findAll().get(0));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
-        AppointmentDtoCreate appointmentToCreate = new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, Calendar.JANUARY, 1, 8, 0), new Date(2023, Calendar.JANUARY, 1, 8, 30), "notes");
+        AppointmentDtoCreate appointmentToCreate =
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, Calendar.JANUARY, 1, 8, 0), new Date(2023, Calendar.JANUARY, 1, 8, 30),
+                "notes");
 
         AppointmentDto createdAppointment = appointmentService.create(appointmentToCreate);
         assertThrows(ConflictException.class, () -> appointmentService.create(appointmentToCreate));
@@ -133,7 +139,8 @@ public class AppointmentServiceTest extends TestBase {
         assertAll("Grouped Assertions of Found Appointment",
             () -> assertEquals(appointmentToFind.id(), foundAppointment.id(), "ID should be equal"),
             () -> assertEquals(appointmentToFind.patient().id(), foundAppointment.patient().id(), "Patient ID should be equal"),
-            () -> assertEquals(appointmentToFind.outpatientDepartment().id(), foundAppointment.outpatientDepartment().id(), "Outpatient Department ID should be equal"),
+            () -> assertEquals(appointmentToFind.outpatientDepartment().id(), foundAppointment.outpatientDepartment().id(),
+                "Outpatient Department ID should be equal"),
             () -> assertEquals(appointmentToFind.startDate(), foundAppointment.startDate(), "Start Date should be equal"),
             () -> assertEquals(appointmentToFind.endDate(), foundAppointment.endDate(), "End Date should be equal"),
             () -> assertEquals(appointmentToFind.notes(), foundAppointment.notes(), "Notes should be equal"));
@@ -151,14 +158,16 @@ public class AppointmentServiceTest extends TestBase {
         PatientDto patientDto = createPatientDto(patientRepository.findAll().get(0));
         OutpatientDepartmentDto outpatientDepartmentDto = createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0));
         AppointmentDto appointmentToFind =
-            new AppointmentDto(appointmentRepository.getAllAppointments().get(0).getId(), patientDto, outpatientDepartmentDto, Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
+            new AppointmentDto(appointmentRepository.getAllAppointments().get(0).getId(), patientDto, outpatientDepartmentDto,
+                Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
                 Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 30).atZone(ZoneId.systemDefault()).toInstant()), "Notes1");
 
         AppointmentDto foundAppointment = appointmentService.getAppointmentById(appointmentToFind.id());
         assertAll("Grouped Assertions of Found Appointment",
             () -> assertEquals(appointmentToFind.id(), foundAppointment.id(), "ID should be equal"),
             () -> assertEquals(appointmentToFind.patient().id(), foundAppointment.patient().id(), "Patient ID should be equal"),
-            () -> assertEquals(appointmentToFind.outpatientDepartment().id(), foundAppointment.outpatientDepartment().id(), "Outpatient Department ID should be equal"),
+            () -> assertEquals(appointmentToFind.outpatientDepartment().id(), foundAppointment.outpatientDepartment().id(),
+                "Outpatient Department ID should be equal"),
             () -> assertEquals(appointmentToFind.startDate(), foundAppointment.startDate(), "Start Date should be equal"),
             () -> assertEquals(appointmentToFind.endDate(), foundAppointment.endDate(), "End Date should be equal"),
             () -> assertEquals(appointmentToFind.notes(), foundAppointment.notes(), "Notes should be equal"));
@@ -210,7 +219,8 @@ public class AppointmentServiceTest extends TestBase {
         assertThat(appointments)
             .isNotNull()
             .hasSize(2)
-            .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate, AppointmentDto::notes)
+            .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
+                AppointmentDto::notes)
             .contains(
                 tuple(createPatientDto(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
@@ -243,7 +253,8 @@ public class AppointmentServiceTest extends TestBase {
         assertThat(allAppointments)
             .isNotNull()
             .hasSize(3)
-            .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate, AppointmentDto::notes)
+            .extracting(AppointmentDto::patient, AppointmentDto::outpatientDepartment, AppointmentDto::startDate, AppointmentDto::endDate,
+                AppointmentDto::notes)
             .contains(
                 tuple(createPatientDto(patientRepository.findAll().get(0)), createOutpatientDepartmentDto(outpatientDepartmentRepository.findAll().get(0)),
                     Date.from(LocalDateTime.of(2023, Month.JANUARY, 1, 8, 0).atZone(ZoneId.systemDefault()).toInstant()),
@@ -262,25 +273,31 @@ public class AppointmentServiceTest extends TestBase {
     private PatientDto createPatientDto(Patient patient) {
         List<MedicationDto> medications = new ArrayList<>();
         for (Medication medication : patient.getMedicines()) {
-            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive()));
+            medications.add(new MedicationDto(medication.getId(), medication.getName(), medication.getActive(), medication.getUnitOfMeasurement()));
         }
         List<AllergyDto> allergies = new ArrayList<>();
         for (Allergy allergy : patient.getAllergies()) {
             allergies.add(new AllergyDto(allergy.getId(), allergy.getName(), allergy.isActive()));
         }
-        return new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(), patient.getCredential().getLastName(),
-            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(), patient.getCredential().getActive());
+        return new PatientDto(patient.getPatientId(), patient.getSvnr(), medications, allergies, patient.getCredential().getFirstName(),
+            patient.getCredential().getLastName(),
+            patient.getCredential().getEmail(), patient.getCredential().getPassword(), patient.getCredential().isInitialPassword(),
+            patient.getCredential().getActive());
     }
 
     private OutpatientDepartmentDto createOutpatientDepartmentDto(OutpatientDepartment outpatientDepartment) {
         OpeningHours openingHours = outpatientDepartment.getOpeningHours();
 
         OpeningHoursDayDto openingHoursDayDto = new OpeningHoursDayDto(LocalTime.of(8, 0), LocalTime.of(14, 0));
-        OpeningHoursDto openingHoursDto = new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto);
-        return new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(), outpatientDepartment.getCapacity(), openingHoursDto, true);
+        OpeningHoursDto openingHoursDto =
+            new OpeningHoursDto(openingHours.getId(), openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto, openingHoursDayDto,
+                openingHoursDayDto, openingHoursDayDto);
+        return new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
+            outpatientDepartment.getCapacity(), openingHoursDto, true);
     }
 
     private AppointmentDto createAppointmentDto(PatientDto patientDto, OutpatientDepartmentDto outpatientDepartmentDto, Appointment appointment) {
-        return new AppointmentDto(appointment.getId(), patientDto, outpatientDepartmentDto, appointment.getStartDate(), appointment.getEndDate(), appointment.getNotes());
+        return new AppointmentDto(appointment.getId(), patientDto, outpatientDepartmentDto, appointment.getStartDate(), appointment.getEndDate(),
+            appointment.getNotes());
     }
 }
