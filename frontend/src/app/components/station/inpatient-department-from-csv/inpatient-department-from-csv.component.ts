@@ -48,6 +48,7 @@ export class InpatientDepartmentFromCsvComponent {
         } else {
           this.notification.error('Some stations could not be added.');
         }
+        this.jsonData = null;
       },
       error: error => {
         this.notification.error('Error adding stations: ' + error.message);

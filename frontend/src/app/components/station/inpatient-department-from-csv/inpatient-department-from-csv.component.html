@@ -16,11 +16,12 @@
     dynamicHeight="true"
   >
     <mat-tab label="extracted allergies">
-      <app-allergy-list
-        [allergies]="jsonData"
+
+      <app-small-list
+        [stations]="jsonData"
         [itemsPerPage]="10">
 
-      </app-allergy-list>
+      </app-small-list>
     </mat-tab>
 
     <mat-tab label="raw json">

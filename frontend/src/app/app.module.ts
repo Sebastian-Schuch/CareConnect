@@ -70,6 +70,7 @@ import {
 import {
   InpatientDepartmentFromCsvComponent
 } from "./components/station/inpatient-department-from-csv/inpatient-department-from-csv.component";
+import {SmallListComponent} from "./components/station/small-list/small-list.component";
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import {
     MedicationListComponent,
     MedicationFromFileComponent,
     OutpatientDepartmentFromFileComponent,
-    InpatientDepartmentFromCsvComponent
+    InpatientDepartmentFromCsvComponent,
+    SmallListComponent
   ],
   imports: [
     BrowserModule,
