@@ -46,16 +46,16 @@ export class LandingAdminComponent implements OnInit {
     forkJoin({
       allergiesCount: this.allergieService.countAllergies(),
       medicationsCount: this.medicationService.getMedicationCount(),
-      outdepartmentsCount: this.departmentService.getOutpatientDepartmentCount()
+      outdepartmentsCount: this.departmentService.getOutpatientDepartmentCount(),
       inDepartmentsCount: this.inPatientDepartment.getInpatientDepartmentCount()
     }).subscribe({
-      next: ({allergiesCount, medicationsCount, outdepartmentsCount}) => {
+      next: ({allergiesCount, medicationsCount, outdepartmentsCount, inDepartmentsCount}) => {
         this.allergies = allergiesCount;
         this.meds = medicationsCount;
         this.outpatients = outdepartmentsCount;
         this.inDepartments = inDepartmentsCount;
 
-        if (allergiesCount > 0 && medicationsCount > 0 && outdepartmentsCount > 0) {
+        if (allergiesCount > 0 && medicationsCount > 0 && outdepartmentsCount > 0 && inDepartmentsCount > 0) {
           this.setupActive = false;
         }
 
