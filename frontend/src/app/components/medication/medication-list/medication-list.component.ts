@@ -26,11 +26,10 @@ export class MedicationListComponent {
 
     this.filteredMedications = this.medication.filter(item => containsKeyName(item));
     this.updatePagination();
-    console.log("loaded medication", this.medication);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.medication) {
+    if (changes.medication) {
       this.updatePagination();
     }
   }
@@ -88,6 +87,6 @@ export class MedicationListComponent {
       start = Math.max(end - maxVisiblePages + 1, 1);
     }
 
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    return Array.from({length: end - start + 1}, (_, i) => start + i);
   }
 }

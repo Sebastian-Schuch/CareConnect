@@ -239,7 +239,6 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
    * @param element - the medication to remove
    */
   deleteMedicationFromTreatment(element: any): void {
-    console.log("called");
     const index = this.dataSource.data.indexOf(element);
     if (index >= 0) {
       this.dataSource.data.splice(index, 1);
@@ -414,7 +413,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   typeValidator(expectedType: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (control.value && typeof control.value !== expectedType) {
-        return { 'invalidType': { value: control.value } };
+        return {'invalidType': {value: control.value}};
       }
       return null;
     };
@@ -439,14 +438,12 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
 
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Backspace') {
-      if (event.target === this.patientInput.nativeElement) {
-        this.treatmentForm.get('patient')?.setValue('');
-        setTimeout(() => {
-          if (this.patientAutoTrigger) {
-            this.patientAutoTrigger.openPanel();
-          }
-        });
-      }
+      this.treatmentForm.get('patient')?.setValue('');
+      setTimeout(() => {
+        if (this.patientAutoTrigger) {
+          this.patientAutoTrigger.openPanel();
+        }
+      });
       if (event.target === this.outpatientDepartmentInput.nativeElement) {
         this.treatmentForm.get('outpatientDepartment')?.setValue('');
         setTimeout(() => {

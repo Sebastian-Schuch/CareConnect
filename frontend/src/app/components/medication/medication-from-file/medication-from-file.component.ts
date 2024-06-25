@@ -38,10 +38,8 @@ export class MedicationFromFileComponent {
             };
 
           })
-          console.log("medicaition from file:", converted)
 
           this.jsonData = converted.filter(i => i.name !== '');
-          console.log("medication data:", this.jsonData);
           this.error = null;
         },
         (error) => {
@@ -57,15 +55,11 @@ export class MedicationFromFileComponent {
   }
 
   public addAll() {
-    console.log('Adding possible all medications');
-
     const requests = this.jsonData.map((item: any) => {
       item.name = item.medication;
       if (item.name === '' || item.name === undefined || this.medication.includes(item.name)) {
         return of(null);  // Return an observable that resolves to null to keep forkJoin intact
       }
-
-      console.log("adding medication", item.name);
       const newMed: MedicationDto = {
         name: item.name,
         unitOfMeasurement: item.unitOfMeasurement,
