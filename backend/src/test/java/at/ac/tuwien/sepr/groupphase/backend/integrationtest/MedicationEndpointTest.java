@@ -27,7 +27,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -162,59 +161,4 @@ public class MedicationEndpointTest extends TestBase {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
-    //TODO: adjust and refactor tests (Issue #60)
-    /*
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenThreeCreatedMedications_whenGetAllMedications_thenReturnsThreeMedications() throws Exception {
-        medicationRepository.deleteAll();
-        String json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra"));
-        byte[] bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
-        MedicationDto medication1 = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyCreate).readAll().get(0);
-
-        json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra2"));
-        bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
-        MedicationDto medication2 = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyCreate).readAll().get(0);
-
-        json = ow.writeValueAsString(new MedicationDtoCreate("WieAgra3"));
-        bodyCreate = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andReturn().getResponse().getContentAsByteArray();
-        MedicationDto medication3 = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyCreate).readAll().get(0);
-
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsByteArray();
-        List<MedicationDto> medications = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyGet).readAll();
-        assertThat(medications).hasSize(3).extracting(MedicationDto::id, MedicationDto::name).containsExactlyInAnyOrder(
-            tuple(medication1.id(), medication1.name()),
-            tuple(medication2.id(), medication2.name()),
-            tuple(medication3.id(), medication3.name()));
-    }
-
-    @Test
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
-    public void givenNoMedicationsInDatabase_whenGetAllMedications_thenReturnsEmptyList() throws Exception {
-        medicationRepository.deleteAll();
-        byte[] bodyGet = mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH)
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse().getContentAsByteArray();
-        List<MedicationDto> medications = objectMapper.readerFor(MedicationDto.class).<MedicationDto>readValues(bodyGet).readAll();
-        assertThat(medications).isEmpty();
-    }*/
 }
