@@ -4,6 +4,7 @@ import {ToastrService} from "ngx-toastr";
 import {CsvConverterService} from "../../../services/csv-converter.service";
 import {AllergyDto} from "../../../dtos/allergy";
 import {catchError, forkJoin, of} from "rxjs";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
 
 function containsKey(obj: any, key: string): boolean {
   return obj && obj.hasOwnProperty(key);
@@ -26,6 +27,7 @@ export class AllergyFromFileComponent {
     private csvService: CsvConverterService,
     private allergyService: AllergyService,
     private notification: ToastrService,
+    private errorFormatter: ErrorFormatterService
   ) {
   }
 
@@ -41,7 +43,6 @@ export class AllergyFromFileComponent {
             };
           })
           this.jsonData = converted.filter(i => i.name !== '' && i.name !== undefined);
-          console.log(this.jsonData)
           this.error = null;
         },
         (error) => {
@@ -75,8 +76,8 @@ export class AllergyFromFileComponent {
           this.onSuccessfulCreation();
         }
       },
-      error: error => {
-        this.notification.error('Error creating allergies: ' + error.message);
+      error: async error => {
+        await this.errorFormatter.printErrorToNotification(error, 'Error creating allergies', this.notification);
       }
     });
   }
