@@ -13,26 +13,29 @@
 </div>
 
 <mat-card class="floating-window" *ngIf="setupActive">
-  <h2>Complete Setup</h2>
+  <h2 tabindex="20">Complete Setup</h2>
 
-  <div class="info-item" [ngClass]="{'green': meds > 0}">
+  <div tabindex="20" [attr.aria-label]="'Medications: '+ meds" class="info-item" [ngClass]="{'green': meds > 0}">
     <span class="label">Medications:</span>
     <span class="value">{{ meds }}</span>
   </div>
-  <div class="info-item" [ngClass]="{'green': allergies > 0}">
+  <div tabindex="20" [attr.aria-label]="'Allergies: '+ allergies" class="info-item"
+       [ngClass]="{'green': allergies > 0}">
     <span class="label">Allergies:</span>
     <span class="value">{{ allergies }}</span>
   </div>
-  <div class="info-item" [ngClass]="{'green': inDepartments > 0}">
-    <span class="label">Inpatient department:</span>
+  <div tabindex="20" [attr.aria-label]="'Inpatient departments: '+ inDepartments" class="info-item"
+       [ngClass]="{'green': inDepartments > 0}">
+    <span class="label">Inpatient departments:</span>
     <span class="value">{{ inDepartments }}</span>
   </div>
-  <div class="info-item" [ngClass]="{'green': outpatients > 0}">
+  <div tabindex="20" [attr.aria-label]="'Outpatient departments: '+ outpatients" class="info-item"
+       [ngClass]="{'green': outpatients > 0}">
     <span class="label">Outpatient department:</span>
     <span class="value">{{ outpatients }}</span>
   </div>
 
-  <a [routerLink]="['./setup']" class="setup-link">Finish Setup</a>
+  <a tabindex="20" [routerLink]="['./setup']" class="setup-link">Finish Setup</a>
 </mat-card>
 
 <div #admin aria-labelledby="admin-section-title" class="admin-landing-container" id="admin-button-section"

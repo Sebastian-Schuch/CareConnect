@@ -118,6 +118,6 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public int getMedicationCount() {
         LOG.trace("getMedicationCount()");
-        return medicationRepository.findAll().size();
+        return medicationRepository.findByActiveTrue().size();
     }
 }

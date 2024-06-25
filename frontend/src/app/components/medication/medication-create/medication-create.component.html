@@ -1,6 +1,6 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
-    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="40">
       <span>{{ this.mode === MedicationCreateEditMode.CREATE ? 'Register' : 'Edit' }}
         Medication</span><br>
     </h1>
@@ -27,7 +27,7 @@
                  [(ngModel)]="medication.name"
                  #nameModel="ngModel"
                  required
-                 tabindex="21"
+                 tabindex="41"
           >
 
           <div class="invalid-feedback">
@@ -54,7 +54,7 @@
                  [(ngModel)]="medication.unitOfMeasurement"
                  #nameModel="ngModel"
                  required
-                 tabindex="22"
+                 tabindex="42"
           >
 
           <div class="invalid-feedback">
@@ -71,7 +71,7 @@
     <button type="submit"
             mat-button class="sepr-btn-submit"
             [disabled]="!form.valid"
-            tabindex="23"
+            tabindex="43"
     >
       {{ this.mode === MedicationCreateEditMode.CREATE ? 'Register' : 'Edit' }} Medication
     </button>

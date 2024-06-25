@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface InpatientDepartmentRepository extends JpaRepository<InpatientDepartment, Long> {
 
@@ -15,7 +17,6 @@ public interface InpatientDepartmentRepository extends JpaRepository<InpatientDe
      *
      * @param specification the specification to filter the inpatient departments
      * @param pageable      the page to get
-     *
      * @return all inpatient departments of the page.
      */
     Page<InpatientDepartment> findAll(Specification<InpatientDepartment> specification, Pageable pageable);
@@ -24,9 +25,15 @@ public interface InpatientDepartmentRepository extends JpaRepository<InpatientDe
      * Returns the inpatient department with the given id only if the inpatient department is active.
      *
      * @param id the id of the inpatient department.
-     *
      * @return the inpatient department with the given id.
      */
     InpatientDepartment findByIdAndActiveTrue(Long id);
+
+    /**
+     * Returns all active inpatient departments.
+     *
+     * @return all active inpatient departments.
+     */
+    List<InpatientDepartment> findByActiveTrue();
 
 }
