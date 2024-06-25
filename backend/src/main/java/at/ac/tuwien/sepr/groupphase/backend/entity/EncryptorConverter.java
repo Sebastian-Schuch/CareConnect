@@ -16,26 +16,32 @@ import java.util.Base64;
 @Component
 public class EncryptorConverter implements AttributeConverter<String, String> {
 
-    private Key key;
-    private Cipher cipher;
+    private ThreadLocal<Key> key = new ThreadLocal<Key>() {
+        @Override
+        protected Key initialValue() {
+            return new SecretKeySpec(secret.getBytes(), "AES");
+        }
+    };
+
+    private ThreadLocal<Cipher> cipher = new ThreadLocal<Cipher>() {
+        @Override
+        protected Cipher initialValue() {
+            try {
+                return Cipher.getInstance("AES");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    };
 
     @Value("${ENCRYPTION_SECRET}")
     private String secret;
 
-    public EncryptorConverter() {
-    }
-
-    @PostConstruct
-    public void init() throws Exception {
-        key = new SecretKeySpec(this.secret.getBytes(), "AES");
-        cipher = Cipher.getInstance("AES");
-    }
-
     @Override
     public String convertToDatabaseColumn(String s) {
         try {
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            return Base64.getEncoder().encodeToString(cipher.doFinal(s.getBytes()));
+            cipher.get().init(Cipher.ENCRYPT_MODE, key.get());
+            return Base64.getEncoder().encodeToString(cipher.get().doFinal(s.getBytes()));
         } catch (IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
             throw new IllegalStateException(e);
         }
@@ -44,8 +50,8 @@ public class EncryptorConverter implements AttributeConverter<String, String> {
     @Override
     public String convertToEntityAttribute(String s) {
         try {
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            return new String(cipher.doFinal(Base64.getDecoder().decode(s)));
+            cipher.get().init(Cipher.DECRYPT_MODE, key.get());
+            return new String(cipher.get().doFinal(Base64.getDecoder().decode(s)));
         } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
             throw new IllegalStateException(e);
         }
