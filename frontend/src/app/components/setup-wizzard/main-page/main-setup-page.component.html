@@ -10,7 +10,6 @@
     <div class="col-12">
       <mat-tab-group dynamicHeight="true" [backgroundColor]="">
         <mat-tab label="Allergies"
-                 value="primary"
         >
           <div class="row">
             <div class="col-md-4">
@@ -21,7 +20,7 @@
             </div>
 
             <div class="col-md-8">
-              <mat-tab-group dynamicHeight="true" color="rgb(45, 129, 91)">
+              <mat-tab-group dynamicHeight="true">
                 <mat-tab label="Add manual">
                   <app-allergy
                     (creationSuccess)="onAllergyCreated()"
@@ -41,8 +40,7 @@
         </mat-tab>
 
         <!-- Medication shit here -->
-        <mat-tab label="Medication"
-                 color="red">
+        <mat-tab label="Medication">
           <div class="row">
             <div class="col-12">
               <div class="row">
