@@ -12,17 +12,20 @@
     Error: {{ error }}
   </div>
   <mat-tab-group
-    *ngIf="jsonData"
+    *ngIf="jsonData && jsonData.length > 0"
     dynamicHeight="true"
   >
     <mat-tab label="extracted allergies">
       <app-allergy-list
         [allergies]="jsonData"
-        [itemsPerPage]="10"></app-allergy-list>
+        [itemsPerPage]="10"
+
+      ></app-allergy-list
+      >
     </mat-tab>
 
     <mat-tab label="raw json">
-      <div *ngIf="jsonData">
+      <div *ngIf="jsonData && jsonData.length > 0">
           <div class="card card-body">
             <pre class="bg-light p-3 border">{{ jsonData | json }}</pre>
           </div>
@@ -30,8 +33,10 @@
     </mat-tab>
 
   </mat-tab-group>
-  <button *ngIf="jsonData" type="button" class="btn btn-primary"
+  <button *ngIf="jsonData && jsonData.length > 0" type="button" class="btn btn-primary"
   (click)="addAll()"
   >Add all</button>
+
+  <p *ngIf="jsonData && jsonData.length === 0" class="text-muted">There is no extractable data in the provided file.</p>
 
 </div>

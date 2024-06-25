@@ -40,7 +40,8 @@ export class AllergyFromFileComponent {
               name: item.allergie
             };
           })
-          this.jsonData = converted.filter(i => i.name !== '');
+          this.jsonData = converted.filter(i => i.name !== '' && i.name !== undefined);
+          console.log(this.jsonData)
           this.error = null;
         },
         (error) => {
