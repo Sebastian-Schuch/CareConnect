@@ -39,23 +39,23 @@ export class LandingAdminComponent implements OnInit {
   public setupActive: boolean = true;
   public meds=0;
   public allergies=0;
-  public stations=0;
+  public outpatients=0;
   public inDepartments: number=0;
 
   ngOnInit() {
     forkJoin({
       allergiesCount: this.allergieService.countAllergies(),
       medicationsCount: this.medicationService.getMedicationCount(),
-      departmentsCount: this.departmentService.getOutpatientDepartmentCount(),
+      outdepartmentsCount: this.departmentService.getOutpatientDepartmentCount()
       inDepartmentsCount: this.inPatientDepartment.getInpatientDepartmentCount()
     }).subscribe({
-      next: ({ allergiesCount, medicationsCount, departmentsCount, inDepartmentsCount}) => {
+      next: ({allergiesCount, medicationsCount, outdepartmentsCount}) => {
         this.allergies = allergiesCount;
         this.meds = medicationsCount;
-        this.stations = departmentsCount;
+        this.outpatients = outdepartmentsCount;
         this.inDepartments = inDepartmentsCount;
 
-        if (allergiesCount > 0 && medicationsCount > 0 && departmentsCount > 0 && inDepartmentsCount > 0) {
+        if (allergiesCount > 0 && medicationsCount > 0 && outdepartmentsCount > 0) {
           this.setupActive = false;
         }
 
