@@ -58,6 +58,8 @@ public class DataGeneratorForDevelopment {
 
     private final TreatmentRepository treatmentRepository;
 
+    private final MessageRepository messageRepository;
+
     private final int numberOfTestData = 10;
 
     private final PasswordEncoder passwordEncoder;
@@ -67,6 +69,7 @@ public class DataGeneratorForDevelopment {
     public DataGeneratorForDevelopment(AllergyRepository allergyRepository, AdminRepository adminRepository, AppointmentRepository appointmentRepository, DoctorRepository doctorRepository,
                                        MedicationRepository medicationRepository, OutpatientDepartmentRepository outpatientDepartmentRepository, PatientRepository patientRepository,
                                        SecretaryRepository secretaryRepository, InpatientDepartmentRepository inpatientDepartmentRepository, TreatmentMedicineRepository treatmentMedicineRepository, TreatmentRepository treatmentRepository,
+                                       MessageRepository messageRepository,
                                        PasswordEncoder passwordEncoder) {
         this.allergyRepository = allergyRepository;
         this.adminRepository = adminRepository;
@@ -79,6 +82,7 @@ public class DataGeneratorForDevelopment {
         this.inpatientDepartmentRepository = inpatientDepartmentRepository;
         this.treatmentMedicineRepository = treatmentMedicineRepository;
         this.treatmentRepository = treatmentRepository;
+        this.messageRepository = messageRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -88,9 +92,10 @@ public class DataGeneratorForDevelopment {
     @PostConstruct
     public void generateData() {
         LOG.info("Generating data…");
-        treatmentRepository.deleteAll();
-        treatmentMedicineRepository.deleteAll();
+        messageRepository.deleteAll();
         appointmentRepository.deleteAll();
+        treatmentMedicineRepository.deleteAll();
+        treatmentRepository.deleteAll();
         inpatientDepartmentRepository.deleteAll();
         outpatientDepartmentRepository.deleteAll();
         patientRepository.deleteAll();
