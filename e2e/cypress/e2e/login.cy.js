@@ -1,23 +1,26 @@
 describe('Login Test', () => {
     it('should navigate to login page, enter credentials and submit', () => {
-        // Open the website
+        cy.loginPatient();
+    });
+});
 
-        // Navigate to login page
-        cy.visit('/#/login');
-
-
-
-        // Enter email
-        cy.get('form .form-group #inputEmail').type('chris.anger@email.com');
-
-        // Enter password
-        cy.get('input[name=password]').type('AngerManagement');
-
-        // Submit the form
-        cy.contains('button span', ' Login ').click();
-
-
-
-        cy.get('div.user-name').should('contain', 'Chris A');
+describe('Start Telemedicine Check', () => {
+    it('should navigate to telemedicine page, open new chat and write one message', () => {
+        cy.loginPatient();
+        cy.visit('/#/home/patient/telemedicine');
+        cy.contains('button','Open New Chat').click();
+        cy.get('#treatmentSelect').click();
+        cy.wait(100);
+        cy.get('mat-option').click();
+        cy.contains('button','Create').click();
+        cy.get('mat-list-item').first().click();
+        cy.wait(1000);
+        cy.get('input[placeholder="Type a message"]').type('Hello{enter}');
+        cy.contains('.message-content', 'Hello').should('exist');
+        cy.logout();
+        cy.loginDoctor();
+        cy.visit('/#/home/doctor/telemedicine');
+        cy.get('mat-list-item').first().click();
+        cy.contains('.message-content', 'Hello').should('exist');
     });
 });
