@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import {StationService} from "../../../services/station.service";
 import {CsvConverterService} from "../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
-import {StationDto} from "../../../dtos/Station";
 import {catchError, forkJoin, of} from "rxjs";
+import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
+import {InpatientDepartmentService} from "../../../services/inpatient-department.service";
 
 @Component({
   selector: 'app-inpatient-department-from-csv',
@@ -15,10 +15,10 @@ export class InpatientDepartmentFromCsvComponent {
   public jsonData: any;
   public error: string | null = null;
 
-  public InpatientDepartments : StationDto[]  = [];
+  public InpatientDepartments : InpatientDepartmentDto[]  = [];
 
   constructor(
-    private service: StationService,
+    private service: InpatientDepartmentService,
     private csvService: CsvConverterService,
     private notification: ToastrService,
   ) {
@@ -30,8 +30,8 @@ export class InpatientDepartmentFromCsvComponent {
       return;
     }
 
-    const requests = this.jsonData.map((item: StationDto) =>
-      this.service.createStation(item).pipe(
+    const requests = this.jsonData.map((item: InpatientDepartmentDto) =>
+      this.service.createInpatientDepartment(item).pipe(
         catchError(error => {
           this.notification.error('Error creating station: ' + error.message);
           return of(null);  // Return an observable that resolves to null in case of error

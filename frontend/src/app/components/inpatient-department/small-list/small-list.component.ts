@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
-import {AllergyDto} from "../../../dtos/allergy";
-import {StationDto} from "../../../dtos/Station";
+import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
 
 @Component({
   selector: 'app-small-list',
@@ -10,13 +9,13 @@ import {StationDto} from "../../../dtos/Station";
 export class SmallListComponent {
 
 
-  @Input() stations: StationDto[] = [];
+  @Input() stations: InpatientDepartmentDto[] = [];
   @Input() itemsPerPage = 10;
   @Output() pageChange = new EventEmitter<number>();
 
   searchQuery = '';
-  filteredStations: StationDto[] = [];
-  paginatedStations: StationDto[] = [];
+  filteredStations: InpatientDepartmentDto[] = [];
+  paginatedStations: InpatientDepartmentDto[] = [];
   currentPage = 1;
   totalPages: number[] = [];
 

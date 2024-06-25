@@ -68,6 +68,7 @@ export class MedicationFromFileComponent {
       console.log("adding medication", item.name);
       const newMed: MedicationDto = {
         name: item.name,
+        unitOfMeasurement: item.unitOfMeasurement,
         id: undefined
       };
       return this.medService.createMedication(newMed);

@@ -4,6 +4,8 @@ import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
 import {MedicationService} from "../../../services/medication.service";
 import {MedicationDto} from "../../../dtos/medication";
+import {MedicationCreateEditMode} from "../../medication/medication-create/medication-create.component";
+import {AllergyCreatEditMode} from "../../allergy/allergy.component";
 
 @Component({
   selector: 'app-main-page',
@@ -91,4 +93,7 @@ export class MainSetupPage {
   onMedicationCreated() {
     this.loadMedication();
   }
+
+    protected readonly MedicationCreateEditMode = MedicationCreateEditMode;
+  protected readonly AllergyCreatEditMode = AllergyCreatEditMode;
 }

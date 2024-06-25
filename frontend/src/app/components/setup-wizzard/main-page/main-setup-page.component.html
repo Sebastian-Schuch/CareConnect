@@ -23,9 +23,12 @@
             <div class="col-md-8">
               <mat-tab-group dynamicHeight="true" color="rgb(45, 129, 91)">
                 <mat-tab label="Add manual">
-                  <h3>Add a new Allergy</h3>
-                  <p>Insert the name of an allergy you want to add to the system.</p>
-                  <app-add-allergy-manual (creationSuccess)="onAllergyCreated()"></app-add-allergy-manual>
+                  <app-allergy
+                    (creationSuccess)="onAllergyCreated()"
+                    [mode]="AllergyCreatEditMode.CREATE"
+                    [isEmbedded]="true"
+                  >
+                  </app-allergy>
                 </mat-tab>
 
                 <mat-tab label="Upload file">
@@ -55,6 +58,8 @@
                   <mat-tab label="add manual">
                     <app-medication-create
                       (creationSuccess)="onMedicationCreated()"
+                      [mode]="MedicationCreateEditMode.CREATE"
+                      [isEmbedded]="true"
                     ></app-medication-create>
                   </mat-tab>
                     <mat-tab label="upload file">

@@ -54,7 +54,10 @@ import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
 import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
-import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
+import {
+  MedicationCreateComponent,
+  MedicationCreateEditMode
+} from "./components/medication/medication-create/medication-create.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},

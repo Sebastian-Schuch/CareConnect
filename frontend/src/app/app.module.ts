@@ -58,7 +58,6 @@ import {
 import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog/new-chat-dialog.component";
 import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
 import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
-import {AddAllergyManualComponent} from "./components/allergy/add-allergy-manual/add-allergy-manual.component";
 import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/allergy-from-file.component";
 import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
 import {MedicationFromFileComponent} from "./components/medication/medication-from-file/medication-from-file.component";
@@ -67,8 +66,8 @@ import {
 } from "./components/outpatient-department-from-file/outpatient-department-from-file.component";
 import {
   InpatientDepartmentFromCsvComponent
-} from "./components/station/inpatient-department-from-csv/inpatient-department-from-csv.component";
-import {SmallListComponent} from "./components/station/small-list/small-list.component";
+} from "./components/inpatient-department/inpatient-department-from-csv/inpatient-department-from-csv.component";
+import {SmallListComponent} from "./components/inpatient-department/small-list/small-list.component";
 import {
   MedicationFormModalComponent
 } from "./components/treatment/medication-form-modal/medication-form-modal.component";
@@ -79,6 +78,7 @@ import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
+import {HalfDonutChartComponent} from "./components/half-donut-chart/half-donut-chart.component";
 
 @NgModule({
   declarations: [
@@ -101,7 +101,6 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/
     LandingPatientComponent,
     MainSetupPage,
     AllergyListComponent,
-    AddAllergyManualComponent,
     AllergyFromFileComponent,
     MedicationListComponent,
     MedicationFromFileComponent,
