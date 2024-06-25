@@ -3,7 +3,6 @@ import {CsvConverterService} from "../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {forkJoin, map} from "rxjs";
-
 function containsKey(obj: any, key: string): boolean {
   return obj && obj.hasOwnProperty(key);
 }

@@ -16,7 +16,7 @@
     dynamicHeight="true"
   >
     >
-      <div *ngIf="jsonData">
+      <div *ngIf="jsonData && jsonData.length > 0">
         <div class="card card-body">
           <pre class="bg-light p-3 border">{{ jsonData | json }}</pre>
         </div>
@@ -25,4 +25,8 @@
   <button *ngIf="jsonData" type="button" class="btn btn-primary"
   (click)="addAll()"
   >Add all</button>
+
+  <p *ngIf="jsonData && jsonData.length === 0" class="text-muted">
+    There is no extractable data in the provided file.
+  </p>
 </div>
