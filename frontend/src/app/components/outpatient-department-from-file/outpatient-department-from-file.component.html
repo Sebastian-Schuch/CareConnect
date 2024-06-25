@@ -29,4 +29,7 @@
   <p *ngIf="jsonData && jsonData.length === 0" class="text-muted">
     There is no extractable data in the provided file.
   </p>
+  <p *ngIf="jsonData && jsonData.length > 0" class="text-muted">
+  There are valid departments in this file.
+  </p>
 </div>
