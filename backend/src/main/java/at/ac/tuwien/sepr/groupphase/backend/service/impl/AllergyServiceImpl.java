@@ -127,4 +127,9 @@ public class AllergyServiceImpl implements AllergyService {
         allergy.setActive(false);
         return allergyMapper.allergyToDto(allergyRepository.save(allergy));
     }
+
+    @Override
+    public int countAllergies() {
+        return (int) allergyRepository.count();
+    }
 }

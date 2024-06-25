@@ -47,6 +47,13 @@ public interface OutpatientDepartmentService {
     OutpatientDepartment getOutpatientDepartmentEntityById(Long id) throws NotFoundException;
 
     /**
+     * Gets the count of all outpatient departments.
+     *
+     * @return the count of all outpatient departments
+     */
+    int getOutpatientDepartmentCount();
+
+    /**
      * Gets a page of outpatient departments.
      *
      * @param spec     the specification to filter the outpatient departments

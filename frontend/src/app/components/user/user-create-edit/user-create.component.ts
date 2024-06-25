@@ -12,9 +12,9 @@ import {AllergyDto, AllergyPageDto} from "../../../dtos/allergy";
 import {AllergyService} from "../../../services/allergy.service";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {AuthService} from "../../../services/auth.service";
-import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordFormModalComponent} from "../change-password-form-modal/change-password-form-modal.component";
 import {ResetPasswordDialogComponent} from "../reset-password-dialog/reset-password-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 export enum UserCreateEditMode {
   create,
@@ -27,7 +27,6 @@ export enum UserCreateEditMode {
   templateUrl: './user-create.component.html',
   styleUrls: ['./user-create.component.scss', '../../../../styles.scss']
 })
-
 
 export class UserCreateComponent implements OnInit {
 

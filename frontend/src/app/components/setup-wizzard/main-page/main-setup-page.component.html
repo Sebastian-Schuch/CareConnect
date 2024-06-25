@@ -1,0 +1,103 @@
+<div class="container mt-4">
+  <div class="start-page-container on-landing-hidden">
+    <div style="position: relative;">
+      <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>
+        <div>Setup Wizard</div></span>
+      </h1>
+    </div>
+    <div>
+      <h3>Follow the steps to complete the setup.</h3>
+      <br>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-tab-group dynamicHeight="true">
+        <mat-tab label="Allergies"
+        >
+          <div class="row">
+            <div class="col-md-4">
+              <app-allergy-list
+                [allergies]="allergies"
+                [itemsPerPage]="10">
+              </app-allergy-list>
+            </div>
+
+            <div class="col-md-8">
+              <mat-tab-group dynamicHeight="true">
+                <mat-tab label="Add manual">
+                  <app-allergy
+                    (creationSuccess)="onAllergyCreated()"
+                    [mode]="AllergyCreatEditMode.CREATE"
+                    [isEmbedded]="true"
+                  >
+                  </app-allergy>
+                </mat-tab>
+
+                <mat-tab label="Upload file">
+                  <h3>Upload a File</h3>
+                  <app-allergy-from-file (creationSuccess)="onAllergyCreated()"></app-allergy-from-file>
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Medication shit here -->
+        <mat-tab label="Medication">
+          <div class="row">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-md-4">
+                  <app-medication-list
+                    [medication]="medication"
+                    [itemsPerPage]="10"
+                  ></app-medication-list>
+                </div>
+                <div class="col-md-8">
+                  <mat-tab-group dynamicHeight="true">
+                    <mat-tab label="Add manual">
+                      <app-medication-create
+                        (creationSuccess)="onMedicationCreated()"
+                        [mode]="MedicationCreateEditMode.CREATE"
+                        [isEmbedded]="true"
+                      ></app-medication-create>
+                    </mat-tab>
+                    <mat-tab label="Upload file">
+                      <app-medication-from-file>
+
+                      </app-medication-from-file>
+                    </mat-tab>
+                  </mat-tab-group>
+
+                </div>
+              </div>
+              <!-- Medication component or content goes here -->
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="In-Patient Department">
+          <h3>Inpatient Department Section</h3>
+          <app-inpatient-department-from-csv>
+
+          </app-inpatient-department-from-csv>
+        </mat-tab>
+
+        <mat-tab label="Out-Patient Department">
+          <div class="row">
+            <div class="col-12">
+              <h3>Outpatient Department Section</h3>
+              <app-outpatient-department-from-file>
+              </app-outpatient-department-from-file>
+            </div>
+          </div>
+        </mat-tab>
+
+
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

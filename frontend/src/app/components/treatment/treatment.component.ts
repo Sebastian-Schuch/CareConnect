@@ -438,14 +438,12 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
 
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Backspace') {
-      if (event.target === this.patientInput.nativeElement) {
-        this.treatmentForm.get('patient')?.setValue('');
-        setTimeout(() => {
-          if (this.patientAutoTrigger) {
-            this.patientAutoTrigger.openPanel();
-          }
-        });
-      }
+      this.treatmentForm.get('patient')?.setValue('');
+      setTimeout(() => {
+        if (this.patientAutoTrigger) {
+          this.patientAutoTrigger.openPanel();
+        }
+      });
       if (event.target === this.outpatientDepartmentInput.nativeElement) {
         this.treatmentForm.get('outpatientDepartment')?.setValue('');
         setTimeout(() => {

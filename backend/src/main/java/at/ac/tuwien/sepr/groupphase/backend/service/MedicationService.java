@@ -67,4 +67,12 @@ public interface MedicationService {
      */
     MedicationDto update(MedicationDto medicationDto);
 
+
+    /**
+     * Get the count of all medications.
+     *
+     * @return the count of all medications
+     */
+    int getMedicationCount();
+
 }
