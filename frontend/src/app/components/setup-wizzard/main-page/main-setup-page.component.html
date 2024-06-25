@@ -45,7 +45,6 @@
                  color="red">
           <div class="row">
             <div class="col-12">
-              <h3>Medication Section</h3>
               <div class="row">
                 <div class="col-md-4">
                   <app-medication-list
@@ -55,7 +54,7 @@
                 </div>
                 <div class="col-md-8">
                   <mat-tab-group dynamicHeight="true">
-                  <mat-tab label="add manual">
+                  <mat-tab label="Add manual">
                     <app-medication-create
                       (creationSuccess)="onMedicationCreated()"
                       [mode]="MedicationCreateEditMode.CREATE"

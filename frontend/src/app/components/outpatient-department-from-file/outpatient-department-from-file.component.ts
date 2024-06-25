@@ -5,6 +5,10 @@ import {OutpatientDepartmentService} from "../../services/outpatient-department.
 import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
 import {forkJoin, map} from "rxjs";
 
+function containsKey(obj: any, key: string): boolean {
+  return obj && obj.hasOwnProperty(key);
+}
+
 @Component({
   selector: 'app-outpatient-department-from-file',
   templateUrl: './outpatient-department-from-file.component.html',
@@ -27,7 +31,11 @@ export class OutpatientDepartmentFromFileComponent {
     if (file) {
       this.csvConverterService.parsCsvToOutPatientDepartment(file).then(
         (data) => {
-          this.jsonData = data.filter(i => i.name !== '');
+          this.jsonData = data.filter(i => i.name !== ''
+            && containsKey(i,'name')
+            && containsKey(i,'description')
+            && containsKey(i,'capacity')
+            && containsKey(i,'openingHours'));
           this.error = null;
           console.log("Parsed data:", this.jsonData);
         },

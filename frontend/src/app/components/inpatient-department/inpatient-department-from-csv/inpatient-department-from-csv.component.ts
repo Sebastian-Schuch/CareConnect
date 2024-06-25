@@ -5,6 +5,10 @@ import {catchError, forkJoin, of} from "rxjs";
 import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
 import {InpatientDepartmentService} from "../../../services/inpatient-department.service";
 
+function containsKey(obj: any, key: string): boolean {
+  return obj && obj.hasOwnProperty(key);
+}
+
 @Component({
   selector: 'app-inpatient-department-from-csv',
   templateUrl: './inpatient-department-from-csv.component.html',
@@ -68,7 +72,7 @@ export class InpatientDepartmentFromCsvComponent {
               capacity: item.capacity
             };
           })
-          this.jsonData = converted.filter(i => i.name !== '');
+          this.jsonData = converted.filter(i => i.name !== '' && containsKey(i, 'capacity') && containsKey(i, 'name'));
           console.log("data", this.jsonData)
           this.error = null;
         },
