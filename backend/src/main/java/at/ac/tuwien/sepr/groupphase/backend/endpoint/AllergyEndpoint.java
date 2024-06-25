@@ -45,6 +45,7 @@ public class AllergyEndpoint {
      * Create a new allergy.
      *
      * @param toCreate the data for the allergy to create
+     *
      * @return the created allergy
      */
     @Secured({"ADMIN"})
@@ -60,6 +61,7 @@ public class AllergyEndpoint {
      * Get a specific allergy.
      *
      * @param id the id of the allergy requested
+     *
      * @return the allergy requested
      */
     @Secured({"ADMIN", "SECRETARY", "DOCTOR", "PATIENT"})
@@ -67,6 +69,20 @@ public class AllergyEndpoint {
     public AllergyDto find(@PathVariable(name = "id") Long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
         return allergyMapper.allergyToDto(this.allergyService.findById(id));
+    }
+
+    /**
+     * Get a specific allergy by name.
+     *
+     * @param name the name of the allergy requested
+     *
+     * @return the allergy requested
+     */
+    @Secured({"ADMIN", "SECRETARY", "DOCTOR", "PATIENT"})
+    @GetMapping(value = "/name/{name}")
+    public AllergyDto findByName(@PathVariable(name = "name") String name) {
+        LOG.info("GET " + BASE_PATH + "/{}", name);
+        return allergyMapper.allergyToDto(this.allergyService.findByName(name));
     }
 
     /**
@@ -92,6 +108,7 @@ public class AllergyEndpoint {
      *
      * @param id       the id of the allergy to update
      * @param toUpdate the data to update the allergy with
+     *
      * @return the updated allergy
      */
     @Secured({"ADMIN"})
@@ -137,5 +154,13 @@ public class AllergyEndpoint {
     public AllergyDto setAllergyInactiveById(@PathVariable("id") Long id) {
         LOG.info("setOutpatientDepartmentInactiveById({})", id);
         return allergyService.setAllergyInactive(id);
+    }
+
+    @Secured({"ADMIN"})
+    @GetMapping(value = "/count")
+    @Operation(summary = "Get count of all allergies")
+    public int countAllergies() {
+        LOG.info("GET " + BASE_PATH + "/count");
+        return allergyService.countAllergies();
     }
 }

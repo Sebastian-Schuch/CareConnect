@@ -38,6 +38,7 @@ public class MedicationEndpoint {
      * The create endpoint for the medication.
      *
      * @param toCreate the data for the medication to create
+     *
      * @return the created medication
      */
     @Secured("ADMIN")
@@ -119,5 +120,12 @@ public class MedicationEndpoint {
     public MedicationDto update(@PathVariable(name = "id") Long id, @RequestBody MedicationDto toUpdate) {
         LOG.info("PUT" + BASE_PATH + "/{}", id);
         return medicationService.update(new MedicationDto(id, toUpdate.name(), toUpdate.active(), toUpdate.unitOfMeasurement()));
+    }
+
+    @Secured({"ADMIN", "PATIENT", "SECRETARY", "DOCTOR"})
+    @GetMapping("/count")
+    public int getMedicationCount() {
+        LOG.info("GET " + BASE_PATH + "/count");
+        return this.medicationService.getMedicationCount();
     }
 }

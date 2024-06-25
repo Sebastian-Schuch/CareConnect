@@ -32,7 +32,7 @@ import {MatAnchor, MatButton, MatFabButton, MatIconButton} from "@angular/materi
 import {InpatientDepartmentComponent} from "./components/inpatient-department/inpatient-department.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {LoginComponent} from "./components/login/login.component";
-import {MedicationCreateComponent} from "./components/medication-create/medication-create.component";
+import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
 import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import {CalenderComponent} from "./components/appointments/calender/calendar/calender.component";
@@ -56,17 +56,29 @@ import {
   AppointmentsSecretaryComponent
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
 import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog/new-chat-dialog.component";
+import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
+import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
+import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/allergy-from-file.component";
+import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
+import {MedicationFromFileComponent} from "./components/medication/medication-from-file/medication-from-file.component";
+import {
+  OutpatientDepartmentFromFileComponent
+} from "./components/outpatient-department-from-file/outpatient-department-from-file.component";
+import {
+  InpatientDepartmentFromCsvComponent
+} from "./components/inpatient-department/inpatient-department-from-csv/inpatient-department-from-csv.component";
+import {SmallListComponent} from "./components/inpatient-department/small-list/small-list.component";
 import {
   MedicationFormModalComponent
 } from "./components/treatment/medication-form-modal/medication-form-modal.component";
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
-import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
-import { HalfDonutChartComponent } from './components/half-donut-chart/half-donut-chart.component';
 import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
-import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
+import {HalfDonutChartComponent} from "./components/half-donut-chart/half-donut-chart.component";
 
 @NgModule({
   declarations: [
@@ -86,6 +98,15 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
     CalendarWrapperComponent,
     AppointmentsPatientComponent,
     AppointmentsSecretaryComponent,
+    LandingPatientComponent,
+    MainSetupPage,
+    AllergyListComponent,
+    AllergyFromFileComponent,
+    MedicationListComponent,
+    MedicationFromFileComponent,
+    OutpatientDepartmentFromFileComponent,
+    InpatientDepartmentFromCsvComponent,
+    SmallListComponent,
     LandingPatientComponent,
     MedicationFormModalComponent,
     OutpatientDepartmentCapacitiesComponent
@@ -141,7 +162,8 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
     MatButtonToggleGroup,
     MatButtonToggle,
     MatTabGroup,
-    MatTab
+    MatTab,
+    NewChatDialogComponent,
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()

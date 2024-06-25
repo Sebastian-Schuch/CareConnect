@@ -39,6 +39,10 @@ export class OutpatientDepartmentService {
     return this.httpClient.post<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri, outpatientDepartment);
   }
 
+  getOutpatientDepartmentCount(): Observable<number> {
+    return this.httpClient.get<number>(this.outpatientDepartmentBaseUri + '/count');
+  }
+
   deleteOutpatientDepartment(id: number) {
     return this.httpClient.delete<OutpatientDepartmentDto>(this.outpatientDepartmentBaseUri + '/' + id);
   }

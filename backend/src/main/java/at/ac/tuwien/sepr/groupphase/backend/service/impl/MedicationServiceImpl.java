@@ -114,4 +114,10 @@ public class MedicationServiceImpl implements MedicationService {
         existingMedication.setName(medicationDto.name());
         return medicationMapper.medicationEntityToMedicationDto(medicationRepository.save(existingMedication));
     }
+
+    @Override
+    public int getMedicationCount() {
+        LOG.trace("getMedicationCount()");
+        return medicationRepository.findAll().size();
+    }
 }
