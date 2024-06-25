@@ -94,8 +94,8 @@ public class DataGeneratorForDevelopment {
         LOG.info("Generating data…");
         messageRepository.deleteAll();
         appointmentRepository.deleteAll();
-        treatmentMedicineRepository.deleteAll();
         treatmentRepository.deleteAll();
+        treatmentMedicineRepository.deleteAll();
         inpatientDepartmentRepository.deleteAll();
         outpatientDepartmentRepository.deleteAll();
         patientRepository.deleteAll();
