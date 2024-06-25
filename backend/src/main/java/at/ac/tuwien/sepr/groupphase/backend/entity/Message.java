@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ public class Message {
     private Long id;
 
     @Convert(converter = EncryptorConverter.class)
+    @Column(length = 2048)
     private String content;
 
     @NotNull

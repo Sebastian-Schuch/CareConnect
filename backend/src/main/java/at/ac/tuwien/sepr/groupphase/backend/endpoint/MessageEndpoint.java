@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MessageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MessageDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.service.MessageService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -39,7 +40,7 @@ public class MessageEndpoint {
      * @param headerAccessor the header accessor
      */
     @MessageMapping("/chat/{to}")
-    public void sendMessage(@Payload MessageDtoCreate message, SimpMessageHeaderAccessor headerAccessor) {
+    public void sendMessage(@Payload @Valid MessageDtoCreate message, SimpMessageHeaderAccessor headerAccessor) {
         LOGGER.info("Message sent to treatment chat: {}", message.treatmentId());
         MessageDto returnMessage = messageService.sendMessage(message, headerAccessor.getUser());
         if (returnMessage != null) {

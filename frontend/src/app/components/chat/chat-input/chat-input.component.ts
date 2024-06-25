@@ -20,10 +20,10 @@ import {MatInput} from "@angular/material/input";
 })
 export class ChatInputComponent {
   @Output() sendMessage = new EventEmitter<string>();
-  message: string;
+  message: string = '';
 
   send() {
-    if (this.message && this.message.trim()) {
+    if (this.message && this.message.trim() && this.message.trim().length <= 1024) {
       this.sendMessage.emit(this.message.trim());
       this.message = '';
     }
