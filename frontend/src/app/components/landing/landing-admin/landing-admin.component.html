@@ -23,6 +23,10 @@
     <span class="label">Allergies:</span>
     <span class="value">{{ allergies }}</span>
   </div>
+  <div class="info-item" [ngClass]="{'green': inDepartments > 0}">
+    <span class="label">In patient department:</span>
+    <span class="value">{{ inDepartments }}</span>
+  </div>
   <div class="info-item" [ngClass]="{'green': stations > 0}">
     <span class="label">Out patient department:</span>
     <span class="value">{{ stations }}</span>

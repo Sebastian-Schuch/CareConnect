@@ -54,6 +54,7 @@ public class InpatientDepartmentEndpoint {
      * Create a new inpatient department.
      *
      * @param toCreate the data for the inpatient department to create
+     *
      * @return the created inpatient department
      */
     @Secured({"ADMIN"})
@@ -95,6 +96,7 @@ public class InpatientDepartmentEndpoint {
      * Get an inpatient department by id.
      *
      * @param id the id of the inpatient department
+     *
      * @return the inpatient department
      */
     @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
@@ -128,5 +130,13 @@ public class InpatientDepartmentEndpoint {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");
         }
         return this.inpatientDepartmentService.updateInpatientDepartment(toUpdate);
+    }
+
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping(value = "/count")
+    @Operation(summary = "Count inpatient departments")
+    public int countInpatientDepartments() {
+        LOG.info("GET " + BASE_PATH + "/count");
+        return inpatientDepartmentService.countInpatientDepartments();
     }
 }

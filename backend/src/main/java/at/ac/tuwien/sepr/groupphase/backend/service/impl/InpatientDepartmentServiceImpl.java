@@ -71,7 +71,8 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
     @Override
     public InpatientDepartmentDto updateInpatientDepartment(InpatientDepartmentDto toUpdate) {
         LOG.trace("updateInpatientDepartment({})", toUpdate);
-        InpatientDepartment inpatientDepartmentToUpdate = inpatientDepartmentRepository.findById(toUpdate.id()).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
+        InpatientDepartment inpatientDepartmentToUpdate =
+            inpatientDepartmentRepository.findById(toUpdate.id()).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
         inpatientDepartmentToUpdate.setName(toUpdate.name());
         inpatientDepartmentToUpdate.setCapacity(toUpdate.capacity());
         return inpatientDepartmentMapper.inpatientDepartmentToDto(inpatientDepartmentRepository.save(inpatientDepartmentToUpdate));
@@ -83,5 +84,11 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
         InpatientDepartment toDisable = inpatientDepartmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
         inpatientDepartmentRepository.save(toDisable.setActive(false));
         return inpatientDepartmentMapper.inpatientDepartmentToDto(toDisable);
+    }
+
+    @Override
+    public int countInpatientDepartments() {
+        LOG.trace("countInpatientDepartments()");
+        return (int) inpatientDepartmentRepository.count();
     }
 }

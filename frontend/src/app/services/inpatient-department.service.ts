@@ -43,4 +43,8 @@ export class InpatientDepartmentService {
   editInpatientDepartment(update: InpatientDepartmentDto) {
     return this.http.post<InpatientDepartmentDto>(this.inpatientDepartmentUri + `/${update.id}`, update);
   }
+
+  public getInpatientDepartmentCount(): Observable<number> {
+    return this.http.get<number>(this.inpatientDepartmentUri + '/count');
+  }
 }

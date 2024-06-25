@@ -9,6 +9,7 @@ import {MedicationService} from "../../../services/medication.service";
 import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
 import {forkJoin} from "rxjs";
 import {NgClass, NgIf} from "@angular/common";
+import {InpatientDepartmentService} from "../../../services/inpatient-department.service";
 
 @Component({
   selector: 'app-landing-admin',
@@ -30,7 +31,8 @@ export class LandingAdminComponent implements OnInit {
     public authService: AuthService, private router: Router,
     public allergieService: AllergyService,
     public medicationService: MedicationService,
-    public departmentService: OutpatientDepartmentService
+    public departmentService: OutpatientDepartmentService,
+    public inPatientDepartment : InpatientDepartmentService
   ) {
   }
 
@@ -38,19 +40,22 @@ export class LandingAdminComponent implements OnInit {
   public meds=0;
   public allergies=0;
   public stations=0;
+  public inDepartments: number=0;
 
   ngOnInit() {
     forkJoin({
       allergiesCount: this.allergieService.countAllergies(),
       medicationsCount: this.medicationService.getMedicationCount(),
-      departmentsCount: this.departmentService.getOutpatientDepartmentCount()
+      departmentsCount: this.departmentService.getOutpatientDepartmentCount(),
+      inDepartmentsCount: this.inPatientDepartment.getInpatientDepartmentCount()
     }).subscribe({
-      next: ({ allergiesCount, medicationsCount, departmentsCount }) => {
+      next: ({ allergiesCount, medicationsCount, departmentsCount, inDepartmentsCount}) => {
         this.allergies = allergiesCount;
         this.meds = medicationsCount;
         this.stations = departmentsCount;
+        this.inDepartments = inDepartmentsCount;
 
-        if (allergiesCount > 0 && medicationsCount > 0 && departmentsCount > 0) {
+        if (allergiesCount > 0 && medicationsCount > 0 && departmentsCount > 0 && inDepartmentsCount > 0) {
           this.setupActive = false;
         }
 
