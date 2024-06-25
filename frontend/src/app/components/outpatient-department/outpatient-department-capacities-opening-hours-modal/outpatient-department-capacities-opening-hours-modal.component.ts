@@ -8,8 +8,8 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
-import {OpeningHoursDayDto} from "../../dtos/opening-hours";
+import {OutpatientDepartmentDto} from "../../../dtos/outpatient-department";
+import {OpeningHoursDayDto} from "../../../dtos/opening-hours";
 
 @Component({
   selector: 'app-outpatient-department-capacities-opening-hours-modal',
@@ -22,7 +22,7 @@ import {OpeningHoursDayDto} from "../../dtos/opening-hours";
     MatDialogTitle
   ],
   templateUrl: './outpatient-department-capacities-opening-hours-modal.component.html',
-  styleUrls: ['./outpatient-department-capacities-opening-hours-modal.component.scss', '../../../styles.scss']
+  styleUrls: ['./outpatient-department-capacities-opening-hours-modal.component.scss', '../../../../styles.scss']
 })
 export class OutpatientDepartmentCapacitiesOpeningHoursModalComponent {
 

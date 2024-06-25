@@ -3,16 +3,16 @@ import {FormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {NgForOf, NgIf} from "@angular/common";
-import {AuthService} from "../../services/auth.service";
-import {Role} from "../../dtos/Role";
-import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
-import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {MatDialog} from "@angular/material/dialog";
 import {
   OutpatientDepartmentDeleteComponent
 } from "../outpatient-department-delete/outpatient-department-delete.component";
 import {ToastrService} from "ngx-toastr";
 import {RouterLink} from "@angular/router";
+import {OutpatientDepartmentDto} from "../../../dtos/outpatient-department";
+import {AuthService} from "../../../services/auth.service";
+import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
+import {Role} from "../../../dtos/Role";
 
 @Component({
   selector: 'app-outpatient-department-list',

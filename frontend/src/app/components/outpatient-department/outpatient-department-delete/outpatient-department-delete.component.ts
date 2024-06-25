@@ -20,7 +20,7 @@ import {
     MatDialogTitle
   ],
   templateUrl: './outpatient-department-delete.component.html',
-  styleUrls: ['./outpatient-department-delete.component.scss', '../../../styles.scss']
+  styleUrls: ['./outpatient-department-delete.component.scss', '../../../../styles.scss']
 })
 export class OutpatientDepartmentDeleteComponent {
   constructor(

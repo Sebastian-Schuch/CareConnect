@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {OutpatientDepartmentDto, OutpatientDepartmentDtoCreate} from "../../dtos/outpatient-department";
-import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {ToastrService} from "ngx-toastr";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ErrorFormatterService} from "../../services/error-formatter.service";
-import {OpeningHoursDayDto, OpeningHoursDto, OpeningHoursDtoCreate} from "../../dtos/opening-hours";
 import {Observable} from "rxjs";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
+import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
+import {OutpatientDepartmentDto, OutpatientDepartmentDtoCreate} from "../../../dtos/outpatient-department";
+import {OpeningHoursDayDto, OpeningHoursDto, OpeningHoursDtoCreate} from "../../../dtos/opening-hours";
 
 export enum OutpatientDepartmentCreateEditMode {
   create,
@@ -15,7 +15,7 @@ export enum OutpatientDepartmentCreateEditMode {
 @Component({
   selector: 'app-outpatient-department-create-edit',
   templateUrl: './outpatient-department.component-create-edit.html',
-  styleUrls: ['./outpatient-department.component-create-edit.scss', '../../../styles.scss']
+  styleUrls: ['./outpatient-department.component-create-edit.scss', '../../../../styles.scss']
 })
 export class OutpatientDepartmentComponent implements OnInit {
 

@@ -1,15 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
-import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
+import {Component, OnInit} from '@angular/core';
+
 import {ActivatedRoute, Router} from "@angular/router";
-import {OpeningHoursDayDto} from "../../dtos/opening-hours";
-import {AuthService} from "../../services/auth.service";
-import {Role} from "../../dtos/Role";
+import {AuthService} from "../../../services/auth.service";
+import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
+import {OutpatientDepartmentDto} from "../../../dtos/outpatient-department";
+import {Role} from "../../../dtos/Role";
+import {OpeningHoursDayDto} from "../../../dtos/opening-hours";
+
 
 @Component({
   selector: 'app-outpatient-department-detail',
   templateUrl: './outpatient-department-detail.component.html',
-  styleUrls: ['./outpatient-department-detail.component.scss', '../../../styles.scss']
+  styleUrls: ['./outpatient-department-detail.component.scss', '../../../../styles.scss']
 })
 export class OutpatientDepartmentDetailComponent implements OnInit {
 
@@ -93,9 +95,11 @@ export class OutpatientDepartmentDetailComponent implements OnInit {
   }
 
   mapOpeningHour(existingOpeningHour: OpeningHoursDayDto): OpeningHoursDayDto {
-    return {isClosed: existingOpeningHour === null ? true : existingOpeningHour.isClosed,
+    return {
+      isClosed: existingOpeningHour === null ? true : existingOpeningHour.isClosed,
       open: existingOpeningHour === null ? undefined : existingOpeningHour.open,
-      close: existingOpeningHour === null ? undefined : existingOpeningHour.close}
+      close: existingOpeningHour === null ? undefined : existingOpeningHour.close
+    }
   }
 
   protected readonly Role = Role;

@@ -10,12 +10,8 @@ import {FooterComponent} from './components/footer/footer.component';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {UserCreateComponent} from "./components/user/user-create-edit/user-create.component";
-import {
-  OutpatientDepartmentComponent
-} from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
-import {
-  OutpatientDepartmentDetailComponent
-} from "./components/outpatient-department-detail/outpatient-department-detail.component";
+
+
 import {TreatmentComponent} from "./components/treatment/treatment.component";
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {MatChipsModule} from "@angular/material/chips";
@@ -75,14 +71,21 @@ import {SmallListComponent} from "./components/inpatient-department/small-list/s
 import {
   MedicationFormModalComponent
 } from "./components/treatment/medication-form-modal/medication-form-modal.component";
-import {
-  OutpatientDepartmentCapacitiesComponent
-} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
+
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 import {HalfDonutChartComponent} from "./components/half-donut-chart/half-donut-chart.component";
+import {
+  OutpatientDepartmentComponent
+} from "./components/outpatient-department/outpatient-department-create-edit/outpatient-department-create-edit.component";
+import {
+  OutpatientDepartmentDetailComponent
+} from "./components/outpatient-department/outpatient-department-detail/outpatient-department-detail.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department/outpatient-department-capacities/outpatient-department-capacities.component";
 
 @NgModule({
   declarations: [

@@ -22,10 +22,6 @@ import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-cr
 import {Role} from "./dtos/Role";
 import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatment/treatment.component";
 import {
-  OutpatientDepartmentComponent,
-  OutpatientDepartmentCreateEditMode
-} from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
-import {
   InpatientDepartmentComponent,
   InpatientDepartmentCreateEditMode
 } from "./components/inpatient-department/inpatient-department.component";
@@ -42,25 +38,30 @@ import {
 } from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
 import {ApiKeyComponent} from "./components/api-key/api-key.component";
 import {
-  OutpatientDepartmentListComponent
-} from "./components/outpatient-department-list/outpatient-department-list.component";
-import {
-  OutpatientDepartmentDetailComponent
-} from "./components/outpatient-department-detail/outpatient-department-detail.component";
-import {
   TreatmentListComponent,
   TreatmentListMode
 } from "./components/treatment/treatment-list/treatment-list.component";
 import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
 import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
-import {
-  OutpatientDepartmentCapacitiesComponent
-} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
+
 import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
 import {
   MedicationCreateComponent,
   MedicationCreateEditMode
 } from "./components/medication/medication-create/medication-create.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department/outpatient-department-capacities/outpatient-department-capacities.component";
+import {
+  OutpatientDepartmentComponent,
+  OutpatientDepartmentCreateEditMode
+} from "./components/outpatient-department/outpatient-department-create-edit/outpatient-department-create-edit.component";
+import {
+  OutpatientDepartmentListComponent
+} from "./components/outpatient-department/outpatient-department-list/outpatient-department-list.component";
+import {
+  OutpatientDepartmentDetailComponent
+} from "./components/outpatient-department/outpatient-department-detail/outpatient-department-detail.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},

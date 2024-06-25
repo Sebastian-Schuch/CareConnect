@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {OutpatientDepartmentService} from '../../services/outpatient-department.service';
 import {Chart, registerables} from 'chart.js';
 import {FormControl} from '@angular/forms';
 import {addDays, getDate, getMonth, getYear} from "date-fns";
@@ -7,15 +6,16 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   OutpatientDepartmentCapacitiesOpeningHoursModalComponent
 } from "../outpatient-department-capacities-opening-hours-modal/outpatient-department-capacities-opening-hours-modal.component";
-import {Role} from "../../dtos/Role";
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../../../services/auth.service";
+import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
+import {Role} from "../../../dtos/Role";
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-outpatient-department-capacities',
   templateUrl: './outpatient-department-capacities.component.html',
-  styleUrls: ['./outpatient-department-capacities.component.scss', '../../../styles.scss']
+  styleUrls: ['./outpatient-department-capacities.component.scss', '../../../../styles.scss']
 })
 export class OutpatientDepartmentCapacitiesComponent implements OnInit {
   departments: any[] = [];
