@@ -22,7 +22,7 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
     private final InpatientDepartmentMapper inpatientDepartmentMapper;
     InpatientDepartmentRepository inpatientDepartmentRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public InpatientDepartmentServiceImpl(InpatientDepartmentRepository inpatientDepartmentRepository, InpatientDepartmentMapper inpatientDepartmentMapper) {
         this.inpatientDepartmentRepository = inpatientDepartmentRepository;
@@ -31,35 +31,36 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
 
     @Override
     public InpatientDepartment findById(Long id) {
+        LOG.trace("findById({})", id);
         try {
             if (id == null) {
-                LOGGER.warn("Id is null");
+                LOG.warn("Id is null");
                 throw new IllegalArgumentException("Id is null");
             }
             InpatientDepartment data = inpatientDepartmentRepository.findByIdAndActiveTrue(id);
             if (data == null) {
-                LOGGER.warn("Could not find inpatient department with id {}", id);
+                LOG.warn("Could not find inpatient department with id {}", id);
                 throw new NotFoundException("Could not find inpatient department");
             } else {
                 return data;
             }
 
         } catch (IllegalArgumentException e) {
-            LOGGER.warn("Can not search for null id.");
+            LOG.warn("Can not search for null id.");
             throw new IllegalArgumentException("Can not search for null id.");
         }
     }
 
     @Override
     public InpatientDepartmentPageDto findAll(Specification<InpatientDepartment> spec, Pageable pageable) {
-        LOGGER.trace("findAll({},{})", spec, pageable);
+        LOG.trace("findAll({},{})", spec, pageable);
         Page<InpatientDepartment> inpatientDepartments = inpatientDepartmentRepository.findAll(spec, pageable);
         return inpatientDepartmentMapper.toInpatientDepartmentPageDto(inpatientDepartments);
     }
 
     @Override
     public InpatientDepartment createInpatientDepartment(InpatientDepartmentDtoCreate toCreate) {
-        LOGGER.trace("createInpatientDepartment({})", toCreate);
+        LOG.trace("createInpatientDepartment({})", toCreate);
         InpatientDepartment inpatientDepartment = new InpatientDepartment();
         inpatientDepartment.setName(toCreate.name());
         inpatientDepartment.setCapacity(toCreate.capacity());
@@ -69,7 +70,7 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
 
     @Override
     public InpatientDepartmentDto updateInpatientDepartment(InpatientDepartmentDto toUpdate) {
-        LOGGER.trace("updateInpatientDepartment({})", toUpdate);
+        LOG.trace("updateInpatientDepartment({})", toUpdate);
         InpatientDepartment inpatientDepartmentToUpdate = inpatientDepartmentRepository.findById(toUpdate.id()).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
         inpatientDepartmentToUpdate.setName(toUpdate.name());
         inpatientDepartmentToUpdate.setCapacity(toUpdate.capacity());
@@ -78,7 +79,7 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
 
     @Override
     public InpatientDepartmentDto deleteInpatientDepartment(Long id) {
-        LOGGER.trace("deleteInpatientDepartment({})", id);
+        LOG.trace("deleteInpatientDepartment({})", id);
         InpatientDepartment toDisable = inpatientDepartmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Inpatient department not found"));
         inpatientDepartmentRepository.save(toDisable.setActive(false));
         return inpatientDepartmentMapper.inpatientDepartmentToDto(toDisable);

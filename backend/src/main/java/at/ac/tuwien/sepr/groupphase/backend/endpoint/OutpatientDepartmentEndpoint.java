@@ -37,7 +37,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/outpatient-departments")
 public class OutpatientDepartmentEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final OutpatientDepartmentService outpatientDepartmentService;
 
     public OutpatientDepartmentEndpoint(OutpatientDepartmentService outpatientDepartmentService) {
@@ -56,7 +56,7 @@ public class OutpatientDepartmentEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     public OutpatientDepartmentDto createOutpatientDepartment(@Valid @RequestBody OutpatientDepartmentDtoCreate outpatientDepartmentDto)
         throws MethodArgumentNotValidException {
-        LOGGER.info("createOutpatientDepartment(" + outpatientDepartmentDto.toString() + ")");
+        LOG.info("createOutpatientDepartment(" + outpatientDepartmentDto.toString() + ")");
         return outpatientDepartmentService.createOutpatientDepartment(outpatientDepartmentDto);
     }
 
@@ -69,7 +69,7 @@ public class OutpatientDepartmentEndpoint {
     @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/{id}"})
     public OutpatientDepartmentDto getOutpatientDepartmentById(@PathVariable("id") Long id) {
-        LOGGER.info("getOutpatientDepartmentById(" + id + ")");
+        LOG.info("getOutpatientDepartmentById(" + id + ")");
         return outpatientDepartmentService.getOutpatientDepartmentById(id);
     }
 
@@ -81,7 +81,7 @@ public class OutpatientDepartmentEndpoint {
     @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
-        LOGGER.info("getAllOutpatientDepartments()");
+        LOG.info("getAllOutpatientDepartments()");
         return outpatientDepartmentService.getAllOutpatientDepartments();
     }
 
@@ -89,6 +89,7 @@ public class OutpatientDepartmentEndpoint {
     @GetMapping("/capacities/day")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForDay(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        LOG.info("getOutpatientDepartmentCapacitiesForDay({})", date);
         return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForDay(date);
     }
 
@@ -96,6 +97,7 @@ public class OutpatientDepartmentEndpoint {
     @GetMapping("/capacities/week")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForWeek(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate) {
+        LOG.info("getOutpatientDepartmentCapacitiesForWeek({})", startDate);
         return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForWeek(startDate);
     }
 
@@ -103,6 +105,7 @@ public class OutpatientDepartmentEndpoint {
     @GetMapping("/capacities/month")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForMonth(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
+        LOG.info("getOutpatientDepartmentCapacitiesForMonth({})", date);
         return outpatientDepartmentService.getOutpatientDepartmentCapacitiesForMonth(date);
     }
 
@@ -118,7 +121,7 @@ public class OutpatientDepartmentEndpoint {
         @RequestParam(name = "size", defaultValue = "20") Integer size,
         @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm
     ) {
-        LOGGER.info("getOutpatientDepartmentPage()");
+        LOG.info("getOutpatientDepartmentPage()");
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
         Specification<OutpatientDepartment> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -133,7 +136,7 @@ public class OutpatientDepartmentEndpoint {
     @PostMapping({"/{id}"})
     public OutpatientDepartmentDto updateOutpatientDepartment(@PathVariable("id") Long id,
                                                               @Valid @RequestBody OutpatientDepartmentDto toUpdate) {
-        LOGGER.info("updateOutpatientDepartment(" + id + ", " + toUpdate.toString() + ")");
+        LOG.info("updateOutpatientDepartment({},{})", id, toUpdate);
         if (!id.equals(toUpdate.id())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");
         }
@@ -149,7 +152,7 @@ public class OutpatientDepartmentEndpoint {
     @Secured({"ADMIN"})
     @DeleteMapping({"/{id}"})
     public OutpatientDepartmentDto setOutpatientDepartmentInactiveById(@PathVariable("id") Long id) {
-        LOGGER.info("setOutpatientDepartmentInactiveById(" + id + ")");
+        LOG.info("setOutpatientDepartmentInactiveById({})", id);
         return outpatientDepartmentService.setOutpatientDepartmentInactive(id);
     }
 }

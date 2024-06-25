@@ -16,7 +16,7 @@ import java.lang.invoke.MethodHandles;
 @Profile("default")
 public class DataGeneratorForProduction {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final AdminRepository adminRepository;
 
@@ -26,9 +26,9 @@ public class DataGeneratorForProduction {
 
     @PostConstruct
     public void generateData() {
-        LOGGER.info("Generating admin account…");
+        LOG.info("Generating admin account…");
         if (adminRepository.count() > 0) {
-            LOGGER.info("Admin account already exists. Skipping generation.");
+            LOG.info("Admin account already exists. Skipping generation.");
             return;
         }
         Credential credential = new Credential();
@@ -42,6 +42,6 @@ public class DataGeneratorForProduction {
         Admin admin = new Admin();
         admin.setCredential(credential);
         adminRepository.save(admin);
-        LOGGER.info("Finished generating account without error.");
+        LOG.info("Finished generating account without error.");
     }
 }

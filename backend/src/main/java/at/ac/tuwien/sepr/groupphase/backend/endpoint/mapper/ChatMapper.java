@@ -17,6 +17,7 @@ public class ChatMapper {
     private final MessageMapper messageMapper;
 
     public ChatMapper(MessageMapper messageMapper) {
+        LOG.trace("ChatMapper({})", messageMapper);
         this.messageMapper = messageMapper;
     }
 

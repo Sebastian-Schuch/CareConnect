@@ -69,22 +69,4 @@ public class MedicationServiceTest extends TestBase {
         List<MedicationDto> allMedications = medicationService.getAllMedications();
         assertEquals(0, allMedications.size());
     }
-    //TODO: adjust and refactor tests (Issue #60)
-    /*
-    @Test
-    public void givenThreeNewlyCreatedMedicationsInDatabase_whenGettingAllMedications_thenReturnThreeMedications() {
-        medicationRepository.deleteAll();
-        MedicationDtoCreate createMedicine = new MedicationDtoCreate("WieAgra");
-        MedicationDto createdMedicine1 = medicationService.create(createMedicine);
-        MedicationDtoCreate createMedicine2 = new MedicationDtoCreate("WieAgra2");
-        MedicationDto createdMedicine2 = medicationService.create(createMedicine2);
-        MedicationDtoCreate createMedicine3 = new MedicationDtoCreate("WieAgra3");
-        MedicationDto createdMedicine3 = medicationService.create(createMedicine3);
-        assertAll("Grouped Assertions of Medication",
-            () -> assertEquals(createMedicine.name(), createdMedicine1.name(), "Name should be equal"),
-
-            () -> assertEquals(createMedicine2.name(), createdMedicine2.name(), "Name should be equal"),
-
-            () -> assertEquals(createMedicine3.name(), createdMedicine3.name(), "Name should be equal"));
-    }*/
 }

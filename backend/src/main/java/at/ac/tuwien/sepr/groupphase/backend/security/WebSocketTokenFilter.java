@@ -15,7 +15,7 @@ import java.lang.invoke.MethodHandles;
 
 @Component
 public class WebSocketTokenFilter implements ChannelInterceptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final JwtAuthorizationFilter jwtUtils;
 
 
@@ -25,6 +25,7 @@ public class WebSocketTokenFilter implements ChannelInterceptor {
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        LOG.trace("preSend({})", message);
         final StompHeaderAccessor accessor =
             MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         if (StompCommand.CONNECT == accessor.getCommand()) {
@@ -34,17 +35,17 @@ public class WebSocketTokenFilter implements ChannelInterceptor {
                 try {
                     user = jwtUtils.getAuthTokenFromString(token);
                 } catch (Exception e) {
-                    LOGGER.error(e.getMessage());
+                    LOG.error(e.getMessage());
                 }
                 if (user != null) {
                     if (user.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("PATIENT"))) {
-                        LOGGER.info("User connected: {}", user.getName());
+                        LOG.info("User connected: {}", user.getName());
                         accessor.setUser(user);
                     } else if (user.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("DOCTOR"))) {
-                        LOGGER.info("User connected: {}", user.getName());
+                        LOG.info("User connected: {}", user.getName());
                         accessor.setUser(user);
                     } else {
-                        LOGGER.warn("Connection refused for: {}", user.getName());
+                        LOG.warn("Connection refused for: {}", user.getName());
                         return null;
                     }
 
@@ -56,6 +57,7 @@ public class WebSocketTokenFilter implements ChannelInterceptor {
     }
 
     private String parseJwt(StompHeaderAccessor accessor) {
+        LOG.trace("parseJwt({})", accessor);
         return accessor.getFirstNativeHeader("Authorization");
     }
 }

@@ -90,6 +90,7 @@ public class SecretaryServiceImpl implements SecretaryService {
 
     @Override
     public boolean isOwnRequest(Long userId) {
+        LOG.trace("isOwnRequest({})", userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("SECRETARY"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

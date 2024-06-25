@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +56,7 @@ public class MedicationMapper {
     }
 
     public MedicationPageDto toMedicationPageDto(Page<Medication> medicationPage) {
+        LOG.trace("toMedicationPageDto({})", medicationPage);
         return new MedicationPageDto(
             medicationEntitiesToListOfMedicationDto(medicationPage.getContent()),
             (int) medicationPage.getTotalElements()

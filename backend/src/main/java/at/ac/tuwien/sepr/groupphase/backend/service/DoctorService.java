@@ -56,14 +56,6 @@ public interface DoctorService {
     List<DoctorDtoSparse> getAllDoctors();
 
     /**
-     * Get the doctor by email.
-     *
-     * @param email the email of the doctor
-     * @return the doctor with the email given
-     */
-    DoctorDto getDoctorByEmail(String email);
-
-    /**
      * Find a doctor by the given credential.
      *
      * @param credential the credential to search for

@@ -14,10 +14,15 @@ import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SecretaryService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserCreationFacadeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.lang.invoke.MethodHandles;
 
 @Service
 public class UserCreationFacadeServiceImpl implements UserCreationFacadeService {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final DoctorService doctorService;
     private final SecretaryService secretaryService;
     private final PatientService patientService;
@@ -33,21 +38,25 @@ public class UserCreationFacadeServiceImpl implements UserCreationFacadeService 
 
     @Override
     public DoctorDto createUser(DoctorDtoCreate toCreate, Credential credential) {
+        LOG.trace("createDoctor({})", toCreate);
         return doctorService.createDoctor(toCreate, credential);
     }
 
     @Override
     public SecretaryDto createUser(SecretaryDtoCreate toCreate, Credential credential) {
+        LOG.trace("createSecretary({})", toCreate);
         return secretaryService.create(toCreate, credential);
     }
 
     @Override
     public PatientDto createUser(PatientDtoCreate toCreate, Credential credential) {
+        LOG.trace("createPatient({})", toCreate);
         return patientService.createPatient(toCreate, credential);
     }
 
     @Override
     public AdminDto createUser(AdminDtoCreate toCreate, Credential credential) {
+        LOG.trace("createAdmin({})", toCreate);
         return adminService.createAdministrator(toCreate, credential);
     }
 }

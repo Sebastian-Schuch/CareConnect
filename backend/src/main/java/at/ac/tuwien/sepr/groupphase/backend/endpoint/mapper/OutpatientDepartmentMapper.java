@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class OutpatientDepartmentMapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private OpeningHoursMapper openingHoursMapper;
 
@@ -34,7 +34,7 @@ public class OutpatientDepartmentMapper {
      * @return the Entity
      */
     public OutpatientDepartment dtoToEntity(OutpatientDepartmentDto dto, OpeningHours openingHours) {
-        LOGGER.trace("DtoToEntity(OutpatientDepartmentDto)");
+        LOG.trace("DtoToEntity(OutpatientDepartmentDto)");
         return new OutpatientDepartment().setId(dto.id())
             .setName(dto.name())
             .setDescription(dto.description())
@@ -51,7 +51,7 @@ public class OutpatientDepartmentMapper {
      * @return the Entity
      */
     public OutpatientDepartment dtoToEntity(OutpatientDepartmentDtoCreate dto, OpeningHours openingHours) {
-        LOGGER.trace("DtoToEntity(OutpatientDepartmentDtoCreate)");
+        LOG.trace("DtoToEntity(OutpatientDepartmentDtoCreate)");
         return new OutpatientDepartment().setId(null)
             .setName(dto.name())
             .setDescription(dto.description())
@@ -68,7 +68,7 @@ public class OutpatientDepartmentMapper {
      * @return the DTO
      */
     public OutpatientDepartmentDto entityToDto(OutpatientDepartment entity, OpeningHoursDto openingHoursDto) {
-        LOGGER.trace("entityToDto()");
+        LOG.trace("entityToDto()");
         return new OutpatientDepartmentDto(
             entity.getId(),
             entity.getName(),
@@ -85,7 +85,7 @@ public class OutpatientDepartmentMapper {
      * @return the list of DTOs
      */
     public List<OutpatientDepartmentDto> entitiesToDtos(List<OutpatientDepartment> entities) {
-        LOGGER.trace("entitiesToDtos()");
+        LOG.trace("entitiesToDtos()");
         return entities.stream()
             .map(entity -> {
                 return entityToDto(entity, openingHoursMapper.entityToDto(entity.getOpeningHours()));
