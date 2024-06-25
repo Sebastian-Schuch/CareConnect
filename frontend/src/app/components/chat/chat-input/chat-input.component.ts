@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatFormField} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
 import {FormsModule} from "@angular/forms";
@@ -20,6 +20,7 @@ import {MatInput} from "@angular/material/input";
 })
 export class ChatInputComponent {
   @Output() sendMessage = new EventEmitter<string>();
+  @Input() selectedChat: boolean = false;
   message: string = '';
 
   send() {
