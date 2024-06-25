@@ -38,7 +38,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.endpoint.InpatientDepartmentE
 @RequestMapping(value = BASE_PATH)
 public class InpatientDepartmentEndpoint {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     static final String BASE_PATH = "/api/v1/inpatient-departments";
 
@@ -61,7 +61,7 @@ public class InpatientDepartmentEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new inpatient department")
     public InpatientDepartmentDto create(@Valid @RequestBody InpatientDepartmentDtoCreate toCreate) {
-        LOGGER.info("POST " + BASE_PATH);
+        LOG.info("POST " + BASE_PATH);
         InpatientDepartment newInpatientDepartment = this.inpatientDepartmentService.createInpatientDepartment(toCreate);
         return inpatientDepartmentMapper.inpatientDepartmentToDto(newInpatientDepartment);
     }
@@ -79,7 +79,7 @@ public class InpatientDepartmentEndpoint {
         @RequestParam(name = "size", defaultValue = "20") Integer size,
         @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm
     ) {
-        LOGGER.info("GET " + BASE_PATH);
+        LOG.info("GET " + BASE_PATH);
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString("ASC"), "name");
         Specification<InpatientDepartment> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -101,7 +101,7 @@ public class InpatientDepartmentEndpoint {
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get an inpatient department")
     public InpatientDepartmentDto getById(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET " + BASE_PATH + "/{id}");
+        LOG.info("GET " + BASE_PATH + "/{id}");
         return inpatientDepartmentMapper.inpatientDepartmentToDto(this.inpatientDepartmentService.findById(id));
     }
 
@@ -115,7 +115,7 @@ public class InpatientDepartmentEndpoint {
     @DeleteMapping(value = "/{id}")
     @Operation(summary = "Delete an inpatient department")
     public InpatientDepartmentDto delete(@PathVariable(name = "id") Long id) {
-        LOGGER.info("DELETE " + BASE_PATH + "/{id}");
+        LOG.info("DELETE " + BASE_PATH + "/{id}");
         return this.inpatientDepartmentService.deleteInpatientDepartment(id);
     }
 
@@ -123,7 +123,7 @@ public class InpatientDepartmentEndpoint {
     @PostMapping(value = "/{id}")
     @Operation(summary = "Edit an inpatient department")
     public InpatientDepartmentDto edit(@PathVariable(name = "id") Long id, @Valid @RequestBody InpatientDepartmentDto toUpdate) {
-        LOGGER.info("POST " + BASE_PATH + "/{id}");
+        LOG.info("POST " + BASE_PATH + "/{id}");
         if (!id.equals(toUpdate.id())) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Id in path and body do not match");
         }

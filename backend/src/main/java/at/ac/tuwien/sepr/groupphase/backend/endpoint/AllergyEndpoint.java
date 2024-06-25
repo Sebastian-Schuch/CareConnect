@@ -31,7 +31,7 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/allergies")
 public class AllergyEndpoint {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String BASE_PATH = "/api/v1/allergies";
     private final AllergyService allergyService;
     private final AllergyMapper allergyMapper;
@@ -52,7 +52,7 @@ public class AllergyEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new allergy")
     public AllergyDto create(@Valid @RequestBody AllergyDtoCreate toCreate) {
-        LOGGER.info("POST " + BASE_PATH);
+        LOG.info("POST " + BASE_PATH);
         return allergyMapper.allergyToDto(this.allergyService.createAllergy(toCreate));
     }
 
@@ -65,7 +65,7 @@ public class AllergyEndpoint {
     @Secured({"ADMIN", "SECRETARY", "DOCTOR", "PATIENT"})
     @GetMapping(value = "/{id}")
     public AllergyDto find(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET " + BASE_PATH + "/{}", id);
+        LOG.info("GET " + BASE_PATH + "/{}", id);
         return allergyMapper.allergyToDto(this.allergyService.findById(id));
     }
 
@@ -78,11 +78,11 @@ public class AllergyEndpoint {
     @GetMapping
     @Operation(summary = "Get list of allergies without details")
     public List<AllergyDto> findAll() {
-        LOGGER.info("GET " + BASE_PATH);
+        LOG.info("GET " + BASE_PATH);
         try {
             return allergyMapper.allergyToDto(allergyService.findAll());
         } catch (NotFoundException e) {
-            LOGGER.info("No allergies found");
+            LOG.info("No allergies found");
             return List.of();
         }
     }
@@ -98,11 +98,11 @@ public class AllergyEndpoint {
     @PutMapping(value = "/{id}")
     @Operation(summary = "Update a new allergy")
     public AllergyDto update(@PathVariable(name = "id") Long id, @RequestBody AllergyDto toUpdate) {
-        LOGGER.info("POST " + BASE_PATH + "/{}", id);
+        LOG.info("POST " + BASE_PATH + "/{}", id);
         try {
             return allergyMapper.allergyToDto(this.allergyService.updateAllergy(new AllergyDto(id, toUpdate.name(), toUpdate.active())));
         } catch (NotFoundException e) {
-            LOGGER.info("Could not find allergy with id {}", id);
+            LOG.info("Could not find allergy with id {}", id);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find allergy");
         }
     }
@@ -122,7 +122,7 @@ public class AllergyEndpoint {
         @RequestParam(name = "size", defaultValue = "20") Integer size,
         @RequestParam(name = "allergyName", defaultValue = "") String searchTerm
     ) {
-        LOGGER.info("searchAllergies({}, {}, {})", page, size, searchTerm);
+        LOG.info("searchAllergies({}, {}, {})", page, size, searchTerm);
         return allergyService.searchAllergies(searchTerm, page, size);
     }
 
@@ -135,7 +135,7 @@ public class AllergyEndpoint {
     @Secured({"ADMIN"})
     @DeleteMapping({"/{id}"})
     public AllergyDto setAllergyInactiveById(@PathVariable("id") Long id) {
-        LOGGER.info("setOutpatientDepartmentInactiveById({})", id);
+        LOG.info("setOutpatientDepartmentInactiveById({})", id);
         return allergyService.setAllergyInactive(id);
     }
 }

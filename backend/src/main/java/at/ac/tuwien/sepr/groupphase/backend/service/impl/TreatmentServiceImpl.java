@@ -36,7 +36,7 @@ import java.util.List;
 @Service
 public class TreatmentServiceImpl implements TreatmentService {
 
-    private static final Logger log = LoggerFactory.getLogger(TreatmentServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TreatmentServiceImpl.class);
     private final TreatmentRepository treatmentRepository;
     private final TreatmentMapper treatmentMapper;
 
@@ -48,7 +48,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public TreatmentDto createTreatment(TreatmentDtoCreate treatmentDtoCreate) {
-        log.trace("createTreatment()");
+        LOG.trace("createTreatment()");
         Treatment treatment = treatmentMapper.dtoToEntity(treatmentDtoCreate);
         Treatment savedTreatment = treatmentRepository.save(treatment);
         return treatmentMapper.entityToDto(savedTreatment);
@@ -56,7 +56,7 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public TreatmentDto updateTreatment(Long id, TreatmentDtoCreate treatmentDtoCreate) throws NotFoundException {
-        log.trace("updateTreatment()");
+        LOG.trace("updateTreatment()");
         Treatment updatedTreatment = treatmentMapper.dtoToEntity(treatmentDtoCreate);
         updatedTreatment.setId(id);
 
@@ -66,10 +66,10 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public TreatmentDto getTreatmentById(Long id) throws NotFoundException {
-        log.trace("getTreatmentByID({})", id);
+        LOG.trace("getTreatmentByID({})", id);
         Treatment treatment = treatmentRepository.findById(id).orElse(null);
         if (treatment == null) {
-            log.warn("treatment with id {} not found", id);
+            LOG.warn("treatment with id {} not found", id);
             throw new NotFoundException("treatment with id " + id + " not found");
         }
         return treatmentMapper.entityToDto(treatment);
@@ -77,10 +77,10 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public Treatment getTreatmentEntityById(Long id) throws NotFoundException {
-        log.trace("getTreatmentEntityById({})", id);
+        LOG.trace("getTreatmentEntityById({})", id);
         Treatment treatment = treatmentRepository.findById(id).orElse(null);
         if (treatment == null) {
-            log.warn("treatment with id {} not found", id);
+            LOG.warn("treatment with id {} not found", id);
             throw new NotFoundException("treatment with id " + id + " not found");
         }
         return treatment;
@@ -88,21 +88,21 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public List<TreatmentDto> getAllTreatmentsFromPatient(Long patientId) {
-        log.trace("getAllTreatmentsFromPatient({})", patientId);
+        LOG.trace("getAllTreatmentsFromPatient({})", patientId);
         List<Treatment> treatments = treatmentRepository.findByPatient_PatientId(patientId);
         return treatmentMapper.entityListToDtoList(treatments);
     }
 
     @Override
     public List<TreatmentDto> getAllTreatmentsFromDoctor(Long doctorId) {
-        log.trace("getAllTreatmentsFromDoctor({})", doctorId);
+        LOG.trace("getAllTreatmentsFromDoctor({})", doctorId);
         List<Treatment> treatments = treatmentRepository.findByDoctors_DoctorId(doctorId);
         return treatmentMapper.entityListToDtoList(treatments);
     }
 
     @Override
     public TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams) {
-        log.trace("searchTreatments({})", searchParams);
+        LOG.trace("searchTreatments({})", searchParams);
         Pageable pageable = PageRequest.of(searchParams.page(), searchParams.size(), Sort.Direction.fromString("DESC"), "treatmentStart");
 
         Specification<Treatment> spec = (root, query, cb) -> {

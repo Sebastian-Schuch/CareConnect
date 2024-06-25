@@ -50,7 +50,7 @@ import java.util.List;
 @Component
 @Profile("datagen")
 public class DataGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private final AllergyRepository allergyRepository;
@@ -127,7 +127,7 @@ public class DataGenerator {
      * Generates dummy data in the database. This method is executed once when the component is instantiated.
      */
     public void generateData(String dataType) {
-        LOGGER.info("Generating data…");
+        LOG.info("Generating data…");
         switch (dataType) {
             case "allergy" -> generateDataInDb(true, false, false, false, false, false, false, false, false, false, false, false);
             case "administrator" -> generateDataInDb(false, false, true, false, false, false, false, false, false, false, false, false);
@@ -141,19 +141,19 @@ public class DataGenerator {
             case "treatmentMedicine" -> generateDataInDb(false, false, false, false, false, true, false, false, false, true, false, false);
             case "treatment" -> generateDataInDb(true, true, false, false, true, true, true, false, false, true, true, false);
             case "stay" -> generateDataInDb(false, false, false, true, true, false, false, true, false, false, false, false);
-            case "dataInterface" -> generateDataInDb(false, true, false,false, true, true, true, false, false, true, true, true);
+            case "dataInterface" -> generateDataInDb(false, true, false, false, true, true, true, false, false, true, true, true);
             default -> generateDataInDb(true, true, true, true, true, true, true, true, true, true, true, true);
         }
-        LOGGER.info("Finished generating data without error.");
+        LOG.info("Finished generating data without error.");
     }
 
     /**
      * Clears all dummy data from the database.
      */
     public void clearData() {
-        LOGGER.info("Clearing data…");
+        LOG.info("Clearing data…");
         clearDb();
-        LOGGER.info("Finished clearing data without error");
+        LOG.info("Finished clearing data without error");
     }
 
     private void clearDb() {
@@ -171,7 +171,8 @@ public class DataGenerator {
         openingHoursRepository.deleteAll();
     }
 
-    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication, boolean generateForOutpatientDepartments,
+    private void generateDataInDb(boolean generateForAllergies, boolean generateForDoctors, boolean generateForAdministrator, boolean generateForSecretary, boolean generateForPatients, boolean generateForMedication,
+                                  boolean generateForOutpatientDepartments,
                                   boolean generateForInpatientDepartments, boolean generateForAppointments, boolean generateForTreatmentMedicines, boolean generateForTreatments, boolean generateForApiKeys) {
         if (generateForAllergies) {
             generateDataForAllergies();

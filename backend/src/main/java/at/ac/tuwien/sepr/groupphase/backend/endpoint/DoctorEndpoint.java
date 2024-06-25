@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
@@ -156,6 +155,7 @@ public class DoctorEndpoint {
     @Secured({"SECRETARY", "DOCTOR", "ADMIN"})
     @GetMapping
     public Page<DoctorDtoSparse> getDoctors(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "50") int size, @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm) {
+        LOG.info("GET " + BASE_PATH);
         Pageable pageable = PageRequest.of(page, size);
         return doctorService.getDoctors(searchTerm, pageable);
     }

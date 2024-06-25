@@ -3,6 +3,10 @@
   flex-direction: column;
   flex: 1;
   height: 40vh;
+  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  min-height: 100%;
 }
 
 .messages {
@@ -22,6 +26,8 @@
   padding: 10px;
   border-radius: 5px;
   max-width: 60%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .my-message {
@@ -54,4 +60,11 @@
 
 .timestamp {
   margin-left: 10px;
+}
+
+.center-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }

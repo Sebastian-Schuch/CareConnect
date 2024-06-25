@@ -76,11 +76,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<AdminDtoSparse> getAllAdministrators() {
+        LOG.trace("getAllAdministrators()");
         return adminMapper.administratorsToAdministratorDtosSparse(adminRepository.findByCredential_ActiveTrue());
     }
 
     @Override
     public AdminDto getAdministratorByEmail(String email) {
+        LOG.trace("getAdministratorByEmail({})", email);
         return adminMapper.administratorToAdministratorDto(adminRepository.findByCredential_EmailAndCredential_ActiveTrue(email));
     }
 
@@ -103,6 +105,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean isOwnRequest(Long userId) {
+        LOG.trace("isOwnRequest({})", userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ADMIN"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

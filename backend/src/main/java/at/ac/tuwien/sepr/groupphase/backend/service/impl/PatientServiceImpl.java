@@ -7,12 +7,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import at.ac.tuwien.sepr.groupphase.backend.specification.DoctorSpecification;
 import at.ac.tuwien.sepr.groupphase.backend.specification.PatientSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,16 +66,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDto getPatientByEmail(String email) {
-        Patient patient = patientRepository.findByCredential_EmailAndCredential_ActiveTrue(email);
-        if (patient == null) {
-            LOG.warn("patient with email {} not found", email);
-            throw new NotFoundException("Patient not found");
-        }
-        return patientMapper.patientToPatientDto(patient);
-    }
-
-    @Override
     public PatientDtoSparse updatePatient(Long id, PatientDtoUpdate toUpdate) {
         LOG.trace("updatePatient({}, {})", id, toUpdate);
         Patient patient = patientRepository.findByPatientIdAndCredential_ActiveTrue(id);
@@ -107,11 +95,13 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<PatientDtoSparse> getAllPatients() {
+        LOG.trace("getAllPatients()");
         return patientMapper.patientsToPatientDtosSparse(patientRepository.findByCredential_ActiveTrue());
     }
 
     @Override
     public boolean isOwnRequest(Long userId) {
+        LOG.trace("isOwnRequest({})", userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("PATIENT"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -131,6 +121,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Page<PatientDtoSparse> getPatients(String searchTerm, Pageable pageable) {
+        LOG.trace("getPatients({}, {})", searchTerm, pageable);
         Specification<Patient> spec = Specification.where(PatientSpecification.containsTextInAnyField(searchTerm))
             .and(PatientSpecification.isActive());
         return patientRepository.findAll(spec, pageable)

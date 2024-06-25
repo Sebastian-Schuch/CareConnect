@@ -8,3 +8,13 @@
 .example-full-width {
   flex: 1;
 }
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.message-count {
+  margin-top: 5px;
+}

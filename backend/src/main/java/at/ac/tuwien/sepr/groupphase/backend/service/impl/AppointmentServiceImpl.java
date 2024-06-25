@@ -74,6 +74,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     @Override
     public void delete(long id) {
+        LOG.trace("delete({})", id);
         if (!appointmentRepository.existsById(id)) {
             LOG.warn("Appointment {} not found", id);
             throw new NotFoundException("Appointment not found");
@@ -103,6 +104,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDto getAppointmentById(long id) {
+        LOG.trace("getAppointmentById({})", id);
         var appointment = appointmentRepository.findById(id).orElse(null);
         if (appointment == null) {
             LOG.warn("Appointment {} not found", id);
@@ -115,7 +117,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentPageDto getAppointmentsByPatient(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
         LOG.trace("getAppointmentsByPatient({}, {}, {}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate, page, size);
 
-        Pageable pageable = PageRequest.of(page, size,  Sort.by("startDate"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startDate"));
 
         Patient patient = patientService.getPatientEntityById(patientId);
         OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
@@ -127,7 +129,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentPageDto getAllFilteredAppointments(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
         LOG.trace("getAllAppointments({}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate);
-        Pageable pageable = PageRequest.of(page, size,  Sort.by("startDate"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startDate"));
 
         Patient patient = patientId != null ? patientService.getPatientEntityById(patientId) : null;
         OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
