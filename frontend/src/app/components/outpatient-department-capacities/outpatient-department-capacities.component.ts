@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {OutpatientDepartmentService} from '../../services/outpatient-department.service';
 import {Chart, registerables} from 'chart.js';
 import {FormControl} from '@angular/forms';
-import {getDate, getMonth, getYear} from "date-fns";
+import {addDays, getDate, getMonth, getYear} from "date-fns";
 import {MatDialog} from "@angular/material/dialog";
 import {
   OutpatientDepartmentCapacitiesOpeningHoursModalComponent
@@ -58,6 +58,10 @@ export class OutpatientDepartmentCapacitiesComponent implements OnInit {
 
   showDate(currentDate: Date) {
     return getDate(currentDate) + "/" + (getMonth(currentDate) + 1) + "/" + getYear(currentDate);
+  }
+
+  showDateWeek(currentDate: Date) {
+    return this.showDate(currentDate) + " - " + this.showDate(addDays(currentDate, 6));
   }
 
   openOpeningHours(department: any): void {

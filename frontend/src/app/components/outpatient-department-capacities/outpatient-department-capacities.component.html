@@ -28,8 +28,12 @@
     <button tabindex="23" [attr.aria-hidden]="disableFocus" mat-button (click)="previous()"
             [attr.aria-label]="'Previous period'">Previous
     </button>
-    <span tabindex="24" [attr.aria-hidden]="disableFocus"
+    <span *ngIf="this.view.value === 'day'" tabindex="24" [attr.aria-hidden]="disableFocus"
           [attr.aria-label]="showDate(currentDate)">{{ showDate(currentDate) }}</span>
+    <span *ngIf="this.view.value === 'week'" tabindex="24"
+          [attr.aria-hidden]="disableFocus">{{ showDateWeek(currentDate) }}</span>
+    <span *ngIf="this.view.value === 'month'" tabindex="24"
+          [attr.aria-hidden]="disableFocus">{{ currentDate | date: dateFormat }}</span>
     <button tabindex="25" [attr.aria-hidden]="disableFocus" mat-button (click)="next()"
             [attr.aria-label]="'Next period'">Next
     </button>
