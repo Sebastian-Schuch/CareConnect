@@ -360,7 +360,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
           this.dataSource._updateChangeSubscription();
         },
         error: (error) => {
-          this.errorFormater.printErrorToNotification(error, "Error creating treatment medicine", this.notification);
+          this.errorFormater.printErrorToNotification(error, "Error adding medicine to treatment", this.notification, "Medication is not valid");
         }
       }
     )
@@ -414,7 +414,7 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   typeValidator(expectedType: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (control.value && typeof control.value !== expectedType) {
-        return { 'invalidType': { value: control.value } };
+        return {'invalidType': {value: control.value}};
       }
       return null;
     };
