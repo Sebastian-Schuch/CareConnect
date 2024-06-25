@@ -1,24 +1,21 @@
-Cypress.Commands.add('loginAdmin', () => {
-    cy.fixture('settings').then(settings => {
-        cy.visit(settings.baseUrl);
-        cy.contains('a', 'Login').click();
-        cy.get('input[name="username"]').type(settings.adminUser);
-        cy.get('input[name="password"]').type(settings.adminPw);
-        cy.contains('button', 'Login').click();
-    })
+Cypress.Commands.add('loginPatient', () => {
+    cy.visit('/#/login');
+    cy.get('form .form-group #inputEmail').type('chris.anger@email.com');
+    cy.get('input[name=password]').type('AngerManagement');
+    cy.contains('button span', ' Login ').click();
+    cy.get('div.user-name').should('contain', 'Chris A');
 })
 
-Cypress.Commands.add('createMessage', (msg) => {
-    cy.fixture('settings').then(settings => {
-        cy.contains('a', 'Message');
-        cy.contains('button', 'Add message').click();
-        cy.get('input[name="title"]').type('title' +  msg);
-        cy.get('textarea[name="summary"]').type('summary' +  msg);
-        cy.get('textarea[name="text"]').type('text' +  msg);
-        cy.get('button[id="add-msg"]').click();
-        cy.get('button[id="close-modal-btn"]').click();
+Cypress.Commands.add('loginDoctor', () => {
+    cy.visit('/#/login');
+    cy.get('form .form-group #inputEmail').type('doctor.eggman@email.com');
+    cy.get('input[name=password]').type('ChaosEmeralds');
+    cy.contains('button span', ' Login ').click();
+    cy.get('div.user-name').should('contain', 'Doctor E');
+})
 
-        cy.contains('title' +  msg).should('be.visible');
-        cy.contains('summary' +  msg).should('be.visible');
-    })
+Cypress.Commands.add('logout', () => {
+    cy.get('button span .user-info').click();
+    cy.wait(500);
+    cy.get('button').contains('Logout').click();
 })
