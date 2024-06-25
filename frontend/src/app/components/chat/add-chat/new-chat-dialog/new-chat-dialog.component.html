@@ -3,7 +3,7 @@
   <p id="dialogDesc">What treatment should the chat be about?</p>
   <mat-form-field class="w-100">
     <mat-label>Treatment</mat-label>
-    <mat-select [(value)]="selectedNewChat" aria-labelledby="dialogDesc">
+    <mat-select [(value)]="selectedNewChat" aria-labelledby="dialogDesc" id="treatmentSelect">
       <ng-container *ngFor="let chat of data.available">
         <mat-option [value]="chat">{{ chat.name }}</mat-option>
       </ng-container>
