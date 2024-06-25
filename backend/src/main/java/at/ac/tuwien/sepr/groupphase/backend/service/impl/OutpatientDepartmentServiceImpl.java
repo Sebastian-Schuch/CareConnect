@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final OutpatientDepartmentRepository outpatientDepartmentRepository;
     private final OutpatientDepartmentMapper outpatientDepartmentMapper;
     private final OpeningHoursMapper openingHoursMapper;
@@ -58,7 +58,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public OutpatientDepartmentDto createOutpatientDepartment(OutpatientDepartmentDtoCreate outpatientDepartmentDto) throws MethodArgumentNotValidException {
-        LOGGER.trace("createOutpatientDepartment()");
+        LOG.trace("createOutpatientDepartment()");
         OpeningHours openingHours = openingHoursService.getOpeningHoursEntityFromDtoCreate(outpatientDepartmentDto.openingHours());
         OutpatientDepartment savedOutpatientDepartment =
             outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(outpatientDepartmentDto, openingHours));
@@ -68,7 +68,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public List<OutpatientDepartmentDto> getAllOutpatientDepartments() {
-        LOGGER.trace("getAllOutpatientDepartments()");
+        LOG.trace("getAllOutpatientDepartments()");
         List<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAllByActiveTrue();
         return outpatientDepartments.stream()
             .map(outpatientDepartment -> outpatientDepartmentMapper.entityToDto(outpatientDepartment,
@@ -78,10 +78,10 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public OutpatientDepartmentDto getOutpatientDepartmentById(Long id) throws NotFoundException {
-        LOGGER.trace("getOutpatientDepartmentById({})", id);
+        LOG.trace("getOutpatientDepartmentById({})", id);
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
         if (outpatientDepartment == null) {
-            LOGGER.warn("Outpatient department with id {} not found", id);
+            LOG.warn("Outpatient department with id {} not found", id);
             throw new NotFoundException("Outpatient department with id " + id + " not found");
         }
         return outpatientDepartmentMapper.entityToDto(outpatientDepartment, openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
@@ -89,10 +89,10 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public OutpatientDepartment getOutpatientDepartmentEntityById(Long id) throws NotFoundException {
-        LOGGER.trace("getOutpatientDepartmentEntityById({})", id);
+        LOG.trace("getOutpatientDepartmentEntityById({})", id);
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
         if (outpatientDepartment == null) {
-            LOGGER.warn("Outpatient department with id {} not found", id);
+            LOG.warn("Outpatient department with id {} not found", id);
             throw new NotFoundException("Outpatient department with id " + id + " not found");
         }
         return outpatientDepartment;
@@ -100,7 +100,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForDay(Date date) throws NotFoundException {
-        LOGGER.trace("getOutpatientDepartmentCapacitiesForDay({})", date);
+        LOG.trace("getOutpatientDepartmentCapacitiesForDay({})", date);
         List<OutpatientDepartment> departments = outpatientDepartmentRepository.findAll();
         List<OutpatientDepartmentCapacityDto> capacities = new ArrayList<>();
 
@@ -109,7 +109,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
             CapacityDto capacity = capacityCalculator.calculateCapacity(department, DateTimeUtil.getStartOfDay(date), DateTimeUtil.getEndOfDay(date), totalSlots);
             capacities.add(
                 new OutpatientDepartmentCapacityDto(
-                outpatientDepartmentMapper.entityToDto(department, openingHoursMapper.entityToDto(department.getOpeningHours())),
+                    outpatientDepartmentMapper.entityToDto(department, openingHoursMapper.entityToDto(department.getOpeningHours())),
                     capacity
                 ));
         }
@@ -118,7 +118,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForWeek(Date startDate) throws NotFoundException {
-        LOGGER.trace("getOutpatientDepartmentCapacitiesForWeek({})", startDate);
+        LOG.trace("getOutpatientDepartmentCapacitiesForWeek({})", startDate);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -146,7 +146,7 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForMonth(Date date) throws NotFoundException {
-        LOGGER.trace("getOutpatientDepartmentCapacitiesForMonth({})", date);
+        LOG.trace("getOutpatientDepartmentCapacitiesForMonth({})", date);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -170,22 +170,19 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     }
 
 
-
-
-
     @Override
     public OutpatientDepartmentPageDto getOutpatientDepartmentsPage(Specification<OutpatientDepartment> spec, Pageable pageable) {
-        LOGGER.trace("getOutpatientDepartmentsPage({}, {})", spec, pageable);
+        LOG.trace("getOutpatientDepartmentsPage({}, {})", spec, pageable);
         Page<OutpatientDepartment> outpatientDepartments = outpatientDepartmentRepository.findAll(spec, pageable);
         return outpatientDepartmentMapper.toOutpatientDepartmentPageDto(outpatientDepartments);
     }
 
     @Override
     public OutpatientDepartmentDto setOutpatientDepartmentInactive(Long id) {
-        LOGGER.trace("setOutpatientDepartmentInactive({})", id);
+        LOG.trace("setOutpatientDepartmentInactive({})", id);
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
         if (outpatientDepartment == null) {
-            LOGGER.warn("Outpatient department with id {} not found", id);
+            LOG.warn("Outpatient department with id {} not found", id);
             throw new NotFoundException("Outpatient department with id " + id + " not found");
         }
         outpatientDepartment.setActive(false);
@@ -195,10 +192,10 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
 
     @Override
     public OutpatientDepartmentDto updateOutpatientDepartment(Long id, OutpatientDepartmentDto toUpdate) {
-        LOGGER.trace("updateOutpatientDepartment({}, {})", id, toUpdate);
+        LOG.trace("updateOutpatientDepartment({}, {})", id, toUpdate);
         OutpatientDepartment outpatientDepartment = outpatientDepartmentRepository.findByIdAndActiveTrue(id);
         if (outpatientDepartment == null) {
-            LOGGER.warn("Active outpatient department with id {} not found", id);
+            LOG.warn("Active outpatient department with id {} not found", id);
             throw new NotFoundException("Active outpatient department with id " + id + " not found");
         }
         return outpatientDepartmentMapper.entityToDto(

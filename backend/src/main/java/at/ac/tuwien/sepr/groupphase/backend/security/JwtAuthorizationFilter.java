@@ -31,7 +31,7 @@ import java.util.List;
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SecurityProperties securityProperties;
     private final JwtTokenizer jwtTokenizer;
     private final UserService userService;
@@ -61,7 +61,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(newAuthToken);
                 }
             } catch (IllegalArgumentException | JwtException e) {
-                LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
+                LOG.debug("Invalid authorization attempt: {}", e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid authorization header or token");
                 return;

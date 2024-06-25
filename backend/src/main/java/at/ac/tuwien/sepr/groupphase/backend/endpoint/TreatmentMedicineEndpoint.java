@@ -22,11 +22,12 @@ import java.lang.invoke.MethodHandles;
 @RestController
 @RequestMapping(value = "/api/v1/treatmentMedicines")
 public class TreatmentMedicineEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TreatmentMedicineService treatmentMedicineService;
 
     @Autowired
     public TreatmentMedicineEndpoint(TreatmentMedicineService treatmentMedicineService) {
+        LOG.info("TreatmentMedicineEndpoint({})", treatmentMedicineService);
         this.treatmentMedicineService = treatmentMedicineService;
     }
 
@@ -40,7 +41,7 @@ public class TreatmentMedicineEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @Secured("DOCTOR")
     public TreatmentMedicineDto createTreatmentMedicine(@Valid @RequestBody TreatmentMedicineDtoCreate treatmentMedicineDtoCreate) {
-        LOGGER.info("createTreatmentMedicine({})", treatmentMedicineDtoCreate);
+        LOG.info("createTreatmentMedicine({})", treatmentMedicineDtoCreate);
         return treatmentMedicineService.createTreatmentMedicine(treatmentMedicineDtoCreate);
     }
 
@@ -53,7 +54,7 @@ public class TreatmentMedicineEndpoint {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Secured("DOCTOR")
     public void deleteTreatmentMedicine(@PathVariable("id") long id) {
-        LOGGER.info("deleteTreatmentMedicine({})", id);
+        LOG.info("deleteTreatmentMedicine({})", id);
         treatmentMedicineService.deleteTreatmentMedicine(id);
     }
 

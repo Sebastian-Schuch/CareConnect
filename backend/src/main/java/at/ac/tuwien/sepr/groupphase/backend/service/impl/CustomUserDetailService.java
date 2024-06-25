@@ -44,7 +44,7 @@ import java.util.Random;
 @Service
 public class CustomUserDetailService implements UserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
@@ -68,7 +68,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOGGER.debug("Load all user by email");
+        LOG.debug("Load all user by email");
         try {
             Credential applicationUser = findApplicationUserByEmail(email);
 
@@ -88,7 +88,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public Credential findApplicationUserByEmail(String email) {
-        LOGGER.debug("Find application user by email");
+        LOG.debug("Find application user by email");
         Credential applicationUser = credentialRepository.findByEmailAndActiveTrue(email);
         if (applicationUser != null) {
             return applicationUser;
@@ -98,9 +98,8 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        LOG.trace("login({})", userLoginDto);
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-        //TODO add locking mechanism in sprint 2, see issue #40
-        //if (userDetails != null && userDetails.isAccountNonExpired() && userDetails.isAccountNonLocked() && userDetails.isCredentialsNonExpired() && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())) {
         if (userDetails != null && passwordEncoder.matches(userLoginDto.getPassword() + passwordPepper, userDetails.getPassword())) {
             List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
@@ -110,6 +109,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public PDDocument createDoctor(DoctorDtoCreate toCreate) {
+        LOG.trace("createDoctor({})", toCreate);
         UserLoginDto userLogin = createCredentials(mapper.doctorCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.doctorCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.DOCTOR);
         DoctorDto doctorDto = userCreationFacadeService.createUser(toCreate, credential);
@@ -119,6 +119,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public PDDocument createSecretary(SecretaryDtoCreate toCreate) {
+        LOG.trace("createSecretary({})", toCreate);
         UserLoginDto userLogin = createCredentials(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.secretaryCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.SECRETARY);
         SecretaryDto secretaryDetailDto = userCreationFacadeService.createUser(toCreate, credential);
@@ -128,6 +129,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public PDDocument createPatient(PatientDtoCreate toCreate) {
+        LOG.trace("createPatient({})", toCreate);
         UserLoginDto userLogin = createCredentials(mapper.patientCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.patientCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.PATIENT);
         PatientDto patientDto = userCreationFacadeService.createUser(toCreate, credential);
@@ -137,6 +139,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public PDDocument createAdministrator(AdminDtoCreate toCreate) {
+        LOG.trace("createAdministrator({})", toCreate);
         UserLoginDto userLogin = createCredentials(mapper.administratorCreateDtoToCredentialCreateDto(toCreate));
         Credential credential = createCredentialEntity(mapper.administratorCreateDtoToCredentialCreateDto(toCreate), userLogin, Role.ADMIN);
         AdminDto adminDto = userCreationFacadeService.createUser(toCreate, credential);
@@ -146,6 +149,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public boolean isValidRequestOfRole(Role role) {
+        LOG.trace("isValidRequestOfRole({})", role);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(role.name()));
     }
@@ -157,6 +161,7 @@ public class CustomUserDetailService implements UserService {
      * @return the users login data
      */
     private UserLoginDto createCredentials(CredentialDtoCreate toCreate) {
+        LOG.trace("createCredentials({})", toCreate);
         // Generate a random password
         String randomPassword = generateRandomPassword();
 
@@ -178,6 +183,7 @@ public class CustomUserDetailService implements UserService {
      * @return the users login data
      */
     private Credential createCredentialEntity(CredentialDtoCreate toCreate, UserLoginDto credentials, Role role) {
+        LOG.trace("createCredentialEntity({})", toCreate);
         // Encode the random password
         String encodedPassword = passwordEncoder.encode(credentials.getPassword() + passwordPepper);
 
@@ -196,7 +202,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void changePassword(ChangePasswordDto passwords) {
-        LOGGER.trace("changePassword({})", passwords);
+        LOG.trace("changePassword({})", passwords);
         Credential credential = findApplicationUserByEmail(passwords.email());
         if (passwordEncoder.matches(passwords.oldPassword() + passwordPepper, credential.getPassword())) {
             credential.setPassword(passwordEncoder.encode(passwords.newPassword() + passwordPepper));
@@ -209,7 +215,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public PDDocument resetPassword(String email) {
-        LOGGER.trace("resetPassword({})", email);
+        LOG.trace("resetPassword({})", email);
         Credential credential = findApplicationUserByEmail(email);
         UserLoginDto userLogin = new UserLoginDto();
         userLogin.setEmail(credential.getEmail());
@@ -227,6 +233,7 @@ public class CustomUserDetailService implements UserService {
      * @return the random password
      */
     private String generateRandomPassword() {
+        LOG.trace("generateRandomPassword()");
         // Generate a random password of length 12
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+*#_-$%";
         StringBuilder randomPassword = new StringBuilder();
@@ -239,7 +246,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void disableUser(String email) {
-        LOGGER.trace("disableUser({})", email);
+        LOG.trace("disableUser({})", email);
         Credential credential = findApplicationUserByEmail(email);
         credential.setActive(false);
         credentialRepository.save(credential);

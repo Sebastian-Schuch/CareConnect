@@ -6,8 +6,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCre
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import java.util.List;
 
 @Component
 public class TreatmentMedicineMapper {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final MedicationService medicationService;
 
@@ -31,6 +35,7 @@ public class TreatmentMedicineMapper {
      * @return the converted TreatmentMedicine entity
      */
     public TreatmentMedicine dtoToEntity(TreatmentMedicineDtoCreate treatmentMedicineDtoCreate) {
+        LOG.trace("dtoToEntity({})", treatmentMedicineDtoCreate);
         Medication med = medicationService.getEntityById(treatmentMedicineDtoCreate.medication().id());
 
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
@@ -47,6 +52,7 @@ public class TreatmentMedicineMapper {
      * @return the converted TreatmentMedicineDto dto
      */
     public TreatmentMedicineDto entityToDto(TreatmentMedicine treatmentMedicine) {
+        LOG.trace("entityToDto({})", treatmentMedicine);
         return new TreatmentMedicineDto(
             treatmentMedicine.getId(),
             new MedicationDto(treatmentMedicine.getMedicine().getId(), treatmentMedicine.getMedicine().getName(), treatmentMedicine.getMedicine().getActive(),
@@ -64,6 +70,7 @@ public class TreatmentMedicineMapper {
      * @return the converted list of TreatmentMedicineDto dtos
      */
     public List<TreatmentMedicineDto> entityListToDtoList(List<TreatmentMedicine> treatmentMedicines) {
+        LOG.trace("entityListToDtoList({})", treatmentMedicines);
         List<TreatmentMedicineDto> treatmentMedicineDtos = new ArrayList<>();
         for (TreatmentMedicine treatmentMedicine : treatmentMedicines) {
             treatmentMedicineDtos.add(entityToDto(treatmentMedicine));

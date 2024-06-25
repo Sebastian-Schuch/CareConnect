@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import jakarta.annotation.security.PermitAll;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.availability.AvailabilityChangeEvent;
 import org.springframework.boot.availability.LivenessState;
@@ -10,12 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.invoke.MethodHandles;
+
 /**
  * This endpoint is used for kubernetes health checks.
  */
 @RestController
 @RequestMapping("/health")
 public class CustomHealthEndpoint {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final ApplicationContext applicationContext;
     private boolean status = true;
@@ -29,6 +34,8 @@ public class CustomHealthEndpoint {
     @PermitAll
     @GetMapping
     public ResponseEntity<String> getHealth() {
+        LOG.trace("Health check");
+
         if (status) {
             return ResponseEntity.ok("OK");
         }
@@ -42,6 +49,7 @@ public class CustomHealthEndpoint {
     @PermitAll
     @GetMapping("/prepareShutdown")
     public void preShutdown() {
+        LOG.info("Prepare shutdown");
         AvailabilityChangeEvent.publish(applicationContext, LivenessState.BROKEN);
         status = false;
     }

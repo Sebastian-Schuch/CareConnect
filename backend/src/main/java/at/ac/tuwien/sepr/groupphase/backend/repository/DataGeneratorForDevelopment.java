@@ -34,7 +34,7 @@ import java.util.List;
 @Component
 @Profile("dev")
 public class DataGeneratorForDevelopment {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final AllergyRepository allergyRepository;
 
@@ -87,7 +87,7 @@ public class DataGeneratorForDevelopment {
      */
     @PostConstruct
     public void generateData() {
-        LOGGER.info("Generating data…");
+        LOG.info("Generating data…");
         treatmentRepository.deleteAll();
         treatmentMedicineRepository.deleteAll();
         appointmentRepository.deleteAll();
@@ -110,7 +110,7 @@ public class DataGeneratorForDevelopment {
         generateDataForAppointments();
         generateDataForTreatmentMedicines();
         generateDataForTreatments();
-        LOGGER.info("Finished generating data without error.");
+        LOG.info("Finished generating data without error.");
     }
 
     private void generateDataForAllergies() {
