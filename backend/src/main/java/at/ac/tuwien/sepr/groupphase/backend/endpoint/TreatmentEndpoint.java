@@ -34,7 +34,7 @@ import java.lang.invoke.MethodHandles;
 @RestController
 @RequestMapping(value = "/api/v1/treatments")
 public class TreatmentEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TreatmentService treatmentService;
     private final PatientServiceImpl patientServiceImpl;
     private final UserService userService;
@@ -58,7 +58,7 @@ public class TreatmentEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @Secured("DOCTOR")
     public TreatmentDto createTreatment(@Valid @RequestBody TreatmentDtoCreate treatmentDtoCreate) {
-        LOGGER.info("createTreatment({})", treatmentDtoCreate);
+        LOG.info("createTreatment({})", treatmentDtoCreate);
         return treatmentService.createTreatment(treatmentDtoCreate);
     }
 
@@ -73,7 +73,7 @@ public class TreatmentEndpoint {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TreatmentDto updateTreatment(@PathVariable("id") Long id, @Valid @RequestBody TreatmentDtoCreate treatmentDtoCreateUpdate) {
-        LOGGER.info("updateTreatment({}, {})", id, treatmentDtoCreateUpdate);
+        LOG.info("updateTreatment({}, {})", id, treatmentDtoCreateUpdate);
         return treatmentService.updateTreatment(id, treatmentDtoCreateUpdate);
     }
 
@@ -87,7 +87,7 @@ public class TreatmentEndpoint {
     @Secured({"DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/{id}"})
     public TreatmentDto getTreatmentById(@PathVariable("id") Long id) {
-        LOGGER.info("getTreatmentById({})", id);
+        LOG.info("getTreatmentById({})", id);
         TreatmentDto treatmentDto = treatmentService.getTreatmentById(id);
         if (userService.isValidRequestOfRole(Role.SECRETARY)
             || userService.isValidRequestOfRole(Role.DOCTOR)
@@ -107,7 +107,7 @@ public class TreatmentEndpoint {
     @Secured({"DOCTOR", "SECRETARY", "PATIENT"})
     @GetMapping({"/search"})
     public TreatmentPageDto searchTreatments(TreatmentDtoSearch searchParams) {
-        LOGGER.info("searchTreatments({})", searchParams);
+        LOG.info("searchTreatments({})", searchParams);
         if (userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR) || patientServiceImpl.isOwnRequest(searchParams.patientId())) {
             return treatmentService.searchTreatments(searchParams);
 

@@ -1,4 +1,5 @@
 <div class="chat-window" role="region" aria-label="Chat window">
+  <h5 *ngIf="!chat" class="center-text">No chat is selected</h5>
     <div class="messages" tabindex="0">
         <div class="message" *ngFor="let message of messages" tabindex="0">
             <div class="message-content" [ngClass]="{'my-message': message.senderEmail === ownEmail, 'other-message': message.senderEmail !== ownEmail}">
@@ -11,5 +12,5 @@
         </div>
         <div #sectionSubscribe id="scroll"></div>
     </div>
-    <app-chat-input (sendMessage)="addMessage($event)"></app-chat-input>
+    <app-chat-input (sendMessage)="addMessage($event)" [selectedChat]="!chat" style="width:100%"></app-chat-input>
 </div>

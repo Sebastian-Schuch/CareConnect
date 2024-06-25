@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import at.ac.tuwien.sepr.groupphase.backend.type.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,8 @@ public class DoctorServiceTest extends TestBase {
 
     @Autowired
     private DoctorRepository doctorRepository;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
     public DoctorServiceTest() {
         super("doctor");
@@ -221,14 +224,13 @@ public class DoctorServiceTest extends TestBase {
         long id = doctorRepository.findAll().get(0).getDoctorId();
         DoctorDto toBeFoundDoctor = new DoctorDto(id, "Doctor",
             "Eggman", "doctor.eggman@email.com", "ChaosEmeralds", false, true);
-        DoctorDto foundDoctor = doctorService.getDoctorByEmail(toBeFoundDoctor.email());
+        Credential cred = customUserDetailService.findApplicationUserByEmail(toBeFoundDoctor.email());
+        DoctorDtoSparse foundDoctor = doctorService.findDoctorByCredential(cred);
         assertAll("Grouped Assertions of Doctor",
             () -> assertEquals(toBeFoundDoctor.id(), foundDoctor.id(), "ID should be equal"),
             () -> assertEquals(toBeFoundDoctor.email(), foundDoctor.email(), "Email should be equal"),
             () -> assertEquals(toBeFoundDoctor.firstname(), foundDoctor.firstname(), "Firstname should be equal"),
             () -> assertEquals(toBeFoundDoctor.lastname(), foundDoctor.lastname(), "Lastname should be equal"),
-            () -> assertEquals(toBeFoundDoctor.password(), foundDoctor.password(), "Password should be equal"),
-            () -> assertEquals(toBeFoundDoctor.active(), foundDoctor.active(), "Active should be equal"),
             () -> assertEquals(toBeFoundDoctor.isInitialPassword(), foundDoctor.isInitialPassword(), "InitialPassword should be equal"));
     }
 

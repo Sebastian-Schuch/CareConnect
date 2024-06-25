@@ -130,6 +130,7 @@ public class TreatmentMapper {
     }
 
     public List<TreatmentDto> entityListToDtoList(List<Treatment> treatments) {
+        LOG.trace("entityListToDtoList({})", treatments);
         List<TreatmentDto> treatmentDtos = new LinkedList<>();
         for (Treatment treatment : treatments) {
             treatmentDtos.add(entityToDto(treatment));
@@ -138,6 +139,7 @@ public class TreatmentMapper {
     }
 
     public TreatmentPageDto toTreatmentPageDto(Page<Treatment> treatmentPage) {
+        LOG.trace("toTreatmentPageDto({})", treatmentPage);
         return new TreatmentPageDto(
             entityListToDtoList(treatmentPage.getContent()),
             (int) treatmentPage.getTotalElements()

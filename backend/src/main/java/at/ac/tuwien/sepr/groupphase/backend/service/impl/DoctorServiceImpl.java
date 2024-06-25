@@ -81,7 +81,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorDtoSparse findDoctorByCredential(Credential credential) {
-        LOG.debug("Find application user by email");
+        LOG.trace("findDoctorByCredential({})", credential);
         Doctor doctor = doctorRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (doctor != null) {
             return doctorMapper.doctorToDoctorDtoSparse(doctor);
@@ -98,16 +98,13 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorDtoSparse> getAllDoctors() {
+        LOG.trace("getAllDoctors()");
         return doctorMapper.doctorsToDoctorDtosSparse(doctorRepository.findByCredential_ActiveTrue());
     }
 
     @Override
-    public DoctorDto getDoctorByEmail(String email) {
-        return doctorMapper.doctorToDoctorDto(doctorRepository.findByCredential_EmailAndCredential_ActiveTrue(email));
-    }
-
-    @Override
     public boolean isOwnRequest(Long userId) {
+        LOG.trace("isOwnRequest({})", userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("DOCTOR"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -127,6 +124,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Page<DoctorDtoSparse> getDoctors(String searchTerm, Pageable pageable) {
+        LOG.trace("getDoctors({}, {})", searchTerm, pageable);
         Specification<Doctor> spec = Specification.where(DoctorSpecification.containsTextInAnyField(searchTerm))
             .and(DoctorSpecification.isActive());
         return doctorRepository.findAll(spec, pageable)
