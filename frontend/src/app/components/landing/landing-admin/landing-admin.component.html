@@ -23,9 +23,9 @@
     <span class="label">Allergies:</span>
     <span class="value">{{ allergies }}</span>
   </div>
-  <div class="info-item" [ngClass]="{'green': stations > 0}">
+  <div class="info-item" [ngClass]="{'green': outpatients > 0}">
     <span class="label">Out patient department:</span>
-    <span class="value">{{ stations }}</span>
+    <span class="value">{{ outpatients }}</span>
   </div>
 
   <a [routerLink]="['./setup']" class="setup-link">Finish Setup</a>

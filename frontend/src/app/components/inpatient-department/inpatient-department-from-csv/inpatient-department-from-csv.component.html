@@ -15,10 +15,10 @@
     *ngIf="jsonData"
     dynamicHeight="true"
   >
-    <mat-tab label="extracted stations">
+    <mat-tab label="extracted inpatient departments">
 
       <app-small-list
-        [stations]="jsonData"
+        [inpatientDepartments]="jsonData"
         [itemsPerPage]="10">
 
       </app-small-list>
@@ -36,7 +36,5 @@
   <button *ngIf="jsonData" type="button" class="btn btn-primary"
           (click)="addAll()"
   >Add all</button>
-  <p *ngIf="jsonData && InpatientDepartments.length === 0" class="text-muted">
-    No medications found in the file
-  </p>
+
 </div>

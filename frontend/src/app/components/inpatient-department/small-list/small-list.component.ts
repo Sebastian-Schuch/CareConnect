@@ -9,13 +9,13 @@ import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
 export class SmallListComponent {
 
 
-  @Input() stations: InpatientDepartmentDto[] = [];
+  @Input() inpatientDepartments: InpatientDepartmentDto[] = [];
   @Input() itemsPerPage = 10;
   @Output() pageChange = new EventEmitter<number>();
 
   searchQuery = '';
-  filteredStations: InpatientDepartmentDto[] = [];
-  paginatedStations: InpatientDepartmentDto[] = [];
+  filteredInpatientDepartments: InpatientDepartmentDto[] = [];
+  paginatedInpatientDepartments: InpatientDepartmentDto[] = [];
   currentPage = 1;
   totalPages: number[] = [];
 
@@ -37,18 +37,18 @@ export class SmallListComponent {
 
   filterAllergies() {
     if (this.searchQuery) {
-      this.filteredStations = this.stations.filter(allergy =>
+      this.filteredInpatientDepartments = this.inpatientDepartments.filter(allergy =>
         allergy.name.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.filteredStations = this.stations;
+      this.filteredInpatientDepartments = this.inpatientDepartments;
     }
     this.calculateTotalPages();
     this.paginateAllergies();
   }
 
   calculateTotalPages() {
-    this.totalPages = Array(Math.ceil(this.filteredStations.length / this.itemsPerPage)).fill(0).map((x, i) => i + 1);
+    this.totalPages = Array(Math.ceil(this.filteredInpatientDepartments.length / this.itemsPerPage)).fill(0).map((x, i) => i + 1);
   }
 
   changePage(page: number) {
@@ -62,7 +62,7 @@ export class SmallListComponent {
   paginateAllergies() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-    this.paginatedStations = this.filteredStations.slice(start, end);
+    this.paginatedInpatientDepartments = this.filteredInpatientDepartments.slice(start, end);
   }
 
   onSearchChange(query: string) {
@@ -80,6 +80,6 @@ export class SmallListComponent {
       start = Math.max(end - maxVisiblePages + 1, 1);
     }
 
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    return Array.from({length: end - start + 1}, (_, i) => start + i);
   }
 }

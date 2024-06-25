@@ -37,7 +37,7 @@ export class InpatientDepartmentFromCsvComponent {
     const requests = this.jsonData.map((item: InpatientDepartmentDto) =>
       this.service.createInpatientDepartment(item).pipe(
         catchError(error => {
-          this.notification.error('Error creating station: ' + error.message);
+          this.notification.error('Error creating inpatient department: ' + error.message);
           return of(null);  // Return an observable that resolves to null in case of error
         })
       )
@@ -48,14 +48,14 @@ export class InpatientDepartmentFromCsvComponent {
         // @ts-ignore
         const allSuccessful = results.every(result => result !== null);
         if (allSuccessful) {
-          this.notification.success('All stations were successfully added.');
+          this.notification.success('All inpatient departments were successfully added.');
         } else {
-          this.notification.error('Some stations could not be added.');
+          this.notification.error('Some inpatient departments could not be added.');
         }
         this.jsonData = null;
       },
       error: error => {
-        this.notification.error('Error adding stations: ' + error.message);
+        this.notification.error('Error adding inpatient departments: ' + error.message);
       }
     });
   }
