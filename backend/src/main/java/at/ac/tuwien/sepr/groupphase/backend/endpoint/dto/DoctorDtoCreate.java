@@ -5,16 +5,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record DoctorDtoCreate(
-    @NotBlank
-    @Email(message = "is not a valid email address")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is not a valid email address")
+    @Size(max = 255, message = "Email cannot be longer than 255 characters")
     String email,
 
-    @NotBlank(message = "cannot be empty")
-    @Size(max = 255, message = "cannot be longer than 255 characters")
+    @NotBlank(message = "Firstname cannot be empty")
+    @Size(max = 255, message = "Firstname cannot be longer than 255 characters")
     String firstname,
 
-    @NotBlank(message = "cannot be empty")
-    @Size(max = 255, message = "cannot be longer than 255 characters")
+    @NotBlank(message = "Lastname cannot be empty")
+    @Size(max = 255, message = "Lastname cannot be longer than 255 characters")
     String lastname
 ) {
 }

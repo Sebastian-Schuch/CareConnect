@@ -5,7 +5,7 @@ import java.util.Date;
 public record AppointmentDto(
     Long id,
 
-    PatientDto patient,
+    PatientDtoSparse patient,
 
     OutpatientDepartmentDto outpatientDepartment,
 

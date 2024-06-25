@@ -12,7 +12,7 @@ import java.lang.invoke.MethodHandles;
 
 @Component
 public class OpeningHoursValidator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Validates the opening hours.
@@ -21,7 +21,7 @@ public class OpeningHoursValidator {
      * @throws MethodArgumentNotValidException if the opening hours are not valid
      */
     public void validateOpeningHours(OpeningHoursDtoCreate openingHoursDtoCreate) throws MethodArgumentNotValidException {
-        LOGGER.trace("validateOpeningHours()");
+        LOG.trace("validateOpeningHours()");
         BindingResult bindingResult = new BeanPropertyBindingResult(openingHoursDtoCreate, "openingHours");
 
         if (openingHoursDtoCreate.monday() != null && !openingHoursDtoCreate.monday().isValid()) {
@@ -46,7 +46,7 @@ public class OpeningHoursValidator {
             bindingResult.rejectValue("sunday", null, "opening time must be before closing time");
         }
         if (bindingResult.hasErrors()) {
-            LOGGER.warn("OpeningHoursDtoCreate is not valid: " + bindingResult.getAllErrors());
+            LOG.warn("OpeningHoursDtoCreate is not valid: " + bindingResult.getAllErrors());
             throw new MethodArgumentNotValidException(null, bindingResult);
         }
     }

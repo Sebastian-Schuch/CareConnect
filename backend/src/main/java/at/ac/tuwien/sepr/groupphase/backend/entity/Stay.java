@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Stay {
@@ -15,7 +15,7 @@ public class Stay {
     private Long id;
 
     @ManyToOne
-    private Station station;
+    private InpatientDepartment inpatientDepartment;
 
     public Patient getPatient() {
         return patient;
@@ -29,8 +29,8 @@ public class Stay {
     @ManyToOne
     private Patient patient;
 
-    private LocalDateTime arrival;
-    private LocalDateTime departure;
+    private Date arrival;
+    private Date departure;
 
     public Long getId() {
         return id;
@@ -41,29 +41,29 @@ public class Stay {
         return this;
     }
 
-    public Station getStation() {
-        return station;
+    public InpatientDepartment getInpatientDepartment() {
+        return inpatientDepartment;
     }
 
-    public Stay setStation(Station station) {
-        this.station = station;
+    public Stay setInpatientDepartment(InpatientDepartment inpatientDepartment) {
+        this.inpatientDepartment = inpatientDepartment;
         return this;
     }
 
-    public LocalDateTime getArrival() {
+    public Date getArrival() {
         return arrival;
     }
 
-    public Stay setArrival(LocalDateTime arrival) {
+    public Stay setArrival(Date arrival) {
         this.arrival = arrival;
         return this;
     }
 
-    public LocalDateTime getDeparture() {
+    public Date getDeparture() {
         return departure;
     }
 
-    public Stay setDeparture(LocalDateTime departure) {
+    public Stay setDeparture(Date departure) {
         this.departure = departure;
         return this;
     }

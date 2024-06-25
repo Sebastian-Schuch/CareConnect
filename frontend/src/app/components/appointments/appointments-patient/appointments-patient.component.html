@@ -1,112 +1,110 @@
 <div class="start-page-container on-landing-hidden">
-
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="19">
       <span>My Appointments</span><br>
     </h1>
   </div>
 
-
   <h3 tabindex="19">Here you can see all your future and past appointments!</h3>
   <p class="subheadline">
-    You can can use the "next" and "previous" buttons to navigate through your appointments.<br>
-    By inputing a department name in the filter field, you can filter the appointments by department.
+    You can use the "next" and "previous" buttons to navigate through your appointments.<br>
+    By inputting a department name in the filter field, you can filter the appointments by department.
   </p>
   <br>
   <div class="filter-container on-landing-hidden matFormFieldFullWidth">
     <mat-form-field appearance="fill">
       <mat-label>Filter by Outpatient Department</mat-label>
       <input tabindex="20" [formControl]="departmentControl" [matAutocomplete]="auto" matInput type="text"
-             role="combobox" aria-expanded="false" aria-owns="auto" aria-haspopup="listbox">
+             role="combobox" aria-expanded="false" aria-haspopup="listbox" (keydown)="onKeydown($event)">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="filterAppointments($event.option.value)"
-                        role="listbox">
+                        role="listbox" [displayWith]="displayOutPD">
         <mat-option *ngFor="let department of filteredDepartments | async" [value]="department" tabindex="0"
                     role="option">
           <a tabindex="20">
-            {{ department }}
+            {{ department.name }}
           </a>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
   </div>
 </div>
+
 <app-confirm-delete-dialog (confirm)="cancelAppointment()"
                            [deleteWhat]="appointmentToBeCancelled?.outpatientDepartment.name"
                            id="confirmDeleteDialog"></app-confirm-delete-dialog>
-<div class="container mt-3">
 
-
-  <div class="appointments-section">
-    <h2 class="on-landing-hidden">Future Appointments</h2>
-    <div class="card-container">
-      <div *ngFor="let appointment of getVisibleFutureAppointments()">
-        <div class="appointment-card" aria-label="Appointment">
-          <div class="appointment-details" tabindex="22">
-            <div><strong>{{ appointment.outpatientDepartment.name }}</strong></div>
-            <div><strong>Start
-              Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}
-            </div>
-            <div><strong>End
-              Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}
+<mat-tab-group  [class.custom-mat-tab-group] = "isEmbedded" [class.custom-mat-tab-group-list]="!isEmbedded" >
+  <mat-tab label="Future Appointments" id="matTabs" >
+    <div class="container mt-3">
+      <div class="appointments-section">
+        <div class="card-container">
+          <div *ngFor="let appointment of getVisibleFutureAppointments()">
+            <div class="appointment-card" aria-label="Appointment">
+              <div class="appointment-details" tabindex="22">
+                <div><strong>{{ appointment.outpatientDepartment.name }}</strong></div>
+                <div><strong>Start
+                  Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}
+                </div>
+                <div><strong>End
+                  Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}
+                </div>
+              </div>
+              <div class="appointment-actions">
+                <button (click)="appointmentToBeCancelled = appointment"
+                        [attr.aria-label]="'Cancel appointment at ' + appointment.outpatientDepartment.name + ' on ' + appointment.startDate.toLocaleDateString() + ' from '+ appointment.startDate.toLocaleTimeString() + ' to '+ appointment.endDate.toLocaleTimeString()"
+                        color="warn"
+                        data-bs-target="#confirmDeleteDialog" data-bs-toggle="modal"
+                        mat-icon-button
+                        tabindex="22">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="appointment-actions">
-            <button (click)="appointmentToBeCancelled = appointment"
-                    [attr.aria-label]="'Cancel appointment at ' + appointment.outpatientDepartment.name + ' on ' + appointment.startDate.toLocaleDateString() + ' from '+ appointment.startDate.toLocaleTimeString() + ' to '+ appointment.endDate.toLocaleTimeString()"
-                    color="warn"
-                    data-bs-target="#confirmDeleteDialog" data-bs-toggle="modal"
-                    mat-icon-button
-                    tabindex="22">
-              <mat-icon>delete</mat-icon>
+          <div class="pagination-buttons on-landing-hidden">
+            <button mat-button class="pagination-buttons-button" tabindex="23" (click)="previousFuturePage()"
+                    [disabled]="currentPageFuture === 0">
+              Previous
+            </button>
+            <button mat-button class="pagination-buttons-button" tabindex="24" (click)="nextFuturePage()"
+                    [disabled]="(currentPageFuture + 1) * pageSize >= totalFutureAppointments">
+              Next
             </button>
           </div>
         </div>
       </div>
-      <div class="pagination-buttons on-landing-hidden">
-        <button mat-button class="pagination-buttons-button" tabindex="23" (click)="previousFuturePage()"
-                [disabled]="currentPageFuture === 1">
-          Previous
-        </button>
-        <button mat-button class="pagination-buttons-button" tabindex="24" (click)="nextFuturePage()"
-                [disabled]="(currentPageFuture * pageSize) >= futureAppointments.length">
-          Next
-        </button>
-      </div>
     </div>
-  </div>
+  </mat-tab>
 
-  <hr class="on-landing-hidden">
-
-  <div class="appointments-section" id="appointment-section-past">
-    <h2 (click)="togglePastAppointments()" class="collapsible-header">
-      Past Appointments
-      <button mat-button style="text-decoration: none;color:black;" tabindex="25"
-              class="toggle-icon">{{ showPastAppointments ? '-' : '+' }}
-      </button>
-    </h2>
-    <div [hidden]="!showPastAppointments" class="card-container">
-      <div *ngFor="let appointment of getVisiblePastAppointments()" class="appointment-card">
-        <div class="appointment-details">
-          <div class="flex-start"><strong>Outpatient Department:</strong> {{ appointment.outpatientDepartment.name }}
+  <mat-tab label="Past Appointments">
+    <div class="container mt-3">
+      <div class="appointments-section" id="appointment-section-past">
+        <div class="card-container">
+          <div *ngFor="let appointment of getVisiblePastAppointments()" class="appointment-card">
+            <div class="appointment-details">
+              <div class="flex-start"><strong>Outpatient
+                Department:</strong> {{ appointment.outpatientDepartment.name }}
+              </div>
+              <div><strong>Start
+                Date:</strong> {{ getDayString(appointment.startDate) }} {{ appointment.startDate.toLocaleTimeString() }}
+              </div>
+              <div class="flex-start"><strong>End
+                Date:</strong> {{ getDayString(appointment.endDate) }} {{ appointment.endDate.toLocaleTimeString() }}
+              </div>
+            </div>
           </div>
-          <div><strong>Start
-            Date:</strong> {{ appointment.startDate.toLocaleDateString() }} {{ appointment.startDate.toLocaleTimeString() }}
-          </div>
-          <div class="flex-start"><strong>End
-            Date:</strong> {{ appointment.endDate.toLocaleDateString() }} {{ appointment.endDate.toLocaleTimeString() }}
-          </div>
+        </div>
+        <div class="pagination-buttons on-landing-hidden" *ngIf="showPastAppointments">
+          <button mat-button class="pagination-buttons-button" tabindex="26" (click)="previousPastPage()"
+                  [disabled]="currentPagePast === 0">
+            Previous
+          </button>
+          <button mat-button class="pagination-buttons-button" tabindex="27" (click)="nextPastPage()"
+                  [disabled]="(currentPagePast + 1) * pageSize >= totalPastAppointments">
+            Next
+          </button>
         </div>
       </div>
     </div>
-    <div class="pagination-buttons" *ngIf="showPastAppointments">
-      <button mat-button class="pagination-buttons-button" tabindex="26" (click)="previousPastPage()"
-              [disabled]="currentPagePast === 1">
-        Previous
-      </button>
-      <button mat-button class="pagination-buttons-button" tabindex="27" (click)="nextPastPage()"
-              [disabled]="(currentPagePast * pageSize) >= pastAppointments.length">
-        Next
-      </button>
-    </div>
-  </div>
-</div>
+  </mat-tab>
+</mat-tab-group>

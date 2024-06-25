@@ -1,3 +1,5 @@
+@import "src/styles.scss";
+
 .container {
   margin-top: 20px;
 }
@@ -21,39 +23,28 @@ h3 {
 }
 
 .form-group {
-  margin-bottom: 50px;
-}
-
-.badge-container {
   display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
   flex-wrap: wrap;
-  flex-direction: row;
-  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.badge {
-  margin-right: 10px;
-  margin-bottom: 10px;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.7rem 1.5rem 0.7rem 0.7rem;
-}
-
-.badge .btn-close {
-  position: absolute;
-  right: 0.25rem;
-  top: 50%;
-  transform: translateY(-50%);
+.form-group > h3 {
+  width: 100%;
 }
 
 .matFormFieldFullWidth {
   width: 100%;
 }
 
+.treatmentColumn {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
 .treatmentDateContainer {
+  margin-bottom: 0;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -107,7 +98,64 @@ h3 {
   border-radius: 5px;
 }
 
-.matFormFieldFullWidth {
-  max-width: 80%;
-  width: 600px;
+.half-width {
+  width: 100%;
 }
+
+@media screen and (min-width: 601px) {
+  .half-width {
+    width: calc(50% - 16px);
+  }
+}
+
+mat-icon {
+  color: $sepr-group-phase-green;
+}
+
+.medication-card {
+  margin: 0;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 24px;
+}
+
+button.mat-fab {
+  margin-top: 20px;
+}
+
+button.mat-fab mat-icon {
+  font-size: 36px;
+}
+
+.medication-button-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.medication-button-container > h3 {
+  margin: 0;
+}
+
+.form-group-additional-margin {
+  margin-bottom: 40px !important;
+}
+
+.button-submit-bottom-section {
+  //margin-top: auto!important;
+}
+
+.medicationSection {
+  display: block !important;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+

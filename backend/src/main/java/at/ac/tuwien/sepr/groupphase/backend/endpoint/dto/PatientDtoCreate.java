@@ -7,20 +7,21 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record PatientDtoCreate(
-    @NotBlank(message = "cannot be empty")
-    @Size(max = 10, min = 10, message = "must have 10 digits")
+    @NotBlank(message = "Social security number cannot be empty")
+    @Size(max = 10, min = 10, message = "Social security number must have 10 digits")
     String svnr,
 
-    @NotBlank
-    @Email(message = "is not a valid email address")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is not a valid email address")
+    @Size(max = 255, message = "Email cannot be longer than 255 characters")
     String email,
 
-    @NotBlank(message = "cannot be empty")
-    @Size(max = 255, message = "cannot be longer than 255 characters")
+    @NotBlank(message = "Firstname cannot be empty")
+    @Size(max = 255, message = "Firstname cannot be longer than 255 characters")
     String firstname,
 
-    @NotBlank(message = "cannot be empty")
-    @Size(max = 255, message = "cannot be longer than 255 characters")
+    @NotBlank(message = "Lastname cannot be empty")
+    @Size(max = 255, message = "Lastname cannot be longer than 255 characters")
     String lastname,
 
     List<MedicationDto> medicines,

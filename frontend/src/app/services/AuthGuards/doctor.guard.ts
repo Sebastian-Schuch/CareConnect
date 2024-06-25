@@ -19,7 +19,7 @@ export class DoctorGuard implements CanActivate {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === Role.doctor) {
       return true;
     } else {
-      this.router.navigate(['/']);
+      this.router.navigate(['/not-found']);
       return false;
     }
   }

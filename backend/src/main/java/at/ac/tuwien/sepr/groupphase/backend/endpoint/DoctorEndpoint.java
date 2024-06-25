@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -15,6 +15,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -79,11 +83,7 @@ public class DoctorEndpoint {
                 byte[] bytes = outputStream.toByteArray();
 
                 inputStream = new ByteArrayInputStream(bytes);
-                return ResponseEntity
-                    .created(URI.create(""))
-                    .headers(headers)
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(new InputStreamResource(inputStream));
+                return ResponseEntity.created(URI.create("")).headers(headers).contentType(MediaType.APPLICATION_PDF).body(new InputStreamResource(inputStream));
             } catch (IOException e) {
                 throw new PdfCouldNotBeCreatedException("Could not create PDF document: " + e.getMessage());
             } finally {
@@ -107,21 +107,9 @@ public class DoctorEndpoint {
      */
     @Secured({"SECRETARY", "ADMIN", "DOCTOR"})
     @GetMapping({"/{id}"})
-    public DoctorDto get(@PathVariable("id") long id) {
+    public DoctorDtoSparse get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
         return this.doctorService.getDoctorById(id);
-    }
-
-    /**
-     * Get all the doctors from the repository.
-     *
-     * @return a list of all doctors
-     */
-    @Secured({"SECRETARY", "DOCTOR", "ADMIN"})
-    @GetMapping
-    public List<DoctorDto> getAll() {
-        LOG.info("GET " + BASE_PATH);
-        return this.doctorService.getAllDoctors();
     }
 
     /**
@@ -133,7 +121,7 @@ public class DoctorEndpoint {
      */
     @Secured({"ADMIN", "DOCTOR"})
     @PutMapping({"/{id}"})
-    public DoctorDto update(@PathVariable("id") long id, @Valid @RequestBody DoctorDtoUpdate toUpdate) {
+    public DoctorDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody DoctorDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
         if (doctorService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.ADMIN)) {
             return this.doctorService.updateDoctor(id, toUpdate);
@@ -151,8 +139,24 @@ public class DoctorEndpoint {
      */
     @Secured({"ADMIN"})
     @GetMapping({"/search"})
-    public List<DoctorDto> search(UserDtoSearch toSearch) {
+    public List<DoctorDtoSparse> search(UserDtoSearch toSearch) {
         LOG.info("GET " + BASE_PATH + "/search");
         return this.doctorService.searchDoctors(toSearch);
+    }
+
+    /**
+     * Get the doctor by email.
+     *
+     * @param page       the page number
+     * @param size       the size of the page
+     * @param searchTerm the email of the doctor
+     * @return the doctor with the email given
+     */
+    @Secured({"SECRETARY", "DOCTOR", "ADMIN"})
+    @GetMapping
+    public Page<DoctorDtoSparse> getDoctors(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "50") int size, @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm) {
+        LOG.info("GET " + BASE_PATH);
+        Pageable pageable = PageRequest.of(page, size);
+        return doctorService.getDoctors(searchTerm, pageable);
     }
 }

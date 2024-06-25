@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.DoctorMapper;
@@ -10,10 +11,15 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.DoctorRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DoctorService;
+import at.ac.tuwien.sepr.groupphase.backend.specification.DoctorSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -38,24 +44,23 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = new Doctor();
         doctor.setCredential(credentials);
         return doctorMapper.doctorToDoctorDto(doctorRepository.save(doctor));
-
     }
 
     @Override
-    public DoctorDto getDoctorById(Long id) {
+    public DoctorDtoSparse getDoctorById(Long id) {
         LOG.trace("getDoctorById({})", id);
-        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        Doctor doctor = doctorRepository.findByDoctorIdAndCredential_ActiveTrue(id);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
         }
-        return doctorMapper.doctorToDoctorDto(doctor);
+        return doctorMapper.doctorToDoctorDtoSparse(doctor);
     }
 
     @Override
     public Doctor getDoctorEntityById(Long id) {
         LOG.trace("getDoctorEntityById({})", id);
-        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        Doctor doctor = doctorRepository.findByDoctorIdAndCredential_ActiveTrue(id);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
@@ -64,57 +69,66 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorDto updateDoctor(Long id, DoctorDtoUpdate toUpdate) {
+    public DoctorDtoSparse updateDoctor(Long id, DoctorDtoUpdate toUpdate) {
         LOG.trace("updateDoctor({}, {})", id, toUpdate);
-        Doctor doctor = doctorRepository.findById(id).orElse(null);
+        Doctor doctor = doctorRepository.findByDoctorIdAndCredential_ActiveTrue(id);
         if (doctor == null) {
             LOG.warn("doctor with id {} not found", id);
             throw new NotFoundException("Doctor not found");
         }
-        return doctorMapper.doctorToDoctorDto(doctorRepository.save(doctorMapper.updateDtoToEntity(toUpdate, doctor)));
+        return doctorMapper.doctorToDoctorDtoSparse(doctorRepository.save(doctorMapper.updateDtoToEntity(toUpdate, doctor)));
     }
 
     @Override
-    public DoctorDto findDoctorByCredential(Credential credential) {
-        LOG.debug("Find application user by email");
-        Doctor doctor = doctorRepository.findByCredential(credential);
+    public DoctorDtoSparse findDoctorByCredential(Credential credential) {
+        LOG.trace("findDoctorByCredential({})", credential);
+        Doctor doctor = doctorRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (doctor != null) {
-            return doctorMapper.doctorToDoctorDto(doctor);
+            return doctorMapper.doctorToDoctorDtoSparse(doctor);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }
 
     @Override
-    public List<DoctorDto> searchDoctors(UserDtoSearch search) {
+    public List<DoctorDtoSparse> searchDoctors(UserDtoSearch search) {
         LOG.trace("searchDoctors({})", search);
-        return doctorMapper.doctorsToDoctorDtos(
+        return doctorMapper.doctorsToDoctorDtosSparse(
             doctorRepository.searchDoctor(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
-    public List<DoctorDto> getAllDoctors() {
-        return doctorMapper.doctorsToDoctorDtos(doctorRepository.findAll());
-    }
-
-    @Override
-    public DoctorDto getDoctorByEmail(String email) {
-        return doctorMapper.doctorToDoctorDto(doctorRepository.findByCredential_Email(email));
+    public List<DoctorDtoSparse> getAllDoctors() {
+        LOG.trace("getAllDoctors()");
+        return doctorMapper.doctorsToDoctorDtosSparse(doctorRepository.findByCredential_ActiveTrue());
     }
 
     @Override
     public boolean isOwnRequest(Long userId) {
+        LOG.trace("isOwnRequest({})", userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("DOCTOR"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String email = principal.toString();
+            if (principal instanceof UserDetails) {
+                email = ((UserDetails) principal).getUsername();
+            }
             try {
                 Doctor doctor = this.getDoctorEntityById(userId);
-                return principal.toString().equals(doctor.getCredential().getEmail());
+                return email.equals(doctor.getCredential().getEmail());
             } catch (NotFoundException e) {
                 return false;
             }
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    @Override
+    public Page<DoctorDtoSparse> getDoctors(String searchTerm, Pageable pageable) {
+        LOG.trace("getDoctors({}, {})", searchTerm, pageable);
+        Specification<Doctor> spec = Specification.where(DoctorSpecification.containsTextInAnyField(searchTerm))
+            .and(DoctorSpecification.isActive());
+        return doctorRepository.findAll(spec, pageable)
+            .map(doctorMapper::doctorToDoctorDtoSparse);
     }
 
     /**
@@ -130,4 +144,6 @@ public class DoctorServiceImpl implements DoctorService {
         }
         return search;
     }
+
+
 }

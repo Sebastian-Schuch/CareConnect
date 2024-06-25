@@ -1,15 +1,15 @@
-import {StationDto} from "./Station";
+import {InpatientDepartmentDto} from "./inpatient-department";
 
 export interface StayDto {
   id: number;
-  station: StationDto;
-  arrival: string;
-  discharge: string;
+  inpatientDepartment: InpatientDepartmentDto;
+  arrival: Date;
+  discharge: Date;
 }
 
 export interface StayDtoCreate {
-  station: StationDto;
-  patientId: string;
+  inpatientDepartment: InpatientDepartmentDto;
+  patientId: number;
 }
 
 export interface StayDtoPage {

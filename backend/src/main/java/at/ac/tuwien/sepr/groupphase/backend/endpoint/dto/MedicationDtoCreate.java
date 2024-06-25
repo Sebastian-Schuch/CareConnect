@@ -4,8 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record MedicationDtoCreate(
-    @NotBlank(message = "cannot be empty")
-    @Size(max = 255, message = "cannot be longer than 255 characters")
-    String name
+    @NotBlank(message = "Name cannot be empty")
+    @Size(max = 255, message = "Name cannot be longer than 255 characters")
+    String name,
+
+    @NotBlank(message = "Name cannot be empty")
+    String unitOfMeasurement
 ) {
 }

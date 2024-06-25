@@ -1,0 +1,74 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>Search for Allergies</span><br>
+    </h1>
+  </div>
+
+  <div>
+    <h3 tabindex="20">Here you can search for allergies and edit them</h3>
+  </div>
+</div>
+<form (submit)="reloadAllergies()">
+  <button type="submit" hidden="hidden">submit</button>
+  <div class="input-row">
+    <div class="form-group">
+      <label for="searchAllergyName" class="col-form-label">
+        Allergy Name
+      </label>
+      <input type="text" id="searchAllergyName"
+             name="searchAllergyName"
+             class="form-control"
+             tabindex="20"
+             [(ngModel)]="allergyName"
+             (ngModelChange)="reloadAllergies()"
+             aria-label="Search for allergy name"
+      >
+    </div>
+  </div>
+  <div class="ms-4"></div>
+</form>
+<div class="mt-3">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="w-75">Name</th>
+        <th class="w-25">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let allergy of allergies; let i = index" class="center-td">
+        <td aria-label="allergy name" [tabindex]="i+'28'">{{ allergy.name }}</td>
+        <td>
+          <div class="btn-group">
+            <label hidden [for]="i+'edit'">Edit Allergy</label>
+            <button [id]="i+'edit'" class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]="'Edit allergy '+allergy.name+' (mode_edit)'"
+                    [tabindex]="i+'36'"
+                    (click)="navigateToEditAllergy(allergy.id)"
+            >
+              <mat-icon>mode_edit</mat-icon>
+            </button>
+            <label hidden [for]="i+'delete'">Delete Allergy</label>
+            <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]='"Delete allergy" + allergy.name + " (delete)"'
+                    [tabindex]="i+'29'"
+                    (click)="openDeleteDialog(allergy)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator [length]=totalItems
+                 [pageSize]=size
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 [pageIndex]=page
+                 (page)="onPageChange($event)"
+                 aria-label="Select page">
+  </mat-paginator>
+</div>

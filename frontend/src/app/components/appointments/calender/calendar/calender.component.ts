@@ -12,7 +12,7 @@ import {
   startOfMonth,
   subMonths,
 } from 'date-fns';
-import {forkJoin, Subject} from 'rxjs';
+import {debounceTime, forkJoin, fromEvent, Subject} from 'rxjs';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarDateFormatter,
@@ -32,14 +32,15 @@ import {OutpatientDepartmentDto} from "../../../../dtos/outpatient-department";
 import {AppointmentDtoCalendar, AppointmentDtoCreate} from "../../../../dtos/appointment";
 import {UserDto} from "../../../../dtos/user";
 import {OpeningHoursDto} from "../../../../dtos/opening-hours";
-import {Router} from "@angular/router";
 import {ErrorFormatterService} from "../../../../services/error-formatter.service";
+import {Role} from "../../../../dtos/Role";
 
 
 @Component({
   selector: 'app-calender',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'calender.component.html',
+  styleUrls: ['calender.component.scss'],
   providers: [
     {
       provide: CalendarDateFormatter,
@@ -55,6 +56,7 @@ import {ErrorFormatterService} from "../../../../services/error-formatter.servic
 export class CalenderComponent implements OnInit {
   @Input() outpatientDepartment: OutpatientDepartmentDto;
   @Input() patient: UserDto;
+  @Input() role: Role;
   @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
 
 
@@ -87,22 +89,35 @@ export class CalenderComponent implements OnInit {
   dayStartHour: number = 0;
   dayEndHour: number = 24;
 
+  isHandset: boolean = false;
+
   constructor(
     private modal: NgbModal,
     private service: CalenderService,
     private notification: ToastrService,
     private appointmentService: AppointmentService,
-    private errorFormatterService: ErrorFormatterService,
-    private router: Router
+    private errorFormatterService: ErrorFormatterService
   ) {
   }
 
   ngOnInit(): void {
     this.setStartAndEndHour(this.outpatientDepartment.openingHours);
+    fromEvent(window, 'resize').pipe(debounceTime(20)).subscribe(() => this.isScreenWideEnough());
+    this.isScreenWideEnough();
     // Since the ngOnChanges Method also calls, when the component is initialized, we don't need to call loadSlotsAndBookedAppointmentsOfMonth here
   }
 
   ngOnChanges(): void {
+    this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
+  }
+
+  public isScreenWideEnough() {
+    this.isHandset = window.innerWidth < 800;
+    if (this.isHandset) {
+      this.view = CalendarView.Day;
+    } else {
+      this.view = CalendarView.Month;
+    }
     this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
   }
 
@@ -142,14 +157,13 @@ export class CalenderComponent implements OnInit {
   public loadSlotsAndBookedAppointmentsOfMonth(dateOfMonth: Date) {
     this.startDate = startOfMonth(subMonths(dateOfMonth, 1));
     this.endDate = endOfMonth(addMonths(dateOfMonth, 1));
-
     if (this.patient) {
       forkJoin({
         bookedAppointments: this.appointmentService.getAppointmentsFromOutpatientDepartmentForTimePeriod(this.outpatientDepartment.id, this.startDate, this.endDate),
         patientAppointments: this.appointmentService.getAppointmentsFromPatient(this.patient.id),
       }).subscribe(({bookedAppointments, patientAppointments}) => {
         this.bookedAppointments = bookedAppointments;
-        this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, patientAppointments, this.startDate, this.endDate);
+        this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, patientAppointments, this.startDate, this.endDate, this.role);
         this.refresh.next();
       });
     } else {
@@ -157,7 +171,7 @@ export class CalenderComponent implements OnInit {
       observable.subscribe({
         next: (bookedAppointments) => {
           this.bookedAppointments = bookedAppointments;
-          this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, [], this.startDate, this.endDate);
+          this.events = this.service.getCalendarEventDataForSpecifiedTime(this.outpatientDepartment, this.bookedAppointments, [], this.startDate, this.endDate, this.role);
           this.refresh.next();
         },
         error: error => {
@@ -185,6 +199,15 @@ export class CalenderComponent implements OnInit {
    */
   public getBadgeColor(date: Date) {
     return this.service.getEventColorBadgeMonth(this.calcCurrentSlots(date), this.calcMaxSlots(date), date, this.service.getDayOfWeek(this.outpatientDepartment.openingHours, getDay(date))).primary;
+  }
+
+  /**
+   * Set the badge text color for the given date
+   *
+   * @param date the date to set the badge color for
+   */
+  public getBadgeColorText(date: Date) {
+    return this.service.getEventColorBadgeMonth(this.calcCurrentSlots(date), this.calcMaxSlots(date), date, this.service.getDayOfWeek(this.outpatientDepartment.openingHours, getDay(date))).secondaryText;
   }
 
   public isInPast(date: Date): boolean {
@@ -234,24 +257,8 @@ export class CalenderComponent implements OnInit {
           this.loadSlotsAndBookedAppointmentsOfMonth(this.viewDate);
         },
         error: async error => {
-          switch (error.status) {
-            case 422:
-              this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not book appointment`, {
-                enableHtml: true,
-                timeOut: 10000
-              });
-              break;
-            case 400:
-              this.notification.error(`No Patient selected`, `Could not book appointment`);
-              break;
-            case 401:
-              this.notification.error(await error.error.text(), `Could not book appointment`);
-              this.router.navigate(['/']);
-              break;
-            default:
-              this.notification.error(await error.error.text(), `Could not book appointment`);
-              break;
-          }
+          await this.errorFormatterService.printErrorToNotification(error, `Could not book appointment`, this.notification, "Not patient selected");
+
         }
       });
     } else {
@@ -364,7 +371,7 @@ export class CalenderComponent implements OnInit {
   }
 
   public getDayString(day: any): string {
-    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
+    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day)
   }
 
   public getWeekdayString(i: number) {

@@ -8,15 +8,15 @@ import jakarta.validation.constraints.Size;
 public record OutpatientDepartmentDtoCreate(
     @NotBlank
     @NotNull
-    @Size(max = 255, message = " must be less than or equal to 255 characters")
+    @Size(max = 255, message = "Name must be less than or equal to 255 characters")
     String name,
     @NotNull
-    @Size(max = 1000, message = " must be less than or equal to 1000 characters")
+    @Size(max = 1000, message = "Description must be less than or equal to 1000 characters")
     String description,
-    @Max(value = 1000, message = " must be less than or equal to 1000")
+    @Max(value = 1000, message = "Capacity must be less than or equal to 1000")
     int capacity,
 
-    @NotNull(message = " must not be null")
+    @NotNull(message = "Opening hours must not be null")
     OpeningHoursDtoCreate openingHours
 ) {
 }

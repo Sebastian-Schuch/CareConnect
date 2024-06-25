@@ -4,7 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.List;
 
 /**
  * Service for the treatment medicine entity.
@@ -16,9 +17,8 @@ public interface TreatmentMedicineService {
      *
      * @param treatmentMedicineDtoCreate the treatment medicine department to create
      * @return the created treatment medicine
-     * @throws MethodArgumentNotValidException if the treatment medicine is not valid
      */
-    TreatmentMedicineDto createTreatmentMedicine(TreatmentMedicineDtoCreate treatmentMedicineDtoCreate) throws MethodArgumentNotValidException;
+    TreatmentMedicineDto createTreatmentMedicine(TreatmentMedicineDtoCreate treatmentMedicineDtoCreate);
 
     /**
      * Gets a treatment medicine by its id.
@@ -37,5 +37,22 @@ public interface TreatmentMedicineService {
      * @throws NotFoundException if the treatment medicine does not exist
      */
     TreatmentMedicine getTreatmentMedicineEntityById(long id) throws NotFoundException;
+
+    /**
+     * Deletes a treatment medicine by its id.
+     *
+     * @param id the id of the treatment medicine
+     * @throws NotFoundException if the treatment medicine does not exist
+     */
+    void deleteTreatmentMedicine(long id) throws NotFoundException;
+
+
+    /**
+     * Gets all treatment medicines.
+     *
+     * @return the treatment medicines
+     */
+    List<TreatmentMedicineDto> getAllTreatmentMedicines();
+
 
 }

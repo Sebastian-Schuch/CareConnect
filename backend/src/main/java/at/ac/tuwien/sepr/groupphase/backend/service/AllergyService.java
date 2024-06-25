@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 
@@ -23,14 +24,6 @@ public interface AllergyService {
      * @return the allergy with the given id
      */
     Allergy findById(Long id);
-
-    /**
-     * This function counts the number of allergies in the db.
-     *
-     * @return the number of allergies in the db
-     */
-    int countAllergies();
-
 
     /**
      * This function finds an allergy by its name.
@@ -63,4 +56,22 @@ public interface AllergyService {
      * @return the allergy entity with the id given
      */
     Allergy getEntityById(Long id);
+
+    /**
+     * This function searches for allergies by their name.
+     *
+     * @param name the name of the allergy to search for
+     * @param page the page number
+     * @param size the size of the page
+     * @return the allergies with the given name
+     */
+    AllergyPageDto searchAllergies(String name, Integer page, Integer size);
+
+    /**
+     * This function sets an allergy to inactive.
+     *
+     * @param id the id of the allergy to set inactive
+     * @return the allergy set to inactive
+     */
+    AllergyDto setAllergyInactive(Long id);
 }

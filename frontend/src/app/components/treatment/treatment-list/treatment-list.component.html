@@ -1,0 +1,194 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>{{ mode === TreatmentListMode.search ? "Search for Treatments" : "View Treatment History" }} </span><br>
+    </h1>
+  </div>
+
+  <div *ngIf="role===Role.patient">
+    <h3 *ngIf="mode===TreatmentListMode.view" tabindex="20">Here you can view your last treatments or click <a
+      (click)="switchToSearch()"
+      style="color:blue;text-decoration-line: underline; cursor: pointer" tabindex="20" aria-label="Switch to search">here</a>
+      to
+      search a specific
+      treatment</h3>
+    <h3 *ngIf="mode===TreatmentListMode.search" tabindex="20">
+      Here you can search for your treatments using the input fields below
+    </h3>
+    <p class="subheadline">
+      The colors in the table represent your stays in the hospital
+    </p>
+  </div>
+</div>
+<form *ngIf="mode===TreatmentListMode.search" class="" (submit)="reloadTreatments()">
+  <button type="submit" hidden="hidden">submit</button>
+  <div class="input-row">
+    <div class="form-group">
+      <label *ngIf="role===Role.doctor || role===Role.secretary" for="searchPatientName" class="col-form-label">
+        Patient
+      </label>
+      <input *ngIf="role===Role.doctor || role===Role.secretary" type="text" id="searchPatientName"
+             name="searchPatientName"
+             class="form-control"
+             tabindex="20"
+             [(ngModel)]="search.patientName"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search for patient name"
+      >
+    </div>
+    <div class="form-group">
+      <label *ngIf="role===Role.doctor || role===Role.secretary" for="searchSvnr" class="col-form-label">
+        Social Security Number
+      </label>
+      <input *ngIf="role===Role.doctor || role===Role.secretary" type="text" id="searchSvnr"
+             name="searchSvnr"
+             class="form-control"
+             tabindex="21"
+             [(ngModel)]="search.svnr"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search for social security number"
+      >
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="form-group">
+      <label for="searchTreatmentTitle" class="col-form-label">
+        Treatment
+      </label>
+      <input type="text" id="searchTreatmentTitle" name="searchTreatmentTitle"
+             class="form-control"
+             tabindex="22"
+             [(ngModel)]="search.treatmentTitle"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search for treatment name"
+      >
+    </div>
+    <div class="form-group">
+      <label for="searchDoctorName" class="col-form-label">
+        Doctor
+      </label>
+      <input type="text" id="searchDoctorName" name="searchDoctorName"
+             class="form-control"
+             tabindex="23"
+             [(ngModel)]="search.doctorName"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search for doctor name"
+      >
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="form-group">
+      <label for="searchMedicationName" class="col-form-label">
+        Medication
+      </label>
+      <input type="text" id="searchMedicationName" name="searchMedicationName"
+             class="form-control"
+             tabindex="24"
+             [(ngModel)]="search.medicationName"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search for medication name"
+      >
+    </div>
+    <div class="form-group">
+      <label for="searchDepartmentName" class="col-form-label">
+        Department
+      </label>
+      <input type="text" id="searchDepartmentName" name="searchDepartmentName"
+             class="form-control"
+             tabindex="25"
+             [(ngModel)]="search.departmentName"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search for department name"
+      >
+    </div>
+  </div>
+  <div class="input-row">
+    <div class="form-group">
+      <label for="searchStartDate" class="col-form-label">
+        Treatment Start
+      </label>
+      <input type="date" id="searchStartDate" name="searchStartDate"
+             class="form-control"
+             tabindex="26"
+             [(ngModel)]="search.startDate"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search in time period from start date"
+      >
+    </div>
+    <div class="form-group">
+      <label for="searchEndDate" class="col-form-label">
+        Treatment End
+      </label>
+      <input type="date" id="searchEndDate" name="searchEndDate"
+             class="form-control"
+             tabindex="27"
+             [(ngModel)]="search.endDate"
+             (ngModelChange)="reloadTreatments()"
+             aria-label="Search in time period from end date"
+      ></div>
+  </div>
+  <div class="ms-4"></div>
+</form>
+<div class="mt-3 ">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="w-15">Name</th>
+        <th class="w-15">Department</th>
+        <th class="w-15" *ngIf="role===Role.doctor || role===Role.secretary">Patient</th>
+        <th class="w-15" *ngIf="role===Role.doctor || role===Role.secretary">Social Security Number</th>
+        <th class="w-15">Doctors</th>
+        <th class="w-15">Medication</th>
+        <th class="w-25">Date</th>
+        <th class="w-5">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let treatment of treatments; let i = index" class="center-td" [ngClass]="colors[i]">
+        <td aria-label="treatment title" [tabindex]="i+'28'">{{ treatment.treatmentTitle }}</td>
+        <td aria-label="treatment department" [tabindex]="i+'29'">{{ treatment.outpatientDepartment.name }}</td>
+        <td *ngIf="role===Role.doctor || role===Role.secretary" aria-label="treatment patient"
+            [tabindex]="i+'30'">{{ this.showUserName(treatment.patient) }}
+        </td>
+        <td *ngIf="role===Role.doctor || role===Role.secretary" aria-label="treatment patient"
+            [tabindex]="i+'31'">{{ treatment.patient.svnr }}
+        </td>
+        <td aria-label="treatment doctors" [tabindex]="i+'32'">{{ this.showDoctors(treatment.doctors) }}</td>
+        <td aria-label="treatment medicines" [tabindex]="i+'33'">{{ this.showMedicines(treatment.medicines) }}</td>
+        <td aria-label="treatment date"
+            [tabindex]="i+'34'">{{ this.showDate(treatment.treatmentStart, treatment.treatmentEnd) }}
+        </td>
+        <td>
+          <div class="btn-group">
+            <label hidden [for]="i+'view'">View Treatment</label>
+            <button [id]="i+'view'"
+                    class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]="'View treatment '+treatment.treatmentTitle+' (visibility)'"
+                    [tabindex]="i+'35'"
+                    (click)="navigateToViewTreatment(treatment.id)"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <label *ngIf="role===Role.doctor" hidden [for]="i+'edit'">Edit Treatment</label>
+            <button *ngIf="role===Role.doctor" [id]="i+'edit'" class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]="'Edit treatment '+treatment.treatmentTitle+' (mode_edit)'"
+                    [tabindex]="i+'36'"
+                    (click)="navigateToEditTreatment(treatment.id)"
+            >
+              <mat-icon>mode_edit</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator [length]=totalItems
+                 [pageSize]=search.size
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 [pageIndex]=search.page
+                 (page)="onPageChange($event)"
+                 aria-label="Select page">
+  </mat-paginator>
+</div>

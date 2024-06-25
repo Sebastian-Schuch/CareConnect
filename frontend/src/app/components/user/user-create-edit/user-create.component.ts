@@ -3,18 +3,19 @@ import {UserDto, UserDtoCreate, UserDtoUpdate} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup, NgModel, Validators} from "@angular/forms";
-import {forkJoin, map, Observable, startWith} from "rxjs";
+import {debounceTime, forkJoin, map, Observable, startWith, switchMap} from "rxjs";
 import {Role} from "../../../dtos/Role";
 import {ToastrService} from 'ngx-toastr';
-import {MedicationDto} from "../../../dtos/medication";
+import {MedicationDto, MedicationPageDto} from "../../../dtos/medication";
 import {MedicationService} from "../../../services/medication.service";
-import {AllergyDto} from "../../../dtos/allergy";
+import {AllergyDto, AllergyPageDto} from "../../../dtos/allergy";
 import {AllergyService} from "../../../services/allergy.service";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {AuthService} from "../../../services/auth.service";
 import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordFormModalComponent} from "../change-password-form-modal/change-password-form-modal.component";
 import {ResetPasswordDialogComponent} from "../reset-password-dialog/reset-password-dialog.component";
+import {Page} from "../../../dtos/page";
 
 export enum UserCreateEditMode {
   create,
@@ -140,28 +141,22 @@ export class UserCreateComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.route.params.subscribe(params => {
+
         if (data.role != null && data.mode != null) {
           this.userId = params['id'];
           this.role = data.role;
           this.mode = data.mode;
           this.generateForm();
-          forkJoin({
-            allergies: this.loadAllergies(),
-            medications: this.loadMedications()
-          }).subscribe({
-            next: ({allergies, medications}) => {
-              this.allergyOptions = allergies;
-              this.medicationOptions = medications;
-              this.resetAllSearchInputs();
-              if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
-                this.loadUser(this.userId);
-              }
-            },
-            error: error => {
-              this.notification.error('Loading of resources failed', 'Error loading resources');
-              console.error('error while getting data from database', error);
+          this.resetAllSearchInputs();
+          console.log(this.filteredAllergyOptions);
+          if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
+
+            if (isNaN(params['id']) === false) {
+              this.loadUser(this.userId);
+            } else {
+              this.router.navigate(['/']);
             }
-          });
+          }
         }
       });
     });
@@ -230,13 +225,40 @@ export class UserCreateComponent implements OnInit {
   private resetAllSearchInputs() {
     this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterMedications(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredMedication(value))
     );
+
 
     this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterAllergies(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredAllergy(value))
     );
+  }
+
+  private loadFilteredMedication(value: string | null | undefined): Observable<MedicationDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.medicationService.searchMedications(filterValue, 0, 10).pipe(
+      map((page: MedicationPageDto) => page.medications)
+    );
+  }
+
+  private loadFilteredAllergy(value: string | null | undefined): Observable<AllergyDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.allergyService.searchAllergies(filterValue, 0, 10).pipe(
+      map((page: AllergyPageDto) => page.allergies)
+    );
+  }
+
+  private getStringValue(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    } else if (value && value.firstname && value.lastname) {
+      return `${value.firstname} ${value.lastname}`;
+    } else {
+      return '';
+    }
   }
 
   public dynamicCssClassesForInput(input: NgModel): any {
@@ -255,9 +277,11 @@ export class UserCreateComponent implements OnInit {
       this.selectedMedicationOptions.push(medication);
     }
     this.userForm.get('medication').setValue('');
+    this.userForm.get('medication').reset();
     this.filteredMedicationOptions = this.userForm.get('medication').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterMedications(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredMedication(value))
     );
   }
 
@@ -271,26 +295,12 @@ export class UserCreateComponent implements OnInit {
       this.selectedAllergyOptions.push(allergy);
     }
     this.userForm.get('allergy').setValue('');
+    this.userForm.get('allergy').reset();
     this.filteredAllergyOptions = this.userForm.get('allergy').valueChanges.pipe(
       startWith(''),
-      map(value => this.filterAllergies(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredAllergy(value))
     );
-  }
-
-  /**
-   * Loads all medications from the backend
-   * @returns an observable with all medications
-   */
-  private loadMedications(): Observable<any> {
-    return this.medicationService.getMedicationsAll();
-  }
-
-  /**
-   * Loads all allergies from the backend
-   * @returns an observable with all allergies
-   */
-  private loadAllergies(): Observable<any> {
-    return this.allergyService.getAllergiesAll();
   }
 
   /**
@@ -313,30 +323,6 @@ export class UserCreateComponent implements OnInit {
     if (index >= 0) {
       this.selectedAllergyOptions.splice(index, 1);
     }
-  }
-
-  /**
-   * Filters the medications based on the input value
-   * @param value the input value to filter for
-   * @returns the filtered medications
-   */
-  private filterMedications(value: string): MedicationDto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.medicationOptions.filter(option =>
-      option.name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  /**
-   * Filters the allergies based on the input value
-   * @param value the input value to filter for
-   * @returns the filtered allergies
-   */
-  private filterAllergies(value: string): MedicationDto[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.allergyOptions.filter(option =>
-      option.name.toLowerCase().includes(filterValue)
-    );
   }
 
   openPasswordModal() {
@@ -385,24 +371,10 @@ export class UserCreateComponent implements OnInit {
 
               const url = window.URL.createObjectURL(response);
               window.open(url);
-              this.router.navigate(['/']);
+              this.routeUserCorrectly(this.role);
             },
             error: async error => {
-              switch (error.status) {
-                case 422:
-                  this.notification.error(this.errorFormatterService.format(JSON.parse(await error.error.text()).ValidationErrors), `Could not create ${this.roleString}`, {
-                    enableHtml: true,
-                    timeOut: 10000
-                  });
-                  break;
-                case 401:
-                  this.notification.error(await error.error.text(), `Could not create ${this.roleString}`);
-                  this.router.navigate(['/']);
-                  break;
-                default:
-                  this.notification.error(await error.error.text(), `Could not create ${this.roleString}`);
-                  break;
-              }
+              await this.errorFormatterService.printErrorToNotification(error, `Error creating user`, this.notification);
             }
           });
         }
@@ -441,9 +413,8 @@ export class UserCreateComponent implements OnInit {
                 this.authService.updateUserInformation();
               }
             },
-            error: error => {
-              this.notification.error('Could not update profile', 'Error updating profile');
-              console.error('error while updating user', error);
+            error: async error => {
+              await this.errorFormatterService.printErrorToNotification(error, 'Error updating user', this.notification);
             }
           });
         }
@@ -454,6 +425,25 @@ export class UserCreateComponent implements OnInit {
       default:
         console.error('Unknown mode', this.mode);
         return;
+    }
+  }
+
+  private routeUserCorrectly(role: Role) {
+    switch (role) {
+      case Role.admin:
+        this.router.navigate(['/home/admin/users/admins']);
+        break;
+      case Role.doctor:
+        this.router.navigate(['/home/admin/users/doctors']);
+        break;
+      case Role.secretary:
+        this.router.navigate(['/home/admin/users/secretaries']);
+        break;
+      case Role.patient:
+        this.router.navigate(['/home/secretary/patients']);
+        break;
+      default:
+        this.router.navigate(['/']);
     }
   }
 }

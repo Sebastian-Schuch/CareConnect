@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -30,7 +32,7 @@ public class AppointmentMapper {
         LOG.trace("appointmentEntityToAppointmentDto({})", appointment);
         return new AppointmentDto(
             appointment.getId(),
-            patientMapper.patientToPatientDto(appointment.getPatient()),
+            patientMapper.patientToPatientDtoSparse(appointment.getPatient()),
             outpatientDepartmentMapper.entityToDto(appointment.getOutpatientDepartment(), openingHoursMapper.entityToDto(appointment.getOutpatientDepartment().getOpeningHours())),
             appointment.getStartDate(),
             appointment.getEndDate(),
@@ -45,6 +47,11 @@ public class AppointmentMapper {
             appointmentsDto.add(appointmentEntityToAppointmentDto(appointment));
         }
         return appointmentsDto;
+    }
+
+    public AppointmentPageDto toAppointmentPageDto(Page<Appointment> appointmentPage) {
+        LOG.trace("toAppointmentPageDto({})", appointmentPage);
+        return new AppointmentPageDto(appointmentEntitiesToListOfAppointmentDto(appointmentPage.getContent()), (int) appointmentPage.getTotalElements());
     }
 
 }

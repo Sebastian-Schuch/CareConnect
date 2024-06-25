@@ -8,6 +8,5 @@ public record DoctorDto(
     String password,
     boolean isInitialPassword,
     boolean active
-
 ) {
 }

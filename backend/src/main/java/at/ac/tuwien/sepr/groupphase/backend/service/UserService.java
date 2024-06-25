@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
@@ -68,6 +70,14 @@ public interface UserService extends UserDetailsService {
     PDDocument createPatient(PatientDtoCreate toCreate);
 
     /**
+     * Creates the Credential Entity with the data given.
+     *
+     * @param toCreate the data of the administrator for the credential entity
+     * @return the users login data
+     */
+    PDDocument createAdministrator(AdminDtoCreate toCreate);
+
+    /**
      * Check if the user is from the specified role.
      *
      * @param role the role to check
@@ -78,9 +88,9 @@ public interface UserService extends UserDetailsService {
     /**
      * Changes the password of the user who sent the request.
      *
-     * @param newLogin the new user login data
+     * @param passwords the new user password
      */
-    void changePassword(UserLoginDto newLogin);
+    void changePassword(ChangePasswordDto passwords);
 
     /**
      * Resets the password of the user.

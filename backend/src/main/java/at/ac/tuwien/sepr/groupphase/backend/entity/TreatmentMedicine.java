@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,11 +22,7 @@ public class TreatmentMedicine {
     @ManyToOne
     private Medication medicine;
 
-    //@Convert(converter = EncryptorConverter.class)
     private Long amount;
-
-    @Convert(converter = EncryptorConverter.class)
-    private String unitOfMeasurement;
 
     private java.util.Date timeOfAdministration;
 
@@ -51,14 +48,6 @@ public class TreatmentMedicine {
 
     public void setAmount(Long amount) {
         this.amount = amount;
-    }
-
-    public String getUnitOfMeasurement() {
-        return unitOfMeasurement;
-    }
-
-    public void setUnitOfMeasurement(String unitOfMeasurement) {
-        this.unitOfMeasurement = unitOfMeasurement;
     }
 
     public java.util.Date getTimeOfAdministration() {

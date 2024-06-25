@@ -1,0 +1,74 @@
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>{{ mode === InpatientDepartmentCreateEditMode.create ? "Register" : "Edit" }}
+        Inpatient Department</span><br>
+    </h1>
+  </div>
+</div>
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+  <div class="row">
+    <!-- Start first name and last name row -->
+    <div class="mb-2 col-lg-6">
+      <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+      <div class="row">
+        <label for="inpatientDepartmentName" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Name
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <input type="text"
+                 id="inpatientDepartmentName"
+                 name="inpatient"
+                 tabindex="21"
+                 placeholder="Inpatient Department Name"
+                 class="form-control"
+                 [class]="dynamicCssClassesForInput(InpatientModel)"
+                 [(ngModel)]="getModel().name"
+                 #InpatientModel="ngModel"
+                 required
+          >
+
+          <div class="invalid-feedback">
+            <!-- This is shown, when the form validation deems the name input to be invalid -->
+            Inpatient Department name is required
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-2 col-lg-6">
+      <div class="row">
+        <label for="inpatientDepartmentCapacity" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Capacity
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="number"
+                 id="inpatientDepartmentCapacity"
+                 name="capacity"
+                 placeholder="Capacity"
+                 class="form-control"
+                 [class]="dynamicCssClassesForInput(CapacityModel)"
+                 [(ngModel)]="getModel().capacity"
+                 #CapacityModel="ngModel"
+                 required
+                 tabindex="22"
+          >
+          <div class="invalid-feedback">
+            Capacity is required
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End first name and last name row -->
+  </div>
+
+  <div class="mt-4 d-flex flex-row">
+    <span class="flex-grow-1"></span>
+    <button type="submit"
+            mat-button class="sepr-btn-submit"
+            [disabled]="!form.valid"
+    >
+      {{ mode === InpatientDepartmentCreateEditMode.create ? "Register Inpatient Department" : "Edit Inpatient Department" }}
+    </button>
+  </div>
+</form>

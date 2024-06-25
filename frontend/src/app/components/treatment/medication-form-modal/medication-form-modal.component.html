@@ -1,0 +1,49 @@
+<h1 mat-dialog-title>Log medication</h1>
+<mat-dialog-content>
+  <form [formGroup]="medicationAdministeredForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-form-field class="full-width">
+      <mat-label>Medication</mat-label>
+      <input matInput formControlName="medication" [matAutocomplete]="auto" [value]="selectedMedication">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayMedication" autoActiveFirstOption="true" (selectionchange)="console.log($event)">
+        <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication">
+          {{ displayMedication(medication) }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="medicationControl.hasError('required')">Medication is required</mat-error>
+      <mat-error *ngIf="medicationControl.hasError('invalidMedication')">Invalid medication</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="half-width">
+      <mat-label>Amount</mat-label>
+      <input matInput formControlName="amount" type="number">
+      <mat-error *ngIf="amountControl.hasError('required')">Amount is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="half-width">
+      <mat-label>Unit</mat-label>
+      <input matInput formControlName="unitOfMeasurement" [value]="selectedUnitOfMeasurement">
+    </mat-form-field>
+
+    <mat-form-field class="half-width">
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="medicineDatePicker"
+             [max]="dateToday| date:'yyyy-MM-dd'">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="dateControl.hasError('required')">Date is required</mat-error>
+      <mat-error *ngIf="dateControl.hasError('invalidDate')">Date must be in the past or today.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="half-width">
+      <mat-label>Time</mat-label>
+      <input matInput formControlName="medicineTimePicker" type="time">
+      <mat-error *ngIf="timeControl.hasError('required')">Time is required</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'">
+  <button class="sepr-btn-cancel" mat-button mat-dialog-close>Cancel</button>
+  <button class="sepr-btn-submit" mat-button (click)="onSubmit()" [disabled]="medicationAdministeredForm.invalid">
+    Submit
+  </button>
+</mat-dialog-actions>

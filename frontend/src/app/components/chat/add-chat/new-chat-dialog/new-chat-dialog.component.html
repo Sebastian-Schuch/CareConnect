@@ -3,14 +3,16 @@
   <p id="dialogDesc">What treatment should the chat be about?</p>
   <mat-form-field class="w-100">
     <mat-label>Treatment</mat-label>
-    <mat-select [(value)]="selectedNewChat" aria-labelledby="dialogDesc">
+    <mat-select [(value)]="selectedNewChat" aria-labelledby="dialogDesc" id="treatmentSelect">
       <ng-container *ngFor="let chat of data.available">
-        <mat-option [value]="chat">{{chat.name}}</mat-option>
+        <mat-option [value]="chat">{{ chat.name }}</mat-option>
       </ng-container>
     </mat-select>
   </mat-form-field>
 </mat-dialog-content>
-<mat-dialog-actions class="px-4">
-  <button mat-button (click)="onNoClick()" aria-label="Cancel">Cancel</button>
-  <button mat-button [mat-dialog-close]="selectedNewChat" [disabled]="selectedNewChat===undefined" aria-label="Create">Create</button>
+<mat-dialog-actions [align]="'end'">
+  <button class="sepr-btn-cancel" mat-button (click)="onNoClick()" aria-label="Cancel">Cancel</button>
+  <button class="sepr-btn-submit" mat-button [mat-dialog-close]="selectedNewChat"
+          [disabled]="selectedNewChat===undefined" aria-label="Create">Create
+  </button>
 </mat-dialog-actions>

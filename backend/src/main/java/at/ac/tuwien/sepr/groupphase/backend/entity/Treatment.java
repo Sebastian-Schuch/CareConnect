@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +21,7 @@ public class Treatment {
     @GeneratedValue
     private Long id;
 
-    @Convert(converter = EncryptorConverter.class)
+    @Column(length = 510)
     private String treatmentTitle;
 
     private Date treatmentStart;
@@ -34,6 +35,7 @@ public class Treatment {
     private OutpatientDepartment outpatientDepartment;
 
     @Convert(converter = EncryptorConverter.class)
+    @Column(length = 2048)
     private String treatmentText;
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -18,7 +18,7 @@ export class SecretaryGuard implements CanActivate {
     if (this.authService.isLoggedIn() && this.authService.getUserRole() === Role.secretary) {
       return true;
     } else {
-      this.router.navigate(['/']);
+      this.router.navigate(['/not-found']);
       return false;
     }
   }

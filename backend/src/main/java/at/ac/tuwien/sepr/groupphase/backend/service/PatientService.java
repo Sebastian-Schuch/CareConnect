@@ -2,10 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,14 +28,14 @@ public interface PatientService {
      * @param id the id of the patient requested
      * @return the patient with the id given
      */
-    PatientDto getPatientById(Long id);
+    PatientDtoSparse getPatientById(Long id);
 
     /**
      * Get all patients from repository.
      *
      * @return the list of all patients
      */
-    List<PatientDto> getAllPatients();
+    List<PatientDtoSparse> getAllPatients();
 
     /**
      * Get the specified patient Entity.
@@ -43,29 +46,13 @@ public interface PatientService {
     Patient getPatientEntityById(Long id);
 
     /**
-     * Get the specified patient Entity.
-     *
-     * @param email the email of the patient requested
-     * @return the patient with the email given
-     */
-    PatientDto getPatientByEmail(String email);
-
-    /**
-     * Get the specified patient Entity.
-     *
-     * @param email the email of the patient requested
-     * @return the patient with the email given
-     */
-    Patient getPatientEntityByEmail(String email);
-
-    /**
      * Update the patient with the given id.
      *
      * @param id       the id of the patient to update
      * @param toUpdate the data to update the patient with
      * @return the updated patient
      */
-    PatientDto updatePatient(Long id, PatientDtoUpdate toUpdate);
+    PatientDtoSparse updatePatient(Long id, PatientDtoUpdate toUpdate);
 
     /**
      * Find a patient by the given credential.
@@ -73,7 +60,7 @@ public interface PatientService {
      * @param credential the credential to find the patient by
      * @return the patient with the credential given
      */
-    PatientDto findPatientByCredential(Credential credential);
+    PatientDtoSparse findPatientByCredential(Credential credential);
 
     /**
      * Search for patients based on the search criteria.
@@ -81,7 +68,7 @@ public interface PatientService {
      * @param search the search criteria
      * @return a list of patients
      */
-    List<PatientDto> searchPatients(UserDtoSearch search);
+    List<PatientDtoSparse> searchPatients(UserDtoSearch search);
 
 
     /**
@@ -91,4 +78,13 @@ public interface PatientService {
      * @return true if the userId is from the patient that is sending the request, false otherwise
      */
     boolean isOwnRequest(Long userId);
+
+    /**
+     * Get a page of patients.
+     *
+     * @param searchTerm the search term to search for
+     * @param pageable   the pageable object
+     * @return a page of doctors
+     */
+    Page<PatientDtoSparse> getPatients(String searchTerm, Pageable pageable);
 }

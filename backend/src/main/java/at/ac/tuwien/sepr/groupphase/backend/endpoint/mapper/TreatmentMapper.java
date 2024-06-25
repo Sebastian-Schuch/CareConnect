@@ -1,11 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Treatment;
@@ -16,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
 import at.ac.tuwien.sepr.groupphase.backend.service.TreatmentMedicineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -63,19 +65,18 @@ public class TreatmentMapper {
      * Converts a TreatmentDtoCreate object to a Treatment object.
      *
      * @param treatmentDtoCreate the TreatmentDtoCreate object to convert
-     * @param treatmentMedicines the TreatmentMedicineDto objects to convert
      * @return the converted Treatment object
      */
-    public Treatment dtoToEntity(TreatmentDtoCreate treatmentDtoCreate, List<TreatmentMedicineDto> treatmentMedicines) {
+    public Treatment dtoToEntity(TreatmentDtoCreate treatmentDtoCreate) {
         LOG.trace("dtoToEntity({})", treatmentDtoCreate);
 
         List<Doctor> doctors = new LinkedList<>();
-        for (DoctorDto doctorDto : treatmentDtoCreate.doctors()) {
+        for (DoctorDtoSparse doctorDto : treatmentDtoCreate.doctors()) {
             doctors.add(doctorService.getDoctorEntityById(doctorDto.id()));
         }
 
         List<TreatmentMedicine> medicines = new LinkedList<>();
-        for (TreatmentMedicineDto treatmentMedicineDto : treatmentMedicines) {
+        for (TreatmentMedicineDto treatmentMedicineDto : treatmentDtoCreate.medicines()) {
             medicines.add(treatmentMedicineService.getTreatmentMedicineEntityById(treatmentMedicineDto.id()));
         }
 
@@ -102,10 +103,10 @@ public class TreatmentMapper {
     public TreatmentDto entityToDto(Treatment treatment) {
         LOG.trace("entityToDto({})", treatment);
 
-        List<DoctorDto> doctors = new LinkedList<>();
+        List<DoctorDtoSparse> doctors = new LinkedList<>();
         List<Doctor> doc = treatment.getDoctors();
         for (Doctor doctor : doc) {
-            doctors.add(doctorMapper.doctorToDoctorDto(doctor));
+            doctors.add(doctorMapper.doctorToDoctorDtoSparse(doctor));
         }
 
         List<TreatmentMedicineDto> medicines = new LinkedList<>();
@@ -113,7 +114,7 @@ public class TreatmentMapper {
             medicines.add(treatmentMedicineMapper.entityToDto(treatmentMedicine));
         }
 
-        PatientDto patient = patientMapper.patientToPatientDto(treatment.getPatient());
+        PatientDtoSparse patient = patientMapper.patientToPatientDtoSparse(treatment.getPatient());
         OutpatientDepartmentDto outpatientDepartmentDto = outpatientDepartmentService.getOutpatientDepartmentById(treatment.getOutpatientDepartment().getId());
 
         return new TreatmentDto(
@@ -129,6 +130,7 @@ public class TreatmentMapper {
     }
 
     public List<TreatmentDto> entityListToDtoList(List<Treatment> treatments) {
+        LOG.trace("entityListToDtoList({})", treatments);
         List<TreatmentDto> treatmentDtos = new LinkedList<>();
         for (Treatment treatment : treatments) {
             treatmentDtos.add(entityToDto(treatment));
@@ -136,4 +138,11 @@ public class TreatmentMapper {
         return treatmentDtos;
     }
 
+    public TreatmentPageDto toTreatmentPageDto(Page<Treatment> treatmentPage) {
+        LOG.trace("toTreatmentPageDto({})", treatmentPage);
+        return new TreatmentPageDto(
+            entityListToDtoList(treatmentPage.getContent()),
+            (int) treatmentPage.getTotalElements()
+        );
+    }
 }

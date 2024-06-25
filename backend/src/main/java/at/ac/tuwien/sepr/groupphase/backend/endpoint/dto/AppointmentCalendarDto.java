@@ -18,15 +18,18 @@ public class AppointmentCalendarDto {
         this.count = count;
     }
 
+    public AppointmentCalendarDto() {
+    }
+
     public void increaseCount() {
         this.count++;
     }
 
-    public Long getOutpatientDepartment() {
+    public Long getOutpatientDepartmentId() {
         return outpatientDepartmentId;
     }
 
-    public void setOutpatientDepartment(Long outpatientDepartmentId) {
+    public void setOutpatientDepartmentId(Long outpatientDepartmentId) {
         this.outpatientDepartmentId = outpatientDepartmentId;
     }
 

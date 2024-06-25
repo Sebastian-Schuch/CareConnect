@@ -1,7 +1,8 @@
 <div class="start-page-container on-landing-hidden">
   <div style="position: relative;">
     <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
-      <span>Register Medication</span><br>
+      <span>{{ this.mode === MedicationCreateEditMode.CREATE ? 'Register' : 'Edit' }}
+        Medication</span><br>
     </h1>
   </div>
 </div>
@@ -36,16 +37,43 @@
         </div>
       </div>
     </div>
+    <div class="mb-2 col-lg-6">
+      <!-- When nesting rows, always make row > col-* > row. The Bootstrap classes do not work right when an element is both col* and row -->
+      <div class="row">
+        <label for="medicationUnitOfMeasurement" class="col-form-label text-md-end text-muted col-md-2 col-lg-4">
+          Unit of Measurement
+        </label>
+        <div class="col-md-10 col-lg-8"
+        >
+          <input type="text"
+                 id="medicationUnitOfMeasurement"
+                 name="medicationUnitOfMeasurement"
+                 placeholder="UnitOfMeasurement"
+                 class="form-control"
+                 [class]="dynamicCssClassesForInput(nameModel)"
+                 [(ngModel)]="medication.unitOfMeasurement"
+                 #nameModel="ngModel"
+                 required
+                 tabindex="22"
+          >
+
+          <div class="invalid-feedback">
+            <!-- This is shown, when the form validation deems the name input to be invalid -->
+            Name is required
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="mt-4 d-flex flex-row">
     <span class="flex-grow-1"></span>
     <button type="submit"
-            class="btn btn-primary"
+            mat-button class="sepr-btn-submit"
             [disabled]="!form.valid"
-            tabindex="22"
+            tabindex="23"
     >
-      Register Medication
+      {{ this.mode === MedicationCreateEditMode.CREATE ? 'Register' : 'Edit' }} Medication
     </button>
   </div>
 </form>

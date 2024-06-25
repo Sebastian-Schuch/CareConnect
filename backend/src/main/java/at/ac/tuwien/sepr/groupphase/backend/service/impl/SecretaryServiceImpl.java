@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SecretaryDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SecretaryMapper;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -41,20 +43,20 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public SecretaryDto getById(Long id) {
+    public SecretaryDtoSparse getById(Long id) {
         LOG.trace("getById({})", id);
-        Secretary secretary = secretaryRepository.findById(id).orElse(null);
+        Secretary secretary = secretaryRepository.findBySecretaryIdAndCredential_ActiveTrue(id);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
         }
-        return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
+        return secretaryMapper.secretaryEntityToSecretaryDtoSparse(secretary);
     }
 
     @Override
     public Secretary getEntityById(Long id) {
         LOG.trace("getEntityById({})", id);
-        Secretary secretary = secretaryRepository.findById(id).orElse(null);
+        Secretary secretary = secretaryRepository.findBySecretaryIdAndCredential_ActiveTrue(id);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
@@ -63,51 +65,55 @@ public class SecretaryServiceImpl implements SecretaryService {
     }
 
     @Override
-    public List<SecretaryDto> searchSecretaries(UserDtoSearch search) {
+    public List<SecretaryDtoSparse> searchSecretaries(UserDtoSearch search) {
         LOG.trace("searchSecretaries({})", search);
-        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(
+        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoSparse(
             secretaryRepository.searchSecretary(this.makeStringSearchable(search.email()), this.makeStringSearchable(search.firstName()), this.makeStringSearchable(search.lastName())));
     }
 
     @Override
-    public SecretaryDto updateSecretary(Long id, SecretaryDtoUpdate toUpdate) {
+    public SecretaryDtoSparse updateSecretary(Long id, SecretaryDtoUpdate toUpdate) {
         LOG.trace("updateSecretary({}, {})", id, toUpdate);
-        Secretary secretary = secretaryRepository.findById(id).orElse(null);
+        Secretary secretary = secretaryRepository.findBySecretaryIdAndCredential_ActiveTrue(id);
         if (secretary == null) {
             LOG.warn("secretary with id {} not found", id);
             throw new NotFoundException("Secretary not found");
         }
-        return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretaryRepository.save(secretaryMapper.updateDtoToEntity(toUpdate, secretary)));
+        return secretaryMapper.secretaryEntityToSecretaryDtoSparse(secretaryRepository.save(secretaryMapper.updateDtoToEntity(toUpdate, secretary)));
     }
 
     @Override
-    public List<SecretaryDto> getAllSecretaries() {
+    public List<SecretaryDtoSparse> getAllSecretaries() {
         LOG.trace("getAllSecretaries()");
-        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoDetail(secretaryRepository.findAll());
+        return secretaryMapper.secretaryEntitiesToListOfSecretaryDtoSparse(secretaryRepository.findByCredential_ActiveTrue());
     }
 
     @Override
     public boolean isOwnRequest(Long userId) {
+        LOG.trace("isOwnRequest({})", userId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("SECRETARY"))) {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String email = principal.toString();
+            if (principal instanceof UserDetails) {
+                email = ((UserDetails) principal).getUsername();
+            }
             try {
                 Secretary secretary = this.getEntityById(userId);
-                return principal.toString().equals(secretary.getCredential().getEmail());
+                return email.equals(secretary.getCredential().getEmail());
             } catch (NotFoundException e) {
                 return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override
-    public SecretaryDto findSecretaryByCredential(Credential credential) {
+    public SecretaryDtoSparse findSecretaryByCredential(Credential credential) {
         LOG.debug("Find application user by email");
-        Secretary secretary = secretaryRepository.findByCredential(credential);
+        Secretary secretary = secretaryRepository.findByCredentialAndCredential_ActiveTrue(credential);
         if (secretary != null) {
-            return secretaryMapper.secretaryEntityToSecretaryDtoDetail(secretary);
+            return secretaryMapper.secretaryEntityToSecretaryDtoSparse(secretary);
         }
         throw new NotFoundException(String.format("Could not find the user with the credential %s", credential));
     }

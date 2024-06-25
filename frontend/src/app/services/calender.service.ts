@@ -24,43 +24,68 @@ import {EventColor} from "calendar-utils";
 import {OutpatientDepartmentDto} from "../dtos/outpatient-department";
 import {AppointmentDto, AppointmentDtoCalendar} from "../dtos/appointment";
 import {OpeningHoursDayDto, OpeningHoursDto} from "../dtos/opening-hours";
+import {Role} from "../dtos/Role";
 
 export const colors: Record<string, EventColor> = {
   red: {
     primary: '#ad2121',
     secondary: '#FAE3E3',
+    secondaryText: '#000000'
   },
   blue: {
     primary: '#1e90ff',
     secondary: '#D1E8FF',
+    secondaryText: '#000000'
   },
   yellow: {
     primary: '#e3bc08',
     secondary: '#FDF1BA',
+    secondaryText: '#000000'
   },
   green: {
     primary: 'rgba(25,236,79,0.33)',
     secondary: 'rgba(17,168,55,0.35)',
+    secondaryText: '#000000'
   },
   empty: {
     primary: 'rgba(17,168,55,0.5)',
     secondary: 'rgba(17,168,55,0.5)',
-  },
-  minimal: {
-    primary: 'rgba(135,206,235,0.5)',
-    secondary: 'rgba(135,206,235,0.5)',
+    secondaryText: '#000000'
   },
   half: {
     primary: 'rgba(255,215,0,0.5)',
     secondary: 'rgba(255,215,0,0.5)',
+    secondaryText: '#000000'
   },
   mostlyFull: {
     primary: 'rgba(255,140,0,0.5)',
     secondary: 'rgba(255,140,0,0.5)',
+    secondaryText: '#000000'
   },
   full: {
     primary: 'rgba(139,0,0,0.5)',
     secondary: 'rgba(139,0,0,0.5)',
+    secondaryText: '#000000'
+  },
+  emptyBadge: {
+    primary: 'rgba(15,120,45,1)',
+    secondary: 'rgba(15,120,45,1)',
+    secondaryText: '#ffffff'
+  },
+  halfBadge: {
+    primary: 'rgba(255,215,0,1)',
+    secondary: 'rgba(255,215,0,1)',
+    secondaryText: '#000000'
+  },
+  mostlyFullBadge: {
+    primary: 'rgba(255,140,0,1)',
+    secondary: 'rgba(255,140,0,1)',
+    secondaryText: '#000000'
+  },
+  fullBadge: {
+    primary: '#ad2121',
+    secondary: '#FAE3E3',
+    secondaryText: '#ffffff'
   }
 };
 
@@ -84,7 +109,7 @@ export class CalenderService {
         title: 'Closed',
         color: colors.red,
         draggable: false,
-        cssClass: 'not-open-time',
+        cssClass: 'not-open-time appointment',
         meta: {
           tooltip: 'Closed my ass'
         }
@@ -95,7 +120,7 @@ export class CalenderService {
         title: 'Closed',
         color: colors.red,
         draggable: false,
-        cssClass: 'not-open-time',
+        cssClass: 'not-open-time appointment',
         meta: {
           tooltip: 'Closed my ass'
         }
@@ -114,7 +139,7 @@ export class CalenderService {
         title: curCap + '/' + maxCap + ' ' + ((ratio < 1) ? 'Open' : 'Already booked out'),
         color: this.getEventColor(curCap, maxCap, addMinutes(addHours(startOfDay(setDay(new Date(), 3)), 7), i * 30)),
         draggable: false,
-        cssClass: 'open-time',
+        cssClass: 'open-time appointment',
         meta: {
           maxCapacity: 10,
           curCapacity: curCap,
@@ -136,12 +161,13 @@ export class CalenderService {
    * @param patientAppointment the appointments of the patient
    * @param startDate the start date of the time period
    * @param endDate the end date of the time period
+   * @param role the role of the user
    */
-  public getCalendarEventDataForSpecifiedTime(outpatientDepartment: OutpatientDepartmentDto, bookedAppointments: AppointmentDtoCalendar[], patientAppointment: AppointmentDto[], startDate: Date, endDate: Date): CalendarEvent[] {
+  public getCalendarEventDataForSpecifiedTime(outpatientDepartment: OutpatientDepartmentDto, bookedAppointments: AppointmentDtoCalendar[], patientAppointment: AppointmentDto[], startDate: Date, endDate: Date, role: Role): CalendarEvent[] {
     let events: CalendarEvent[] = [];
     for (let currentDiff = 0; addDays(startDate, currentDiff) < endDate; currentDiff++) {
       let currentOpeningHours: OpeningHoursDayDto = this.getDayOfWeek(outpatientDepartment.openingHours, getDay(addDays(startDate, currentDiff)));
-      let tmp = this.calculateSlotsOfDay(currentOpeningHours, outpatientDepartment.capacity, bookedAppointments, this.getPatientAppointmentFromOutpatientDepartment(outpatientDepartment.id, patientAppointment), addDays(startDate, currentDiff), getDay(addDays(startDate, currentDiff)));
+      let tmp = this.calculateSlotsOfDay(currentOpeningHours, outpatientDepartment.capacity, bookedAppointments, this.getPatientAppointmentFromOutpatientDepartment(outpatientDepartment.id, patientAppointment), addDays(startDate, currentDiff), getDay(addDays(startDate, currentDiff)), role);
       for (let i = 0; i < tmp.length; i++) {
         events.push(tmp[i])
       }
@@ -179,17 +205,15 @@ export class CalenderService {
     if (isBefore(date, new Date())) {
       return colors.full;
     }
-    if (fullness <= 0.1) {
+    if (fullness <= 0.25) {
       return colors.empty;
-    } else if (fullness < 0.25) {
-      return colors.minimal
     } else if (fullness < 0.5) {
-      return colors.minimal;
+      return colors.half;
     } else if (fullness < 1) {
       return colors.mostlyFull;
     } else if (fullness === 1) {
       return colors.full;
-    } else return colors.green;
+    } else return colors.red;
   }
 
   /**
@@ -206,24 +230,22 @@ export class CalenderService {
     const fullness = curCap / maxCap;
     if (openingHoursDay != null) {
       if (this.isInPast(date, openingHoursDay)) {
-        return colors.full;
+        return colors.fullBadge;
       }
     } else {
       if (isBefore(date, new Date())) {
-        return colors.full;
+        return colors.fullBadge;
       }
     }
-    if (fullness <= 0.1) {
-      return colors.empty;
-    } else if (fullness < 0.25) {
-      return colors.minimal
+    if (fullness <= 0.25) {
+      return colors.emptyBadge;
     } else if (fullness < 0.5) {
-      return colors.minimal;
+      return colors.halfBadge;
     } else if (fullness < 1) {
-      return colors.mostlyFull;
+      return colors.mostlyFullBadge;
     } else if (fullness === 1) {
-      return colors.full;
-    } else return colors.green;
+      return colors.fullBadge;
+    } else return colors.fullBadge;
   }
 
   public isInPast(date: Date, openingHoursDay: OpeningHoursDayDto): boolean {
@@ -276,16 +298,23 @@ export class CalenderService {
    * @param patientAppointment the appointments of the patient
    * @param weekdate the date of the week
    * @param i the offset from the start of the week
+   * @param role the role of the user
    */
-  private calculateSlotsOfDay(openingHours: OpeningHoursDayDto, capacity: number, bookedAppointments: AppointmentDtoCalendar[], patientAppointment: AppointmentDto[], weekdate: Date, i: number): CalendarEvent[] {
+  private calculateSlotsOfDay(openingHours: OpeningHoursDayDto, capacity: number, bookedAppointments: AppointmentDtoCalendar[], patientAppointment: AppointmentDto[], weekdate: Date, i: number, role: Role): CalendarEvent[] {
     let calendarEvents: CalendarEvent[] = [];
+    let color_closed: EventColor = {
+      primary: colors.red.primary,
+      secondary: colors.red.secondary,
+      secondaryText: '#000000'
+    }
     if (openingHours == null || openingHours.isClosed) {
       // This case represents the outpatient department being closed
+
       calendarEvents.push({
         start: addHours(startOfDay(setDay(weekdate, i, {weekStartsOn: 1})), 0),
         end: subSeconds(addHours(startOfDay(setDay(weekdate, i, {weekStartsOn: 1})), 24), 1),
-        title: 'Closed',
-        color: colors.red,
+        title: '<h6><b>Closed</b></h6>',
+        color: color_closed,
         draggable: false,
         cssClass: 'not-open-time',
         meta: {
@@ -302,8 +331,8 @@ export class CalenderService {
       calendarEvents.push({
         start: addHours(startOfDay(setDay(weekdate, i, {weekStartsOn: 1})), 0),
         end: addMinutes(addHours(startOfDay(setDay(weekdate, i, {weekStartsOn: 1})), this.getOpenHourOfDay(openingHours)), this.getOpenMinuteOfDay(openingHours)),
-        title: 'Closed',
-        color: colors.red,
+        title: '<h6><b>Closed</b></h6>',
+        color: color_closed,
         draggable: false,
         cssClass: 'not-open-time',
         meta: {
@@ -313,8 +342,8 @@ export class CalenderService {
       calendarEvents.push({
         start: addMinutes(addHours(startOfDay(setDay(weekdate, i, {weekStartsOn: 1})), this.getCloseHourOfDay(openingHours)), this.getCloseMinuteOfDay(openingHours)),
         end: subSeconds(addHours(startOfDay(setDay(weekdate, i, {weekStartsOn: 1})), 24), 1),
-        title: 'Closed',
-        color: colors.red,
+        title: '<h6><b>Closed</b></h6>',
+        color: color_closed,
         draggable: false,
         cssClass: 'not-open-time',
         meta: {
@@ -339,7 +368,11 @@ export class CalenderService {
         // Check if the current timeslot is an appointment of the patient
         for (let j = 0; j < patientAppointment.length; j++) {
           if (isEqual(addMinutes(startTime, currentDiff), patientAppointment[j].startDate)) {
-            title = "Your appointment"
+            if (role === Role.patient) {
+              title = "Your appointment"
+            } else {
+              title = "Patient's appointment"
+            }
             isMyAppointment = true;
             appointmentId = patientAppointment[j].id;
           }
@@ -348,7 +381,7 @@ export class CalenderService {
         let tmp: CalendarEvent = {
           start: addMinutes(startTime, currentDiff),
           end: addMinutes(startTime, currentDiff + 30),
-          title: title,
+          title: '<h6>' + title + '</h6>',
           color: this.getEventColor(curCap, capacity, addMinutes(startTime, currentDiff)),
           draggable: false,
           cssClass: 'open-time',

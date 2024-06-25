@@ -1,12 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AppointmentDto} from "../../../dtos/appointment";
-import {AppointmentService} from "../../../services/appointment.service";
-import {UserService} from "../../../services/user.service";
-import {ToastrService} from "ngx-toastr";
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {getDate, getMonth, getYear} from "date-fns";
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import { AppointmentDto, AppointmentPageDto } from "../../../dtos/appointment";
+import { AppointmentService } from "../../../services/appointment.service";
+import { UserService } from "../../../services/user.service";
+import { ToastrService } from "ngx-toastr";
+import { FormControl } from '@angular/forms';
+import { debounceTime, Observable, switchMap } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { getDate, getMonth, getYear } from "date-fns";
+import { OutpatientDepartmentDto, OutpatientDepartmentPageDto } from "../../../dtos/outpatient-department";
+import { OutpatientDepartmentService } from "../../../services/outpatient-department.service";
+import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-appointments-patient',
@@ -15,74 +18,89 @@ import {getDate, getMonth, getYear} from "date-fns";
 })
 export class AppointmentsPatientComponent implements OnInit {
   appointmentToBeCancelled: AppointmentDto | undefined;
-  patientAppointments: AppointmentDto[] = [];
   futureAppointments: AppointmentDto[] = [];
   pastAppointments: AppointmentDto[] = [];
-  outpatientDepartments: string[] = [];
-  filteredDepartments: Observable<string[]>;
+
+  filteredDepartments: Observable<OutpatientDepartmentDto[]>;
   departmentControl = new FormControl();
-  showPastAppointments: boolean = false;
+  showPastAppointments: boolean = true;
   pageSize: number = 3;
-  currentPageFuture: number = 1;
-  currentPagePast: number = 1;
+  currentPageFuture: number = 0;
+  currentPagePast: number = 0;
+  totalFutureAppointments: number = 0;
+  totalPastAppointments: number = 0;
   @Input() customStyle!: boolean;
 
+  @ViewChild('departmentInput', { static: false }) departmentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('outpdepAutoTrigger', { static: false }) outpdepAutoTrigger: MatAutocompleteTrigger;
+  @Input() isEmbedded: boolean = false;
   constructor(
     private appointmentService: AppointmentService,
     private userService: UserService,
-    private notification: ToastrService
-  ) {
-    this.filteredDepartments = this.departmentControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filterDepartments(value))
-    );
-  }
+    private notification: ToastrService,
+    private outpatientDepartmentService: OutpatientDepartmentService
+  ) {}
 
   ngOnInit(): void {
-    this.loadPatientAppointments();
     this.filteredDepartments = this.departmentControl.valueChanges.pipe(
       startWith(''),
-      map(value => this._filterDepartments(value))
+      debounceTime(300),
+      switchMap(value => this.loadFilteredOutPatDep(value))
     );
+    this.loadFutureAppointments();
+    this.loadPastAppointments();
   }
 
   getVisibleFutureAppointments(): AppointmentDto[] {
-    const startIndex = (this.currentPageFuture - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.futureAppointments.slice(startIndex, endIndex);
+    return this.futureAppointments;
   }
 
   getVisiblePastAppointments(): AppointmentDto[] {
-    const startIndex = (this.currentPagePast - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.pastAppointments.slice(startIndex, endIndex);
+    return this.pastAppointments;
   }
 
   nextFuturePage(): void {
-    if ((this.currentPageFuture * this.pageSize) < this.futureAppointments.length) {
-      this.currentPageFuture++;
-    }
+    this.currentPageFuture++;
+    this.loadFutureAppointments();
   }
 
   previousFuturePage(): void {
-    if (this.currentPageFuture > 1) {
+    if (this.currentPageFuture > 0) {
       this.currentPageFuture--;
+      this.loadFutureAppointments();
+    }
+  }
+
+  nextPastPage(): void {
+    this.currentPagePast++;
+    this.loadPastAppointments();
+  }
+
+  previousPastPage(): void {
+    if (this.currentPagePast > 0) {
+      this.currentPagePast--;
+      this.loadPastAppointments();
     }
   }
 
   public getDayString(day: any): string {
-    return getDate(day) + '/' + getMonth(day) + '/' + getYear(day)
+    return getDate(day) + '/' + (getMonth(day) + 1) + '/' + getYear(day);
   }
 
-  nextPastPage(): void {
-    if ((this.currentPagePast * this.pageSize) < this.pastAppointments.length) {
-      this.currentPagePast++;
-    }
+  private loadFilteredOutPatDep(value: string | null | undefined): Observable<OutpatientDepartmentDto[]> {
+    const filterValue = this.getStringValue(value).toLowerCase();
+    return this.outpatientDepartmentService.getOutpatientDepartmentPage(filterValue, 0, 50).pipe(
+      map((page: OutpatientDepartmentPageDto) => page.outpatientDepartments)
+    );
   }
 
-  previousPastPage(): void {
-    if (this.currentPagePast > 1) {
-      this.currentPagePast--;
+  private getStringValue(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    } else if (value && value.firstname && value.lastname) {
+      return `${value.firstname} ${value.lastname}`;
+    } else {
+      return '';
     }
   }
 
@@ -94,7 +112,10 @@ export class AppointmentsPatientComponent implements OnInit {
       this.appointmentService.cancelAppointment(this.appointmentToBeCancelled.id).subscribe({
         next: () => {
           this.notification.success(`Appointment successfully cancelled.`);
-          this.loadPatientAppointments();
+          this.loadFutureAppointments();
+          if (this.showPastAppointments) {
+            this.loadPastAppointments();
+          }
         },
         error: error => {
           console.error('Error deleting appointment', error);
@@ -104,54 +125,32 @@ export class AppointmentsPatientComponent implements OnInit {
     }
   }
 
-  /**
-   * toggle if past appointments should be shown
-   */
-  togglePastAppointments(): void {
-    this.showPastAppointments = !this.showPastAppointments;
-  }
 
   /**
    * Filter appointments by department
-   * @param department the department to filter by
    */
-  filterAppointments(department: string): void {
-    if (department) {
-      this.futureAppointments = this.patientAppointments.filter(appointment =>
-        appointment.startDate > new Date() && appointment.outpatientDepartment.name === department
-      );
-      this.pastAppointments = this.patientAppointments.filter(appointment =>
-        appointment.startDate <= new Date() && appointment.outpatientDepartment.name === department
-      );
-    } else {
-      this.futureAppointments = this.patientAppointments.filter(appointment => appointment.startDate > new Date());
-      this.pastAppointments = this.patientAppointments.filter(appointment => appointment.startDate <= new Date());
+  filterAppointments(department: OutpatientDepartmentDto): void {
+    const departmentId = department ? department.id : null;
+    this.loadFutureAppointments(departmentId);
+    if (this.showPastAppointments) {
+      this.loadPastAppointments(departmentId);
     }
   }
 
   /**
-   * Load the appointments for the patient
+   * Load the future appointments for the patient
    */
-  private loadPatientAppointments(): void {
+  private loadFutureAppointments(departmentId: number | null = null): void {
     this.userService.getPatientCredentials().subscribe({
       next: (patient) => {
-        this.appointmentService.getAppointmentsFromPatient(patient.id).subscribe({
-          next: (appointments) => {
-            this.patientAppointments = appointments.map(appointment => {
+        this.appointmentService.getAppointmentsByPatient(patient.id, departmentId, new Date(), null, this.currentPageFuture, this.pageSize).subscribe({
+          next: (response: AppointmentPageDto) => {
+            this.futureAppointments = response.appointments.map(appointment => {
               appointment.startDate = new Date(appointment.startDate);
               appointment.endDate = new Date(appointment.endDate);
               return appointment;
             });
-
-            this.sortAppointments();
-            this.futureAppointments = this.patientAppointments.filter(appointment => appointment.startDate > new Date());
-            this.pastAppointments = this.patientAppointments.filter(appointment => appointment.startDate <= new Date());
-
-            this.outpatientDepartments = [...new Set(this.patientAppointments.map(appointment => appointment.outpatientDepartment.name))];
-            this.filteredDepartments = this.departmentControl.valueChanges.pipe(
-              startWith(''),
-              map(value => this._filterDepartments(value))
-            );
+            this.totalFutureAppointments = response.totalItems;
           },
           error: (err) => {
             console.error('Error loading appointments', err);
@@ -165,18 +164,55 @@ export class AppointmentsPatientComponent implements OnInit {
   }
 
   /**
-   * Sort the appointments by start date
+   * Load the past appointments for the patient
    */
-  private sortAppointments(): void {
-    this.patientAppointments.sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+  loadPastAppointments(departmentId: number | null = null): void {
+    console.log('loading past appointments');
+    this.userService.getPatientCredentials().subscribe({
+      next: (patient) => {
+        this.appointmentService.getAppointmentsByPatient(patient.id, departmentId, null, new Date(), this.currentPagePast, this.pageSize).subscribe({
+          next: (response: AppointmentPageDto) => {
+            this.pastAppointments = response.appointments.map(appointment => {
+              appointment.startDate = new Date(appointment.startDate);
+              appointment.endDate = new Date(appointment.endDate);
+              return appointment;
+            });
+            this.totalPastAppointments = response.totalItems;
+          },
+          error: (err) => {
+            console.error('Error loading appointments', err);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching patient details', err);
+      }
+    });
   }
 
   /**
-   * Filter the outpatient departments
-   * @param value the value to filter by
+   * Display the outpatient department in the select field with correct format
+   * @param outpatientDepartment - the outpatient department as an object
+   * @return string - the formatted outpatient department
    */
-  private _filterDepartments(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.outpatientDepartments.filter(department => department.toLowerCase().includes(filterValue));
+  displayOutPD(outpatientDepartment: any): string {
+    return outpatientDepartment ? `${outpatientDepartment.name}` : '';
   }
+
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Backspace' && (event.target as HTMLInputElement).value === '') {
+      this.departmentControl.setValue('');
+      this.loadFutureAppointments();
+      if (this.showPastAppointments) {
+        this.loadPastAppointments();
+      }
+      setTimeout(() => {
+        if (this.outpdepAutoTrigger) {
+          this.outpdepAutoTrigger.openPanel();
+        }
+      });
+    }
+  }
+
+
 }

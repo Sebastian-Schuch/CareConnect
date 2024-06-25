@@ -7,7 +7,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
 import {NgbModalModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {UserCreateComponent} from "./components/user/user-create-edit/user-create.component";
@@ -29,8 +28,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
-import {MatAnchor, MatButton, MatIconButton} from "@angular/material/button";
-import {StationComponent} from "./components/station/station.component";
+import {MatAnchor, MatButton, MatFabButton, MatIconButton} from "@angular/material/button";
+import {InpatientDepartmentComponent} from "./components/inpatient-department/inpatient-department.component";
 import {AllergyComponent} from "./components/allergy/allergy.component";
 import {LoginComponent} from "./components/login/login.component";
 import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
@@ -61,7 +60,6 @@ import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-pag
 import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
 import {AddAllergyManualComponent} from "./components/allergy/add-allergy-manual/add-allergy-manual.component";
 import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/allergy-from-file.component";
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
 import {MedicationFromFileComponent} from "./components/medication/medication-from-file/medication-from-file.component";
 import {
@@ -71,16 +69,25 @@ import {
   InpatientDepartmentFromCsvComponent
 } from "./components/station/inpatient-department-from-csv/inpatient-department-from-csv.component";
 import {SmallListComponent} from "./components/station/small-list/small-list.component";
+import {
+  MedicationFormModalComponent
+} from "./components/treatment/medication-form-modal/medication-form-modal.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
+import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
+import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle} from "@angular/material/card";
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    HomeComponent,
     LoginComponent,
     TreatmentComponent,
-    StationComponent,
+    InpatientDepartmentComponent,
     AllergyComponent,
     UserCreateComponent,
     OutpatientDepartmentComponent,
@@ -100,7 +107,10 @@ import {SmallListComponent} from "./components/station/small-list/small-list.com
     MedicationFromFileComponent,
     OutpatientDepartmentFromFileComponent,
     InpatientDepartmentFromCsvComponent,
-    SmallListComponent
+    SmallListComponent,
+    LandingPatientComponent,
+    MedicationFormModalComponent,
+    OutpatientDepartmentCapacitiesComponent
   ],
   imports: [
     BrowserModule,
@@ -140,8 +150,21 @@ import {SmallListComponent} from "./components/station/small-list/small-list.com
     MatIconButton,
     ChatComponent,
     NewChatDialogComponent,
+    MatDialogContent,
+    MatDialogTitle,
+    MatDialogActions,
+    MatDialogClose,
+    MatCard,
+    MatCardHeader,
+    MatCardContent,
+    MatFabButton,
+    MatCardSubtitle,
+    HalfDonutChartComponent,
+    MatButtonToggleGroup,
+    MatButtonToggle,
     MatTabGroup,
-    MatTab
+    MatTab,
+    NewChatDialogComponent,
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
@@ -49,7 +50,19 @@ public class PatientMapper {
             patient.getCredential().getPassword(),
             patient.getCredential().isInitialPassword(),
             patient.getCredential().getActive());
+    }
 
+    /**
+     * Converts the patient entity to the patientDtoSparse without password.
+     *
+     * @param patient the patient to convert
+     * @return the patientDto
+     */
+    public PatientDtoSparse patientToPatientDtoSparse(Patient patient) {
+        LOG.trace("patientToPatientDtoSparse({})", patient);
+        return new PatientDtoSparse(patient.getPatientId(), patient.getSvnr(), medicationMapper.medicationEntitiesToListOfMedicationDto(patient.getMedicines()), allergyMapper.allergyToDto(patient.getAllergies()),
+            patient.getCredential().getFirstName(), patient.getCredential().getLastName(), patient.getCredential().getEmail(),
+            patient.getCredential().isInitialPassword());
     }
 
     /**
@@ -58,11 +71,11 @@ public class PatientMapper {
      * @param patients the patients to convert
      * @return the converted patients
      */
-    public List<PatientDto> patientsToPatientDtos(List<Patient> patients) {
+    public List<PatientDtoSparse> patientsToPatientDtosSparse(List<Patient> patients) {
         LOG.trace("patientsToPatientsDtos({})", patients);
-        List<PatientDto> patientDtos = new ArrayList<>();
+        List<PatientDtoSparse> patientDtos = new ArrayList<>();
         for (Patient patient : patients) {
-            patientDtos.add(patientToPatientDto(patient));
+            patientDtos.add(patientToPatientDtoSparse(patient));
         }
         return patientDtos;
     }
@@ -80,8 +93,8 @@ public class PatientMapper {
         }
         if (toCreate.allergies() != null) {
             List<Allergy> allergies = new ArrayList<>();
-            for (MedicationDto medication : toCreate.medicines()) {
-                allergies.add(allergyService.getEntityById(medication.id()));
+            for (AllergyDto allergy : toCreate.allergies()) {
+                allergies.add(allergyService.getEntityById(allergy.id()));
             }
             patient.setAllergies(allergies);
         }
@@ -104,7 +117,7 @@ public class PatientMapper {
         if (toUpdate.allergies() != null) {
             List<Allergy> allergies = new ArrayList<>();
             for (AllergyDto allergy : toUpdate.allergies()) {
-                allergies.add(allergyService.getEntityById(allergy.uid));
+                allergies.add(allergyService.getEntityById(allergy.id()));
             }
             patientUpdate.setAllergies(allergies);
         }

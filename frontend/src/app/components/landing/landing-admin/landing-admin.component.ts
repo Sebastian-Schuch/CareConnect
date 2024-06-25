@@ -40,7 +40,6 @@ export class LandingAdminComponent implements OnInit {
   public stations=0;
 
   ngOnInit() {
-    console.log("initialising landing admin component");
     forkJoin({
       allergiesCount: this.allergieService.countAllergies(),
       medicationsCount: this.medicationService.getMedicationCount(),
@@ -55,11 +54,14 @@ export class LandingAdminComponent implements OnInit {
           this.setupActive = false;
         }
 
-        console.log("setup is active: ", this.setupActive);
       },
       error: err => {
         console.error('Error fetching counts:', err);
       }
     });
+  }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
   }
 }

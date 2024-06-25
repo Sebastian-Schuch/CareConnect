@@ -2,10 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Doctor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ public interface DoctorService {
      * @param id the id of the doctor requested
      * @return the doctor with the id given
      */
-    DoctorDto getDoctorById(Long id);
+    DoctorDtoSparse getDoctorById(Long id);
 
     /**
      * Get the specified doctor.
@@ -42,7 +45,7 @@ public interface DoctorService {
      * @param toUpdate the data to update the doctor with
      * @return the updated doctor
      */
-    DoctorDto updateDoctor(Long id, DoctorDtoUpdate toUpdate);
+    DoctorDtoSparse updateDoctor(Long id, DoctorDtoUpdate toUpdate);
 
 
     /**
@@ -50,15 +53,7 @@ public interface DoctorService {
      *
      * @return a list of all Doctors
      */
-    List<DoctorDto> getAllDoctors();
-
-    /**
-     * Get the doctor by email.
-     *
-     * @param email the email of the doctor
-     * @return the doctor with the email given
-     */
-    DoctorDto getDoctorByEmail(String email);
+    List<DoctorDtoSparse> getAllDoctors();
 
     /**
      * Find a doctor by the given credential.
@@ -66,7 +61,7 @@ public interface DoctorService {
      * @param credential the credential to search for
      * @return the doctor with the given credential
      */
-    DoctorDto findDoctorByCredential(Credential credential);
+    DoctorDtoSparse findDoctorByCredential(Credential credential);
 
     /**
      * Search for doctors based on the search criteria.
@@ -74,7 +69,7 @@ public interface DoctorService {
      * @param search the search criteria
      * @return a list of doctors
      */
-    List<DoctorDto> searchDoctors(UserDtoSearch search);
+    List<DoctorDtoSparse> searchDoctors(UserDtoSearch search);
 
     /**
      * Check if the used id matches the token given.
@@ -83,5 +78,14 @@ public interface DoctorService {
      * @return true if the userId is from the doctor that is sending the request, false otherwise
      */
     boolean isOwnRequest(Long userId);
+
+    /**
+     * Get a page of doctors.
+     *
+     * @param searchTerm the search term to search for
+     * @param pageable   the pageable object
+     * @return a page of doctors
+     */
+    Page<DoctorDtoSparse> getDoctors(String searchTerm, Pageable pageable);
 
 }

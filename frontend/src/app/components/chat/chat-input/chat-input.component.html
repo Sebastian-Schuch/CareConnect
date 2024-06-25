@@ -1,8 +1,12 @@
 <div class="chat-input">
   <mat-form-field class="example-full-width">
-    <input matInput placeholder="Type a message" [(ngModel)]="message" (keyup.enter)="send()" aria-label="Type a message">
+    <input matInput placeholder="Type a message" [(ngModel)]="message" (keyup.enter)="send()" [disabled]="selectedChat"
+           aria-label="Type a message">
   </mat-form-field>
-  <button mat-icon-button color="primary" (click)="send()" aria-label="Send message">
-    <mat-icon aria-hidden="true">send</mat-icon>
-  </button>
+  <div class="button-container">
+    <button mat-icon-button color="primary" (click)="send()" aria-label="Send message" [disabled]="selectedChat">
+      <mat-icon aria-hidden="true">send</mat-icon>
+    </button>
+    <div class="message-count">{{ this.message.trim().length }}/1024</div>
+  </div>
 </div>

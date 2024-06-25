@@ -3,9 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AppointmentService {
@@ -29,10 +32,12 @@ public interface AppointmentService {
     /**
      * Get the specified appointments.
      *
-     * @param searchParams the search parameters
+     * @param outpatientDepartmentId the id of the outpatient department
+     * @param startDate              the start date of the appointments
+     * @param endDate                the end date of the appointments
      * @return the booked appointments
      */
-    List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(AppointmentSearchDto searchParams);
+    List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, Date startDate, Date endDate);
 
     /**
      * Get the specified appointment.
@@ -42,12 +47,28 @@ public interface AppointmentService {
      */
     AppointmentDto getAppointmentById(long id);
 
+
     /**
      * Get all appointments.
      *
      * @return the list of all appointments.
      */
     List<AppointmentDto> getAllAppointments();
+
+    /**
+     * Get all appointments of the patient.
+     *
+     * @return the list of all appointments of the patient.
+     */
+    AppointmentPageDto getAppointmentsByPatient(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size);
+
+
+    /**
+     * Get all appointments.
+     *
+     * @return the list of all appointments.
+     */
+    AppointmentPageDto getAllFilteredAppointments(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size);
 
     /**
      * delete the specified appointment.

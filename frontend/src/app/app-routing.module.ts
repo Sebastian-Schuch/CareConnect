@@ -20,20 +20,41 @@ import {
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
 import {UserCreateComponent, UserCreateEditMode} from "./components/user/user-create-edit/user-create.component";
 import {Role} from "./dtos/Role";
-import {TreatmentComponent} from "./components/treatment/treatment.component";
+import {TreatmentComponent, TreatmentCreateEditMode} from "./components/treatment/treatment.component";
 import {
-  OutpatientDepartmentComponent
+  OutpatientDepartmentComponent,
+  OutpatientDepartmentCreateEditMode
 } from "./components/outpatient-department-create-edit/outpatient-department-create-edit.component";
-import {InpatientDepartmentCreateEditMode, StationComponent} from "./components/station/station.component";
-import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
-import {AllergyComponent} from "./components/allergy/allergy.component";
+import {
+  InpatientDepartmentComponent,
+  InpatientDepartmentCreateEditMode
+} from "./components/inpatient-department/inpatient-department.component";
+import {AllergyComponent, AllergyCreatEditMode} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
+import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {StaysListComponent} from "./components/stays/stays-list/stays-list.component";
 import {
   InpatientDepartmentListComponent
-} from "./components/station/inpatient-department-list/inpatient-department-list.component";
+} from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
+import {ApiKeyComponent} from "./components/api-key/api-key.component";
+import {
+  OutpatientDepartmentListComponent
+} from "./components/outpatient-department-list/outpatient-department-list.component";
+import {
+  OutpatientDepartmentDetailComponent
+} from "./components/outpatient-department-detail/outpatient-department-detail.component";
+import {
+  TreatmentListComponent,
+  TreatmentListMode
+} from "./components/treatment/treatment-list/treatment-list.component";
+import {AllergyListComponent} from "./components/allergy-list/allergy-list.component";
+import {MedicationListComponent} from "./components/medication-list/medication-list.component";
+import {
+  OutpatientDepartmentCapacitiesComponent
+} from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
 import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
+import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -51,6 +72,18 @@ const routes: Routes = [
           },
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
+          {
+            path: 'treatment', children: [
+              {path: '', component: TreatmentListComponent, data: {role: Role.patient, mode: TreatmentListMode.view}},
+              {
+                path: 'search',
+                component: TreatmentListComponent,
+                data: {role: Role.patient, mode: TreatmentListMode.search}
+              },
+              {path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}}
+            ]
+          },
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.patient, mode: UserCreateEditMode.view}},
@@ -65,7 +98,11 @@ const routes: Routes = [
           {path:'setup', component: MainSetupPage},
           {
             path: 'register', children: [
-              //{path: 'admin', component: UserCreateComponent, data: {roleString: Role.admin, mode: UserCreateEditMode.create}},
+              {
+                path: 'admin',
+                component: UserCreateComponent,
+                data: {role: Role.admin, mode: UserCreateEditMode.create}
+              },
               {
                 path: 'doctor',
                 component: UserCreateComponent,
@@ -76,10 +113,18 @@ const routes: Routes = [
                 component: UserCreateComponent,
                 data: {role: Role.secretary, mode: UserCreateEditMode.create}
               },
-              {path: 'outpatient-department', component: OutpatientDepartmentComponent},
-              {path: 'inpatient-department', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.create}},
-              {path: 'medicine', component: MedicationCreateComponent},
-              {path: 'allergy', component: AllergyComponent}
+              {
+                path: 'outpatient-department',
+                component: OutpatientDepartmentComponent,
+                data: {mode: OutpatientDepartmentCreateEditMode.create}
+              },
+              {
+                path: 'inpatient-department',
+                component: InpatientDepartmentComponent,
+                data: {mode: InpatientDepartmentCreateEditMode.create}
+              },
+              {path: 'medication', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.CREATE}},
+              {path: 'allergy', component: AllergyComponent, data: {mode: AllergyCreatEditMode.CREATE}}
             ]
           },
           {
@@ -144,12 +189,56 @@ const routes: Routes = [
             ]
           },
           {
+            path: 'allergies', children: [
+              {path: '', component: AllergyListComponent},
+              {
+                path: ':id', children: [
+                  {path: 'edit', component: AllergyComponent, data: {mode: AllergyCreatEditMode.EDIT}},
+                ]
+              }
+            ]
+          },
+          {
+            path: 'medications', children: [
+              {path: '', component: MedicationListComponent},
+              {
+                path: ':id', children: [
+                  {path: 'edit', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.EDIT}}
+                ]
+              }
+            ]
+          },
+          {
             path: 'inpatient-department', children: [
               {path: '', component: InpatientDepartmentListComponent},
-              {path: ':id', children: [
-                  {path: 'edit', component: StationComponent, data: {mode: InpatientDepartmentCreateEditMode.edit}}
-                ]}
+              {
+                path: ':id', children: [
+                  {
+                    path: 'edit',
+                    component: InpatientDepartmentComponent,
+                    data: {mode: InpatientDepartmentCreateEditMode.edit}
+                  }
+                ]
+              }
             ]
+          },
+          {
+            path: 'outpatient-department', children: [
+              {path: '', component: OutpatientDepartmentListComponent},
+              {
+                path: ':id', children: [
+                  {
+                    path: 'edit',
+                    component: OutpatientDepartmentComponent,
+                    data: {mode: OutpatientDepartmentCreateEditMode.edit}
+                  },
+                  {path: '', component: OutpatientDepartmentDetailComponent}
+                ]
+              }
+            ]
+          },
+          {
+            path: 'api-keys', component: ApiKeyComponent
           },
           {
             path: ':id', children: [
@@ -164,24 +253,30 @@ const routes: Routes = [
           {path: '', component: LandingDoctorComponent},
           {path: 'telemedicine', component: ChatComponent},
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: 'treatment', children: [
-              {path: 'log', component: TreatmentComponent},
+              {path: '', component: TreatmentListComponent, data: {role: Role.doctor, mode: TreatmentListMode.search}},
+              {path: 'log', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.log}},
               {
                 path: ':id', children: [
-                  //{path: '', component: TreatmentViewComponent},
-                  //{path: 'edit', component: TreatmentEditComponent}
-                ],
-              }
-            ]
+                  {path: '', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}},
+                  {
+                    path: 'edit', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.edit}
+                  }
+                ]
+              }]
           },
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.view}},
-              {path: 'edit', component: UserCreateComponent, data: {role: Role.doctor, mode: UserCreateEditMode.edit}}
+              {
+                path: 'edit',
+                component: UserCreateComponent,
+                data: {role: Role.doctor, mode: UserCreateEditMode.edit}
+              }
             ]
-          }
-        ]
+          }]
       },
       {
         path: 'secretary', canActivate: [SecretaryGuard], children: [
@@ -190,6 +285,18 @@ const routes: Routes = [
             path: 'appointments', children: [
               {path: '', component: AppointmentsSecretaryComponent},
               {path: 'book', component: CalendarWrapperComponent},
+            ]
+          },
+          {
+            path: 'treatment', children: [
+              {
+                path: '',
+                component: TreatmentListComponent,
+                data: {role: Role.secretary, mode: TreatmentListMode.search}
+              },
+              {
+                path: ':id', component: TreatmentComponent, data: {mode: TreatmentCreateEditMode.detail}
+              }
             ]
           },
           {
@@ -227,6 +334,7 @@ const routes: Routes = [
             ]
           },
           {path: 'inpatient-department', component: InpatientDepartmentListComponent},
+          {path: 'outpatient-department', component: OutpatientDepartmentCapacitiesComponent},
           {
             path: ':id', children: [
               {path: '', component: UserCreateComponent, data: {role: Role.secretary, mode: UserCreateEditMode.view}},
@@ -241,6 +349,8 @@ const routes: Routes = [
       }
     ]
   },
+  {path: 'not-found', component: NotFoundComponent},
+  {path: '**', redirectTo: '/not-found'}
 ];
 
 @NgModule({

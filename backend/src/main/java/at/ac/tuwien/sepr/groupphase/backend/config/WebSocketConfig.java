@@ -15,7 +15,7 @@ import java.lang.invoke.MethodHandles;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final WebSocketTokenFilter webSocketTokenFilter;
 
@@ -31,7 +31,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        LOGGER.info("new Websocket connection established");
+        LOG.info("new Websocket connection established");
         registry.addEndpoint("/api/v1/chat").setAllowedOrigins("*");
     }
 

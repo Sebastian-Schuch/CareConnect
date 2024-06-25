@@ -4,7 +4,8 @@ import {
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
-  MatDialogRef, MatDialogTitle
+  MatDialogRef,
+  MatDialogTitle
 } from "@angular/material/dialog";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption} from "@angular/material/autocomplete";
@@ -35,14 +36,16 @@ export interface DialogData {
     CommonModule
   ],
   templateUrl: './new-chat-dialog.component.html',
-  styleUrl: './new-chat-dialog.component.scss'
+  styleUrls: ['./new-chat-dialog.component.scss', '../../../../../styles.scss']
 })
 export class NewChatDialogComponent {
   selectedNewChat: string;
+
   constructor(
     public dialogRef: MatDialogRef<NewChatDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {}
+  ) {
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

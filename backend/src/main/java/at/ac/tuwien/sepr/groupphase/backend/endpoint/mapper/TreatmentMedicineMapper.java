@@ -6,7 +6,13 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TreatmentMedicineDtoCre
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.TreatmentMedicine;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Mapper for converting between TreatmentMedicine and TreatmentMedicineDto objects.
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TreatmentMedicineMapper {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final MedicationService medicationService;
 
@@ -28,12 +35,12 @@ public class TreatmentMedicineMapper {
      * @return the converted TreatmentMedicine entity
      */
     public TreatmentMedicine dtoToEntity(TreatmentMedicineDtoCreate treatmentMedicineDtoCreate) {
+        LOG.trace("dtoToEntity({})", treatmentMedicineDtoCreate);
         Medication med = medicationService.getEntityById(treatmentMedicineDtoCreate.medication().id());
 
         TreatmentMedicine treatmentMedicine = new TreatmentMedicine();
         treatmentMedicine.setMedicine(med);
         treatmentMedicine.setAmount(treatmentMedicineDtoCreate.amount());
-        treatmentMedicine.setUnitOfMeasurement(treatmentMedicineDtoCreate.unitOfMeasurement());
         treatmentMedicine.setTimeOfAdministration(treatmentMedicineDtoCreate.medicineAdministrationDate());
         return treatmentMedicine;
     }
@@ -45,12 +52,29 @@ public class TreatmentMedicineMapper {
      * @return the converted TreatmentMedicineDto dto
      */
     public TreatmentMedicineDto entityToDto(TreatmentMedicine treatmentMedicine) {
+        LOG.trace("entityToDto({})", treatmentMedicine);
         return new TreatmentMedicineDto(
             treatmentMedicine.getId(),
-            new MedicationDto(treatmentMedicine.getMedicine().getId(), treatmentMedicine.getMedicine().getName(), treatmentMedicine.getMedicine().getActive()),
-            treatmentMedicine.getUnitOfMeasurement(),
+            new MedicationDto(treatmentMedicine.getMedicine().getId(), treatmentMedicine.getMedicine().getName(), treatmentMedicine.getMedicine().getActive(),
+                treatmentMedicine.getMedicine()
+                    .getUnitOfMeasurement()),
             treatmentMedicine.getAmount(),
             treatmentMedicine.getTimeOfAdministration()
         );
+    }
+
+    /**
+     * Converts a list of TreatmentMedicine entities to a list of TreatmentMedicineDto dtos.
+     *
+     * @param treatmentMedicines the list of TreatmentMedicine entities to convert
+     * @return the converted list of TreatmentMedicineDto dtos
+     */
+    public List<TreatmentMedicineDto> entityListToDtoList(List<TreatmentMedicine> treatmentMedicines) {
+        LOG.trace("entityListToDtoList({})", treatmentMedicines);
+        List<TreatmentMedicineDto> treatmentMedicineDtos = new ArrayList<>();
+        for (TreatmentMedicine treatmentMedicine : treatmentMedicines) {
+            treatmentMedicineDtos.add(entityToDto(treatmentMedicine));
+        }
+        return treatmentMedicineDtos;
     }
 }

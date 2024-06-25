@@ -3,9 +3,9 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PdfCouldNotBeCreatedException;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.lang.invoke.MethodHandles;
+import java.nio.file.AccessDeniedException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,20 +31,20 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Exception handler for NotFoundException.
      */
-    @ExceptionHandler(value = {NotFoundException.class, EntityNotFoundException.class})
+    @ExceptionHandler(value = {NotFoundException.class})
     protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
-        LOGGER.warn(ex.getMessage());
+        LOG.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(value = {PdfCouldNotBeCreatedException.class})
     protected ResponseEntity<Object> handlePdfCouldNotBeCreated(RuntimeException ex, WebRequest request) {
-        LOGGER.error(ex.getMessage());
+        LOG.error(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
@@ -52,8 +53,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(value = {ConflictException.class})
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
-        LOGGER.warn(ex.getMessage());
+        LOG.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    /**
+     * Exception handler for AccessDeniedException.
+     */
+    @ExceptionHandler(value = {AccessDeniedException.class})
+    protected ResponseEntity<Object> handleAccess(RuntimeException ex, WebRequest request) {
+        LOG.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     /**
@@ -69,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errors = ex.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(err -> err.getField() + " " + err.getDefaultMessage())
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .collect(Collectors.toList());
         body.put("ValidationErrors", errors);
 

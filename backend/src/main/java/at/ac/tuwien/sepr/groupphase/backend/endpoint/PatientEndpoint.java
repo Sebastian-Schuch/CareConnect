@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoUpdate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
@@ -15,6 +15,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -108,25 +112,13 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping({"/{id}"})
-    public PatientDto get(@PathVariable("id") long id) {
+    public PatientDtoSparse get(@PathVariable("id") long id) {
         LOG.info("GET " + BASE_PATH + "/{}", id);
         if (patientService.isOwnRequest(id) || userService.isValidRequestOfRole(Role.SECRETARY) || userService.isValidRequestOfRole(Role.DOCTOR)) {
             return this.patientService.getPatientById(id);
         } else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this resource");
         }
-    }
-
-    /**
-     * Get all the patients from the repository.
-     *
-     * @return a list of all patients
-     */
-    @Secured({"SECRETARY", "DOCTOR"})
-    @GetMapping
-    public List<PatientDto> getAll() {
-        LOG.info("GET " + BASE_PATH);
-        return this.patientService.getAllPatients();
     }
 
     /**
@@ -138,7 +130,7 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY", "PATIENT"})
     @PutMapping({"/{id}"})
-    public PatientDto update(@PathVariable("id") long id, @Valid @RequestBody PatientDtoUpdate toUpdate) {
+    public PatientDtoSparse update(@PathVariable("id") long id, @Valid @RequestBody PatientDtoUpdate toUpdate) {
         LOG.info("PUT " + BASE_PATH + "/{}", id);
         if (userService.isValidRequestOfRole(Role.SECRETARY) || patientService.isOwnRequest(id)) {
             return this.patientService.updatePatient(id, toUpdate);
@@ -155,8 +147,24 @@ public class PatientEndpoint {
      */
     @Secured({"SECRETARY"})
     @GetMapping({"/search"})
-    public List<PatientDto> search(UserDtoSearch toSearch) {
+    public List<PatientDtoSparse> search(UserDtoSearch toSearch) {
         LOG.info("GET " + BASE_PATH + "/search");
         return this.patientService.searchPatients(toSearch);
+    }
+
+    /**
+     * Get the patient by email, name.
+     *
+     * @param page       the page number
+     * @param size       the size of the page
+     * @param searchTerm the search-term
+     * @return the doctor with the email given
+     */
+    @Secured({"SECRETARY", "DOCTOR", "ADMIN"})
+    @GetMapping
+    public Page<PatientDtoSparse> getPatients(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "50") int size, @RequestParam(name = "searchTerm", defaultValue = "") String searchTerm) {
+        LOG.info("GET " + BASE_PATH);
+        Pageable pageable = PageRequest.of(page, size);
+        return patientService.getPatients(searchTerm, pageable);
     }
 }

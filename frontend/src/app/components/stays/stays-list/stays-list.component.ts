@@ -1,23 +1,28 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
-  MatCell, MatCellDef,
+  MatCell,
+  MatCellDef,
   MatColumnDef,
   MatHeaderCell,
   MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef,
-  MatRow, MatRowDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
   MatTable
 } from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {StaysService} from "../../../services/stays.service";
 import {StayDto} from "../../../dtos/stays";
 import {ActivatedRoute} from "@angular/router";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {StaysManageComponent} from "../stays-manage/stays-manage.component";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatDialog} from "@angular/material/dialog";
 import {StaysEditComponent} from "../stays-edit/stays-edit.component";
+import {UserService} from "../../../services/user.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-stays-manage-list',
@@ -37,25 +42,41 @@ import {StaysEditComponent} from "../stays-edit/stays-edit.component";
     DatePipe,
     StaysManageComponent,
     MatButton,
-    MatIcon
+    MatIcon,
+    NgIf
   ],
   templateUrl: './stays-list.component.html',
   styleUrl: './stays-list.component.scss'
 })
-export class StaysListComponent {
+export class StaysListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns: string[] = ['inpatient_department', 'check_in_time', 'discharge_time', 'edit'];
 
-  constructor(private staysService: StaysService, private route: ActivatedRoute, private dialog: MatDialog) {
+  constructor(private staysService: StaysService, private route: ActivatedRoute, private dialog: MatDialog, private userService: UserService, private notificationService: ToastrService) {
   }
+
   dataSource: StayDto[];
-  patientId: string;
+  patientId: number;
   length: number = 0;
+  firstname: string;
+  lastname: string;
 
   ngOnInit(): void {
-    this.patientId = this.route.snapshot.paramMap.get('id');
-    this.loadStays();
+    this.route.params.subscribe(params => {
+      this.patientId = params['id'];
+      let observable = this.userService.getPatientById(this.patientId);
+      observable.subscribe({
+        next: user => {
+          this.firstname = user.firstname;
+          this.lastname = user.lastname;
+          this.loadStays();
+        },
+        error: () => {
+          this.notificationService.error("Error loading patient");
+        }
+      });
+    });
   }
 
   formatDate(date: string): Date {
@@ -76,7 +97,7 @@ export class StaysListComponent {
     const pageIndex = event ? event.pageIndex : 0;
     const pageSize = event ? event.pageSize : 5;
 
-    this.staysService.getAllStays(this.patientId,pageIndex, pageSize).subscribe(stays => {
+    this.staysService.getAllStays(this.patientId, pageIndex, pageSize).subscribe(stays => {
       this.dataSource = stays.content;
       this.length = stays.totalElements;
     });

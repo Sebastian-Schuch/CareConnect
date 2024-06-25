@@ -1,8 +1,10 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {MedicationDto, MedicationDtoCreate} from "../dtos/medication";
+import {MedicationDto, MedicationDtoCreate, MedicationPageDto} from "../dtos/medication";
 import {Globals} from "../global/globals";
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import type = _default.defaults.animations.numbers.type;
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,16 @@ export class MedicationService {
    */
   getMedicationById(id: number): Observable<MedicationDto> {
     return this.http.get<MedicationDto>(`${this.medicationBaseUri}/${id}`);
+  }
+
+  /**
+   * Update the medication with the given data.
+   *
+   * @param medication the data for the medication that should be updated
+   * @return an Observable of the updated medication
+   */
+  updateMedication(medication: MedicationDto): Observable<MedicationDto> {
+    return this.http.put<MedicationDto>(`${this.medicationBaseUri}/${medication.id}`, medication);
   }
 
   /**
@@ -55,5 +67,33 @@ export class MedicationService {
    */
   getMedicationCount(): Observable<number> {
     return this.http.get<number>(`${this.medicationBaseUri}/count`);
+  }
+
+  /**
+   * Get all medications from the backend with pagination.
+   *
+   * @param medicationName the name of the medication to search for
+   * @param page the page number
+   * @param size the size of the page
+   * @return an Observable of the medications
+   */
+  searchMedications(medicationName: string, page: number, size: number) {
+    let params = new HttpParams();
+    params = params.set('page', page);
+    params = params.set('size', size);
+    if (typeof medicationName === 'string' && medicationName !== "") {
+      params = params.set('medicationName', medicationName.trim());
+    }
+    return this.http.get<MedicationPageDto>(`${this.medicationBaseUri}/search`, {params: params});
+  }
+
+  /**
+   * Delete the medication with the given ID.
+   *
+   * @param id the ID of the medication to delete
+   * @return an Observable
+   */
+  deleteMedication(id: number): Observable<any> {
+    return this.http.delete(`${this.medicationBaseUri}/${id}`);
   }
 }

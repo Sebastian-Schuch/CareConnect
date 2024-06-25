@@ -77,6 +77,8 @@ html, body {
   overflow-y: auto;
 }
 
+// styling for the badges
+
 .badge-container {
   display: flex;
   justify-content: flex-start;
@@ -129,4 +131,61 @@ html, body {
   color: #666666;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.sepr-btn-delete {
+  margin-top: 30px;
+  background-color: #f44336;
+  color: white;
+  font-size: 1rem;
+  padding: 25px 35px;
+  border-radius: 5px;
+}
+
+.sepr-btn-delete:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.sepr-btn-cancel {
+  margin-top: 30px;
+  background-color: transparent;
+  color: black;
+  font-size: 1rem;
+  padding: 25px 35px;
+  border-radius: 5px;
+}
+
+.sepr-btn-cancel:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.toast-container {
+  margin-top: 60px !important;
+}
+
+/* Global styles */
+.custom-mat-tab-group .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #fff !important;
+  font-size: 16px;
+}
+
+.custom-mat-tab-group .mat-mdc-tab .mdc-tab__text-label {
+  color: #fff !important;
+  font-size: 16px;
+}
+
+.custom-mat-tab-group-list .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  font-size: 16px;
+  color: $sepr-group-phase-green !important;
+}
+
+.custom-mat-tab-group-list .mat-mdc-tab .mdc-tab__text-label {
+  font-size: 16px;
+  color: $sepr-group-phase-green !important;
 }

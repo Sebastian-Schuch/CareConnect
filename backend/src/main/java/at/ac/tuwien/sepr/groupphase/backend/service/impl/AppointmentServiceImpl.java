@@ -3,25 +3,28 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.AppointmentMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Appointment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.OutpatientDepartment;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AppointmentRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.AppointmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.OutpatientDepartmentService;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
-import jakarta.persistence.EntityNotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.specification.AppointmentSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,8 +74,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Transactional
     @Override
     public void delete(long id) {
+        LOG.trace("delete({})", id);
         if (!appointmentRepository.existsById(id)) {
-            throw new EntityNotFoundException("Appointment not found with id " + id);
+            LOG.warn("Appointment {} not found", id);
+            throw new NotFoundException("Appointment not found");
         }
         appointmentRepository.deleteById(id);
     }
@@ -83,6 +88,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentMapper.appointmentEntitiesToListOfAppointmentDto(appointmentRepository.getAllAppointmentsFromPatientWithPatientId(id));
     }
 
+
     @Override
     public List<AppointmentDto> getAllAppointments() {
         LOG.trace("getAllAppointments");
@@ -90,22 +96,46 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(AppointmentSearchDto searchParams) {
-        LOG.trace("getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId({})", searchParams);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date startDate = sdf.parse(searchParams.startDate().split("T")[0]);
-            Date endDate = sdf.parse(searchParams.endDate().split("T")[0]);
-            List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(searchParams.outpatientDepartmentId(), startDate, endDate);
-            return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, searchParams.outpatientDepartmentId());
-        } catch (ParseException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
-        }
+    public List<AppointmentCalendarDto> getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(long outpatientDepartmentId, Date startDate, Date endDate) {
+        LOG.trace("getAllAppointmentsFromOutpatientDepartmentWithOutpatientDepartmentId({},{},{})", outpatientDepartmentId, startDate, endDate);
+        List<Appointment> appointments = appointmentRepository.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);
+        return this.appointmentEntitiesToListOfAppointmentCalendarDto(appointments, outpatientDepartmentId);
     }
 
     @Override
     public AppointmentDto getAppointmentById(long id) {
-        return appointmentMapper.appointmentEntityToAppointmentDto(appointmentRepository.findById(id).orElse(null));
+        LOG.trace("getAppointmentById({})", id);
+        var appointment = appointmentRepository.findById(id).orElse(null);
+        if (appointment == null) {
+            LOG.warn("Appointment {} not found", id);
+            throw new NotFoundException("Appointment not found");
+        }
+        return appointmentMapper.appointmentEntityToAppointmentDto(appointment);
+    }
+
+    @Override
+    public AppointmentPageDto getAppointmentsByPatient(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
+        LOG.trace("getAppointmentsByPatient({}, {}, {}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate, page, size);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startDate"));
+
+        Patient patient = patientService.getPatientEntityById(patientId);
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
+
+        Page<Appointment> appointments = appointmentRepository.findAll(AppointmentSpecification.filterByPatientWithOptionalCriteria(patient, outpatientDepartment, startDate, endDate), pageable);
+        return appointmentMapper.toAppointmentPageDto(appointments);
+    }
+
+    @Override
+    public AppointmentPageDto getAllFilteredAppointments(Long patientId, Long outpatientDepartmentId, Date startDate, Date endDate, int page, int size) {
+        LOG.trace("getAllAppointments({}, {}, {}, {})", patientId, outpatientDepartmentId, startDate, endDate);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startDate"));
+
+        Patient patient = patientId != null ? patientService.getPatientEntityById(patientId) : null;
+        OutpatientDepartment outpatientDepartment = outpatientDepartmentId != null ? outpatientDepartmentService.getOutpatientDepartmentEntityById(outpatientDepartmentId) : null;
+
+        Page<Appointment> appointments = appointmentRepository.findAll(AppointmentSpecification.filterAllAppointmentsWithOptionalCriteria(patient, outpatientDepartment, startDate, endDate), pageable);
+        return appointmentMapper.toAppointmentPageDto(appointments);
     }
 
     /**
@@ -116,6 +146,7 @@ public class AppointmentServiceImpl implements AppointmentService {
      * @return the list of AppointmentCalendarDto
      */
     private List<AppointmentCalendarDto> appointmentEntitiesToListOfAppointmentCalendarDto(List<Appointment> appointments, Long outpatientDepartmentId) {
+        LOG.trace("appointmentEntitiesToListOfAppointmentCalendarDto({},{})", appointments, outpatientDepartmentId);
         List<AppointmentCalendarDto> appointmentCalendarDtos = new ArrayList<>();
         for (Appointment appointment : appointments) {
             if (appointmentCalendarDtos.isEmpty()) {
@@ -148,6 +179,5 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return null;
     }
-
 
 }
