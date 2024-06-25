@@ -58,7 +58,6 @@ export class InpatientDepartmentListComponent implements OnInit {
     this.inpatientDepartmentService.getInpatientDepartments(this.searchedName, this.pageProperties.pageIndex, this.pageProperties.pageSize).subscribe({
       next: value => {
         this.inpatientDepartments = value.inpatientDepartments;
-        console.log(this.inpatientDepartments);
         this.totalItems = value.totalItems;
       },
       error: err => console.error(err)

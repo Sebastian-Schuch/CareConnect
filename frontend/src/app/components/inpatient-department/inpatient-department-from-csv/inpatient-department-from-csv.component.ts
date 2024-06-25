@@ -78,7 +78,6 @@ export class InpatientDepartmentFromCsvComponent {
             && i.capacity !== undefined
             && i.name !== undefined
           );
-          console.log(this.jsonData)
           this.error = null;
         },
         (error) => {

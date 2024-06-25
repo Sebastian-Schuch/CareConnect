@@ -4,6 +4,7 @@ import {MedicationService} from "../../../services/medication.service";
 import {ToastrService} from "ngx-toastr";
 import {MedicationDto} from "../../../dtos/medication";
 import {forkJoin, of} from "rxjs";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
 
 @Component({
   selector: 'app-medication-from-file',
@@ -22,6 +23,7 @@ export class MedicationFromFileComponent {
     private csvService: CsvConverterService,
     private medService: MedicationService,
     private notification: ToastrService,
+    private errorFormatter: ErrorFormatterService
   ) {
   }
 
@@ -34,9 +36,9 @@ export class MedicationFromFileComponent {
           const converted = data.map(item => {
             return {
               name: item.medication,
-              medication: item.medication
+              medication: item.medication,
+              unitOfMeasurement: item.unitOfMeasurement
             };
-
           })
 
           this.jsonData = converted.filter(i => i.name !== '');
@@ -79,8 +81,8 @@ export class MedicationFromFileComponent {
         }
         this.onSuccessfulCreation();
       },
-      error: error => {
-        this.notification.error('Error adding medications: ' + error.message);
+      error: async error => {
+        await this.errorFormatter.printErrorToNotification(error, 'Error adding medications', this.notification);
       }
     });
   }

@@ -4,7 +4,7 @@
          (input)="onSearchChange($event.target.value)">
   <ul class="list-group">
     <li *ngFor="let entry of paginatedMedication; let i = index" class="list-group-item">
-      {{ i + 1 + (currentPage - 1) * itemsPerPage }}. {{ entry.name }}
+      {{ i + 1 + (currentPage - 1) * itemsPerPage }}. {{ entry.name }} - {{ entry.unitOfMeasurement }}
     </li>
   </ul>
   <nav aria-label="Page navigation" class="mt-3">
