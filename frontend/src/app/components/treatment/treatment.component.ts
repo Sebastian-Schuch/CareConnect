@@ -239,7 +239,6 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
    * @param element - the medication to remove
    */
   deleteMedicationFromTreatment(element: any): void {
-    console.log("called");
     const index = this.dataSource.data.indexOf(element);
     if (index >= 0) {
       this.dataSource.data.splice(index, 1);

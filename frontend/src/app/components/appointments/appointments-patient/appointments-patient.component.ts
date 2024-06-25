@@ -1,14 +1,14 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import { AppointmentDto, AppointmentPageDto } from "../../../dtos/appointment";
-import { AppointmentService } from "../../../services/appointment.service";
-import { UserService } from "../../../services/user.service";
-import { ToastrService } from "ngx-toastr";
-import { FormControl } from '@angular/forms';
-import { debounceTime, Observable, switchMap } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { getDate, getMonth, getYear } from "date-fns";
-import { OutpatientDepartmentDto, OutpatientDepartmentPageDto } from "../../../dtos/outpatient-department";
-import { OutpatientDepartmentService } from "../../../services/outpatient-department.service";
+import {AppointmentDto, AppointmentPageDto} from "../../../dtos/appointment";
+import {AppointmentService} from "../../../services/appointment.service";
+import {UserService} from "../../../services/user.service";
+import {ToastrService} from "ngx-toastr";
+import {FormControl} from '@angular/forms';
+import {debounceTime, Observable, switchMap} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {getDate, getMonth, getYear} from "date-fns";
+import {OutpatientDepartmentDto, OutpatientDepartmentPageDto} from "../../../dtos/outpatient-department";
+import {OutpatientDepartmentService} from "../../../services/outpatient-department.service";
 import {MatAutocompleteTrigger} from "@angular/material/autocomplete";
 
 @Component({
@@ -31,15 +31,17 @@ export class AppointmentsPatientComponent implements OnInit {
   totalPastAppointments: number = 0;
   @Input() customStyle!: boolean;
 
-  @ViewChild('departmentInput', { static: false }) departmentInput: ElementRef<HTMLInputElement>;
-  @ViewChild('outpdepAutoTrigger', { static: false }) outpdepAutoTrigger: MatAutocompleteTrigger;
+  @ViewChild('departmentInput', {static: false}) departmentInput: ElementRef<HTMLInputElement>;
+  @ViewChild('outpdepAutoTrigger', {static: false}) outpdepAutoTrigger: MatAutocompleteTrigger;
   @Input() isEmbedded: boolean = false;
+
   constructor(
     private appointmentService: AppointmentService,
     private userService: UserService,
     private notification: ToastrService,
     private outpatientDepartmentService: OutpatientDepartmentService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.filteredDepartments = this.departmentControl.valueChanges.pipe(
@@ -167,7 +169,6 @@ export class AppointmentsPatientComponent implements OnInit {
    * Load the past appointments for the patient
    */
   loadPastAppointments(departmentId: number | null = null): void {
-    console.log('loading past appointments');
     this.userService.getPatientCredentials().subscribe({
       next: (patient) => {
         this.appointmentService.getAppointmentsByPatient(patient.id, departmentId, null, new Date(), this.currentPagePast, this.pageSize).subscribe({

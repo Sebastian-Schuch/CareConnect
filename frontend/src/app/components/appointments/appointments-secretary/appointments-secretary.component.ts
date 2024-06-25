@@ -1,16 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { catchError, debounceTime, Observable, of, switchMap } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { AppointmentService } from '../../../services/appointment.service';
-import { OutpatientDepartmentService } from '../../../services/outpatient-department.service';
-import { AppointmentDto, AppointmentPageDto } from '../../../dtos/appointment';
-import { OutpatientDepartmentDto, OutpatientDepartmentPageDto } from '../../../dtos/outpatient-department';
-import { ToastrService } from 'ngx-toastr';
-import { getDate, getMonth, getYear } from "date-fns";
-import { UserDto } from "../../../dtos/user";
-import { UserService } from "../../../services/user.service";
-import { Page } from "../../../dtos/page";
+import {Component, Input, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {debounceTime, Observable, switchMap} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {AppointmentService} from '../../../services/appointment.service';
+import {OutpatientDepartmentService} from '../../../services/outpatient-department.service';
+import {AppointmentDto, AppointmentPageDto} from '../../../dtos/appointment';
+import {OutpatientDepartmentDto, OutpatientDepartmentPageDto} from '../../../dtos/outpatient-department';
+import {ToastrService} from 'ngx-toastr';
+import {getDate, getMonth, getYear} from "date-fns";
+import {UserDto} from "../../../dtos/user";
+import {UserService} from "../../../services/user.service";
+import {Page} from "../../../dtos/page";
 
 @Component({
   selector: 'app-appointments-secretary',
@@ -41,7 +41,8 @@ export class AppointmentsSecretaryComponent implements OnInit {
     private outpatientDepartmentService: OutpatientDepartmentService,
     private notification: ToastrService,
     private userService: UserService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.appointmentFilterForm = new FormGroup({
@@ -110,7 +111,7 @@ export class AppointmentsSecretaryComponent implements OnInit {
     }
   }
 
-   filterAppointments(): void {
+  filterAppointments(): void {
     const selectedDepartment = this.appointmentFilterForm.get('departmentControl').value;
     const startDate = this.appointmentFilterForm.get('startDateControl').value;
     const endDate = this.appointmentFilterForm.get('endDateControl').value;
@@ -127,7 +128,6 @@ export class AppointmentsSecretaryComponent implements OnInit {
 
   private loadFutureAppointments(departmentId: number | null = null, patientId: number | null = null, startDate: Date | null = null, endDate: Date | null = null): void {
     const futureStartDate = new Date();
-    console.log(departmentId);
     this.appointmentService.getAllFilteredAppointments(patientId, departmentId, futureStartDate, endDate, this.currentPageFuture, this.pageSize).subscribe({
       next: (response: AppointmentPageDto) => {
         this.futureAppointments = response.appointments.map(appointment => {
