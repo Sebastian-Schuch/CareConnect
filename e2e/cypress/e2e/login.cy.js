@@ -5,7 +5,7 @@ describe('Login Test', () => {
         // Navigate to login page
         cy.visit('/#/login');
 
-        cy.wait(1000);
+
 
         // Enter email
         cy.get('form .form-group #inputEmail').type('chris.anger@email.com');
@@ -16,7 +16,7 @@ describe('Login Test', () => {
         // Submit the form
         cy.contains('button span', ' Login ').click();
 
-        cy.wait(1000);
+
 
         cy.get('div.user-name').should('contain', 'Chris A');
     });
