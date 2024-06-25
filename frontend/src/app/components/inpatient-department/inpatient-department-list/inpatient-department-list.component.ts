@@ -58,6 +58,7 @@ export class InpatientDepartmentListComponent implements OnInit {
     this.inpatientDepartmentService.getInpatientDepartments(this.searchedName, this.pageProperties.pageIndex, this.pageProperties.pageSize).subscribe({
       next: value => {
         this.inpatientDepartments = value.inpatientDepartments;
+        console.log(this.inpatientDepartments);
         this.totalItems = value.totalItems;
       },
       error: err => console.error(err)
@@ -79,7 +80,7 @@ export class InpatientDepartmentListComponent implements OnInit {
           this.deleteInpatientDepartment(inpatientDepartment.id);
           if (this.inpatientDepartments.length === 1) {
             this.pageProperties = {
-              pageIndex: this.pageProperties.pageIndex - 1,
+              pageIndex: this.pageProperties.pageIndex,
               pageSize: this.pageProperties.pageSize
             };
             this.reloadInpatientDepartments();
