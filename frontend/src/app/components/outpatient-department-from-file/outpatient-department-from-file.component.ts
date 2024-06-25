@@ -1,8 +1,7 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 import {CsvConverterService} from "../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
-import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
 import {forkJoin, map} from "rxjs";
 
 function containsKey(obj: any, key: string): boolean {
@@ -19,8 +18,8 @@ export class OutpatientDepartmentFromFileComponent {
     private csvConverterService: CsvConverterService,
     private notification: ToastrService,
     private outPatientDepartmentService: OutpatientDepartmentService
-
-  ) { }
+  ) {
+  }
 
   public jsonData: any;
   public error: string | null = null;
@@ -37,7 +36,6 @@ export class OutpatientDepartmentFromFileComponent {
             && containsKey(i,'capacity')
             && containsKey(i,'openingHours'));
           this.error = null;
-          console.log("Parsed data:", this.jsonData);
         },
         (error) => {
           this.error = error.message;

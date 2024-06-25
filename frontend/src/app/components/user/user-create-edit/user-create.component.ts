@@ -146,7 +146,6 @@ export class UserCreateComponent implements OnInit {
           this.mode = data.mode;
           this.generateForm();
           this.resetAllSearchInputs();
-          console.log(this.filteredAllergyOptions);
           if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
 
             if (isNaN(params['id']) === false) {

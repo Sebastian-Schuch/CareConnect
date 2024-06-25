@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
@@ -6,6 +6,7 @@ import {MedicationService} from "../../../services/medication.service";
 import {MedicationDto} from "../../../dtos/medication";
 import {MedicationCreateEditMode} from "../../medication/medication-create/medication-create.component";
 import {AllergyCreatEditMode} from "../../allergy/allergy.component";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
 
 @Component({
   selector: 'app-main-page',
@@ -23,6 +24,7 @@ export class MainSetupPage {
     private allergyService: AllergyService,
     private notification: ToastrService,
     private medService: MedicationService,
+    private errorFormatterService: ErrorFormatterService,
   ) {
   }
 
@@ -35,6 +37,7 @@ export class MainSetupPage {
     this.changeBackgroundColor();
 
   }
+
   changeActiveTab(): void {
     this.removePreviousActiveTabClass();
     this.changeBackgroundColor();
@@ -56,14 +59,13 @@ export class MainSetupPage {
     this.showFileUpload = !this.showFileUpload;
   }
 
-  loadMedication(){
+  loadMedication() {
     this.medService.getMedicationsAll().subscribe({
       next: data => {
         this.medication = data;
-        console.log("medicationdata",data);
       },
-      error: error => {
-        this.notification.error('Error loading medications: ' + error.message);
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, 'Error loading medications', this.notification);
       }
     });
   }
@@ -72,17 +74,14 @@ export class MainSetupPage {
     this.allergyService.getAllergiesAll().subscribe({
       next: data => {
         this.allergies = data;
-        console.log("reloading allergies!", this.allergies);
-
       },
-      error: error => {
-        this.notification.error('Error loading allergies: ' + error.message);
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, 'Error loading allergies', this.notification);
       }
     });
   }
 
   onAllergyCreated(): void {
-    console.log('Allergy was successfully created.');
     this.loadAllergies();
   }
 
@@ -94,6 +93,6 @@ export class MainSetupPage {
     this.loadMedication();
   }
 
-    protected readonly MedicationCreateEditMode = MedicationCreateEditMode;
+  protected readonly MedicationCreateEditMode = MedicationCreateEditMode;
   protected readonly AllergyCreatEditMode = AllergyCreatEditMode;
 }

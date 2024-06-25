@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {CsvConverterService} from "../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {catchError, forkJoin, of} from "rxjs";
@@ -19,7 +19,7 @@ export class InpatientDepartmentFromCsvComponent {
   public jsonData: any;
   public error: string | null = null;
 
-  public InpatientDepartments : InpatientDepartmentDto[]  = [];
+  public InpatientDepartments: InpatientDepartmentDto[] = [];
 
   constructor(
     private service: InpatientDepartmentService,
@@ -28,7 +28,7 @@ export class InpatientDepartmentFromCsvComponent {
   ) {
   }
 
-  addAll(){
+  addAll() {
     if (!this.jsonData || this.jsonData.length === 0) {
       this.notification.error('No data to add.');
       return;

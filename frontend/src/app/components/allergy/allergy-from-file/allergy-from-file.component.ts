@@ -26,7 +26,6 @@ export class AllergyFromFileComponent {
     private csvService: CsvConverterService,
     private allergyService: AllergyService,
     private notification: ToastrService,
-
   ) {
   }
 
@@ -53,13 +52,11 @@ export class AllergyFromFileComponent {
   }
 
   addAll() {
-    console.log('Adding all allergies');
-
     const requests = this.jsonData.map((item: any) =>
       this.allergyService.createAllergy(item).pipe(
         catchError(error => {
           this.notification.error('Error creating allergy: ' + error.message);
-          return of({ item, success: false });  // Return an object to keep track of the error
+          return of({item, success: false});  // Return an object to keep track of the error
         })
       )
     );

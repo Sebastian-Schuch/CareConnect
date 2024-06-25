@@ -14,16 +14,16 @@ import {ReactiveFormsModule} from "@angular/forms";
 @Component({
   selector: 'app-api-key-view',
   standalone: true,
-    imports: [
-        MatButton,
-        MatDialogActions,
-        MatDialogContent,
-        MatDialogTitle,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        ReactiveFormsModule
-    ],
+  imports: [
+    MatButton,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule
+  ],
   templateUrl: './api-key-view.component.html',
   styleUrl: './api-key-view.component.scss'
 })
@@ -31,8 +31,7 @@ export class ApiKeyViewComponent {
   apikey: string = '';
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<ApiKeyViewComponent>) {
-    console.log(data)
+              public dialogRef: MatDialogRef<ApiKeyViewComponent>) {
     this.apikey = data.apiKey;
   }
 

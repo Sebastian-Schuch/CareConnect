@@ -4,7 +4,7 @@
     <mat-form-field class="full-width">
       <mat-label>Medication</mat-label>
       <input matInput formControlName="medication" [matAutocomplete]="auto" [value]="selectedMedication">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayMedication" autoActiveFirstOption="true" (selectionchange)="console.log($event)">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayMedication" autoActiveFirstOption="true">
         <mat-option *ngFor="let medication of filteredMedicationOptions | async" [value]="medication">
           {{ displayMedication(medication) }}
         </mat-option>
