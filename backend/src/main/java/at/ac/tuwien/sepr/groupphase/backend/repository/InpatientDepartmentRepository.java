@@ -11,9 +11,19 @@ import org.springframework.stereotype.Repository;
 public interface InpatientDepartmentRepository extends JpaRepository<InpatientDepartment, Long> {
 
     /**
-     * Returns all inpatient departments in the db.
+     * Returns all inpatient departments of the given page from the db.
      *
-     * @return all inpatient departments.
+     * @param specification the specification to filter the inpatient departments
+     * @param pageable      the page to get
+     * @return all inpatient departments of the page.
      */
     Page<InpatientDepartment> findAll(Specification<InpatientDepartment> specification, Pageable pageable);
+
+    /**
+     * Returns the inpatient department with the given id only if the inpatient department is active.
+     *
+     * @param id the id of the inpatient department.
+     * @return the inpatient department with the given id.
+     */
+    InpatientDepartment findByIdAndActiveTrue(Long id);
 }

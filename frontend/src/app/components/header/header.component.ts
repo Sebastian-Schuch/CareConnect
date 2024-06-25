@@ -41,20 +41,18 @@ export class HeaderComponent implements OnInit {
   }
 
   private loadUser() {
-    if (this.authService.getUserRole() != Role.admin) {
-      let observable = this.getCorrectObservable();
-      observable.subscribe({
-        next: (user: UserDto) => {
-          this.user = user;
-          this.formatName(user);
-          this.initialPassword();
-        },
-        error: error => {
-          this.notification.error('Error', 'Error loading user credentials', error);
-          console.error(error);
-        }
-      });
-    }
+    let observable = this.getCorrectObservable();
+    observable.subscribe({
+      next: (user: UserDto) => {
+        this.user = user;
+        this.formatName(user);
+        this.initialPassword();
+      },
+      error: error => {
+        this.notification.error('Error', 'Error loading user credentials', error);
+        console.error(error);
+      }
+    });
   }
 
   private initialPassword() {
@@ -148,7 +146,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public patientNavigateToOutpatientDepartment() {
-    //this.router.navigate(['/home/patient/outpatient-department']);
+    this.router.navigate(['/home/patient/outpatient-department']);
   }
 
   public patientNavigateToInpatientDepartment() {
@@ -157,6 +155,14 @@ export class HeaderComponent implements OnInit {
 
   public patientNavigateToTelemedicine() {
     this.router.navigate(['/home/patient/telemedicine']);
+  }
+
+  public patientNavigateToTreatment() {
+    this.router.navigate(['/home/patient/treatment']);
+  }
+
+  public patientNavigateToTreatmentSearch() {
+    this.router.navigate(['/home/patient/treatment/search']);
   }
 
   public secretaryNavigateToAppointmentBook() {
@@ -176,11 +182,15 @@ export class HeaderComponent implements OnInit {
   }
 
   public secretaryNavigateToOutpatientDepartment() {
-    //this.router.navigate(['/home/secretary/outpatient-department']);
+    this.router.navigate(['/home/secretary/outpatient-department']);
   }
 
   public secretaryNavigateToInpatientDepartment() {
     this.router.navigate(['/home/secretary/inpatient-department']);
+  }
+
+  public secretaryNavigateToTreatment() {
+    this.router.navigate(['/home/secretary/treatment']);
   }
 
   public doctorNavigateToTreatmentLog() {
@@ -192,15 +202,23 @@ export class HeaderComponent implements OnInit {
   }
 
   public doctorNavigateToOutpatientDepartment() {
-    //this.router.navigate(['/home/doctor/outpatient-department']);
+    this.router.navigate(['/home/doctor/outpatient-department']);
   }
 
   public doctorNavigateToInpatientDepartment() {
     this.router.navigate(['/home/doctor/inpatient-department']);
   }
 
+  public doctorNavigateToTreatment() {
+    this.router.navigate(['/home/doctor/treatment']);
+  }
+
+  public adminNavigateToApiKeys() {
+    this.router.navigate(['/home/admin/api-keys']);
+  }
+
   public adminNavigateToUsersAdmins() {
-    //this.router.navigate(['/home/admin/users/admins']);
+    this.router.navigate(['/home/admin/users/admins']);
   }
 
   public adminNavigateToUsersDoctors() {
@@ -212,7 +230,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public adminNavigateToRegisterAdmin() {
-    //this.router.navigate(['/home/admin/register/admin']);
+    this.router.navigate(['/home/admin/register/admin']);
   }
 
   public adminNavigateToRegisterDoctor() {

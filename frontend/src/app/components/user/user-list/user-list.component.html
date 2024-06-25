@@ -69,7 +69,7 @@
           <label hidden [for]="i+'details'">User details</label>
           <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
                   [routerLink]="[user.id]"
-                  aria-label="Show user details"
+                  [attr.aria-label]="'show user details of '+user.firstname+' '+user.lastname+' (visibility)'"
                   [tabindex]="i+'27'"
           >
             <mat-icon>visibility</mat-icon>
@@ -77,15 +77,15 @@
           <label hidden [for]="i+'edit'">Edit User</label>
           <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
                   [routerLink]="[user.id, 'edit']"
-                  aria-label="Edit user"
+                  [attr.aria-label]="'edit user '+user.firstname+' '+user.lastname+' (mode_edit)'"
                   [tabindex]="i+'28'"
           >
             <mat-icon>mode_edit</mat-icon>
           </button>
-          <label hidden [for]="i+'delete'">User details</label>
+          <label hidden [for]="i+'delete'">Delete User</label>
           <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
                   (click)="openDeleteModal(user.email)"
-                  aria-label="Delete user"
+                  [attr.aria-label]="'delete user'+user.firstname+' '+user.lastname+' (delete)'"
                   [tabindex]="i+'29'"
           >
             <mat-icon>delete</mat-icon>
@@ -94,7 +94,7 @@
             <label hidden [for]="i+'stay'">Stay Overview</label>
             <button [id]="i+'stay'" class="btn btn-sm responsive-info-button"
                     [routerLink]="[user.id, 'stay']"
-                    aria-label="Stay Overview"
+                    [attr.aria-label]="'stay overview of user '+user.firstname+' '+user.lastname+' (bed)'"
                     [tabindex]="i+'30'"
             >
               <span class="material-icons">bed</span>

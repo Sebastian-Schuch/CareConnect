@@ -229,8 +229,12 @@ class TreatmentEndpointIntegrationTest extends TestBase {
     void testUpdateExistingTreatment_givenValidDto_expectSuccessfulUpdate() throws Exception {
         TreatmentMedicineDto treatmentMedicineDto = treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE2);
         Long id = treatmentRepository.findAll().get(2).getId();
-        TreatmentDtoCreate updateDto = new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text", List.of(DOCTOR2), List.of(treatmentMedicineDto));
-        TreatmentDto updatedTreatment = new TreatmentDto(id, "Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text", List.of(DOCTOR2), List.of(treatmentMedicineDto));
+        TreatmentDtoCreate updateDto =
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text",
+                List.of(DOCTOR2), List.of(treatmentMedicineDto));
+        TreatmentDto updatedTreatment =
+            new TreatmentDto(id, "Updated Title", TREATMENT_START_DATE2, TREATMENT_END_DATE2, PATIENT2, OUTPATIENT_DEPARTMENT2, "Updated Treatment Text",
+                List.of(DOCTOR2), List.of(treatmentMedicineDto));
 
         String json = ow.writeValueAsString(updateDto);
         MvcResult result = mockMvc.perform(put(BASE_PATH + "/" + id)
@@ -329,7 +333,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
     void testGetTreatmentById_givenValidId_expectTreatmentData() throws Exception {
         // create a valid treatment to get
         TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED =
-            new TreatmentDtoCreate(TREATMENT_TITLE1, TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+            new TreatmentDtoCreate(TREATMENT_TITLE1, TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1,
+                List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         dtoValidator.validate(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED, "treatmentDtoCreate");
         String json = ow.writeValueAsString(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED);
         MvcResult result = mockMvc.perform(post(BASE_PATH)
@@ -356,6 +361,48 @@ class TreatmentEndpointIntegrationTest extends TestBase {
             .andExpect(jsonPath("$.doctors.length()").value(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED.doctors().size()))
             .andExpect(jsonPath("$.medicines.length()").value(TREATMENT_DTO_CREATE_VALID_ONE_DOC_ONE_MED.medicines().size()));
     }
+
+    // **** Tests for searchTreatment ****
+    @WithMockUser(username = "doctor1@email.com", authorities = {"DOCTOR"})
+    @Transactional
+    @DisplayName("searchTreatment: valid get request - expect treatments")
+    @Test
+    void testSearchTreatment_givenValidSearchRequest_expectTreatmentData() throws Exception {
+        // test the search request
+        mockMvc.perform(get(BASE_PATH + "/search")
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .queryParam("patientName", PATIENT1.firstname())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.treatments.size()").value(1))
+            .andExpect(jsonPath("$.treatments[0].patient.firstname").value(PATIENT1.firstname()))
+            .andExpect(jsonPath("$.treatments[0].patient.lastname").value(PATIENT1.lastname()))
+            .andExpect(jsonPath("$.treatments[0].patient.svnr").value(PATIENT1.svnr()))
+            .andExpect(jsonPath("$.treatments[0].patient.email").value(PATIENT1.email()))
+            .andExpect(jsonPath("$.treatments[0].treatmentTitle").value("Treatment1"))
+            .andExpect(jsonPath("$.treatments[0].treatmentText").value("Text1"))
+            .andExpect(jsonPath("$.treatments[0].outpatientDepartment.id").value(OUTPATIENT_DEPARTMENT1.id()))
+            .andExpect(jsonPath("$.treatments[0].outpatientDepartment.name").value(OUTPATIENT_DEPARTMENT1.name()))
+            .andExpect(jsonPath("$.treatments[0].doctors.size()").value(1))
+            .andExpect(jsonPath("$.treatments[0].medicines.size()").value(0));
+    }
+
+    @WithMockUser(username = "doctor1@email.com", authorities = {"DOCTOR"})
+    @Transactional
+    @DisplayName("searchTreatment: valid get request - expect treatments")
+    @Test
+    void testSearchTreatment_givenValidSearchRequestWithNoMatchingTreatments_expectNoTreatments() throws Exception {
+        // test the search request
+        mockMvc.perform(get(BASE_PATH + "/search")
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .queryParam("treatmentTitle", "Somebody once told me...")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.treatments.size()").value(0));
+    }
+
 
     // **** Authorization Tests for getTreatmentById() ****
 
@@ -463,10 +510,52 @@ class TreatmentEndpointIntegrationTest extends TestBase {
 
     @WithMockUser(username = "admin@email.com", authorities = {"ADMIN"})
     @Transactional
-    @DisplayName("updateTreatment: unauthorized access (Secretary) - expect 403 Forbidden")
+    @DisplayName("updateTreatment: unauthorized access (Admin) - expect 403 Forbidden")
     @Test
     void testCreateTreatment_givenUnauthorizedAdmin_expectForbidden() throws Exception {
         tryCreateTreatmentExpectGivenStatus(status().isForbidden());
+    }
+
+    // **** Authorization Tests for searchTreatment() ****
+
+    @WithMockUser(username = "doctor1@email.com", authorities = {"DOCTOR"})
+    @Transactional
+    @DisplayName("searchTreatment: valid search request - expect status isOk")
+    @Test
+    void testSearchTreatment_givenAuthorizedDoctor_expectStatusOk() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isOk());
+    }
+
+    @WithMockUser(username = "patient1@email.com", authorities = {"PATIENT"})
+    @Transactional
+    @DisplayName("searchTreatment: unauthorized access - expect 403 Forbidden")
+    @Test
+    void testSearchTreatment_givenUnauthorizedPatient_expectForbidden() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isForbidden());
+    }
+
+    @WithMockUser(username = "chris.anger@email.com", authorities = {"PATIENT"})
+    @Transactional
+    @DisplayName("searchTreatment: authorized access (patient) - expect status isOk")
+    @Test
+    void testSearchTreatment_givenAuthorizedPatient_expectStatusOk() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isOk());
+    }
+
+    @WithMockUser(username = "secretary1@email.com", authorities = {"SECRETARY"})
+    @Transactional
+    @DisplayName("searchTreatment: authorized access (Secretary) - expect status isOk")
+    @Test
+    void testSearchTreatment_givenAuthorizedSecretary_expectStatusOk() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isOk());
+    }
+
+    @WithMockUser(username = "admin@email.com", authorities = {"ADMIN"})
+    @Transactional
+    @DisplayName("searchTreatment: unauthorized access (Admin) - expect 403 Forbidden")
+    @Test
+    void testSearchTreatment_givenUnauthorizedAdmin_expectForbidden() throws Exception {
+        trySearchTreatmentExpectGivenStatus(status().isForbidden());
     }
 
     /**
@@ -491,7 +580,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
      */
     private void tryUpdateTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
         TreatmentDtoCreate updatedTreatmentDtoCreate =
-            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1,
+                List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         String json = ow.writeValueAsString(updatedTreatmentDtoCreate);
         mockMvc.perform(put(BASE_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -507,11 +597,28 @@ class TreatmentEndpointIntegrationTest extends TestBase {
      * @throws Exception if the request fails
      */
     private void tryCreateTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
-        TreatmentDtoCreate treatmentDtoCreate = new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1, List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
+        TreatmentDtoCreate treatmentDtoCreate =
+            new TreatmentDtoCreate("Updated Title", TREATMENT_START_DATE1, TREATMENT_END_DATE1, PATIENT1, OUTPATIENT_DEPARTMENT1, TREATMENT_TEXT1,
+                List.of(DOCTOR1), List.of(TREATMENT_MEDICINE1_DTO));
         String json = ow.writeValueAsString(treatmentDtoCreate);
         mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(expectedStatus);
+    }
+
+    /**
+     * Tries to search for treatments and expects a given status - used to check Authorization
+     *
+     * @param expectedStatus the expected status
+     * @throws Exception if the request fails
+     */
+    private void trySearchTreatmentExpectGivenStatus(ResultMatcher expectedStatus) throws Exception {
+        mockMvc.perform(get(BASE_PATH + "/search")
+                .queryParam("page", "1")
+                .queryParam("size", "10")
+                .queryParam("patientId", String.valueOf(PATIENT1.id()))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(expectedStatus);
     }
@@ -547,7 +654,6 @@ class TreatmentEndpointIntegrationTest extends TestBase {
 
         for (int i = 0; i < expectedTreatmentDto.medicines().size(); i++) {
             assertEquals(expectedTreatmentDto.medicines().get(i).medication().name(), medicinesNode.get(i).path("medication").path("name").asText());
-            assertEquals(expectedTreatmentDto.medicines().get(i).unitOfMeasurement(), medicinesNode.get(i).path("unitOfMeasurement").asText());
             assertEquals(expectedTreatmentDto.medicines().get(i).amount(), medicinesNode.get(i).path("amount").asLong());
         }
     }
@@ -611,7 +717,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
             OUTPATIENT_DEPARTMENT1,
             TREATMENT_TEXT1,
             List.of(DOCTOR1),
-            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
+            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1),
+                treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
         );
 
         TreatmentDto TREATMENT_DTO_VALID_ONE_DOC_TWO_MED = new TreatmentDto(
@@ -623,7 +730,8 @@ class TreatmentEndpointIntegrationTest extends TestBase {
             OUTPATIENT_DEPARTMENT1,
             TREATMENT_TEXT1,
             List.of(DOCTOR1),
-            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1), treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
+            List.of(treatmentTestUtils.createTreatmentMedicineDto(MEDICATION1, TREATMENT_MEDICATION_DATE1),
+                treatmentTestUtils.createTreatmentMedicineDto(MEDICATION2, TREATMENT_MEDICATION_DATE1))
         );
 
         // valid treatment dto empty optional fields

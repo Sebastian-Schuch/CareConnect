@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AdminDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DoctorDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoCreate;
@@ -67,6 +68,14 @@ public interface UserService extends UserDetailsService {
      * @return the users login data
      */
     PDDocument createPatient(PatientDtoCreate toCreate);
+
+    /**
+     * Creates the Credential Entity with the data given.
+     *
+     * @param toCreate the data of the administrator for the credential entity
+     * @return the users login data
+     */
+    PDDocument createAdministrator(AdminDtoCreate toCreate);
 
     /**
      * Check if the user is from the specified role.

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDtoCreate;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.MedicationMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MedicationRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.MedicationService;
@@ -29,9 +30,11 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public MedicationDto create(MedicationDtoCreate toCreate) {
         LOG.trace("create{}", toCreate);
-        Medication medication = new Medication();
-        medication.setName(toCreate.name());
-        medication.setActive(true);
+        Medication existingMedication = medicationRepository.findByName(toCreate.name());
+        if (existingMedication != null) {
+            throw new ConflictException("Medication already exists");
+        }
+        Medication medication = medicationMapper.medicationDtoCreateToMedicationEntity(toCreate);
         return medicationMapper.medicationEntityToMedicationDto(medicationRepository.save(medication));
     }
 
@@ -58,6 +61,6 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public List<MedicationDto> getAllMedications() {
         LOG.trace("getAllMedications()");
-        return medicationMapper.medicationEntitiesToListOfMedicationDto(medicationRepository.findAll());
+        return medicationMapper.medicationEntitiesToListOfMedicationDto(medicationRepository.findByActiveTrue());
     }
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.security;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,8 +16,10 @@ import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,24 +33,39 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SecurityProperties securityProperties;
+    private final JwtTokenizer jwtTokenizer;
+    private final UserService userService;
 
-    public JwtAuthorizationFilter(SecurityProperties securityProperties) {
+    public JwtAuthorizationFilter(SecurityProperties securityProperties, JwtTokenizer jwtTokenizer, UserService userService) {
         this.securityProperties = securityProperties;
+        this.jwtTokenizer = jwtTokenizer;
+        this.userService = userService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        try {
-            UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
-            if (authToken != null) {
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        String header = request.getHeader("Authorization");
+        if (header != null && !header.startsWith("Basic ")) {
+            try {
+                UsernamePasswordAuthenticationToken authToken = getAuthToken(request);
+                if (authToken != null) {
+                    UserDetails userDetails = userService.loadUserByUsername(authToken.getName());
+
+                    // Generate a new Bearer Token for the response
+                    List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+                    String newToken = jwtTokenizer.getAuthToken(authToken.getName(), roles);
+                    UsernamePasswordAuthenticationToken newAuthToken = getAuthTokenFromString(newToken);
+                    response.setHeader(securityProperties.getAuthHeader(), newToken);
+
+                    SecurityContextHolder.getContext().setAuthentication(newAuthToken);
+                }
+            } catch (IllegalArgumentException | JwtException e) {
+                LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid authorization header or token");
+                return;
             }
-        } catch (IllegalArgumentException | JwtException e) {
-            LOGGER.debug("Invalid authorization attempt: {}", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid authorization header or token");
-            return;
         }
         chain.doFilter(request, response);
     }

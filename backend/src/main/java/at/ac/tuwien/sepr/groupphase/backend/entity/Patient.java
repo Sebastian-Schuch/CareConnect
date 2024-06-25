@@ -26,7 +26,7 @@ public class Patient {
     private Credential credential;
 
     @Convert(converter = EncryptorConverter.class)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String svnr;
 
     @ManyToMany(fetch = FetchType.EAGER)

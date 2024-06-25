@@ -97,7 +97,7 @@ public class MessageServiceImpl implements MessageService {
 
     private List<ChatDto> getChatsAsPatient(Object principal, boolean activeChats) {
         String email = principal.toString();
-        Credential user = credentialRepository.findByEmail(email);
+        Credential user = credentialRepository.findByEmailAndActiveTrue(email);
         List<Treatment> chatRooms;
         List<Message> messages;
         List<ChatDto> chats = new ArrayList<>();
@@ -120,7 +120,7 @@ public class MessageServiceImpl implements MessageService {
 
     private List<ChatDto> getChatsAsDoctor(Object principal) {
         String email = principal.toString();
-        Credential user = credentialRepository.findByEmail(email);
+        Credential user = credentialRepository.findByEmailAndActiveTrue(email);
         List<Treatment> chatRooms = treatmentRepository.findTreatmentsByDoctorsCredentialsWithMessages(user.getId());
         List<Message> messages = messageRepository.findLatestMessagesForTreatments(chatRooms.stream().map(Treatment::getId).toList());
         List<ChatDto> chats = new ArrayList<>();

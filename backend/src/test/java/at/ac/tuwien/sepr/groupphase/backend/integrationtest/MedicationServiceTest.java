@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,13 +37,14 @@ public class MedicationServiceTest extends TestBase {
 
     @Test
     public void givenNewlyCreatedMedication_whenGettingMedicationWithId_thenReturnMedication() {
-        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");
+        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra2", "mg");
         MedicationDto createdMedication = medicationService.create(createMedication);
         MedicationDto foundMedication = medicationService.getById(createdMedication.id());
         assertAll("Grouped Assertions of Medication",
             () -> assertEquals(createdMedication.id(), foundMedication.id(), "ID should be equal"),
             () -> assertEquals(createdMedication.name(), foundMedication.name(), "Name should be equal"),
-            () -> assertEquals(createdMedication.active(), foundMedication.active(), "Active should be equal"));
+            () -> assertEquals(createdMedication.active(), foundMedication.active(), "Active should be equal"),
+            () -> assertEquals(createdMedication.unitOfMeasurement(), foundMedication.unitOfMeasurement(), "Unit of Measurement should be equal"));
     }
 
     @Test
@@ -53,32 +56,35 @@ public class MedicationServiceTest extends TestBase {
 
     @Test
     public void givenMedicationCreateDto_whenCreatingNewMedication_thenReturnNewlyCreated() {
-        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra");
+        MedicationDtoCreate createMedication = new MedicationDtoCreate("WieAgra2", "mg");
         MedicationDto createdMedication = medicationService.create(createMedication);
         assertAll("Grouped Assertions of Medication",
-            () -> assertEquals(createdMedication.name(), createMedication.name(), "Name should be equal"));
+            () -> assertEquals(createdMedication.name(), createMedication.name(), "Name should be equal"),
+            () -> assertEquals(createdMedication.unitOfMeasurement(), createMedication.unitOfMeasurement(), "Unit of Measurement should be equal"));
     }
 
-    //TODO: adjust and refactor tests (Issue #60)
-    /*
     @Test
     public void givenNoMedicationsInDatabase_whenGettingAllMedications_thenReturnEmptyList() {
+        medicationRepository.deleteAll();
         List<MedicationDto> allMedications = medicationService.getAllMedications();
         assertEquals(0, allMedications.size());
     }
-
+    //TODO: adjust and refactor tests (Issue #60)
+    /*
     @Test
     public void givenThreeNewlyCreatedMedicationsInDatabase_whenGettingAllMedications_thenReturnThreeMedications() {
-        MedicationCreateDto createMedicine = new MedicationCreateDto("WieAgra");
+        medicationRepository.deleteAll();
+        MedicationDtoCreate createMedicine = new MedicationDtoCreate("WieAgra");
         MedicationDto createdMedicine1 = medicationService.create(createMedicine);
-        MedicationDto createdMedicine2 = medicationService.create(createMedicine);
-        MedicationDto createdMedicine3 = medicationService.create(createMedicine);
+        MedicationDtoCreate createMedicine2 = new MedicationDtoCreate("WieAgra2");
+        MedicationDto createdMedicine2 = medicationService.create(createMedicine2);
+        MedicationDtoCreate createMedicine3 = new MedicationDtoCreate("WieAgra3");
+        MedicationDto createdMedicine3 = medicationService.create(createMedicine3);
         assertAll("Grouped Assertions of Medication",
             () -> assertEquals(createMedicine.name(), createdMedicine1.name(), "Name should be equal"),
 
-            () -> assertEquals(createMedicine.name(), createdMedicine2.name(), "Name should be equal"),
+            () -> assertEquals(createMedicine2.name(), createdMedicine2.name(), "Name should be equal"),
 
-            () -> assertEquals(createMedicine.name(), createdMedicine3.name(), "Name should be equal"));
-    }
-     */
+            () -> assertEquals(createMedicine3.name(), createdMedicine3.name(), "Name should be equal"));
+    }*/
 }

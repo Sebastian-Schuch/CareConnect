@@ -168,6 +168,9 @@
                         <compilerArg>
                             -Amapstruct.defaultComponentModel=spring
                         </compilerArg>
+                        <compilerArg>
+                            -parameters
+                        </compilerArg>
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -193,7 +196,7 @@
                         </ports>
                         <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                         <jvmFlags>
-                            <jvmFlag>-Dspring.profiles.active=qa,generateData</jvmFlag>
+                            <jvmFlag>-Dspring.profiles.active=default</jvmFlag>
                             <jvmFlag>-Xmx128m</jvmFlag>
                         </jvmFlags>
                     </container>

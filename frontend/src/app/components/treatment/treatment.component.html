@@ -66,7 +66,7 @@
             <button (click)="removeDoctorFromSelection(doctor)"
                     [attr.aria-label]="'Remove ' + doctor.firstname + ' ' + doctor.lastname"
                     class="btn-close btn-close-white"
-                    type="button">
+                    type="button" *ngIf="mode !== TreatmentCreateEditMode.detail">
               <span class="visually-hidden">Remove {{ doctor.firstname }} {{ doctor.lastname }}</span>
             </button>
           </span>
@@ -128,7 +128,8 @@
         </div>
         <div class="medication-button-container">
           <h3 style="display: inline-block">Medication <span>(optional)</span></h3>
-          <button (click)="openMedicationModal()" *ngIf="dataSource.data && dataSource.data.length > 0"
+          <button (click)="openMedicationModal()"
+                  *ngIf="dataSource.data && dataSource.data.length > 0 && mode !== TreatmentCreateEditMode.detail"
                   aria-label="Add medication"
                   color="" mat-fab type="button">
             <mat-icon>add</mat-icon>
@@ -137,12 +138,13 @@
         <div class="form-group medicationSection">
           <ng-container *ngIf="!dataSource.data || dataSource.data.length === 0">
             <mat-card class="medication-card">
-              <mat-card-header style="display: block">
+              <mat-card-header style="display: block" *ngIf="mode !== TreatmentCreateEditMode.detail">
                 <mat-card-title class="card-title">Log a medication</mat-card-title>
                 <mat-card-subtitle>You have not logged any medication. To start click on the button.</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content style="margin-top: 20px">
-                <button (click)="openMedicationModal()" aria-label="Add medication" color="" mat-fab type="button">
+                <button (click)="openMedicationModal()" aria-label="Add medication" color="" mat-fab type="button"
+                        *ngIf="mode !== TreatmentCreateEditMode.detail">
                   <mat-icon>add</mat-icon>
                 </button>
               </mat-card-content>
@@ -161,7 +163,7 @@
                 </ng-container>
                 <ng-container matColumnDef="Unit">
                   <th *matHeaderCellDef mat-header-cell> Unit</th>
-                  <td *matCellDef="let element" mat-cell> {{ element.unitOfMeasurement }}</td>
+                  <td *matCellDef="let element" mat-cell> {{ element.medication.unitOfMeasurement }}</td>
                 </ng-container>
                 <ng-container matColumnDef="Date">
                   <th *matHeaderCellDef mat-header-cell> Date</th>
@@ -174,7 +176,8 @@
                 <ng-container matColumnDef="Delete">
                   <th *matHeaderCellDef mat-header-cell></th>
                   <td *matCellDef="let element" mat-cell>
-                    <button (click)="deleteMedicationFromTreatment(element)" mat-icon-button>
+                    <button (click)="deleteMedicationFromTreatment(element)" mat-icon-button
+                            *ngIf="mode !== TreatmentCreateEditMode.detail">
                       <svg class="bi bi-trash3" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                            xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -190,7 +193,7 @@
             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons="true"></mat-paginator>
           </ng-container>
         </div>
-        <div class="mt-4 d-flex flex-row button-submit-bottom-section">
+        <div *ngIf="mode !== TreatmentCreateEditMode.detail" class="mt-4 d-flex flex-row button-submit-bottom-section">
           <span class="flex-grow-1"></span>
           <button [disabled]="treatmentForm.invalid" class="sepr-btn-submit"
                   mat-button

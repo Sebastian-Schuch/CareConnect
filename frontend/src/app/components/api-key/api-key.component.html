@@ -1,0 +1,31 @@
+<main class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="0">
+      <span>Manage API keys</span><br>
+    </h1>
+  </div>
+</main>
+<button mat-button class="sepr-btn-submit" (click)="openApiKeyCreateDialog()" aria-label="Create API Key">Create API Key</button>
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th class="w-25">Time of creation</th>
+    <th class="w-25">Revoke</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let apiKey of dataSource; let i = index" class="center-td">
+    <td aria-label="Description" [tabindex]="i+'23'">{{ apiKey.description }}</td>
+    <td aria-label="Time of creation" [tabindex]="i+'24'">{{ apiKey.created | date:'dd-MM-yyyy HH:mm' }}</td>
+    <td>
+      <label hidden [for]="i+'revoke'">Revoke a API key</label>
+      <button mat-button (click)="deleteApiKey(apiKey)" aria-label="Delete API Key">
+        <mat-icon aria-hidden="true">delete</mat-icon>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<mat-paginator (page)="loadApiKeys($event)" [length]="length" [pageSizeOptions]="[5, 10, 20]"
+               showFirstLastButtons aria-label="Pagination"></mat-paginator>

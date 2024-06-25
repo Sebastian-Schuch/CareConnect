@@ -38,7 +38,10 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -94,14 +97,12 @@ public class TreatmentMedicineEndpointIntegrationTest extends TestBase {
 
         TREATMENT_MEDICINE_DTO_CREATE_VALID = new TreatmentMedicineDtoCreate(
             MEDICATION1,
-            "mg",
             100,
             TREATMENT_MEDICATION_DATE1
         );
 
         TREATMENT_MEDICINE_DTO_CREATE_INVALID = new TreatmentMedicineDtoCreate(
             null,
-            "l",
             200,
             TREATMENT_MEDICATION_DATE1
         );
@@ -132,7 +133,6 @@ public class TreatmentMedicineEndpointIntegrationTest extends TestBase {
         assertNotNull(treatmentMedicine);
         assertAll("Verify treatment medicine properties",
             () -> assertEquals(TREATMENT_MEDICINE_DTO_CREATE_VALID.medication().id(), treatmentMedicine.getMedicine().getId()),
-            () -> assertEquals(TREATMENT_MEDICINE_DTO_CREATE_VALID.unitOfMeasurement(), treatmentMedicine.getUnitOfMeasurement()),
             () -> assertEquals(TREATMENT_MEDICINE_DTO_CREATE_VALID.amount(), treatmentMedicine.getAmount()),
             () -> assertEquals(TREATMENT_MEDICINE_DTO_CREATE_VALID.medicineAdministrationDate(), treatmentMedicine.getTimeOfAdministration())
         );
@@ -182,7 +182,8 @@ public class TreatmentMedicineEndpointIntegrationTest extends TestBase {
      * @param expectedResponseStatus              the expected status
      * @throws Exception if the request fails
      */
-    private void tryToCreateTreatmentMedicineExpectGivenStatus(TreatmentMedicineDtoCreate TREATMENT_MEDICINE_DTO_CREATE_VALID, ResultMatcher expectedResponseStatus) throws Exception {
+    private void tryToCreateTreatmentMedicineExpectGivenStatus(TreatmentMedicineDtoCreate TREATMENT_MEDICINE_DTO_CREATE_VALID,
+                                                               ResultMatcher expectedResponseStatus) throws Exception {
         String json = ow.writeValueAsString(TREATMENT_MEDICINE_DTO_CREATE_VALID);
         mockMvc.perform(post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)

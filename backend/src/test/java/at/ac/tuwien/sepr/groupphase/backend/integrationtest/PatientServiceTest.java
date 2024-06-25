@@ -93,7 +93,7 @@ public class PatientServiceTest extends TestBase {
         long id = patientRepository.findAll().get(0).getPatientId();
         List<MedicationDto> medications = new ArrayList<>();
         List<AllergyDto> allergies = new ArrayList<>();
-        PatientDtoUpdate updatePatient = new PatientDtoUpdate("0000000000", medications, allergies, "x", "y", "a@a.a", false, false);
+        PatientDtoUpdate updatePatient = new PatientDtoUpdate("0000000001", medications, allergies, "x", "y", "a@a.a", false, false);
 
         PatientDtoSparse foundPatient = patientService.getPatientById(id);
         PatientDtoSparse finalFoundPatient1 = foundPatient;
@@ -161,7 +161,7 @@ public class PatientServiceTest extends TestBase {
         patientRepository.deleteAll();
         List<MedicationDto> medications = new ArrayList<>();
         List<AllergyDto> allergies = new ArrayList<>();
-        PatientDtoCreate toCreate1 = new PatientDtoCreate("1234123456", "a@a.a", "a", "b", medications, allergies);
+        PatientDtoCreate toCreate1 = new PatientDtoCreate("1234123454", "a@a.a", "a", "b", medications, allergies);
         Credential credential1 = new Credential();
         credential1.setEmail("a@a.a");
         credential1.setActive(true);
@@ -172,7 +172,7 @@ public class PatientServiceTest extends TestBase {
         credential1.setRole(Role.PATIENT);
         PatientDto createdPatient1 = patientService.createPatient(toCreate1, credential1);
 
-        PatientDtoCreate toCreate2 = new PatientDtoCreate("1234123456", "b@a.a", "a", "b", medications, allergies);
+        PatientDtoCreate toCreate2 = new PatientDtoCreate("1234123455", "b@a.a", "a", "b", medications, allergies);
         Credential credential2 = new Credential();
         credential2.setEmail("b@a.a");
         credential2.setActive(true);
