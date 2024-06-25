@@ -62,7 +62,6 @@ export class MainSetupPage implements OnInit, AfterViewInit {
   loadMedication() {
     this.medService.getMedicationsAll().subscribe({
       next: data => {
-        console.log(data);
         this.medication = data;
       },
       error: async error => {
