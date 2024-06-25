@@ -12,7 +12,7 @@
     Error: {{ error }}
   </div>
   <mat-tab-group
-    *ngIf="jsonData"
+    *ngIf="jsonData && jsonData.length > 0"
     dynamicHeight="true"
   >
     <mat-tab label="extracted inpatient departments">
@@ -33,12 +33,13 @@
     </mat-tab>
 
   </mat-tab-group>
-  <button *ngIf="jsonData" type="button" class="btn btn-primary"
+  <button *ngIf="jsonData && jsonData.length > 0" type="button" class="btn btn-primary"
           (click)="addAll()"
   >Add all
   </button>
   <p *ngIf="jsonData && InpatientDepartments.length === 0" class="text-muted">
     No medications found in the file
   </p>
+
 
 </div>

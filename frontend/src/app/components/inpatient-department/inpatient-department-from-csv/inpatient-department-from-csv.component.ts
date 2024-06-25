@@ -72,7 +72,13 @@ export class InpatientDepartmentFromCsvComponent {
               capacity: item.capacity
             };
           })
-          this.jsonData = converted.filter(i => i.name !== '' && containsKey(i, 'capacity') && containsKey(i, 'name'));
+          this.jsonData = converted.filter(i => i.name !== ''
+            && containsKey(i, 'capacity')
+            && containsKey(i, 'name')
+            && i.capacity !== undefined
+            && i.name !== undefined
+          );
+          console.log(this.jsonData)
           this.error = null;
         },
         (error) => {
