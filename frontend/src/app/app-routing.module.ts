@@ -29,7 +29,10 @@ import {
   InpatientDepartmentComponent,
   InpatientDepartmentCreateEditMode
 } from "./components/inpatient-department/inpatient-department.component";
-import {AllergyComponent, AllergyCreatEditMode} from "./components/allergy/allergy.component";
+import {
+  AllergyCreatEditMode,
+  AllergyCreateEditComponent
+} from "./components/allergy/allergy-create-edit/allergy-create-edit.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
@@ -48,8 +51,8 @@ import {
   TreatmentListComponent,
   TreatmentListMode
 } from "./components/treatment/treatment-list/treatment-list.component";
-import {AllergyListComponent} from "./components/allergy-list/allergy-list.component";
-import {MedicationListComponent} from "./components/medication-list/medication-list.component";
+import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
+import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
 import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
@@ -98,7 +101,7 @@ const routes: Routes = [
       {
         path: 'admin', canActivate: [AdminGuard], children: [
           {path: '', component: LandingAdminComponent},
-          {path:'setup', component: MainSetupPage},
+          {path: 'setup', component: MainSetupPage},
           {
             path: 'register', children: [
               {
@@ -127,7 +130,7 @@ const routes: Routes = [
                 data: {mode: InpatientDepartmentCreateEditMode.create}
               },
               {path: 'medication', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.CREATE}},
-              {path: 'allergy', component: AllergyComponent, data: {mode: AllergyCreatEditMode.CREATE}}
+              {path: 'allergy', component: AllergyCreateEditComponent, data: {mode: AllergyCreatEditMode.CREATE}}
             ]
           },
           {
@@ -196,7 +199,7 @@ const routes: Routes = [
               {path: '', component: AllergyListComponent},
               {
                 path: ':id', children: [
-                  {path: 'edit', component: AllergyComponent, data: {mode: AllergyCreatEditMode.EDIT}},
+                  {path: 'edit', component: AllergyCreateEditComponent, data: {mode: AllergyCreatEditMode.EDIT}},
                 ]
               }
             ]

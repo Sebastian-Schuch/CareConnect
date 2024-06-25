@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {CsvConverterService} from "../../../services/csv-converter.service";
+import {CsvConverterService} from "../../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {catchError, forkJoin, of} from "rxjs";
-import {InpatientDepartmentDto} from "../../../dtos/inpatient-department";
-import {InpatientDepartmentService} from "../../../services/inpatient-department.service";
+import {InpatientDepartmentDto} from "../../../../dtos/inpatient-department";
+import {InpatientDepartmentService} from "../../../../services/inpatient-department.service";
 
 function containsKey(obj: any, key: string): boolean {
   return obj && obj.hasOwnProperty(key);
@@ -11,10 +11,10 @@ function containsKey(obj: any, key: string): boolean {
 
 @Component({
   selector: 'app-inpatient-department-from-csv',
-  templateUrl: './inpatient-department-from-csv.component.html',
-  styleUrl: './inpatient-department-from-csv.component.scss'
+  templateUrl: './inpatient-department-from-file.component.html',
+  styleUrl: './inpatient-department-from-file.component.scss'
 })
-export class InpatientDepartmentFromCsvComponent {
+export class InpatientDepartmentFromFileComponent {
 
   public jsonData: any;
   public error: string | null = null;

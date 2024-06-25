@@ -1,27 +1,76 @@
-<div class="medication-from-database container mt-3">
-  <h3>Medication</h3>
-  <input type="text" class="form-control mb-3" placeholder="Search medications"
-         (input)="onSearchChange($event.target.value)">
-  <ul class="list-group">
-    <li *ngFor="let entry of paginatedMedication; let i = index" class="list-group-item">
-      {{ i + 1 + (currentPage - 1) * itemsPerPage }}. {{ entry.name }} - {{ entry.unitOfMeasurement }}
-    </li>
-  </ul>
-  <nav aria-label="Page navigation" class="mt-3">
-    <ul class="pagination justify-content-center">
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li class="page-item" *ngFor="let page of visibleMedications" [class.active]="currentPage === page">
-        <a class="page-link" (click)="changePage(page)">{{ page }}</a>
-      </li>
-      <li class="page-item" [class.disabled]="currentPage === totalPages.length">
-        <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+<div class="start-page-container on-landing-hidden">
+  <div style="position: relative;">
+    <h1 class="headline" style="position: relative; z-index: 1;" tabindex="20">
+      <span>Search for Medications</span><br>
+    </h1>
+  </div>
+
+  <div>
+    <h3 tabindex="20">Here you can search for medications and edit them</h3>
+  </div>
+</div>
+<form (submit)="reloadMedications()">
+  <button type="submit" hidden="hidden">submit</button>
+  <div class="input-row">
+    <div class="form-group">
+      <label for="searchMedicationName" class="col-form-label">
+        Medication Name
+      </label>
+      <input type="text" id="searchMedicationName"
+             name="searchMedicationName"
+             class="form-control"
+             tabindex="20"
+             [(ngModel)]="medicationName"
+             (ngModelChange)="reloadMedications()"
+             aria-label="Search for medication name"
+      >
+    </div>
+  </div>
+  <div class="ms-4"></div>
+</form>
+<div class="mt-3">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th class="w-75">Name</th>
+        <th class="w-25">Unit of Measurement</th>
+        <th class="w-25">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let medication of medications; let i = index" class="center-td">
+        <td aria-label="medication name" [tabindex]="i+'28'">{{ medication.name }}</td>
+        <td aria-label="medication unit of measurement" [tabindex]="i+'29'">{{ medication.unitOfMeasurement }}</td>
+        <td>
+          <div class="btn-group">
+            <label hidden [for]="i+'EDIT'">Edit Medication</label>
+            <button [id]="i+'EDIT'" class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]="'Edit medication '+medication.name+' (mode_edit)'"
+                    [tabindex]="i+'30'"
+                    (click)="navigateToEditMedication(medication.id)"
+            >
+              <mat-icon>mode_edit</mat-icon>
+            </button>
+            <label hidden [for]="i+'delete'">Delete Medication</label>
+            <button [id]="i+'delete'" class="btn btn-sm responsive-info-button"
+                    [attr.aria-label]='"Delete medication" + medication.name + " (delete)"'
+                    [tabindex]="i+'31'"
+                    (click)="openDeleteDialog(medication)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <mat-paginator [length]=totalItems
+                 [pageSize]=size
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 [pageIndex]=page
+                 (page)="onPageChange($event)"
+                 aria-label="Select page">
+  </mat-paginator>
 </div>

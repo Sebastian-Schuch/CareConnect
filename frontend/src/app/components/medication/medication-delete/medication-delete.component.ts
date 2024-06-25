@@ -8,10 +8,10 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {AllergyDto} from "../../dtos/allergy";
+import {MedicationDto} from "../../../dtos/medication";
 
 @Component({
-  selector: 'app-allergy-delete',
+  selector: 'app-medication-delete',
   standalone: true,
   imports: [
     MatButton,
@@ -20,13 +20,13 @@ import {AllergyDto} from "../../dtos/allergy";
     MatDialogContent,
     MatDialogTitle
   ],
-  templateUrl: './allergy-delete.component.html',
-  styleUrls: ['./allergy-delete.component.scss', '../../../styles.scss']
+  templateUrl: './medication-delete.component.html',
+  styleUrls: ['./medication-delete.component.scss', '../../../../styles.scss']
 })
-export class AllergyDeleteComponent {
+export class MedicationDeleteComponent {
   constructor(
-    public dialogRef: MatDialogRef<AllergyDeleteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { allergy: AllergyDto },
+    public dialogRef: MatDialogRef<MedicationDeleteComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { medication: MedicationDto },
   ) {
   }
 }

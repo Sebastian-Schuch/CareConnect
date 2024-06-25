@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {CsvConverterService} from "../../services/csv-converter.service";
+import {CsvConverterService} from "../../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
-import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
+import {OutpatientDepartmentService} from "../../../../services/outpatient-department.service";
 import {forkJoin, map} from "rxjs";
+
 function containsKey(obj: any, key: string): boolean {
   return obj && obj.hasOwnProperty(key);
 }
@@ -30,10 +31,10 @@ export class OutpatientDepartmentFromFileComponent {
       this.csvConverterService.parsCsvToOutPatientDepartment(file).then(
         (data) => {
           this.jsonData = data.filter(i => i.name !== ''
-            && containsKey(i,'name')
-            && containsKey(i,'description')
-            && containsKey(i,'capacity')
-            && containsKey(i,'openingHours'));
+            && containsKey(i, 'name')
+            && containsKey(i, 'description')
+            && containsKey(i, 'capacity')
+            && containsKey(i, 'openingHours'));
           this.error = null;
         },
         (error) => {

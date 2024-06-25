@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {AllergyDto, AllergyDtoCreate} from "../../dtos/allergy";
-import {AllergyService} from "../../services/allergy.service";
+import {AllergyDto, AllergyDtoCreate} from "../../../dtos/allergy";
+import {AllergyService} from "../../../services/allergy.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ErrorFormatterService} from "../../services/error-formatter.service";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
 
 export enum AllergyCreatEditMode {
   CREATE,
@@ -14,17 +14,17 @@ export enum AllergyCreatEditMode {
 
 @Component({
   selector: 'app-allergy',
-  templateUrl: './allergy.component.html',
-  styleUrls: ['./allergy.component.scss', '../../../styles.scss']
+  templateUrl: './allergy-create-edit.component.html',
+  styleUrls: ['./allergy-create-edit.component.scss', '../../../../styles.scss']
 })
-export class AllergyComponent implements OnInit {
+export class AllergyCreateEditComponent implements OnInit {
 
   @Output() creationSuccess = new EventEmitter<void>();
 
   @Input() mode: AllergyCreatEditMode = null;
   @Input() isEmbedded: boolean = false;
 
-  @ViewChild('content', { static: true }) content!: TemplateRef<any>;
+  @ViewChild('content', {static: true}) content!: TemplateRef<any>;
 
   public error: string | null = null;
 
@@ -39,7 +39,7 @@ export class AllergyComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      if(data.mode) {
+      if (data.mode) {
         this.mode = data.mode;
       }
       if (this.mode === AllergyCreatEditMode.EDIT) {
@@ -65,7 +65,7 @@ export class AllergyComponent implements OnInit {
         observable.subscribe({
           next: data => {
             this.notification.success('Successfully created ' + data.name + ' Allergy');
-            if(!this.isEmbedded) {
+            if (!this.isEmbedded) {
               this.router.navigate(['/home/admin/allergies'])
             }
             this.onSuccessfulCreation();

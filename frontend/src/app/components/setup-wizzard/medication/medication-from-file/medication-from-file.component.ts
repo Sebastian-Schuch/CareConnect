@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {CsvConverterService} from "../../../services/csv-converter.service";
-import {MedicationService} from "../../../services/medication.service";
+import {CsvConverterService} from "../../../../services/csv-converter.service";
+import {MedicationService} from "../../../../services/medication.service";
 import {ToastrService} from "ngx-toastr";
-import {MedicationDto} from "../../../dtos/medication";
+import {MedicationDto} from "../../../../dtos/medication";
 import {forkJoin, of} from "rxjs";
-import {ErrorFormatterService} from "../../../services/error-formatter.service";
+import {ErrorFormatterService} from "../../../../services/error-formatter.service";
 
 @Component({
   selector: 'app-medication-from-file',

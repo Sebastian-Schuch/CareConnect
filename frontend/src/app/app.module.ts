@@ -30,7 +30,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatAnchor, MatButton, MatFabButton, MatIconButton} from "@angular/material/button";
 import {InpatientDepartmentComponent} from "./components/inpatient-department/inpatient-department.component";
-import {AllergyComponent} from "./components/allergy/allergy.component";
+import {AllergyCreateEditComponent} from "./components/allergy/allergy-create-edit/allergy-create-edit.component";
 import {LoginComponent} from "./components/login/login.component";
 import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
 import {CalendarModule, DateAdapter} from "angular-calendar";
@@ -57,16 +57,20 @@ import {
 } from "./components/appointments/appointments-secretary/appointments-secretary.component";
 import {NewChatDialogComponent} from "./components/chat/add-chat/new-chat-dialog/new-chat-dialog.component";
 import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
-import {AllergyListComponent} from "./components/allergy/allergy-list/allergy-list.component";
-import {AllergyFromFileComponent} from "./components/allergy/allergy-from-file/allergy-from-file.component";
-import {MedicationListComponent} from "./components/medication/medication-list/medication-list.component";
-import {MedicationFromFileComponent} from "./components/medication/medication-from-file/medication-from-file.component";
+import {AllergyListComponent} from "./components/setup-wizzard/allergy/allergy-list/allergy-list.component";
+import {
+  AllergyFromFileComponent
+} from "./components/setup-wizzard/allergy/allergy-from-file/allergy-from-file.component";
+import {MedicationListComponent} from "./components/setup-wizzard/medication/medication-list/medication-list.component";
+import {
+  MedicationFromFileComponent
+} from "./components/setup-wizzard/medication/medication-from-file/medication-from-file.component";
 import {
   OutpatientDepartmentFromFileComponent
-} from "./components/outpatient-department-from-file/outpatient-department-from-file.component";
+} from "./components/setup-wizzard/outpatient-department/outpatient-department-from-file/outpatient-department-from-file.component";
 import {
-  InpatientDepartmentFromCsvComponent
-} from "./components/inpatient-department/inpatient-department-from-csv/inpatient-department-from-csv.component";
+  InpatientDepartmentFromFileComponent
+} from "./components/setup-wizzard/inpatient-department/inpatient-department-from-file/inpatient-department-from-file.component";
 import {SmallListComponent} from "./components/inpatient-department/small-list/small-list.component";
 import {
   MedicationFormModalComponent
@@ -88,7 +92,7 @@ import {HalfDonutChartComponent} from "./components/half-donut-chart/half-donut-
     LoginComponent,
     TreatmentComponent,
     InpatientDepartmentComponent,
-    AllergyComponent,
+    AllergyCreateEditComponent,
     UserCreateComponent,
     OutpatientDepartmentComponent,
     OutpatientDepartmentDetailComponent,
@@ -105,7 +109,7 @@ import {HalfDonutChartComponent} from "./components/half-donut-chart/half-donut-
     MedicationListComponent,
     MedicationFromFileComponent,
     OutpatientDepartmentFromFileComponent,
-    InpatientDepartmentFromCsvComponent,
+    InpatientDepartmentFromFileComponent,
     SmallListComponent,
     LandingPatientComponent,
     MedicationFormModalComponent,
