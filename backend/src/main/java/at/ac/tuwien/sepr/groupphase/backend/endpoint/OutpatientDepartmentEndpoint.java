@@ -85,6 +85,13 @@ public class OutpatientDepartmentEndpoint {
         return outpatientDepartmentService.getAllOutpatientDepartments();
     }
 
+    @Secured({"ADMIN", "DOCTOR", "SECRETARY", "PATIENT"})
+    @GetMapping("/count")
+    public int getOutpatientDepartmentCount() {
+        LOG.info("getOutpatientDepartmentCount()");
+        return outpatientDepartmentService.getOutpatientDepartmentCount();
+    }
+
     @Secured({"SECRETARY", "PATIENT", "DOCTOR"})
     @GetMapping("/capacities/day")
     public List<OutpatientDepartmentCapacityDto> getOutpatientDepartmentCapacitiesForDay(

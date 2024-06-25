@@ -85,3 +85,46 @@
     }
   }
 }
+
+.floating-window {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 20rem;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  text-align: left; /* Changed from center to left align */
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.info-item .label {
+  font-weight: bold;
+}
+
+.info-item .value {
+  font-size: 1.2em; /* Emphasize the number */
+}
+
+.green {
+  color: green;
+}
+
+.floating-window a.setup-link {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.floating-window a.setup-link:hover {
+  text-decoration: underline;
+}

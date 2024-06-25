@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {AllergyDto, AllergyDtoCreate} from "../../dtos/allergy";
 import {AllergyService} from "../../services/allergy.service";
 import {NgForm, NgModel} from "@angular/forms";
@@ -19,6 +19,15 @@ export enum AllergyCreatEditMode {
 })
 export class AllergyComponent implements OnInit {
 
+  @Output() creationSuccess = new EventEmitter<void>();
+
+  @Input() mode: AllergyCreatEditMode = null;
+  @Input() isEmbedded: boolean = false;
+
+  @ViewChild('content', { static: true }) content!: TemplateRef<any>;
+
+  public error: string | null = null;
+
   constructor(
     private allergyService: AllergyService,
     private notification: ToastrService,
@@ -28,11 +37,11 @@ export class AllergyComponent implements OnInit {
   ) {
   }
 
-  mode: AllergyCreatEditMode = null;
-
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.mode = data.mode;
+      if(data.mode) {
+        this.mode = data.mode;
+      }
       if (this.mode === AllergyCreatEditMode.EDIT) {
         this.route.params.subscribe(params => {
           this.allergyService.getAllergyById(params.id).subscribe(allergy => {
@@ -56,7 +65,10 @@ export class AllergyComponent implements OnInit {
         observable.subscribe({
           next: data => {
             this.notification.success('Successfully created ' + data.name + ' Allergy');
-            this.router.navigate(['/home/admin/allergies'])
+            if(!this.isEmbedded) {
+              this.router.navigate(['/home/admin/allergies'])
+            }
+            this.onSuccessfulCreation();
           },
           error: async error => {
             await this.errorFormatterService.printErrorToNotification(error, `Could not create Allergy`, this.notification);
@@ -81,6 +93,10 @@ export class AllergyComponent implements OnInit {
     return {
       'is-invalid': !input.valid && !input.pristine,
     };
+  }
+
+  private onSuccessfulCreation() {
+    this.creationSuccess.emit();
   }
 
   protected readonly AllergyCreatEditMode = AllergyCreatEditMode;

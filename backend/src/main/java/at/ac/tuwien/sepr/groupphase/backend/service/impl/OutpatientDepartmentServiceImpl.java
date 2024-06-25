@@ -202,4 +202,10 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
             outpatientDepartmentRepository.save(outpatientDepartmentMapper.dtoToEntity(toUpdate, openingHoursMapper.dtoToEntity(toUpdate.openingHours()))),
             openingHoursMapper.entityToDto(outpatientDepartment.getOpeningHours()));
     }
+
+    @Override
+    public int getOutpatientDepartmentCount() {
+        LOG.trace("getOutpatientDepartmentCount()");
+        return outpatientDepartmentRepository.findAll().size();
+    }
 }

@@ -183,7 +183,7 @@
 
       <button mat-button [matMenuTriggerFor]="departmentMenu" tabindex="12">
         <mat-icon>add_business</mat-icon>
-        Manage Department
+        Departments
       </button>
       <mat-menu #departmentMenu="matMenu">
         <div class="dropdown-card">
@@ -211,7 +211,7 @@
 
       <button mat-button [matMenuTriggerFor]="medicationMenu" tabindex="13">
         <mat-icon>medication</mat-icon>
-        Manage Medications
+        Medications
       </button>
       <mat-menu #medicationMenu="matMenu">
         <div class="dropdown-card">
@@ -226,7 +226,7 @@
 
       <button mat-button [matMenuTriggerFor]="allergyMenu" tabindex="13">
         <mat-icon>thermostat</mat-icon>
-        Manage Allergies
+        Allergies
       </button>
       <mat-menu #allergyMenu="matMenu">
         <div class="dropdown-card">
@@ -238,10 +238,6 @@
           </button>
         </div>
       </mat-menu>
-      <button mat-button (click)="adminNavigateToApiKeys()" tabindex="15">
-        <mat-icon>key</mat-icon>
-        Manage API keys
-      </button>
     </ng-container>
   </div>
 
@@ -270,6 +266,14 @@
       <button mat-menu-item routerLink="/" (click)="authService.logoutUser()" class="clean-button">Logout</button>
       <button mat-menu-item (click)="userNavigateToEditProfile()" class="clean-button">Profile
       </button>
+      <div *ngIf="isRoleAdmin()">
+        <button mat-menu-item class="clean-button" (click)="adminNavigateToApiKeys()">
+          Manage API keys
+        </button>
+        <button mat-menu-item class="clean-button" (click)="adminNavigateToSetupTool()">
+          Setup Tool
+        </button>
+      </div>
       <div *ngIf="isHandheld">
         <!-- Role specific actions -->
         <!-- patient -->
@@ -378,10 +382,6 @@
           </button>
           <button mat-menu-item class="clean-button" (click)="adminNavigateToAllergies()">
             View Allergies
-          </button>
-          <button mat-button (click)="adminNavigateToApiKeys()" tabindex="15">
-            <mat-icon>key</mat-icon>
-            Manage API keys
           </button>
         </div>
       </div>

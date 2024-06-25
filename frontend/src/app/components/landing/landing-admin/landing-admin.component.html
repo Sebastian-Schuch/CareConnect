@@ -12,6 +12,29 @@
   </a>
 </div>
 
+<mat-card class="floating-window" *ngIf="setupActive">
+  <h2>Complete Setup</h2>
+
+  <div class="info-item" [ngClass]="{'green': meds > 0}">
+    <span class="label">Medications:</span>
+    <span class="value">{{ meds }}</span>
+  </div>
+  <div class="info-item" [ngClass]="{'green': allergies > 0}">
+    <span class="label">Allergies:</span>
+    <span class="value">{{ allergies }}</span>
+  </div>
+  <div class="info-item" [ngClass]="{'green': inDepartments > 0}">
+    <span class="label">Inpatient department:</span>
+    <span class="value">{{ inDepartments }}</span>
+  </div>
+  <div class="info-item" [ngClass]="{'green': outpatients > 0}">
+    <span class="label">Outpatient department:</span>
+    <span class="value">{{ outpatients }}</span>
+  </div>
+
+  <a [routerLink]="['./setup']" class="setup-link">Finish Setup</a>
+</mat-card>
+
 <div #admin aria-labelledby="admin-section-title" class="admin-landing-container" id="admin-button-section"
      role="navigation">
   <h2 class="visually-hidden" id="admin-section-title">Admin Sections</h2>
@@ -87,12 +110,11 @@
           <mat-card id="allergy" aria-label="Register Allergy"
                     class="card" role="link">
             <mat-icon aria-hidden="true">thermostat</mat-icon>
-            <label for="allergy"><h3>Register Allergy</h3></label>
+            <label for="allergy"><h3>Register<br>Allergy</h3></label>
           </mat-card>
         </a>
 
       </div>
     </mat-card>
   </div>
-
 </div>

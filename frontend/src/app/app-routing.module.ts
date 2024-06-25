@@ -29,10 +29,6 @@ import {
   InpatientDepartmentComponent,
   InpatientDepartmentCreateEditMode
 } from "./components/inpatient-department/inpatient-department.component";
-import {
-  MedicationCreateComponent,
-  MedicationCreateEditMode
-} from "./components/medication-create/medication-create.component";
 import {AllergyComponent, AllergyCreatEditMode} from "./components/allergy/allergy.component";
 import {ChatComponent} from "./components/chat/chat.component";
 import {UserListComponent} from "./components/user/user-list/user-list.component";
@@ -57,6 +53,11 @@ import {MedicationListComponent} from "./components/medication-list/medication-l
 import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department-capacities/outpatient-department-capacities.component";
+import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
+import {
+  MedicationCreateComponent,
+  MedicationCreateEditMode
+} from "./components/medication/medication-create/medication-create.component";
 
 const routes: Routes = [
   {path: '', component: LandingLoggedOutComponent},
@@ -97,6 +98,7 @@ const routes: Routes = [
       {
         path: 'admin', canActivate: [AdminGuard], children: [
           {path: '', component: LandingAdminComponent},
+          {path:'setup', component: MainSetupPage},
           {
             path: 'register', children: [
               {

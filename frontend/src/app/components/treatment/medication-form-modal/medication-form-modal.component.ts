@@ -5,7 +5,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {map, startWith} from 'rxjs/operators';
 import {MedicationDto, MedicationPageDto} from '../../../dtos/medication';
 import {MedicationService} from '../../../services/medication.service';
-import {Page} from "../../../dtos/page";
 
 @Component({
   selector: 'app-medication-form-modal',
@@ -53,7 +52,7 @@ export class MedicationFormModalComponent implements OnInit {
         this.selectedUnitOfMeasurement = value;
         this.medicationAdministeredForm.get("unitOfMeasurement").setValue(value);
       },
-      error: err => console.log(err)
+      error: err => console.error(err)
     });
   }
 

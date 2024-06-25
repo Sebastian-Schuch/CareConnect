@@ -79,7 +79,7 @@ export class InpatientDepartmentListComponent implements OnInit {
           this.deleteInpatientDepartment(inpatientDepartment.id);
           if (this.inpatientDepartments.length === 1) {
             this.pageProperties = {
-              pageIndex: this.pageProperties.pageIndex - 1,
+              pageIndex: this.pageProperties.pageIndex,
               pageSize: this.pageProperties.pageSize
             };
             this.reloadInpatientDepartments();
