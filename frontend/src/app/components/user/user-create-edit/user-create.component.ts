@@ -3,7 +3,7 @@ import {UserDto, UserDtoCreate, UserDtoUpdate} from "../../../dtos/user";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup, NgModel, Validators} from "@angular/forms";
-import {debounceTime, forkJoin, map, Observable, startWith, switchMap} from "rxjs";
+import {debounceTime, map, Observable, startWith, switchMap} from "rxjs";
 import {Role} from "../../../dtos/Role";
 import {ToastrService} from 'ngx-toastr';
 import {MedicationDto, MedicationPageDto} from "../../../dtos/medication";
@@ -12,10 +12,9 @@ import {AllergyDto, AllergyPageDto} from "../../../dtos/allergy";
 import {AllergyService} from "../../../services/allergy.service";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {AuthService} from "../../../services/auth.service";
-import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordFormModalComponent} from "../change-password-form-modal/change-password-form-modal.component";
 import {ResetPasswordDialogComponent} from "../reset-password-dialog/reset-password-dialog.component";
-import {Page} from "../../../dtos/page";
+import {MatDialog} from "@angular/material/dialog";
 
 export enum UserCreateEditMode {
   create,
@@ -28,7 +27,6 @@ export enum UserCreateEditMode {
   templateUrl: './user-create.component.html',
   styleUrls: ['./user-create.component.scss', '../../../../styles.scss']
 })
-
 
 export class UserCreateComponent implements OnInit {
 
@@ -148,7 +146,6 @@ export class UserCreateComponent implements OnInit {
           this.mode = data.mode;
           this.generateForm();
           this.resetAllSearchInputs();
-          console.log(this.filteredAllergyOptions);
           if (this.mode == UserCreateEditMode.edit || this.mode == UserCreateEditMode.view) {
 
             if (isNaN(params['id']) === false) {

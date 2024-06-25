@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {MedicationDto, MedicationDtoCreate} from "../../dtos/medication";
+import {Component, EventEmitter, input, Input, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {MedicationService} from "../../services/medication.service";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
 import {ToastrService} from "ngx-toastr";
-import {ErrorFormatterService} from "../../services/error-formatter.service";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
+import {MedicationDto, MedicationDtoCreate} from "../../../dtos/medication";
+import {MedicationService} from "../../../services/medication.service";
 
 export enum MedicationCreateEditMode {
   CREATE,
@@ -15,9 +15,10 @@ export enum MedicationCreateEditMode {
 @Component({
   selector: 'app-medication-create',
   templateUrl: './medication-create.component.html',
-  styleUrls: ['./medication-create.component.scss', '../../../styles.scss']
+  styleUrls: ['./medication-create.component.scss', '../../../../styles.scss']
 })
 export class MedicationCreateComponent implements OnInit {
+  @Output() creationSuccess = new EventEmitter<void>();
 
   medication: MedicationDto = {
     id: 0,
@@ -25,7 +26,8 @@ export class MedicationCreateComponent implements OnInit {
     unitOfMeasurement: ''
   };
 
-  mode: MedicationCreateEditMode = null;
+  @Input() mode: MedicationCreateEditMode = null;
+  @Input() isEmbedded: boolean = false;
 
   constructor(
     private service: MedicationService,
@@ -38,7 +40,10 @@ export class MedicationCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      this.mode = data.mode;
+      if(data.mode) {
+        this.mode = data.mode;
+      }
+
       if (this.mode === MedicationCreateEditMode.EDIT) {
         this.route.params.subscribe(params => {
           this.service.getMedicationById(params.id).subscribe(medication => {
@@ -63,7 +68,10 @@ export class MedicationCreateComponent implements OnInit {
         observable.subscribe({
           next: () => {
             this.notification.success('Successfully created ' + this.medication.name + ' Medication');
-            this.router.navigate(['/home/admin/medications'])
+            this.onSuccessfulCreation();
+            if(!this.isEmbedded) {
+              this.router.navigate(['/home/admin/medications'])
+            }
           },
           error: async error => {
             await this.errorFormatterService.printErrorToNotification(error, `Could not create Medication`, this.notification);
@@ -85,4 +93,8 @@ export class MedicationCreateComponent implements OnInit {
   }
 
   protected readonly MedicationCreateEditMode = MedicationCreateEditMode;
+
+  private onSuccessfulCreation(): void {
+    this.creationSuccess.emit();
+  }
 }
