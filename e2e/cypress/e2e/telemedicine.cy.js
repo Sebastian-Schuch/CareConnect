@@ -9,7 +9,7 @@ describe('Start Telemedicine Check', () => {
                 cy.wait(500);
                 cy.get('#treatmentSelect').click();
                 cy.wait(100);
-                cy.get('mat-option').click();
+                cy.get('mat-option').contains('Treatment1').click();
                 cy.contains('button','Create').click();
             }
         });
