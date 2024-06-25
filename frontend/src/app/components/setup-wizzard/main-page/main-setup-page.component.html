@@ -40,7 +40,7 @@
           </div>
         </mat-tab>
 
-<!-- Medication shit here -->
+        <!-- Medication shit here -->
         <mat-tab label="Medication"
                  color="red">
           <div class="row">
@@ -48,20 +48,20 @@
               <div class="row">
                 <div class="col-md-4">
                   <app-medication-list
-                  [medication]="medication"
-                  [itemsPerPage]="15"
+                    [medication]="medication"
+                    [itemsPerPage]="15"
                   ></app-medication-list>
                 </div>
                 <div class="col-md-8">
                   <mat-tab-group dynamicHeight="true">
-                  <mat-tab label="Add manual">
-                    <app-medication-create
-                      (creationSuccess)="onMedicationCreated()"
-                      [mode]="MedicationCreateEditMode.CREATE"
-                      [isEmbedded]="true"
-                    ></app-medication-create>
-                  </mat-tab>
-                    <mat-tab label="upload file">
+                    <mat-tab label="Add manual">
+                      <app-medication-create
+                        (creationSuccess)="onMedicationCreated()"
+                        [mode]="MedicationCreateEditMode.CREATE"
+                        [isEmbedded]="true"
+                      ></app-medication-create>
+                    </mat-tab>
+                    <mat-tab label="Upload file">
                       <app-medication-from-file>
 
                       </app-medication-from-file>
@@ -76,6 +76,7 @@
         </mat-tab>
 
         <mat-tab label="In-Patient Department">
+          <h3>Inpatient Department Section</h3>
           <app-inpatient-department-from-csv>
 
           </app-inpatient-department-from-csv>
@@ -84,10 +85,8 @@
         <mat-tab label="Out-Patient Department">
           <div class="row">
             <div class="col-12">
-              <h3>Out-Patient Department Section</h3>
-              <!-- Out-Patient Department component or content goes here -->
+              <h3>Outpatient Department Section</h3>
               <app-outpatient-department-from-file>
-
               </app-outpatient-department-from-file>
             </div>
           </div>

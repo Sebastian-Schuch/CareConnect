@@ -1,6 +1,7 @@
 <div class="medication-from-database container mt-3">
   <h3>Medication</h3>
-  <input type="text" class="form-control mb-3" placeholder="Search medication" (input)="onSearchChange($event.target.value)">
+  <input type="text" class="form-control mb-3" placeholder="Search medications"
+         (input)="onSearchChange($event.target.value)">
   <ul class="list-group">
     <li *ngFor="let entry of paginatedMedication; let i = index" class="list-group-item">
       {{ i + 1 + (currentPage - 1) * itemsPerPage }}. {{ entry.name }}

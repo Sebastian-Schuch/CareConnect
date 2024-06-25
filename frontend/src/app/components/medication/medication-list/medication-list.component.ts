@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {MedicationDto} from "../../../dtos/medication";
 
 function containsKeyName(obj: any): boolean {
@@ -10,7 +10,7 @@ function containsKeyName(obj: any): boolean {
   templateUrl: './medication-list.component.html',
   styleUrl: './medication-list.component.scss'
 })
-export class MedicationListComponent {
+export class MedicationListComponent implements OnInit, OnChanges {
   @Input() medication: MedicationDto[] = [];
   @Input() itemsPerPage = 10;
   @Output() pageChange = new EventEmitter<number>();
@@ -22,8 +22,6 @@ export class MedicationListComponent {
   paginatedMedication: MedicationDto[] = [];
 
   ngOnInit() {
-
-
     this.filteredMedications = this.medication.filter(item => containsKeyName(item));
     this.updatePagination();
   }
@@ -55,8 +53,7 @@ export class MedicationListComponent {
   }
 
   filterMedications() {
-    this.medication = this.medication.filter(med => (med.name !== '' || med.name !== undefined) && containsKeyName("name"));
-
+    this.medication = this.medication.filter(med => (med.name !== '' || med.name !== undefined));
     if (this.searchQuery) {
       this.filteredMedications = this.medication.filter(medication =>
         medication.name.toLowerCase().includes(this.searchQuery.toLowerCase())

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
@@ -13,7 +13,7 @@ import {ErrorFormatterService} from "../../../services/error-formatter.service";
   templateUrl: './main-setup-page.component.html',
   styleUrl: './main-setup-page.component.scss',
 })
-export class MainSetupPage {
+export class MainSetupPage implements OnInit, AfterViewInit {
 
   showFileUpload = false;
   public allergies: AllergyDto[] = [];
@@ -62,6 +62,7 @@ export class MainSetupPage {
   loadMedication() {
     this.medService.getMedicationsAll().subscribe({
       next: data => {
+        console.log(data);
         this.medication = data;
       },
       error: async error => {
