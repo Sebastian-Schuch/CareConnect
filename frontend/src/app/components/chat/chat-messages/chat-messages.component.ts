@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
-import {DatePipe, NgClass, NgForOf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {ChatInputComponent} from "../chat-input/chat-input.component";
 import {AddChatComponent} from "../add-chat/add-chat.component";
@@ -18,7 +18,8 @@ import {MessageService} from "../../../services/message.service";
     ChatInputComponent,
     NgClass,
     DatePipe,
-    AddChatComponent
+    AddChatComponent,
+    NgIf
   ],
   templateUrl: './chat-messages.component.html',
   styleUrl: './chat-messages.component.scss'

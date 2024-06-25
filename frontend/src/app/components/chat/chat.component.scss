@@ -1,6 +1,8 @@
 .chat-container{
   display: flex;
   height: 50%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 app-chat-list {
   border-right: 1px solid #e0e0e0; // Change the color as needed
@@ -44,6 +46,6 @@ app-chat-list {
 .matFormFieldFullWidth{
   display: flex;
   margin: 0 auto;
-  max-width: 80%;
+  //max-width: 80%;
   width: 600px;
 }
