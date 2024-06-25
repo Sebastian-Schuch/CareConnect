@@ -67,6 +67,9 @@ import {MedicationFromFileComponent} from "./components/medication/medication-fr
 import {
   OutpatientDepartmentFromFileComponent
 } from "./components/outpatient-department-from-file/outpatient-department-from-file.component";
+import {
+  InpatientDepartmentFromCsvComponent
+} from "./components/station/inpatient-department-from-csv/inpatient-department-from-csv.component";
 
 @NgModule({
   declarations: [
@@ -94,7 +97,8 @@ import {
     AllergyFromFileComponent,
     MedicationListComponent,
     MedicationFromFileComponent,
-    OutpatientDepartmentFromFileComponent
+    OutpatientDepartmentFromFileComponent,
+    InpatientDepartmentFromCsvComponent
   ],
   imports: [
     BrowserModule,

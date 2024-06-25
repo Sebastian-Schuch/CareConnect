@@ -3,6 +3,7 @@ import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {CsvConverterService} from "../../../services/csv-converter.service";
 import {AllergyDto} from "../../../dtos/allergy";
+import {catchError, forkJoin, of} from "rxjs";
 
 @Component({
   selector: 'app-allergy-from-file',
@@ -49,16 +50,32 @@ export class AllergyFromFileComponent {
 
   addAll() {
     console.log('Adding all allergies');
-    this.jsonData.forEach((item: any) => {
-      this.allergyService.createAllergy(item).subscribe({
-        next: () => {
-          this.notification.success('Allergy ' + item.name + ' was successfully created.');
-          this.onSuccessfulCreation();
-        },
-        error: error => {
+
+    const requests = this.jsonData.map((item: any) =>
+      this.allergyService.createAllergy(item).pipe(
+        catchError(error => {
           this.notification.error('Error creating allergy: ' + error.message);
+          return of({ item, success: false });  // Return an object to keep track of the error
+        })
+      )
+    );
+
+    forkJoin(requests).subscribe({
+      next: (results) => {
+        if (results) {
+          // @ts-ignore
+          const allSuccessful = results.every(result => result !== null && result.success !== false);
+          if (allSuccessful) {
+            this.notification.success('All allergies were successfully created.');
+          } else {
+            this.notification.error('Some allergies could not be created.');
+          }
+          this.onSuccessfulCreation();
         }
-      });
+      },
+      error: error => {
+        this.notification.error('Error creating allergies: ' + error.message);
+      }
     });
   }
 

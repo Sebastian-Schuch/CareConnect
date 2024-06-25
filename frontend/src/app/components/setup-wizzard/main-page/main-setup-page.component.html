@@ -8,7 +8,7 @@
 
   <div class="row">
     <div class="col-12">
-      <mat-tab-group dynamicHeight="true">
+      <mat-tab-group dynamicHeight="true" [backgroundColor]="">
         <mat-tab label="Allergies">
           <div class="row">
             <div class="col-md-4">
@@ -19,7 +19,7 @@
             </div>
 
             <div class="col-md-8">
-              <mat-tab-group dynamicHeight="true">
+              <mat-tab-group dynamicHeight="true" color="rgb(45, 129, 91)">
                 <mat-tab label="Add manual">
                   <h3>Add a new Allergy</h3>
                   <p>Insert the name of an allergy you want to add to the system.</p>
@@ -64,9 +64,14 @@
                 </div>
               </div>
               <!-- Medication component or content goes here -->
-              <p>Content for medication setup.</p>
             </div>
           </div>
+        </mat-tab>
+
+        <mat-tab label="In-Patient Department">
+          <app-inpatient-department-from-csv>
+
+          </app-inpatient-department-from-csv>
         </mat-tab>
 
         <mat-tab label="Out-Patient Department">
@@ -80,6 +85,8 @@
             </div>
           </div>
         </mat-tab>
+
+
       </mat-tab-group>
     </div>
   </div>

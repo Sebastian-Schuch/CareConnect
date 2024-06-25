@@ -3,6 +3,7 @@ import {CsvConverterService} from "../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {OutpatientDepartmentService} from "../../services/outpatient-department.service";
 import {OutpatientDepartmentDto} from "../../dtos/outpatient-department";
+import {forkJoin, map} from "rxjs";
 
 @Component({
   selector: 'app-outpatient-department-from-file',
@@ -39,20 +40,20 @@ export class OutpatientDepartmentFromFileComponent {
     }
   }
 
-  private addDepartment(department: OutpatientDepartmentDto){
-    this.outPatientDepartmentService.createOutpatientDepartment(department).subscribe(
-      (response) => {
-        this.notification.success('Department added successfully');
+  addAll() {
+    const requests = this.jsonData.map(department =>
+      this.outPatientDepartmentService.createOutpatientDepartment(department).pipe(
+        map(response => response)  // Ensure we return the response for each request
+      )
+    );
+
+    forkJoin(requests).subscribe(
+      (responses) => {
+        this.notification.success('All departments added successfully');
       },
       (error) => {
-        this.notification.error('Error adding department: ' + error.message);
+        this.notification.error('Error adding departments: ' + error.message);
       }
     );
-  }
-
-  addAll(){
-    this.jsonData.forEach(department => {
-      this.addDepartment(department);
-    });
   }
 }
