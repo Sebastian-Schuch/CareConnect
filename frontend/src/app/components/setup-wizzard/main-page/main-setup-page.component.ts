@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
@@ -8,7 +8,7 @@ import {MedicationDto} from "../../../dtos/medication";
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-setup-page.component.html',
-  styleUrl: './main-setup-page.component.scss'
+  styleUrl: './main-setup-page.component.scss',
 })
 export class MainSetupPage {
 
@@ -27,6 +27,27 @@ export class MainSetupPage {
   ngOnInit(): void {
     this.loadAllergies();
     this.loadMedication();
+  }
+
+  ngAfterViewInit(): void {
+    this.changeBackgroundColor();
+
+  }
+  changeActiveTab(): void {
+    this.removePreviousActiveTabClass();
+    this.changeBackgroundColor();
+  }
+
+  changeBackgroundColor(): void {
+    const activeTab = document.getElementsByClassName('mdc-tab--active')[0];
+    (activeTab as HTMLElement).style.backgroundColor = 'transparent';
+    (activeTab as HTMLElement).classList.add('active-tab');
+  }
+
+  removePreviousActiveTabClass(): void {
+    const previousActiveTab = document.getElementsByClassName('active-tab')[0];
+    (previousActiveTab as HTMLElement).style.backgroundColor = 'unset';
+    previousActiveTab.classList.remove('active-tab');
   }
 
   toggleView() {

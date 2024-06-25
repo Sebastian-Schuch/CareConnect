@@ -5,6 +5,10 @@ import {CsvConverterService} from "../../../services/csv-converter.service";
 import {AllergyDto} from "../../../dtos/allergy";
 import {catchError, forkJoin, of} from "rxjs";
 
+function containsKey(obj: any, key: string): boolean {
+  return obj && obj.hasOwnProperty(key);
+}
+
 @Component({
   selector: 'app-allergy-from-file',
   templateUrl: './allergy-from-file.component.html',

@@ -1,7 +1,12 @@
-::ng-deep .mat-tab-group.mat-primary .mat-ink-bar {
-  background-color: green;
+.mat-mdc-tab .mdc-tab-indicator__content--underline {
+  border-color: green !important;
 }
 
-::ng-deep .mat-tab-label.mat-tab-label-active {
-  color: green !important;
+::ng-deep .mdc-tab.mdc-tab--active{
+  background-color: transparent !important;
+  font-weight: 900;
+}
+
+::ng-deep .mdc-tab.mdc-tab--active .mdc-tab-indicator > span{
+  background-color: green !important;
 }
