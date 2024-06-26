@@ -25,4 +25,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
     Patient findByPatientIdAndCredential_ActiveTrue(Long id);
 
     List<Patient> findByCredential_ActiveTrue();
+
+    Patient findBySvnr(String svnr);
 }

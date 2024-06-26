@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDtoSearch;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.PatientMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Credential;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Patient;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ConflictException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.PatientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.PatientService;
@@ -40,7 +41,13 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDto createPatient(PatientDtoCreate toCreate, Credential credentials) {
         LOG.trace("createPatient({})", toCreate);
-        return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.createDtoToEntity(toCreate, credentials)));
+        try {
+            patientRepository.findBySvnr(toCreate.svnr());
+        } catch (NotFoundException e) {
+            return patientMapper.patientToPatientDto(patientRepository.save(patientMapper.createDtoToEntity(toCreate, credentials)));
+        }
+        LOG.warn("Patient with svnr {} already exists", toCreate.svnr());
+        throw new ConflictException("Patient with svnr already exists");
     }
 
     @Override
