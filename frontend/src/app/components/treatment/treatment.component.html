@@ -21,7 +21,7 @@
                    aria-labelledby="patientLabel"
                    formControlName="patient"
                    matInput type="text"
-                   (keydown)="onKeydown($event)"
+                   (keydown)="onKeydownPatient($event)"
                    (keydown.enter)="onEnterKey($event)"
                    #patientInput
                    #patientTrigger="matAutocompleteTrigger">
@@ -38,7 +38,8 @@
             <mat-label>Outpatient-Department</mat-label>
             <mat-icon matPrefix>location_on</mat-icon>
             <input [matAutocomplete]="outpdepAuto" formControlName="outpatientDepartment" matInput type="text"
-                   (keydown.enter)="onEnterKey($event)" (keydown)="onKeydown($event)" #outpatientDepartmentInput
+                   (keydown.enter)="onEnterKey($event)" (keydown)="onKeydownDepartment($event)"
+                   #outpatientDepartmentInput
                    #outpatientDepartmentTrigger="matAutocompleteTrigger">
             <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD" autoActiveFirstOption="true">
               <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">

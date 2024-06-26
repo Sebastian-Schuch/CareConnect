@@ -429,7 +429,18 @@ export class TreatmentComponent implements OnInit {
   }
 
 
-  onKeydown(event: KeyboardEvent): void {
+  onKeydownDepartment(event: KeyboardEvent): void {
+    if (event.key === 'Backspace') {
+      this.treatmentForm.get('outpatientDepartment')?.setValue('');
+      setTimeout(() => {
+        if (this.outpdepAutoTrigger) {
+          this.outpdepAutoTrigger.openPanel();
+        }
+      });
+    }
+  }
+
+  onKeydownPatient(event: KeyboardEvent): void {
     if (event.key === 'Backspace') {
       this.treatmentForm.get('patient')?.setValue('');
       setTimeout(() => {
@@ -437,14 +448,6 @@ export class TreatmentComponent implements OnInit {
           this.patientAutoTrigger.openPanel();
         }
       });
-      if (event.target === this.outpatientDepartmentInput.nativeElement) {
-        this.treatmentForm.get('outpatientDepartment')?.setValue('');
-        setTimeout(() => {
-          if (this.outpdepAutoTrigger) {
-            this.outpdepAutoTrigger.openPanel();
-          }
-        });
-      }
     }
   }
 
