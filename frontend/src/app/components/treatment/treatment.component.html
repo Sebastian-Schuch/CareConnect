@@ -21,7 +21,7 @@
                    aria-labelledby="patientLabel"
                    formControlName="patient"
                    matInput type="text"
-                   (keydown)="onKeydown($event)"
+                   (keydown)="onKeydownPatient($event)"
                    (keydown.enter)="onEnterKey($event)"
                    #patientInput
                    #patientTrigger="matAutocompleteTrigger">
@@ -38,7 +38,8 @@
             <mat-label>Outpatient-Department</mat-label>
             <mat-icon matPrefix>location_on</mat-icon>
             <input [matAutocomplete]="outpdepAuto" formControlName="outpatientDepartment" matInput type="text"
-                   (keydown.enter)="onEnterKey($event)"  (keydown)="onKeydown($event)"  #outpatientDepartmentInput
+                   (keydown.enter)="onEnterKey($event)" (keydown)="onKeydownDepartment($event)"
+                   #outpatientDepartmentInput
                    #outpatientDepartmentTrigger="matAutocompleteTrigger">
             <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD" autoActiveFirstOption="true">
               <mat-option *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">
@@ -52,7 +53,8 @@
           <mat-form-field appearance="fill" class="matFormFieldFullWidth">
             <mat-icon matPrefix>medical_services</mat-icon>
             <mat-label>Doctor</mat-label>
-            <input [matAutocomplete]="doctorAuto" formControlName="doctor" matInput type="text" (keydown.enter)="onEnterKey($event)" #doctorInput #doctorTrigger="matAutocompleteTrigger">
+            <input [matAutocomplete]="doctorAuto" formControlName="doctor" matInput type="text"
+                   (keydown.enter)="onEnterKey($event)" #doctorInput #doctorTrigger="matAutocompleteTrigger">
             <mat-autocomplete #doctorAuto="matAutocomplete" autoActiveFirstOption="true">
               <mat-option (onSelectionChange)="addDoctorToSelection(doctor)"
                           *ngFor="let doctor of filteredDoctorOptions | async"
@@ -191,7 +193,6 @@
                 <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
               </table>
             </div>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons="true"></mat-paginator>
           </ng-container>
         </div>
         <div *ngIf="mode !== TreatmentCreateEditMode.detail" class="mt-4 d-flex flex-row button-submit-bottom-section">

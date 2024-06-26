@@ -5,6 +5,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static at.ac.tuwien.sepr.groupphase.backend.config.TimeSlotConfig.MIN_APPOINTMENT_LENGTH_IN_MINUTES;
@@ -43,15 +44,22 @@ public record AppointmentDtoCreate(
     @AssertTrue(message = "Appointment must be during opening hours")
     public boolean isDuringOpeningHours() {
         OpeningHoursDayDto weekday = outpatientDepartment.openingHours().getWeekdayByDate(startDate);
-        if (weekday.open().getHour() > startDate.getHours()) {
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTime(startDate);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.setTime(endDate);
+        if (weekday.open().getHour() > calendarStart.get(Calendar.HOUR_OF_DAY)) {
             return false;
         }
-        if (weekday.close().getHour() < endDate.getHours()) {
+        if (weekday.close().getHour() < calendarEnd.get(Calendar.HOUR_OF_DAY)) {
             return false;
         }
-        if (weekday.open().getHour() == startDate.getHours() && weekday.open().getMinute() > startDate.getMinutes()) {
+        if (weekday.open().getHour() == calendarStart.get(Calendar.HOUR_OF_DAY) && weekday.open().getMinute() > calendarStart.get(Calendar.MINUTE)) {
             return false;
         }
-        return weekday.close().getHour() != endDate.getHours() || weekday.close().getMinute() >= endDate.getMinutes();
+        if (weekday.close().getHour() == calendarEnd.get(Calendar.HOUR_OF_DAY) && weekday.close().getMinute() > calendarEnd.get(Calendar.MINUTE)) {
+            return false;
+        }
+        return true;
     }
 }

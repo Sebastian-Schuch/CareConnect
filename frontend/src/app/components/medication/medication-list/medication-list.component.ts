@@ -1,89 +1,91 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormsModule} from "@angular/forms";
+import {MatIcon} from "@angular/material/icon";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {NgForOf} from "@angular/common";
+import {Router} from "@angular/router";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
+import {ToastrService} from "ngx-toastr";
+import {MatDialog} from "@angular/material/dialog";
+import {MedicationService} from "../../../services/medication.service";
 import {MedicationDto} from "../../../dtos/medication";
-
-function containsKeyName(obj: any): boolean {
-  return obj && obj.hasOwnProperty('name');
-}
+import {MedicationDeleteComponent} from "../medication-delete/medication-delete.component";
 
 @Component({
   selector: 'app-medication-list',
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatIcon,
+    MatPaginator,
+    NgForOf
+  ],
   templateUrl: './medication-list.component.html',
   styleUrl: './medication-list.component.scss'
 })
-export class MedicationListComponent implements OnInit, OnChanges {
-  @Input() medication: MedicationDto[] = [];
-  @Input() itemsPerPage = 10;
-  @Output() pageChange = new EventEmitter<number>();
-
-  searchQuery = '';
-  totalPages: number[] = [];
-  currentPage = 1;
-  filteredMedications: MedicationDto[] = [];
-  paginatedMedication: MedicationDto[] = [];
-
-  ngOnInit() {
-    this.filteredMedications = this.medication.filter(item => containsKeyName(item));
-    this.updatePagination();
+export class MedicationListComponent implements OnInit {
+  constructor(private router: Router, private medicationService: MedicationService, private errorFormatterService: ErrorFormatterService, private notificationService: ToastrService, public dialog: MatDialog) {
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.medication) {
-      this.updatePagination();
-    }
+  totalItems: number = 0;
+  medications: MedicationDto[] = [];
+  medicationName: string = '';
+  size: number = 10;
+  page: number = 0;
+
+  public reloadMedications(): void {
+    this.medicationService.searchMedications(this.medicationName, this.page, this.size).subscribe({
+      next: medicationPage => {
+        this.medications = medicationPage.medications;
+        this.totalItems = medicationPage.totalItems;
+      },
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, "Error loading Medications", this.notificationService);
+      }
+    });
   }
 
-  updatePagination() {
-    this.filterMedications();
-    this.calculateTotalPages();
-    this.paginateMedications();
+  onPageChange($event: PageEvent) {
+    this.size = $event.pageSize;
+    this.page = $event.pageIndex;
+    this.reloadMedications();
   }
 
-  changePage(page: number) {
-    if (page > 0 && page <= this.totalPages.length) {
-      this.currentPage = page;
-      this.paginateMedications();
-      this.pageChange.emit(this.currentPage);
-    }
+  public navigateToEditMedication(medicationId: number): void {
+    this.router.navigate(['home/admin/medications/' + medicationId + '/edit']);
   }
 
-  paginateMedications() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    this.paginatedMedication = this.filteredMedications.slice(start, end);
+  private deleteMedication(id: number) {
+    this.medicationService.deleteMedication(id).subscribe({
+      next: () => {
+        this.reloadMedications();
+        this.notificationService.success("Medication deleted successfully");
+      },
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, "Error deleting Medication", this.notificationService);
+      }
+    });
   }
 
-  filterMedications() {
-    this.medication = this.medication.filter(med => (med.name !== '' || med.name !== undefined));
-    if (this.searchQuery) {
-      this.filteredMedications = this.medication.filter(medication =>
-        medication.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else {
-      this.filteredMedications = this.medication;
-    }
-    this.calculateTotalPages();
-    this.paginateMedications();
+  openDeleteDialog(medication: MedicationDto) {
+    const dialogRef = this.dialog.open(MedicationDeleteComponent,
+      {data: {medication: medication}});
+
+    dialogRef.afterClosed().subscribe({
+      next: value => {
+        if (value) {
+          this.deleteMedication(medication.id);
+          if (this.medications.length === 1) {
+            this.page = this.page - 1;
+            this.reloadMedications();
+          }
+        }
+      },
+      error: err => console.error(err)
+    })
   }
 
-  calculateTotalPages() {
-    this.totalPages = Array(Math.ceil(this.filteredMedications.length / this.itemsPerPage)).fill(0).map((x, i) => i + 1);
-  }
-
-  onSearchChange(query: string) {
-    this.searchQuery = query;
-    this.updatePagination();
-  }
-
-  get visibleMedications(): number[] {
-    const maxVisiblePages = 5;
-    const halfMax = Math.floor(maxVisiblePages / 2);
-    let start = Math.max(this.currentPage - halfMax, 1);
-    let end = Math.min(start + maxVisiblePages - 1, this.totalPages.length);
-
-    if (end - start < maxVisiblePages - 1) {
-      start = Math.max(end - maxVisiblePages + 1, 1);
-    }
-
-    return Array.from({length: end - start + 1}, (_, i) => start + i);
+  ngOnInit(): void {
+    this.reloadMedications();
   }
 }

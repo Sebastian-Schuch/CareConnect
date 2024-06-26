@@ -2,14 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface AllergyRepository extends JpaRepository<Allergy, Long>, JpaSpecificationExecutor<Allergy> {
@@ -33,6 +31,10 @@ public interface AllergyRepository extends JpaRepository<Allergy, Long>, JpaSpec
     @Query(value = "SELECT * FROM Allergy WHERE ID= ?1 AND ACTIVE", nativeQuery = true)
     Allergy findAllergyById(Long id);
 
-
-
+    /**
+     * Returns all active allergies.
+     *
+     * @return all active allergies.
+     */
+    List<Allergy> findByActiveTrue();
 }
