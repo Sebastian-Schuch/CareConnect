@@ -5,6 +5,7 @@
       type="file"
       class="form-control"
       id="csvFileInput"
+      #fileInput
       (change)="onFileChange($event)"
     />
   </div>
@@ -37,8 +38,8 @@
           (click)="addAll()"
   >Add all
   </button>
-  <p *ngIf="jsonData && InpatientDepartments.length === 0" class="text-muted">
-    No medications found in the file
+  <p *ngIf="jsonData && jsonData.length === 0" class="text-muted">
+    No in-patient departments found in the provided file
   </p>
 
 

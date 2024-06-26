@@ -88,6 +88,12 @@ import {
 import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department/outpatient-department-capacities/outpatient-department-capacities.component";
+import {
+    OutpatientDepartmentListComponent
+} from "./components/outpatient-department/outpatient-department-list/outpatient-department-list.component";
+import {
+  InpatientDepartmentListComponent
+} from "./components/inpatient-department/inpatient-department-list/inpatient-department-list.component";
 
 @NgModule({
   declarations: [
@@ -173,6 +179,8 @@ import {
     MatTabGroup,
     MatTab,
     NewChatDialogComponent,
+    OutpatientDepartmentListComponent,
+    InpatientDepartmentListComponent,
   ],
   providers: [httpInterceptorProviders, provideAnimationsAsync('noop'),
     {provide: MAT_DATE_LOCALE, useValue: 'de-DE'}, provideNativeDateAdapter()

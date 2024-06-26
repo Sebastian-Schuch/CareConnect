@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {CsvConverterService} from "../../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {OutpatientDepartmentService} from "../../../../services/outpatient-department.service";
@@ -21,6 +21,7 @@ export class OutpatientDepartmentFromFileComponent {
   ) {
   }
 
+  @ViewChild('fileInput') fileInput: any;
   public jsonData: any;
   public error: string | null = null;
 
@@ -56,10 +57,18 @@ export class OutpatientDepartmentFromFileComponent {
     forkJoin(requests).subscribe(
       (responses) => {
         this.notification.success('All departments added successfully');
+        this.clearFileInput();
+
       },
       (error) => {
         this.notification.error('Error adding departments: ' + error.message);
+        this.clearFileInput();
+
       }
     );
+  }
+
+  clearFileInput() {
+    this.fileInput.nativeElement.value = '';
   }
 }

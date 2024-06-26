@@ -41,7 +41,11 @@ export class MedicationFromFileComponent {
             };
           })
 
-          this.jsonData = converted.filter(i => i.name !== '');
+          this.jsonData = converted.filter(i => i.name !== ''
+            && i.name !== undefined
+            && i.medication !== undefined
+            && i.unitOfMeasurement !== undefined
+          );
           this.error = null;
         },
         (error) => {

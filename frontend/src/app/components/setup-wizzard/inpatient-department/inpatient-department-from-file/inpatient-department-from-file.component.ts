@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {CsvConverterService} from "../../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {catchError, forkJoin, of} from "rxjs";
@@ -15,6 +15,8 @@ function containsKey(obj: any, key: string): boolean {
   styleUrl: './inpatient-department-from-file.component.scss'
 })
 export class InpatientDepartmentFromFileComponent {
+
+  @ViewChild('fileInput') fileInput: any;
 
   public jsonData: any;
   public error: string | null = null;
@@ -53,6 +55,7 @@ export class InpatientDepartmentFromFileComponent {
           this.notification.error('Some inpatient departments could not be added.');
         }
         this.jsonData = null;
+        this.clearFileInput();
       },
       error: error => {
         this.notification.error('Error adding inpatient departments: ' + error.message);
@@ -86,5 +89,9 @@ export class InpatientDepartmentFromFileComponent {
         }
       );
     }
+  }
+
+  clearFileInput() {
+    this.fileInput.nativeElement.value = '';
   }
 }
