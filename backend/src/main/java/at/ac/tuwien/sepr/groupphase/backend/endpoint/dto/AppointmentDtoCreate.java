@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static at.ac.tuwien.sepr.groupphase.backend.config.TimeSlotConfig.MIN_APPOINTMENT_LENGTH_IN_MINUTES;
 
@@ -45,8 +46,10 @@ public record AppointmentDtoCreate(
     public boolean isDuringOpeningHours() {
         OpeningHoursDayDto weekday = outpatientDepartment.openingHours().getWeekdayByDate(startDate);
         Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTimeZone(TimeZone.getTimeZone("CET")); // Set timezone to CET
         calendarStart.setTime(startDate);
         Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.setTimeZone(TimeZone.getTimeZone("CET")); // Set timezone to CET
         calendarEnd.setTime(endDate);
         if (weekday.open().getHour() > calendarStart.get(Calendar.HOUR_OF_DAY)) {
             return false;
@@ -57,7 +60,7 @@ public record AppointmentDtoCreate(
         if (weekday.open().getHour() == calendarStart.get(Calendar.HOUR_OF_DAY) && weekday.open().getMinute() > calendarStart.get(Calendar.MINUTE)) {
             return false;
         }
-        if (weekday.close().getHour() == calendarEnd.get(Calendar.HOUR_OF_DAY) && weekday.close().getMinute() > calendarEnd.get(Calendar.MINUTE)) {
+        if (weekday.close().getHour() == calendarEnd.get(Calendar.HOUR_OF_DAY) && weekday.close().getMinute() < calendarEnd.get(Calendar.MINUTE)) {
             return false;
         }
         return true;
