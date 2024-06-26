@@ -1,7 +1,16 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.TestBase;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AllergyDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentCalendarDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentDtoCreate;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.AppointmentPageDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.MedicationDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDayDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OpeningHoursDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.OutpatientDepartmentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PatientDtoSparse;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergy;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Medication;
 import at.ac.tuwien.sepr.groupphase.backend.entity.OpeningHours;
@@ -15,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +43,10 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
@@ -263,9 +273,14 @@ public class AppointmentEndpointTest extends TestBase {
         OutpatientDepartmentDto outpatientDepartmentDto =
             new OutpatientDepartmentDto(outpatientDepartment.getId(), outpatientDepartment.getName(), outpatientDepartment.getDescription(),
                 outpatientDepartment.getCapacity(), openingHoursDto, true);
-
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTimeZone(TimeZone.getTimeZone("CET")); // Set timezone to CET
+        calendarStart.set(2023, Calendar.JANUARY, 1, 7, 0);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.setTimeZone(TimeZone.getTimeZone("CET")); // Set timezone to CET
+        calendarEnd.set(2023, Calendar.JANUARY, 1, 7, 30);
         AppointmentDtoCreate appointmentToCreate =
-            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, new Date(2023, 1, 1, 7, 0), new Date(2023, 1, 1, 7, 30), "notes");
+            new AppointmentDtoCreate(patientDto, outpatientDepartmentDto, calendarStart.getTime(), calendarEnd.getTime(), "notes");
         String json = ow.writeValueAsString(appointmentToCreate);
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
