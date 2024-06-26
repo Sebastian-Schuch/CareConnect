@@ -1,6 +1,6 @@
 <div class="allergies-from-database container mt-3">
-  <h3>Allergies</h3>
-  <input type="text" class="form-control mb-3" placeholder="Search allergies" (input)="onSearchChange($event.target.value)">
+  <input type="text" class="form-control mb-3" placeholder="Search allergies"
+         (input)="onSearchChange($event.target.value)">
   <ul class="list-group">
     <li *ngFor="let entry of paginatedAllergies; let i = index" class="list-group-item">
       {{ i + 1 + (currentPage - 1) * itemsPerPage }}. {{ entry.name }}
