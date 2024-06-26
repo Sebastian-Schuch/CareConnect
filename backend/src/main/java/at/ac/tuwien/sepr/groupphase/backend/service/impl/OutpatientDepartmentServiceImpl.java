@@ -206,6 +206,6 @@ public class OutpatientDepartmentServiceImpl implements OutpatientDepartmentServ
     @Override
     public int getOutpatientDepartmentCount() {
         LOG.trace("getOutpatientDepartmentCount()");
-        return outpatientDepartmentRepository.findAll().size();
+        return outpatientDepartmentRepository.findAllByActiveTrue().size();
     }
 }

@@ -1,0 +1,36 @@
+<div class="department-from-csv container mt-3">
+  <div class="mb-3">
+    <label for="csvFileInput" class="form-label">Upload CSV file</label>
+    <input
+      type="file"
+      class="form-control"
+      id="csvFileInput"
+      #fileInput
+      (change)="onFileChange($event)"
+    />
+  </div>
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    Error: {{ error }}
+  </div>
+  <mat-tab-group
+    *ngIf="jsonData"
+    dynamicHeight="true"
+  >
+    >
+      <div *ngIf="jsonData && jsonData.length > 0">
+        <div class="card card-body">
+          <pre class="bg-light p-3 border">{{ jsonData | json }}</pre>
+        </div>
+      </div>
+  </mat-tab-group>
+  <button *ngIf="jsonData" type="button" class="btn btn-primary"
+  (click)="addAll()"
+  >Add all</button>
+
+  <p *ngIf="jsonData && jsonData.length === 0" class="text-muted">
+    There is no extractable data in the provided file.
+  </p>
+  <p *ngIf="jsonData && jsonData.length > 0" class="text-muted">
+  There are valid departments in this file.
+  </p>
+</div>

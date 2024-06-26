@@ -89,6 +89,6 @@ public class InpatientDepartmentServiceImpl implements InpatientDepartmentServic
     @Override
     public int countInpatientDepartments() {
         LOG.trace("countInpatientDepartments()");
-        return (int) inpatientDepartmentRepository.count();
+        return (int) inpatientDepartmentRepository.findByActiveTrue().size();
     }
 }

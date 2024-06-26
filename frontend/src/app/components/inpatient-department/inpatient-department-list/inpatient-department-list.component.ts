@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {NgForOf, NgIf} from "@angular/common";
@@ -29,6 +29,7 @@ import {Role} from "../../../dtos/Role";
   styleUrl: './inpatient-department-list.component.scss'
 })
 export class InpatientDepartmentListComponent implements OnInit {
+  @Input() reloadEvent: EventEmitter<void> = new EventEmitter<void>();
   inpatientDepartments: InpatientDepartmentDto[];
   pageProperties: { pageIndex: number, pageSize: number } = {pageIndex: 0, pageSize: 10};
   totalItems: number = 0;
@@ -52,6 +53,9 @@ export class InpatientDepartmentListComponent implements OnInit {
       },
       error: err => console.error(err)
     })
+    this.reloadEvent.subscribe(() => {
+      this.reloadInpatientDepartments()
+    });
   }
 
   reloadInpatientDepartments() {

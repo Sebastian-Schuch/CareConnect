@@ -1,84 +1,97 @@
-import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatIcon} from "@angular/material/icon";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {NgForOf, NgIf} from "@angular/common";
 import {AllergyDto} from "../../../dtos/allergy";
+import {Router} from "@angular/router";
+import {AllergyService} from "../../../services/allergy.service";
+import {ToastrService} from "ngx-toastr";
+import {ErrorFormatterService} from "../../../services/error-formatter.service";
+import {Role} from "../../../dtos/Role";
+import {MatDialog} from "@angular/material/dialog";
+import {AllergyDeleteComponent} from "../allergy-delete/allergy-delete.component";
 
 @Component({
   selector: 'app-allergy-list',
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatIcon,
+    MatPaginator,
+    NgForOf,
+    NgIf,
+    ReactiveFormsModule
+  ],
   templateUrl: './allergy-list.component.html',
-  styleUrl: './allergy-list.component.scss'
+  styleUrls: ['./allergy-list.component.scss', '../../../../styles.scss']
 })
-export class AllergyListComponent {
-  @Input() allergies: AllergyDto[] = [];
-  @Input() itemsPerPage = 10;
-  @Output() pageChange = new EventEmitter<number>();
+export class AllergyListComponent implements OnInit {
 
-  searchQuery = '';
-  filteredAllergies: AllergyDto[] = [];
-  paginatedAllergies: AllergyDto[] = [];
-  currentPage = 1;
-  totalPages: number[] = [];
-
-  ngOnInit() {
-    this.updatePagination();
+  constructor(private router: Router, private allergyService: AllergyService, private errorFormatterService: ErrorFormatterService, private notificationService: ToastrService, public dialog: MatDialog) {
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.allergies) {
-      this.updatePagination();
-    }
+  totalItems: number = 0;
+  allergies: AllergyDto[] = [];
+  allergyName: string = '';
+  size: number = 10;
+  page: number = 0;
+
+  public reloadAllergies(): void {
+    this.allergyService.searchAllergies(this.allergyName, this.page, this.size).subscribe({
+      next: allergyPage => {
+        this.allergies = allergyPage.allergies;
+        this.totalItems = allergyPage.totalItems;
+      },
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, "Error loading Allergies", this.notificationService);
+      }
+    });
   }
 
-  updatePagination() {
-    this.filterAllergies();
-    this.calculateTotalPages();
-    this.paginateAllergies();
+  onPageChange($event: PageEvent) {
+    this.size = $event.pageSize;
+    this.page = $event.pageIndex;
+    this.reloadAllergies();
   }
 
-  filterAllergies() {
-    if (this.searchQuery) {
-      this.filteredAllergies = this.allergies.filter(allergy =>
-        allergy.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else {
-      this.filteredAllergies = this.allergies;
-    }
-    this.calculateTotalPages();
-    this.paginateAllergies();
+  public navigateToEditAllergy(allergyId: number): void {
+    this.router.navigate(['home/admin/allergies/' + allergyId + '/edit']);
   }
 
-  calculateTotalPages() {
-    this.totalPages = Array(Math.ceil(this.filteredAllergies.length / this.itemsPerPage)).fill(0).map((x, i) => i + 1);
+  ngOnInit(): void {
+    this.reloadAllergies();
   }
 
-  changePage(page: number) {
-    if (page > 0 && page <= this.totalPages.length) {
-      this.currentPage = page;
-      this.paginateAllergies();
-      this.pageChange.emit(this.currentPage);
-    }
+  openDeleteDialog(allergy: AllergyDto) {
+    const dialogRef = this.dialog.open(AllergyDeleteComponent,
+      {data: {allergy: allergy}});
+
+    dialogRef.afterClosed().subscribe({
+      next: value => {
+        if (value) {
+          this.deleteAllergy(allergy.id);
+          if (this.allergies.length === 1) {
+            this.page = this.page - 1;
+            this.reloadAllergies();
+          }
+        }
+      },
+      error: err => console.error(err)
+    })
   }
 
-  paginateAllergies() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    this.paginatedAllergies = this.filteredAllergies.slice(start, end);
+  private deleteAllergy(id: number) {
+    this.allergyService.deleteAllergy(id).subscribe({
+      next: () => {
+        this.reloadAllergies();
+        this.notificationService.success("Allergy deleted successfully");
+      },
+      error: async error => {
+        await this.errorFormatterService.printErrorToNotification(error, "Error deleting Allergy", this.notificationService);
+      }
+    });
   }
 
-  onSearchChange(query: string) {
-    this.searchQuery = query;
-    this.updatePagination();
-  }
-
-  get visiblePages() {
-    const maxVisiblePages = 5;
-    const halfMax = Math.floor(maxVisiblePages / 2);
-    let start = Math.max(this.currentPage - halfMax, 1);
-    let end = Math.min(start + maxVisiblePages - 1, this.totalPages.length);
-
-    if (end - start < maxVisiblePages - 1) {
-      start = Math.max(end - maxVisiblePages + 1, 1);
-    }
-
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  }
+  protected readonly Role = Role;
 }
-

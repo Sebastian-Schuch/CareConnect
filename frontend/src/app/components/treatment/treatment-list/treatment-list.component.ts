@@ -162,7 +162,7 @@ export class TreatmentListComponent implements OnInit {
   public showMedicines(medicines: TreatmentMedicineSelection[]): string {
     let result = "";
     medicines.forEach(medicine => {
-      result += medicine.medication.name + ", ";
+      result += medicine.medication.name + "-" + medicine.amount + "" + medicine.medication.unitOfMeasurement + ", ";
     });
     return result.substring(0, result.length - 2);
   }
