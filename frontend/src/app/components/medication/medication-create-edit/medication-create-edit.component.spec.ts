@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {MedicationCreateComponent} from './medication-create.component';
+import {MedicationCreateEditComponent} from './medication-create-edit.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {ActivatedRoute} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 
 describe('MedicationCreateComponent', () => {
-  let component: MedicationCreateComponent;
-  let fixture: ComponentFixture<MedicationCreateComponent>;
+  let component: MedicationCreateEditComponent;
+  let fixture: ComponentFixture<MedicationCreateEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MedicationCreateComponent],
+      declarations: [MedicationCreateEditComponent],
       imports: [HttpClientModule, HttpClientTestingModule, FormsModule],
       providers: [
         {
@@ -31,7 +31,7 @@ describe('MedicationCreateComponent', () => {
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(MedicationCreateComponent);
+    fixture = TestBed.createComponent(MedicationCreateEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

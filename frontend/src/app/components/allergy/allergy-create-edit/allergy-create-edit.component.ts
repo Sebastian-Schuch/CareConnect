@@ -39,7 +39,7 @@ export class AllergyCreateEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      if (data.mode) {
+      if (!this.isEmbedded) {
         this.mode = data.mode;
       }
       if (this.mode === AllergyCreatEditMode.EDIT) {

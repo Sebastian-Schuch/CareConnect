@@ -4,7 +4,7 @@ import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
 import {MedicationService} from "../../../services/medication.service";
 import {MedicationDto} from "../../../dtos/medication";
-import {MedicationCreateEditMode} from "../../medication/medication-create/medication-create.component";
+import {MedicationCreateEditMode} from "../../medication/medication-create-edit/medication-create-edit.component";
 import {AllergyCreatEditMode} from "../../allergy/allergy-create-edit/allergy-create-edit.component";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 

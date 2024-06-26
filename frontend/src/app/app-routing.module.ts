@@ -46,9 +46,9 @@ import {MedicationListComponent} from "./components/medication/medication-list/m
 
 import {MainSetupPage} from "./components/setup-wizzard/main-page/main-setup-page.component";
 import {
-  MedicationCreateComponent,
+  MedicationCreateEditComponent,
   MedicationCreateEditMode
-} from "./components/medication/medication-create/medication-create.component";
+} from "./components/medication/medication-create-edit/medication-create-edit.component";
 import {
   OutpatientDepartmentCapacitiesComponent
 } from "./components/outpatient-department/outpatient-department-capacities/outpatient-department-capacities.component";
@@ -130,7 +130,11 @@ const routes: Routes = [
                 component: InpatientDepartmentComponent,
                 data: {mode: InpatientDepartmentCreateEditMode.create}
               },
-              {path: 'medication', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.CREATE}},
+              {
+                path: 'medication',
+                component: MedicationCreateEditComponent,
+                data: {mode: MedicationCreateEditMode.CREATE}
+              },
               {path: 'allergy', component: AllergyCreateEditComponent, data: {mode: AllergyCreatEditMode.CREATE}}
             ]
           },
@@ -210,7 +214,7 @@ const routes: Routes = [
               {path: '', component: MedicationListComponent},
               {
                 path: ':id', children: [
-                  {path: 'edit', component: MedicationCreateComponent, data: {mode: MedicationCreateEditMode.EDIT}}
+                  {path: 'edit', component: MedicationCreateEditComponent, data: {mode: MedicationCreateEditMode.EDIT}}
                 ]
               }
             ]

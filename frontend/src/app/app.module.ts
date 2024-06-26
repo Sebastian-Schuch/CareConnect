@@ -28,7 +28,9 @@ import {MatAnchor, MatButton, MatFabButton, MatIconButton} from "@angular/materi
 import {InpatientDepartmentComponent} from "./components/inpatient-department/inpatient-department.component";
 import {AllergyCreateEditComponent} from "./components/allergy/allergy-create-edit/allergy-create-edit.component";
 import {LoginComponent} from "./components/login/login.component";
-import {MedicationCreateComponent} from "./components/medication/medication-create/medication-create.component";
+import {
+  MedicationCreateEditComponent
+} from "./components/medication/medication-create-edit/medication-create-edit.component";
 import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import {CalenderComponent} from "./components/appointments/calender/calendar/calender.component";
@@ -99,7 +101,7 @@ import {
     UserCreateComponent,
     OutpatientDepartmentComponent,
     OutpatientDepartmentDetailComponent,
-    MedicationCreateComponent,
+    MedicationCreateEditComponent,
     LoginComponent,
     CalenderComponent,
     CalendarWrapperComponent,

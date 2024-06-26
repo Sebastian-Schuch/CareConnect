@@ -1,4 +1,4 @@
-import {Component, EventEmitter, input, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForm, NgModel} from "@angular/forms";
 import {Observable} from "rxjs";
@@ -14,10 +14,10 @@ export enum MedicationCreateEditMode {
 
 @Component({
   selector: 'app-medication-create',
-  templateUrl: './medication-create.component.html',
-  styleUrls: ['./medication-create.component.scss', '../../../../styles.scss']
+  templateUrl: './medication-create-edit.component.html',
+  styleUrls: ['./medication-create-edit.component.scss', '../../../../styles.scss']
 })
-export class MedicationCreateComponent implements OnInit {
+export class MedicationCreateEditComponent implements OnInit {
   @Output() creationSuccess = new EventEmitter<void>();
 
   medication: MedicationDto = {
@@ -40,7 +40,7 @@ export class MedicationCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
-      if(data.mode) {
+      if (!this.isEmbedded) {
         this.mode = data.mode;
       }
 
@@ -69,7 +69,7 @@ export class MedicationCreateComponent implements OnInit {
           next: () => {
             this.notification.success('Successfully created ' + this.medication.name + ' Medication');
             this.onSuccessfulCreation();
-            if(!this.isEmbedded) {
+            if (!this.isEmbedded) {
               this.router.navigate(['/home/admin/medications'])
             }
           },
