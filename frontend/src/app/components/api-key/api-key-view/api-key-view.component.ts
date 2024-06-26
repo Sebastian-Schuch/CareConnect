@@ -25,7 +25,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     ReactiveFormsModule
   ],
   templateUrl: './api-key-view.component.html',
-  styleUrl: './api-key-view.component.scss'
+  styleUrls: ['./api-key-view.component.scss', '../../../../styles.scss']
 })
 export class ApiKeyViewComponent {
   apikey: string = '';

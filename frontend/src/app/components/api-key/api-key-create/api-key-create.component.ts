@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
@@ -9,31 +9,33 @@ import {ApiKeyService} from "../../../services/api-key.service";
 import {ToastrService} from "ngx-toastr";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 import {ApiKeyDtoCreate} from "../../../dtos/api-keys";
+
 @Component({
   selector: 'app-api-key-create',
   standalone: true,
-    imports: [
-        MatButton,
-        MatDatepicker,
-        MatDatepickerInput,
-        MatDatepickerToggle,
-        MatDialogActions,
-        MatDialogContent,
-        MatDialogTitle,
-        MatFormField,
-        MatHint,
-        MatInput,
-        MatLabel,
-        MatSuffix,
-        ReactiveFormsModule
-    ],
+  imports: [
+    MatButton,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogTitle,
+    MatFormField,
+    MatHint,
+    MatInput,
+    MatLabel,
+    MatSuffix,
+    ReactiveFormsModule
+  ],
   templateUrl: './api-key-create.component.html',
-  styleUrl: './api-key-create.component.scss'
+  styleUrls: ['./api-key-create.component.scss', '../../../../styles.scss']
 })
 export class ApiKeyCreateComponent implements OnInit {
 
   createApiKey: FormGroup;
   description: FormControl;
+
   constructor(public dialogRef: MatDialogRef<ApiKeyCreateComponent>,
               private apiKeyService: ApiKeyService,
               private notification: ToastrService,
@@ -61,7 +63,8 @@ export class ApiKeyCreateComponent implements OnInit {
       },
       error: async error => {
         await this.errorFormatterService.printErrorToNotification(error, "Couldn't create API key", this.notification);
-      }});
+      }
+    });
   }
 
   close(data: any): void {
