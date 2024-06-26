@@ -40,7 +40,7 @@
           <div class="btn-group">
             <label hidden [for]="i+'details'">Outpatient-departments details</label>
             <button [id]="i+'details'" class="btn btn-sm responsive-info-button"
-                    [routerLink]="[outpatientDepartment.id]"
+                    [routerLink]="['/home/admin/outpatient-department',outpatientDepartment.id]"
                     aria-label="Show Outpatient-department details"
                     [tabindex]="i+'27'"
             >
@@ -49,7 +49,7 @@
             <label hidden [for]="i+'edit'" *ngIf="role === Role.admin">Edit outpatient department</label>
             <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
                     aria-label="Edit outpatientDepartment"
-                    [routerLink]="[outpatientDepartment.id, 'edit']"
+                    [routerLink]="['/home/admin/outpatient-department',outpatientDepartment.id, 'edit']"
                     [tabindex]="i+'28'"
                     *ngIf="role === Role.admin"
             >
