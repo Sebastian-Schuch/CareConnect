@@ -347,7 +347,6 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
     const treatmentMedicineDtoCreate: TreatmentMedicineDtoCreate = {
       medication: medicationData.medication,
       amount: medicationData.amount,
-      unitOfMeasurement: medicationData.medication.unitOfMeasurement,
       medicineAdministrationDate: this.combineDateAndTime(medicationData.medicineDatePicker, medicationData.medicineTimePicker)
     };
     this.treatmentMedicineService.createTreatmentMedicine(treatmentMedicineDtoCreate).subscribe(
