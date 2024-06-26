@@ -13,7 +13,7 @@ import {ChatDto} from "../dtos/chat";
 })
 export class MessageService {
 
-  private messageBaseUri: string = 'ws://'+(this.globals.backendUri).substring(7)+'/chat';
+  private messageBaseUri: string = this.globals.backendUri.startsWith('https') ? 'wss://' + this.globals.backendUri.substring(8) + '/chat' : 'ws://' + this.globals.backendUri.substring(7) + '/chat';
 
   private messageRestUri: string = this.globals.backendUri + '/messages';
 
