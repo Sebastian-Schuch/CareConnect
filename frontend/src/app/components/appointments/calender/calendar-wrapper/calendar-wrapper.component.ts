@@ -59,19 +59,26 @@ export class CalendarWrapperComponent implements OnInit {
     this.resetAllSearchInputs();
   }
 
-  onKeydown(event: KeyboardEvent): void {
+  onKeydownDepartment(event: KeyboardEvent): void {
     if (event.key === 'Backspace') {
-      this.appointmentForm.get('patient')?.setValue('');
-      setTimeout(() => {
-        if (this.patientAutoTrigger) {
-          this.patientAutoTrigger.openPanel();
-        }
-      });
       if (event.target === this.outpatientDepartmentInput.nativeElement) {
         this.appointmentForm.get('outpatientDepartment')?.setValue('');
         setTimeout(() => {
           if (this.outpdepAutoTrigger) {
             this.outpdepAutoTrigger.openPanel();
+          }
+        });
+      }
+    }
+  }
+
+  onKeydownPatient(event: KeyboardEvent): void {
+    if (event.key === 'Backspace') {
+      if (event.target === this.patientInput.nativeElement) {
+        this.appointmentForm.get('patient')?.setValue('');
+        setTimeout(() => {
+          if (this.patientAutoTrigger) {
+            this.patientAutoTrigger.openPanel();
           }
         });
       }

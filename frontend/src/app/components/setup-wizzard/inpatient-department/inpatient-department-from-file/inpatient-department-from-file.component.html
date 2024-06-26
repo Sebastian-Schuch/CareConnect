@@ -1,0 +1,46 @@
+<div class="in-patient-from-csv container mt-3">
+  <div class="mb-3">
+    <label for="csvFileInput" class="form-label">Upload CSV file</label>
+    <input
+      type="file"
+      class="form-control"
+      id="csvFileInput"
+      #fileInput
+      (change)="onFileChange($event)"
+    />
+  </div>
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    Error: {{ error }}
+  </div>
+  <mat-tab-group
+    *ngIf="jsonData && jsonData.length > 0"
+    dynamicHeight="true"
+  >
+    <mat-tab label="extracted inpatient departments">
+
+      <app-small-list
+        [inpatientDepartments]="jsonData"
+        [itemsPerPage]="10">
+
+      </app-small-list>
+    </mat-tab>
+
+    <mat-tab label="raw json">
+      <div *ngIf="jsonData">
+        <div class="card card-body">
+          <pre class="bg-light p-3 border">{{ jsonData | json }}</pre>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+  <button *ngIf="jsonData && jsonData.length > 0" type="button" class="btn btn-primary"
+          (click)="addAll()"
+  >Add all
+  </button>
+  <p *ngIf="jsonData && jsonData.length === 0" class="text-muted">
+    No in-patient departments found in the provided file
+  </p>
+
+
+</div>

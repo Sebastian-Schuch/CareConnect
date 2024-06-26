@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
 import {MedicationService} from "../../../services/medication.service";
 import {MedicationDto} from "../../../dtos/medication";
-import {MedicationCreateEditMode} from "../../medication/medication-create/medication-create.component";
-import {AllergyCreatEditMode} from "../../allergy/allergy.component";
+import {MedicationCreateEditMode} from "../../medication/medication-create-edit/medication-create-edit.component";
+import {AllergyCreatEditMode} from "../../allergy/allergy-create-edit/allergy-create-edit.component";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
 
 @Component({
@@ -14,7 +14,8 @@ import {ErrorFormatterService} from "../../../services/error-formatter.service";
   styleUrl: './main-setup-page.component.scss',
 })
 export class MainSetupPage implements OnInit, AfterViewInit {
-
+  reloadEventOut = new EventEmitter<void>();
+  reloadEventIn = new EventEmitter<void>();
   showFileUpload = false;
   public allergies: AllergyDto[] = [];
   public medication: MedicationDto[] = [];
@@ -35,7 +36,14 @@ export class MainSetupPage implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.changeBackgroundColor();
+  }
 
+  refreshOutPatient() {
+    this.reloadEventOut.emit();
+  }
+
+  refreshInPatient() {
+    this.reloadEventIn.emit();
   }
 
   changeActiveTab(): void {

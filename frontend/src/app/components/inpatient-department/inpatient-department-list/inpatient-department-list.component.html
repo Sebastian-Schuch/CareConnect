@@ -38,7 +38,7 @@
           <div class="btn-group">
             <label hidden [for]="i+'edit'">Edit inpatient department</label>
             <button [id]="i+'edit'" class="btn btn-sm responsive-warning-button"
-                    [routerLink]="[inpatientDepartment.id, 'edit']"
+                    [routerLink]="['/home/admin/inpatient-department',inpatientDepartment.id, 'edit']"
                     [attr.aria-label]="'Edit inpatientDepartment '+inpatientDepartment.name+' (mode_edit)'"
                     [tabindex]="i+'28'"
             >

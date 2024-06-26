@@ -130,6 +130,6 @@ public class AllergyServiceImpl implements AllergyService {
 
     @Override
     public int countAllergies() {
-        return (int) allergyRepository.count();
+        return (int) allergyRepository.findByActiveTrue().size();
     }
 }

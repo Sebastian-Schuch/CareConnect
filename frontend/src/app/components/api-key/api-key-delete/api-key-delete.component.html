@@ -2,13 +2,13 @@
 
 <mat-dialog-content>
   <p>Do you really want to revoke this API Key? This cannot be undone!</p>
-  <h5>{{apiKeyDto.description}}</h5>
+  <h5>{{ apiKeyDto.description }}</h5>
 </mat-dialog-content>
 <mat-dialog-actions [align]="'end'">
   <button mat-button class="sepr-btn-cancel" (click)="close()">
     Close
   </button>
-  <button mat-button class="sepr-btn-cancel" (click)="submit()">
+  <button mat-button class="sepr-btn-delete" (click)="submit()">
     Confirm
   </button>
 </mat-dialog-actions>

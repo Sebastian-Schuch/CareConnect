@@ -114,6 +114,11 @@ public class AppointmentEndpoint {
         return appointmentService.getAllAppointmentsFromStartDateToEndDateWithOutpatientDepartmentId(outpatientDepartmentId, startDate, endDate);
     }
 
+    /**
+     * Get all appointments booked on a OutpatientDepartment.
+     *
+     * @return the booked appointments
+     */
     @Secured("PATIENT")
     @GetMapping("/patient")
     public AppointmentPageDto getAppointmentsByPatient(
@@ -127,6 +132,13 @@ public class AppointmentEndpoint {
         return appointmentService.getAppointmentsByPatient(patientId, outpatientDepartmentId, startDate, endDate, page, size);
     }
 
+    /**
+     * Get all appointments.
+     *
+     * @param page the page number
+     * @param size the size of the page
+     * @return a page of all appointments
+     */
     @Secured("SECRETARY")
     @GetMapping("/all")
     public AppointmentPageDto getAllAppointments(

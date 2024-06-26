@@ -20,7 +20,7 @@
       <mat-form-field appearance="fill" class="matFormFieldFullWidth">
         <mat-label>Outpatient Department</mat-label>
         <input tabindex="17" type="text" matInput formControlName="outpatientDepartment"
-               [matAutocomplete]="outpdepAuto" (keydown)="onKeydown($event)"  #outpatientDepartmentInput
+               [matAutocomplete]="outpdepAuto" (keydown)="onKeydownDepartment($event)" #outpatientDepartmentInput
                #outpatientDepartmentTrigger="matAutocompleteTrigger">
         <mat-autocomplete #outpdepAuto="matAutocomplete" [displayWith]="displayOutPD">
           <mat-option tabindex="18" *ngFor="let outpd of filteredOutPatDep | async" [value]="outpd">
@@ -32,7 +32,8 @@
     <div class="form-group" *ngIf="isRoleSecretary()">
       <mat-form-field appearance="fill" class="matFormFieldFullWidth">
         <mat-label>patient</mat-label>
-        <input tabindex="19" type="text" matInput formControlName="patient" [matAutocomplete]="patientAuto" (keydown)="onKeydown($event)"  #patientInput #patientTrigger="matAutocompleteTrigger">
+        <input tabindex="19" type="text" matInput formControlName="patient" [matAutocomplete]="patientAuto"
+               (keydown)="onKeydownPatient($event)" #patientInput #patientTrigger="matAutocompleteTrigger">
         <mat-autocomplete #patientAuto="matAutocomplete" [displayWith]="displayPatient">
           <mat-option tabindex="20" *ngFor="let patient of filteredPatientOptions | async" [value]="patient">
             {{ patient.firstname }} {{ patient.lastname }}, SVNR: {{ patient.svnr }}
