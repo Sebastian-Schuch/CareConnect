@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {MatIcon} from "@angular/material/icon";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
@@ -29,6 +29,7 @@ import {Role} from "../../../dtos/Role";
   styleUrl: './outpatient-department-list.component.scss'
 })
 export class OutpatientDepartmentListComponent implements OnInit {
+  @Input() reloadEvent: EventEmitter<void> = new EventEmitter<void>();
   role: Role;
   searchedName: string = "";
   outpatientDepartments: OutpatientDepartmentDto[];
@@ -46,6 +47,9 @@ export class OutpatientDepartmentListComponent implements OnInit {
   ngOnInit() {
     this.role = this.authService.getUserRole();
     this.reloadOutpatientDepartments();
+    this.reloadEvent.subscribe(() => {
+      this.reloadOutpatientDepartments()
+    });
   }
 
   reloadOutpatientDepartments() {

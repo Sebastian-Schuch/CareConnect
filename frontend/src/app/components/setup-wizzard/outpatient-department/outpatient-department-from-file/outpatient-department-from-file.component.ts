@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {CsvConverterService} from "../../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {OutpatientDepartmentService} from "../../../../services/outpatient-department.service";
@@ -21,6 +21,7 @@ export class OutpatientDepartmentFromFileComponent {
   ) {
   }
 
+  @Output() reloadEvent = new EventEmitter<void>();
   @ViewChild('fileInput') fileInput: any;
   public jsonData: any;
   public error: string | null = null;
@@ -58,6 +59,7 @@ export class OutpatientDepartmentFromFileComponent {
       (responses) => {
         this.notification.success('All departments added successfully');
         this.clearFileInput();
+        this.reloadEvent.emit();
 
       },
       (error) => {

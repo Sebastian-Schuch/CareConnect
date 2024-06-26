@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {CsvConverterService} from "../../../../services/csv-converter.service";
 import {ToastrService} from "ngx-toastr";
 import {catchError, forkJoin, of} from "rxjs";
@@ -15,7 +15,7 @@ function containsKey(obj: any, key: string): boolean {
   styleUrl: './inpatient-department-from-file.component.scss'
 })
 export class InpatientDepartmentFromFileComponent {
-
+  @Output() reloadEvent = new EventEmitter<void>();
   @ViewChild('fileInput') fileInput: any;
 
   public jsonData: any;
@@ -49,6 +49,7 @@ export class InpatientDepartmentFromFileComponent {
       next: (results) => {
         // @ts-ignore
         const allSuccessful = results.every(result => result !== null);
+        this.reloadEvent.emit();
         if (allSuccessful) {
           this.notification.success('All inpatient departments were successfully added.');
         } else {

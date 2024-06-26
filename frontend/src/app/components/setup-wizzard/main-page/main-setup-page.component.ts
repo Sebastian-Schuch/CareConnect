@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit} from '@angular/core';
 import {AllergyService} from "../../../services/allergy.service";
 import {ToastrService} from "ngx-toastr";
 import {AllergyDto} from "../../../dtos/allergy";
@@ -14,7 +14,8 @@ import {ErrorFormatterService} from "../../../services/error-formatter.service";
   styleUrl: './main-setup-page.component.scss',
 })
 export class MainSetupPage implements OnInit, AfterViewInit {
-
+  reloadEventOut = new EventEmitter<void>();
+  reloadEventIn = new EventEmitter<void>();
   showFileUpload = false;
   public allergies: AllergyDto[] = [];
   public medication: MedicationDto[] = [];
@@ -35,7 +36,14 @@ export class MainSetupPage implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.changeBackgroundColor();
+  }
 
+  refreshOutPatient() {
+    this.reloadEventOut.emit();
+  }
+
+  refreshInPatient() {
+    this.reloadEventIn.emit();
   }
 
   changeActiveTab(): void {

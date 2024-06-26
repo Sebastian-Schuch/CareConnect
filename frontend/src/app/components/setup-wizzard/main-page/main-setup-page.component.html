@@ -80,20 +80,20 @@
         </mat-tab>
 
         <mat-tab label="Inpatient Department">
-          <app-inpatient-department-from-csv>
+          <app-inpatient-department-from-csv (reloadEvent)="refreshInPatient()">
 
           </app-inpatient-department-from-csv>
-          <app-inpatient-department-list></app-inpatient-department-list>
+          <app-inpatient-department-list [reloadEvent]="reloadEventIn"></app-inpatient-department-list>
         </mat-tab>
 
         <mat-tab label="Out-Patient Department">
           <div class="row">
             <div class="col-12">
-              <app-outpatient-department-from-file>
+              <app-outpatient-department-from-file (reloadEvent)="refreshOutPatient()">
               </app-outpatient-department-from-file>
             </div>
           </div>
-          <app-outpatient-department-list></app-outpatient-department-list>
+          <app-outpatient-department-list [reloadEvent]="reloadEventOut"></app-outpatient-department-list>
         </mat-tab>
 
 

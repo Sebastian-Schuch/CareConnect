@@ -1,8 +1,7 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {debounceTime, Observable, startWith, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
-import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {TreatmentDto, TreatmentDtoCreate} from "../../dtos/treatment";
 import {TreatmentMedicineDtoCreate, TreatmentMedicineSelection} from "../../dtos/treatmentMedicine";
@@ -34,7 +33,7 @@ export enum TreatmentCreateEditMode {
   styleUrls: ['./treatment.component.scss']
 })
 
-export class TreatmentComponent implements OnInit, AfterViewInit {
+export class TreatmentComponent implements OnInit {
 
   treatmentForm: FormGroup;
   mode: TreatmentCreateEditMode = TreatmentCreateEditMode.log;
@@ -52,7 +51,6 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['Medication', 'Amount', 'Unit', 'Date', 'Time', 'Delete'];
   dataSource: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('doctorAuto', {static: false}) doctorAuto: MatAutocomplete;
   @ViewChild('patientAuto', {static: false}) patientAuto: MatAutocomplete;
   @ViewChild('outpdepAuto', {static: false}) outpdepAuto: MatAutocomplete;
@@ -111,10 +109,6 @@ export class TreatmentComponent implements OnInit, AfterViewInit {
   public getDayString(date): string {
     let outDate = new Date(date);
     return getDate(outDate) + "." + (getMonth(outDate) + 1) + "." + getYear(outDate);
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   /**
