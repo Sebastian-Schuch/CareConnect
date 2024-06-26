@@ -44,13 +44,13 @@ public record AppointmentDtoCreate(
 
     @AssertTrue(message = "Appointment must be during opening hours")
     public boolean isDuringOpeningHours() {
-        OpeningHoursDayDto weekday = outpatientDepartment.openingHours().getWeekdayByDate(startDate);
         Calendar calendarStart = Calendar.getInstance();
         calendarStart.setTimeZone(TimeZone.getTimeZone("CET")); // Set timezone to CET
         calendarStart.setTime(startDate);
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTimeZone(TimeZone.getTimeZone("CET")); // Set timezone to CET
         calendarEnd.setTime(endDate);
+        OpeningHoursDayDto weekday = outpatientDepartment.openingHours().getWeekdayByDate(startDate);
         if (weekday.open().getHour() > calendarStart.get(Calendar.HOUR_OF_DAY)) {
             return false;
         }
