@@ -9,9 +9,7 @@ import {
 import {ApiKeyService} from "../../../services/api-key.service";
 import {ToastrService} from "ngx-toastr";
 import {ErrorFormatterService} from "../../../services/error-formatter.service";
-import {FormBuilder} from "@angular/forms";
 import {ApiKeyDto} from "../../../dtos/api-keys";
-import {ApiKeyViewComponent} from "../api-key-view/api-key-view.component";
 import {MatButton} from "@angular/material/button";
 
 @Component({
@@ -24,7 +22,7 @@ import {MatButton} from "@angular/material/button";
     MatDialogTitle
   ],
   templateUrl: './api-key-delete.component.html',
-  styleUrl: './api-key-delete.component.scss'
+  styleUrls: ['./api-key-delete.component.scss', '../../../../styles.scss']
 })
 export class ApiKeyDeleteComponent {
 
